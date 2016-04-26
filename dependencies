@@ -1,0 +1,27 @@
+
+Llia Dependencies                (GPL lesser)
+
+    Python 2.7.9
+	PyOsc 0.3.6 (included)    (GPL lesser)
+	simplegeneric (included)  (Zope)
+	mido (1.1.14)             (MIT)
+	    mido requires a back end, either rtmidi or portmidi
+
+    SuperCollider 3.6.6
+     or some other OSC server
+
+
+Instillation (Linux) 
+
+    SuperCollider
+	Llia classes
+	Llia documentation
+	Llia synth defs
+
+    mido
+	pip install mido
+	install rtmidi 
+
+	Set environmental variable MIDO_BACKEND='mido.backends.rtmidi'
+	
+

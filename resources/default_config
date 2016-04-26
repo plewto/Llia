@@ -1,0 +1,334 @@
+;; Demo Llia configuration file.
+;;     General format
+;;
+;;         [section-name]
+;;         parameter1 : value   ; a comment
+;;         parameter2 : value
+;;
+;;     Major sections:
+;;         [GENERAL] [MIDI], [OSC], [GUI], [MIDI-CHANNELS] and [MIDI-CONTROLLERS]
+;;
+;;    [GENERAL]
+;;    log-file: <filename>              : If filename is provided, status, warning
+;;                                      : and error messages are loged to file.
+;;    [MIDI]
+;;    input-port : <port-name>          ; Set MIDI input port.  To see a list
+;;                                      ; of available ports use the command
+;;                                      ; line option --midi_ports.  The
+;;                                      ; input port may also be set by the
+;;                                      ; command line options  -i or --midiin
+;;                                      ; or by environmental variable
+;;                                      ; LLIA_MIDI_IN.
+;;
+;;    output-port : <port-name>         ; Set MIDI output port.  The output 
+;;                                      ; port may also be specified by 
+;;                                      ; command line options -o or --midiout
+;;                                      ; or buy the environmental variable
+;;                                      ; LLIA_MIDI_OUT.  Currently Llia
+;;                                      ; does not use the MIDI output port.
+;;
+;;    backend : <value>                 ; Sets MIDI backend used by the mido
+;;                                      ; package.  <value> must be one of
+;;                                      ; 'mido.backends.rtmidi' or
+;;                                      ; 'mido.backends.portmidi' depending
+;;                                      ; on which is installed.
+;;
+;;    enable-program-pp  : <bool>       ; Enable "pretty-printer" to display
+;;                                      ; program data to the terminal on
+;;                                      ; reception of MIDI program-change
+;;                                      ; events.
+;;
+;;    autogen-program-slot : <n>        ; Sets the program slot number for     **DEPRECIATED**
+;;                                      ; for generating random programs.
+;;                                      ; If a slot number is provided -AND-
+;;                                      ; a patch generator is defined for
+;;                                      ; the specific instrument, a random 
+;;                                      ; program is generated on reception 
+;;                                      ; of a MIDI program change for that
+;;                                      ; slot.  <n> should be an integer
+;;                                      ; between 0 and 127 inclusive.
+;;
+;;    autogen-store-slot : <n>          ; Sets program slot where randomly    **DEPRECIATED**
+;;                                      ; generated programs are to be stored.
+;;
+;;    enable-keyswitch : <bool>         ; Enable keyswitch feature.
+;;                                      ; A keyswitch converts selected
+;;                                      ; note-on events to program change
+;;                                      ; evnets.
+;;
+;;    keyswitch-channel : <n>           ; Sets MIDI chanel for keyswitch
+;;                                      ; reception.
+;;
+;;    keyswitch-transpose : <n>         ; Sets key-number to program-number
+;;                                      ; transpose value.
+;;                                      ; program-number = key-number + n
+;;
+;;    trace-midi-reception : <bool>     ; Enable debug mode to trace MIDI input
+;;
+;;
+;;    [OSC]
+;;
+;;    global-id : <name>                : OSC id used for top-level comunication between
+;;                                      : Llia client and host.
+;;                                      :
+;;    host-address : <address>          : Sets the ip address for the
+;;                                      ; SuperCollider server.
+;;
+;;    host-port : <n>                   ; Sets host port number, default 57120
+;;
+;;    client-address : <address>        ; Sets the ip address for the Llia
+;;                                      ; client.  This is the address the 
+;;                                      ; server uses to communicate back to
+;;                                      ; the client.  Currently the
+;;                                      ; client-address is not used.
+;;
+;;    client-port : <n>                 ; port number of OSC messages
+;;                                      ; clients from the server to the
+;;                                      ; client.  Currently client is
+;;                                      ; not used.
+;;
+;;    trace-osc-transmission : <bool>   ; enable debug OSC output tracing
+;;
+;;
+;;
+;;    [GUI]
+;;    gui : <name>                      ; Selects the GUI system to use.
+;;                                      ; Currently the only valid options
+;;                                      ; are 'Tk' and 'None'
+;;
+;;    enable-tooltips :  <bool>         ; Enable mouse over tooltips.
+;;
+;;    warn-on-overwrite : <bool>        ; If true ask for confirmation before
+;;                                      ; overwriting a file.  TK ignores this
+;;                                      ; flag and will always display an
+;;                                      ; overwrite warning.
+;;
+;;    warn-on-initialize : <bool>       ; If true ask for confirmation before
+;;                                      ; initializing large structures (such
+;;                                      ; as a program bank).
+;;
+;;    warn-on-exit : <bool>             ; If true ask for confirmation before
+;;                                      ; exiting Llia.
+;;
+;;    enable-active-updates : <bool>    ; If true update GUI components in
+;;                                      ; response to MIDI controller changes.
+;;
+;;    enable-midi-edit: <bool>          ; If true -AND- enable-active-updates
+;;                                      ; is also true, MIDI controller events
+;;                                      ; modify the data of the current 
+;;                                      ; program.  All changes are preserved
+;;                                      ; if the current program is stored
+;;                                      ; into the program bank.
+;;
+;;    enable-controller-edit : <bool>   ; If true -AND- enable-active-updates    **DEPRECIATED**
+;;                                      ; is also true, MIDI controller events   ** use enable-midi-edit **
+;;                                      ; modify the data of the current 
+;;                                      ; program.  All changes are preserved
+;;                                      ; if the current program is stored
+;;                                      ; into the program bank.
+;;
+;;     [MIDI-CHANNELS]
+;;     C01 : <name>                     ; Assign names to MIDI channels.
+;;     c02 : <name>
+;;      ..........
+;;      ..........
+;;     C16 : <name>
+;;
+;;     [MIDI-CONTROLLERS]
+;;     ctrl000 : <name>                 ; Assign names to MIDI controllers
+;;     ctrl001 : <name>
+;;      ...........
+;;      ...........
+;;    ctrl127 : <name>
+
+
+[GENERAL]
+log-file : ~/t/llia.log
+
+[MIDI]
+input-port : Launchkey Mini 28:0
+; input-port : E-MU Xmidi 2x2 24:0
+output-port :
+backend : mido.backends.rtmidi
+enable-program-pp : True
+autogen-program-slot : 0  # <DEPRECIATED>
+autogen-store-slot : 1    # <DEPRECIATED>
+enable-keyswitch : True
+keyswitch-channel : 10
+keyswitch-transpose : -40
+trace-midi-reception : False
+
+[OSC]
+global-id : dog
+host-address : 127.0.0.1
+host-port : 57120
+client-address : 127.0.0.1
+client-port : 58000
+trace-osc-transmission : False
+
+[GUI]
+gui : None			; Select GUI library
+enable-tooltips : True
+warn-on-overwrite : True        ; Not recognized by Tk
+warn-on-initialize : True
+warn-on-exit : False
+enable-active-update : True     ; Enable MIDI controller changes to
+                                ; update GUI
+
+enable-midi-edit : False        ; Enable MIDI controller changes to
+                                ; alter current program parameters.
+				; enable-active-updates must also
+				; be true.
+
+;; *DEPRECIATED*  use enable-midi-edit				
+enable-controller-edit : False  ; Enable MIDI controller changes to
+                                ; alter "current" program parameters.
+
+
+[MIDI-CHANNELS]
+C01 : Alpha
+C02 : Beta
+C03 : 
+C04 : 
+C05 : 
+C06 : 
+C07 : 
+C08 : 
+C09 : 
+C10 : 
+C11 : 
+C12 : 
+C13 : 
+C14 : 
+C15 : 
+C16 : 
+
+[MIDI-CONTROLLERS]
+CTRL000 : 
+CTRL001 : ModWheel
+CTRL002 : Breath
+CTRL003 : 
+CTRL004 : Pedal
+CTRL005 : 
+CTRL006 : 
+CTRL007 : Volume
+CTRL008 : 
+CTRL009 : 
+CTRL010 :
+CTRL011 : 
+CTRL012 : 
+CTRL013 : 
+CTRL014 : 
+CTRL015 : 
+CTRL016 : 
+CTRL017 : 
+CTRL018 : 
+CTRL019 : 
+CTRL020 : 
+CTRL021 : LK1 ; Novation launchkey mini
+CTRL022 : LK2
+CTRL023 : LK3
+CTRL024 : LK4
+CTRL025 : LK5
+CTRL026 : LK6
+CTRL027 : LK7
+CTRL028 : LK8
+CTRL029 : 
+CTRL030 : 
+CTRL031 : 
+CTRL032 : 
+CTRL033 : 
+CTRL034 : 
+CTRL035 : 
+CTRL036 : 
+CTRL037 : 
+CTRL038 : 
+CTRL039 : 
+CTRL040 : 
+CTRL041 : 
+CTRL042 : 
+CTRL043 : 
+CTRL044 : 
+CTRL045 : 
+CTRL046 : 
+CTRL047 : 
+CTRL048 : 
+CTRL049 : 
+CTRL050 : 
+CTRL051 : 
+CTRL052 : 
+CTRL053 : 
+CTRL054 : 
+CTRL055 : 
+CTRL056 : 
+CTRL057 : 
+CTRL058 : 
+CTRL059 : 
+CTRL060 : 
+CTRL061 : 
+CTRL062 : 
+CTRL063 : 
+CTRL064 : 
+CTRL065 : 
+CTRL066 : 
+CTRL067 : 
+CTRL068 : 
+CTRL069 : 
+CTRL070 : 
+CTRL071 : 
+CTRL072 : 
+CTRL073 : 
+CTRL074 : 
+CTRL075 : 
+CTRL076 : 
+CTRL077 : 
+CTRL078 : 
+CTRL079 : 
+CTRL080 : 
+CTRL081 : 
+CTRL082 : 
+CTRL083 : 
+CTRL084 : 
+CTRL085 : 
+CTRL086 : 
+CTRL087 : 
+CTRL088 : 
+CTRL089 : 
+CTRL090 : 
+CTRL091 : 
+CTRL092 : 
+CTRL093 : 
+CTRL094 : 
+CTRL095 : 
+CTRL096 : 
+CTRL097 : 
+CTRL098 : 
+CTRL099 : 
+CTRL100 : 
+CTRL101 : 
+CTRL102 : 
+CTRL103 : 
+CTRL104 : 
+CTRL105 : 
+CTRL106 : 
+CTRL107 : 
+CTRL108 : 
+CTRL109 : 
+CTRL110 : 
+CTRL111 : 
+CTRL112 : 
+CTRL113 : 
+CTRL114 : 
+CTRL115 : 
+CTRL116 : 
+CTRL117 : 
+CTRL118 : 
+CTRL119 : 
+CTRL120 : 
+CTRL121 : 
+CTRL122 : 
+CTRL123 : 
+CTRL124 : 
+CTRL125 : 
+CTRL126 :
+CTRL127 :

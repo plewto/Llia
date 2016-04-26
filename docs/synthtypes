@@ -1,0 +1,18 @@
+Available Llia synths
+
+; ---------------------------------------------------------------------- 
+;				   ORGN
+
+A basic "combo" organ using FM tone generations.
+
+
+; ---------------------------------------------------------------------- 
+;				   Saw3
+
+A subtractive synth with 3 oscillators.
+
+
+; ---------------------------------------------------------------------- 
+;				   Echo1
+
+Simple echo effect for testing. Will probably be redefined.

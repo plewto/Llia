@@ -1,0 +1,89 @@
+LliaApp
+
+TopLevel:
+
+   exit()
+   status(msg, [timeout])
+   warning(msg)
+   error(errnum, msg)
+   main_window()   
+   
+MainWindow
+
+    status(msg, [timeout])
+    warning(msg)
+
+KeyTableRegistry
+
+   extension
+   __setitem__(table_name, key_table)
+   __getitem__(table_name) --> key_table | "EQ12"
+   clear
+   reset
+   eqtemp(npo, name, [refkey],[octave])
+   just(template, name, [refkey], [transpose], [npo]) 
+   save(filename)
+   load(filename)
+
+
+CONFIG: (llia.config.LliaConfig)
+   write_config_file(filename)
+   sections() --> list
+   options(section) --> list
+   get_option(section, option) --> value
+   set_option(section, option, value) --> None
+   channel_name(channel, [new_name]) --> String
+   reset_channel_names() --> None
+   formatted_channel_names() --> list
+   controller_name(ctrl, [new_name]) --> String
+   reset_controller_names() --> None
+   formatted_controller_names() --> list
+   host_and_port() --> tuple 
+   global_osc_id() --> String
+   gui()  --> String, name of GUI system
+   enable_tooltips() --> bool
+   warn_on_overwrite() --> bool
+   warn_on_initialize() --> bool
+   warn_on_exit() --> bool
+   active_updates_enabled() --> bool
+   controller_edit_enabled() --> bool **DEPRECIATED**
+   midi_edit_enabled() --> bool
+   program_pp_enabled() --> bool
+   autogen_program_slot() --> int   **DEPRECIATED**
+   store_autogen_results() --> int  **DEPRECIATED**
+
+
+Global OSC: (llia.proxy.LliaProxy)
+   global_osc_id() --> String
+   osc_host() --> tuple
+   get_callback_message() --> dict
+   boot_server([server_name])
+   quit_server([server_name])
+   kill_all_servers()
+   ping()
+   dump()
+   post_message(lines ---)
+   set_client()
+   add_audio_bus(name [numchans])
+   add_control_bus(name, [numchans])
+   add_synth(synthType, oscID, [keymode, outbus, inbus, voice_count])
+   add_efx(snthType, oscID, inbus, outbus)
+   q_running_servers() --> list
+   q_active_synths() --> list
+   q_keymodes() --> list	
+   q_synthtypes() --> list
+   q_audio_buses() --> list
+   q_control_buses() --> list
+   
+SynthProxy
+   free()
+   midi_input_channel([new_chan]) -> int
+   current_program -> Program
+   current_performance -> Performance
+   transpose([n]) -> int
+   key_range([range_]) -> tuple(low, high)
+   bend_range([range_]) -> int
+   bend_parameter([param]) -> String
+
+   
+   

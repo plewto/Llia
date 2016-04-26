@@ -1,0 +1,650 @@
+/*
+** aello.sc 2016.04.16
+**
+** Defines two class for handling global Aello OSC request:
+**     ActiveAelloInstrument is a wrapper class around a KeymodeObject.
+**     AelloHandler handles incoming OSC request.
+*/
+
+
+/* 
+** ********************************************************************
+** ActiveAelloInstrument is a helper class which wraps a Keymode object.
+** An instance of ActiveAelloInstrument is created and maintained by the 
+** AelloHandler class for each Aello instrument. 
+** Fields:
+**   oscID         - A unique string identity used for OSC communication 
+**                   between an instrument and it's client side proxy.
+**   synthType     - String or symbol.
+**   keymodeName   - String or Symbol.
+**   keymodeObject - An instance of some Keymode subclass.
+*/
+
+
+BONES_ActiveAelloInstrument : Object {
+
+	var <oscID;
+	var synthType;
+	var keymodeName;
+	var keymodeObject;
+
+	*new {|synth, id, km, outbus, inbus, voiceCount|
+		^super.new.init(synth, id, km, outbus, inbus, voiceCount);
+	}
+
+	init {|synth, id, km, outbus, inbus, voiceCount|
+		if(id == nil, {id = synth});
+		oscID = id;
+		synthType = synth;
+		keymodeName = km.asString;
+		keymodeObject = case
+     		{ keymodeName == "Poly1"}{Poly1.new(synth, id)}
+		    { keymodeName == "Mono1"}{Mono1.new(synth, id)}
+		    { keymodeName == "EFX"}{EfxKeymode.new(synth, id)}
+		{ True == True}{error("Invalid Aello keymode: " + km)};
+		keymodeObject.outbus_(outbus);
+		keymodeObject.inbus_(inbus);
+	}
+
+	free {
+		keymodeObject.free;
+		synthType = "Freed " + synthType;
+	}
+
+	panic {
+		keymodeObject.allNotesOff;
+	}
+	
+	asString {
+		var acc = "";
+		acc = acc + synthType + ",";
+		acc = acc + "oscID: " + oscID + ",";
+		acc = acc + "keymode: " + keymodeName;
+		^acc;
+	}
+
+	diagnosticDump {
+		this.asString.postln;
+		keymodeObject.diagnosticDump;
+	}
+
+}
+		
+/* 
+** ********************************************************************
+** AelloHandler handles global OSC request for an Aello client.
+** Fields:
+** aelloClient   - NetAddr of Aello client for response messages.
+** aelloServer   - NetAddr of this.
+** OSCID         - Sting, unique id used for OSC communication between 
+**                 client and server. 
+** activeSynths  - Dictionary of ActiveAelloInstrument objects.
+** knownKeymodes - Static array of valid keymodes.
+** knownSynths   - Static array of valid synth types.
+** oscHandlers   - Internal array of osc handler functions.
+** dead          - Flag indicates if this has been freed.
+**                 Once freed, this can not process further OSC request.
+**
+** Error numbers:
+**   1 - Attempt to add synth using an existing id.
+**   2 - Attempt to access non-existing synth.
+**   3 - Attempt to add bus usng existing id.
+**   4 - Attemp to access non-existing bus.
+**
+** OSC Messages:
+**
+**   set-aello-client  ip port
+**       Set net address of aello client.
+**       response message -> set-aello-client ip port
+**
+**    ping
+**       Post text indicating reception of ping message.
+**       response message -> aello-ping-response
+** 
+**    query-audio-bus-names
+**       response message -> audio-bus-names list
+**
+**    add-audio-bus-alias  id numchan
+**       Adds new audio bus alias.
+**       id - The bus name
+**       numchans - number of channels
+**       response message -> audio-bus-alias-added  id numchans bus-index
+**       response message -> ERROR 3 Attempt to add alias with existing id
+**       
+**    query-keymodes
+**       Display list of valid key modes.
+**       response message -> aello-keymodes list
+**
+**    query-synth-types
+**       Display list of valid synth types.
+**       response message -> aello-synth-types list
+** 
+**    query-active-synths
+**       Display id's for all currently active synths.
+**       response message -> active-aello-synths list
+**
+**    add-synth synth-type, id, keymode, outbus, inbus, voice-count
+**       Adds indicate synth and key-mode. 
+**       synth-type  - String, must match an element returned by 
+**                     query-synth-types
+**       id          - String, unique OSC id.
+**       keymode     - String, must match an element returned by
+**                     query-keymodes
+**       outbus      - int, audio output bus index.
+**       inbus       - int, audio input bus index. 
+**       voice-count - int, number of voices to allocate.  Keymodes
+**                     which do not require a voice-count simply ignore 
+**                     this value.
+**       response message -> synth-added id
+**                        -> error 1 <id already in use>
+**
+**    add-efx-synth  synth-type, id, outbus, inpus
+**      response message -> "efx-synth-added id
+**      response message -> error 1 
+**
+**      free-synth id
+**         Free the synth with the given id.
+**         response message -> synth-freed id
+**                           -> error 2 <id does not exists>
+**      free-all
+**         Free all resources managed by this instance.  Once freed
+**         further OSC communication is not possible.
+**         response-message aello-handler-freed
+**
+**      panic
+**         Send panic message (all notes off) to all instruments
+**         managed by this instance.
+**         response-message -> panic-received.
+**
+**      post-message [lines...]
+**         Display each line in post window.
+**         There is no response message.
+**
+**       dump
+**          Display diagnostic information about this instance and 
+**          all instruments managed by it.
+**          There is no response message.
+*/
+
+BONES_AelloHandler : Object {
+
+	var aelloClient;				// NetAddr (ip, port)
+	var aelloServer;				// NetAddr (ip, port)
+	var oscID;						// String
+	var activeSynths;				// Dictionary
+	var audioBuses;					// Dictionary
+	var knownKeymodes, knownSynths; // static list
+	var oscHandlers;
+	var dead = false;
+
+    *isBusNumber {|n|
+		if(n.isInteger,
+			{
+				^true;
+			},{
+				var q = n.asInteger;
+				if(q == 0,
+					{
+						^(n=="0");
+					},{
+						^true;
+					})
+			})
+	}
+	
+	*new {arg
+		oscid = "Aello",
+		clientAddress = "127.0.0.1",
+		clientPort = 58000,
+		ip = "127.0.0.1",
+		port = 57120;
+		^super.new.init(clientAddress, clientPort, ip, port, oscid);
+	}
+
+	/*
+    ** Initialize this instance.
+    ** ARGS:
+	**   clientAddress - String, ip address of Aello client.
+    **   clientPort    - int, port number of Aello client.
+    **   ip            - String, ip address for this instance.
+    **   port          - int, port number for this instance.
+    **   oscid         - String, OSC id. The id for both client 
+    **                   and this must match.
+	*/
+	init {|clientAddress, clientPort, ip, port, oscid|
+		knownKeymodes = [\Poly1, \Mono1, \EFX];
+		knownSynths = [\ORGN, \Saw3];
+		this.setClient(clientAddress, clientPort);
+		aelloServer = NetAddr.new(ip, port);
+		oscID = oscid;
+		activeSynths = Dictionary.new(8);
+		audioBuses = Dictionary.new(8);
+		this.initOscHandlers;
+	}
+
+	/*
+    ** Free all resource used by this.
+    ** Once freed further OSC comunication is not possible.
+	*/
+	free {
+		dead = true;
+		oscHandlers.do({|h|h.free});
+		this.activeSynthKeys.do({|k|
+			var aai = activeSynths.at(k);
+			aai.free;
+		});
+	}
+
+	/*
+	** Returns Set of currently active synth id's
+	*/
+	activeSynthKeys {
+		^activeSynths.keys;
+	}
+
+	/*
+    ** Test if given synth id exists.
+    ** ARGS:
+    **   id - String
+    ** RETURNS:
+    **   boolean
+	*/
+	synthExists {|id|
+		var rs = true;
+		activeSynths.atFail(id, {rs = false});
+		^rs;
+	}
+
+	/*
+    ** Add new synth.
+    ** ARGS:
+    **   synthType  - String, must match value in knownSynths list.
+    **   id         - String, a unique id, may default to synthType
+    **                for first instance of a given synthType.
+    **   keymode    - String, keymode name, must matxch value in 
+    **                knownKeymodes list
+    **   outbus     - String, audio output bus name, String may be '0' 
+    **   inbus      - String, audio input bus name.             
+    **   voiceCount - int, number of voices to allocate.  Keymodes
+    **                which do not require a voice-count igonre
+    **                this value.
+    ** RETURNS:
+    **   bool true --> OK
+    **   bool false --> Error, id is not uniqe.
+    **
+    ** NOTE: No error is produced if input or output bus names do not exists.
+	*/
+	addSynth {|synthType, id=nil, keymode="Poly1", outbus=0, inbus=nil, voiceCount=0|
+		var obi, ibi; // audio output and input bus indexes.
+		var aai;
+		if(outbus == 0 || outbus == "0",
+			{obi = 0},{obi = this.getAudioBus(outbus)});
+		ibi = this.getAudioBus(inbus);
+		aai = ActiveAelloInstrument.new(synthType, id, keymode, obi, ibi, voiceCount);
+		id = aai.oscID;
+		if(this.synthExists(id),
+			{
+				postf("ERROR: Synth with id '%' already exists.\n", id);
+				^false;
+			},{
+				activeSynths.add(id -> aai);
+				postf("Added % synth,  id = '%',  keymode is %\n", synthType, id, keymode);
+				^true;
+			});
+	}
+
+	addEfx {|synthType, id=nil, outbus=0, inbus=nil|
+		^this.addSynth(synthType, id, "EFX", outbus, inbus);
+	}
+	
+	/*
+    ** Free all resources used by indicate synth.
+    ** ARGS:
+    **   id - String, the synths id
+    **
+    ** RETURNS:
+    **   bool true -> synth was freed.
+    **   bool false -> synth with given id does not exists.
+	*/
+	freeSynth{|id|
+		if(this.synthExists(id),
+			{
+				var aai = activeSynths.at(id);
+				aai.free;
+				activeSynths.removeAt(id);
+				postf("Synth % freed\n", id);
+				^true;
+			},{
+				^false;
+			})
+	}
+
+	/*
+    ** Returns Set of assigned audio bus names.
+	*/
+	audioBusNames {
+		^audioBuses.keys;
+	}
+
+	/*
+    ** Predicate, test existance of audio bus name.
+    **
+    ** ARGS:
+    **    id - String
+    **
+    ** RETURNS:
+    **    bool true if id is an assigned audio bus name.
+    */
+	audioBusExists {|id|
+		var rs = true;
+		audioBuses.atFail(id, {rs = false});
+		^rs;
+	}
+
+	/*
+    ** Add audio bus alias
+    **
+    ** ARGS:
+    **   id       - String, bus alias
+    **   numchans - int,number of channels, default 1
+    ** 
+	** RETURNS:
+    **    int, the bus index, or
+    **    bool false if id is already a bus alias.
+	*/
+	audioBusAlias {|id, numchans=1|
+		if(this.audioBusExists(id),
+			{
+				postf("ERROR: Audio bus alias '%' already exists!\n", id);
+				^false;
+			},{
+				var b = Bus.audio(nil, numchans);
+				var index = b.index;
+				audioBuses.add(id -> b);
+				postf("Assigned '%' to audio bus %\n", id, index);
+				^index;
+			})
+	}
+
+	/*
+    ** Retrieve Bus object assigned to id.
+    ** ARGS:
+    **   id - String, the bus id.
+	**
+    ** RETURNS:
+    **   The Bus object, or
+    **   false if id is not assigned to a bus.
+    */
+	getAudioBus {|id|
+		^audioBuses.atFail(id, {false});
+	}
+
+	/*
+    ** Retrieve index of audio busassigned to id.
+    ** ARGS:
+    **   id - Stgring,the bus id
+    **
+    ** RETURNS:
+    **   int, the bus index, or
+    **   flase if id is not assigned to abus.
+	*/
+	audioBusIndex {|id|
+		var b = this.getAudioBus(id);
+		if( b != false,
+			{
+				^b.index;
+			},{
+				^false;
+			});
+	}
+	
+	/*
+	** Send OSC response message from this to Aello client.
+    ** ARGS:
+    **   msg     - String, the osc message path.
+    **             NOTE: Only specify the path 'tail'.  The full
+    **             path name is automatically generated using the
+    **             the oscID of this.
+    **   payload - list of values.
+	*/
+	respond {|msg, payload|
+		var root = oscID.asString;
+		var addr = "/"++root++"/"++msg;
+		["Response ", msg, payload].postln;
+		aelloClient.sendMsg(addr, payload);
+	}
+
+	/*
+	** Send OSC message to client indicating that an error has occured.
+    ** ARGS:
+    **    errnum - int error number.
+    **    errmsg - String, the error message.
+	*/
+	respondWithError {|errnum, errmsg|
+		this.respond("ERROR", [errnum, errmsg]);
+	}
+
+	/*
+    ** Used internally to concatenate OSC message path strings.
+    ** ARGS:
+    **   tail - String
+	**
+    ** REUTNRS:
+    **   String 
+	*/
+	path {|tail|
+		var root = oscID.asString;
+		var rs;
+		tail = tail.asString;
+		rs = "/"++root++"/"++tail;
+		^rs;
+	}
+
+	/*
+    ** Used internally to initialize OSC handler functions
+    ** Do not execute.
+	*/
+	initOscHandlers {
+		oscHandlers.do.free;
+		oscHandlers = [
+			// set-aello-client  ip port
+			// --> set-aello-client ip port
+			OSCFunc({|msg, time, addr, port|
+				var ip = msg[1];
+				var portnum = msg[2];
+				aelloClient = NetAddr.new(ip.asString, portnum);
+				this.respond("set-aello-client", [ip, portnum])},
+				this.path("set-aello-client")),
+			
+			// ping
+			// --> aello-ping-response
+			OSCFunc({|msg, time, addr, port|
+				"AelloHandler.ping".postln;
+				this.respond("aello-ping-response", []);},
+				this.path("ping")),
+
+			// query-audio-names
+			// --> audio-bus-names ...
+			OSCFunc({|msg, time, addr, port|
+				var names = this.audioBusNames;
+				postf("Audio buses: %\n", names);
+				this.respond("audio-bus-names", names)},
+				this.path("query-audio-bus-names")),
+
+			// add-audio-bus-alias  id numchans
+			// --> audio-bus-alias-added id numchans index
+			// --> ERROR
+			OSCFunc({|msg, time, addr, port|
+				var id = msg[1];
+				var nchans = msg[2];
+				var index = this.audioBusAlias(id, nchans);
+				if( index != false,
+					{
+						this.respond("audio-bus-alias-added", [id, nchans, index]);
+					},{
+						var msg = "Attempt to add audio bus alias with existing id: '"++id++"'";
+						this.respondWithError(4, msg);
+					})},
+				this.path("add-audio-bus-alias"));
+			
+			// query-keymodes
+			// --> aello-keymodes ....
+			OSCFunc({|msg, time, addr, port|
+				postf("Valid Aello keymodes: %\n", knownKeymodes);
+				this.respond("aello-keymodes", [knownKeymodes]);},
+				this.path("query-keymodes")),
+
+			// query-synth-types
+			// --> aello-synth-types ...
+			OSCFunc({|msg, time, addr, port|
+				postf("Valid Aello synth types: %\n", knownSynths);
+				this.respond("aello-synth-types", [knownSynths]);},
+				this.path("query-synth-types")),
+
+			// query-active-synths
+			// --> active-aello-synths ...
+			OSCFunc({|msg, time, addr, port|
+				postf("Active synths: %\n", this.activeSynthKeys);
+				this.respond("active-aello-synths", this.activeSynthKeys);},
+				this.path("query-active-synths")),
+
+			// add-synth synth-type, id, keymode, outbus, inbus, voice-count
+			// --> synth-added id
+			// --> ERROR 1 
+			OSCFunc({|msg, time, addr, port|
+				var synthType = msg[1];
+				var id = msg[2];
+				var keymode = msg[3];
+				var outbus = msg[4].asString;
+				var inbus = msg[5].asString;
+				var vcount = msg[6];
+				var flag = this.addSynth(synthType, id, keymode, outbus, inbus, vcount);
+				if(flag,
+					{
+						this.respond("synth-added", [id]);
+					},{
+						var errmsg = "Error while adding synth";
+						this.respondWithError(1, errmsg);
+					})},
+				this.path("add-synth")),
+
+			// add-efx-synth synth-type, id, outbus, inbus
+			// --> synth-added
+			// --> ERROR 1
+			OSCFunc({|msg, time, addr, port|
+				var synthType = msg[1];
+				var id = msg[2];
+				var outbus = msg[3].asString;
+				var inbus = msg[4].asString;
+				var flag = this.addEfx(synthType, id, outbus, inbus);
+				if(flag,
+					{
+						this.respond("efx-synth-added", [id]);
+					},{
+						var errmsg = "Error while adding effects synth";
+						this.respondWithError(1, errmsg);
+					})},
+				this.path("add-efx-synth")),
+			
+			// free-synth id
+			// --> synth-freed id
+			// --> ERROR 2 Synth does not exists
+			OSCFunc({|msg, time, addr, port|
+				var id = msg[1];
+				if(this.freeSynth(id),
+					{
+						this.respond("synth-freed", [id]);
+					},{
+						var errmsg = "free-synth  synth id '"++id.asString++"' does not exists";
+						this.respondWithError(2, errmsg);
+					})},
+				this.path("free-synth")),
+
+			// allocate-audio-bus  id numchannels
+			// --> allocated-audio-bus id index
+			OSCFunc({|msg, time, addr, port|
+				var id = msg[1];
+				var numchans = msg[2];
+				var bus = Bus.audio(nil, numchans);
+				var index = bus.index;
+				postf("Audio bus ['%'] --> %\n", id, index);
+				this.respond("allocated-audio-bus", [id, index]);},
+				this.path("allocate-audio-bus")),
+				
+			// free-all
+			// --> aello-handler-freed"
+			OSCFunc({|msg, time, addr, port|
+				this.free;
+				postf("AelloHandler % freed", oscID);
+				this.respond("aello-handler-freed");},
+				this.path("free-all")),
+
+			// panic
+			// --> panic-received
+			OSCFunc({|msg, time, addr, port|
+				activeSynths.values.do({|aai| aai.panic});
+				postf("Panic");
+				this.respond("panic-received");},
+				this.path("panic")),
+
+			// post-message [text ----]
+			// --> <None>
+			OSCFunc({|msg, time, addr, port|
+				var s = msg.size;
+				var i = 1;
+				//msg.do({|txt| txt.postln});
+				while( {i<s},
+					{
+						msg[i].post;
+						i = i+1;
+					})},
+				this.path("post-message")),
+
+			// dump
+			// --> <None>
+			OSCFunc({|msg, time, addr, port|
+				this.diagnosticDump},
+				this.path("dump"))
+		]
+	}
+	
+	/*
+    ** Set client address and port.
+    ** ARGS:
+    **   ip   - String, client ip address.
+    **   port - int, client port number. 
+	*/
+	setClient {|ip, port|
+		aelloClient = NetAddr.new(ip, port);
+		postf("Aello client set to %\n", aelloClient);
+	}
+
+	/*
+    ** Displays diagnostic information.
+    */
+	diagnosticDump {
+		var pad = "    ";
+		var pad2 = pad + "    ";
+		if(dead==true,
+			{
+				postf("\nDEAD AelloHandler:\n");
+				postf("%oscID '%'\n", oscID);
+			},{
+				postf("\nAelloHandler:\n");
+				postf("%client %\n", pad, aelloClient);
+				postf("%server %\n", pad, aelloServer);
+				postf("%oscID '%'\n", pad, oscID);
+				postf("%valid key modes: %\n", pad, knownKeymodes);
+				postf("%valid synth types: %\n", pad, knownSynths);
+				postf("%Audio Buses: ", pad);
+				audioBuses.keys.do({|k| postf("'%' ", k)});
+				postf("\n");
+				activeSynths.values.do({|aai|
+					"-------------------------------".postln;
+					aai.diagnosticDump;
+				});
+			})
+	}
+					
+}
+
