@@ -240,14 +240,16 @@ class LliaProxy(object):
             sproxy.info = info
             self.synths[key] = sproxy
             sleep(4)
-            return True
+            return sproxy
         else:
             msg = "Synth %s %s could not be added" % (synthType, oscID)
             self.warning(msg)
             return False
 
     def add_efx(self, synthType, oscID, inbus, outbus=0):
-        return self.add_synth(synthType, oscID, "EFX", outbus, inbus, 1)
+        s = self.add_synth(synthType, oscID, "EFX", outbus, inbus, 1)
+        if s: s.is_efx = True
+        return s 
 
     def q_active_synths(self):
         slt = self._query_host("query-active-synths", delim="<synth>")
