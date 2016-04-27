@@ -30,6 +30,7 @@ BIPOLAR_RANGE = (-1.0, 1.0)
 
 RCENT = 2**(1.0/1200)
 
+
 # LED Shapes
 BAR = 0
 ROUND = 1

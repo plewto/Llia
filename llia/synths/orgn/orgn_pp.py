@@ -4,7 +4,7 @@
 from __future__ import print_function
 
 import llia.util.lmath as math
-# from llia.synths.orgn.orgn_data import inv_b_detune, inv_b_mod_ratio
+from llia.performance_edit import performance_pp
 
 
 def amp_to_db(amp):
@@ -29,6 +29,8 @@ def pp_orgn(program, slot=127):
                                             program["tremoloB"], 
                                             amp_to_db(program["mixB"]))
     acc += '%sbfreq=[%d, %d],\n' % (pad, program["detuneB"],program["ratioB"])
-    acc += '%sbenv=[%5.3f, %5.3f])\n' % (pad, program["decayB"], 
+    acc += '%sbenv=[%5.3f, %5.3f]),\n' % (pad, program["decayB"], 
                                          program["sustainB"])
+    perf = program.performance
+    acc += performance_pp(perf, 10)
     return acc

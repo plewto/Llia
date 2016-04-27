@@ -6,6 +6,7 @@ from __future__ import print_function
 from llia.program import Program
 from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
+from llia.performance_edit import performance, smap, ccmap
 
 prototype = {"amp" : 0.50,
              "pan" : 0.0,
@@ -46,7 +47,8 @@ def orgn(slot, name, amp=0.05, pan=0.0,
          a = [0.4, 0.0, 1.0],
          b = [0.4, 0.0, 1.0],
          bfreq = [2, 2],
-         benv = [1.0, 1.0]):
+         benv = [1.0, 1.0],
+         performance = performance()):
     p = Orgn(name)
     p["amp"] = db_to_amp(min(amp, 12))
     p["pan"] = pan
@@ -66,6 +68,7 @@ def orgn(slot, name, amp=0.05, pan=0.0,
     p["ratioB"] = float(bfreq[1])
     p["decayB"] = nlimit(benv[0])
     p["sustainB"] = nlimit(benv[1])
+    p.performance = performance
     program_bank[slot] = p
     return p
 
@@ -73,14 +76,20 @@ def orgn(slot, name, amp=0.05, pan=0.0,
 #orgn(0, "Init")
 
 orgn(  0, "Boxholm",
-          amp=-12, pan=+0.000,
-          lfo=[5.000, 0.010, 1.000],
-          vib=[0.000, 0.010],
-          chorus=[0.300, 1.000],
-          a=[0.400, 0.000,  +0],
-          b=[0.400, 0.000,  +0],
-          bfreq=[1, 2],
-          benv=[1.000, 1.000])
+       amp=-12, pan=+0.000,
+       lfo=[5.000, 0.010, 1.000],
+       vib=[0.000, 0.010],
+       chorus=[0.300, 1.000],
+       a=[0.400, 0.000,  +0],
+       b=[0.400, 0.000,  +0],
+       bfreq=[1, 2],
+       benv=[1.000, 1.000],
+       performance = performance(transpose = 0,
+                                 key_range = (0, 127),
+                                 bend = (200, "detune"),
+                                 smaps = [smap("velocity", "modDepthA")],
+                                 ccmaps = [ccmap(21, "vibrato"),
+                                           ccmap(22, "vsens")]))
 
 orgn(  1, "Buckeye",
           amp=-12, pan=+0.000,

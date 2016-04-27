@@ -193,7 +193,7 @@ class LliaProxy(object):
             rs = self._expect("llia-audio-buses")
             if rs:
                 self.audio_buses[name] = numchan
-                sleep(4)
+                #sleep(4)
                 return True
             else:
                 msg = "Audio bus '%s' could not be created" % name
@@ -239,7 +239,7 @@ class LliaProxy(object):
             sproxy = spec.create_proxy_synth(self.app)
             sproxy.info = info
             self.synths[key] = sproxy
-            sleep(4)
+            #sleep(4)
             return sproxy
         else:
             msg = "Synth %s %s could not be added" % (synthType, oscID)
