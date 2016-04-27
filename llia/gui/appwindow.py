@@ -16,12 +16,14 @@ class AbstractApplicationWindow(object):
     @abc.abstractmethod
     def status(self, msg, timeout=-1):
         oscid = self.app.global_osc_id()
-        print("Status oscID %s : %s" % (oscid, msg))
+        #print("Status oscID %s : %s" % (oscid, msg))
+        print("STATUS  : /Llia/%s : %s" % (oscid, msg))
 
     @abc.abstractmethod
     def warning(self, msg):
         oscid = self.app.global_osc_id()
-        print("WARNING oscID %s : %s" % (oscid, msg))
+        #print("WARNING oscID %s : %s" % (oscid, msg))
+        print("WARNING : /Llia/%s : %s" % (oscid, msg))
 
     @abc.abstractmethod
     def as_widget(self):

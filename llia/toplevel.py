@@ -60,7 +60,7 @@ class LliaTopLevel(object):
         self._main_window.status(msg, timeout)
     
     def warning(self, msg):
-        lgmsg = "WARNING oscID %s : %s" % (self.global_osc_id(), msg)
+        lgmsg = "WARNING /Llia/%s : %s" % (self.global_osc_id(), msg)
         self.log_event(lgmsg)
         self._main_window.warning(msg)
     

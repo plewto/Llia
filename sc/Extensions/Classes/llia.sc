@@ -173,15 +173,15 @@ LliaHandler : Object {
     **                Currently all keymodes ignore voiceCount. 
 	*/
 	addSynth {|synthType, id, keymode, outbus, inbus, voiceCount|
-		var outb, inb, sinfo;
+		var outb, inb, sinfo, key, msg;
 		outb = this.audioBus(outbus);
 		inb = this.audioBus(inbus);
-		//postf("DEBUG synthType '%'  outbus='%' outb='%'  \n", synthType, outbus, outb);
 		sinfo = LliaSynthInfo(synthType, id, oscID, keymode, outb, inb, voiceCount);
-		id = synthType++"_"++id;
-		this.freeSynth(id);
-		synths.add(id -> sinfo);
-		postf("Added % synth oscID %\n", oscID, id) 
+		key = synthType++"_"++id;
+		this.freeSynth(key);
+		synths.add(key -> sinfo);
+		msg = "Added synth /Llia/"++oscID++"/"++synthType++"/"++id;
+		postf("%\n", msg);
 	}
 
 	/*
@@ -419,7 +419,7 @@ LliaHandler : Object {
 			/*
 			** post [lines...]
             ** Display lines in post window
-			** -> llia-post-response
+			** -> (none)  
 			*/
 			OSCFunc({|msg|
 				var s = msg.size;
@@ -429,7 +429,8 @@ LliaHandler : Object {
 						msg[i].post;
 						i = i + 1;
 					});
-				this.respond("llia-post-response", [])},
+				// this.respond("llia-post-response", [])
+			},
 				this.path("post")),
 
 			/*
@@ -569,14 +570,17 @@ LliaHandler : Object {
 				var outbus = msg[4].asString;
 				var inbus = msg[5].asString;
 				var vcount = msg[6].asInteger.max(1);
-				if(this.synthExists(id),
+				var key = synthType++"_"++id;
+				if(this.synthExists(key),
 					{
-						var errmsg = "Synth '"++id++"' already exists!";
+						//var errmsg = "Synth '" ++key++ "' already exists!";
+						//var errmsg = "Llia:"++oscID++":"++synthType++":"++id++"  already exists";
+						var errmsg = "/Llia/"++oscID++"/"++synthType++"/"++id++" already exists";
 						postf("WARNING: %\n", errmsg);
 						this.respondWithError(2, errmsg);
 					},{
 						this.addSynth(synthType, id, keymode, outbus, inbus, vcount);
-						this.post("Added synth: %\n", id);
+						//this.post("Added synth: %\n", id);
 						this.respond("llia-added-synth", id.asString);
 					})},
 				this.path("add-synth")),

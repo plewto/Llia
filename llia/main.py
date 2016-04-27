@@ -215,9 +215,14 @@ app = LliaTopLevel(config, True)
 
 
 from random import randint
+from time import sleep
 id_ = 1 #randint(0, 10000)
 app.proxy.add_audio_bus("Alpha", 2)
 app.proxy.add_efx("Echo1", id_, inbus="Alpha", outbus=0)
+app.proxy.add_synth("ORGN", id_, outbus=0)
+
+print("Slepping...")
+app.proxy.post_message("Sleeping...")
 app.proxy.add_synth("ORGN", id_, outbus=0)
 app.start_main_loop()
 

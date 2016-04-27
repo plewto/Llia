@@ -223,7 +223,7 @@ class LliaProxy(object):
             return False
         key = "%s_%s" % (synthType, oscID)
         if self.synths.has_key(key):
-            msg = "%s synth %s already exists" % (synhType, oscID)
+            msg = "Synth /Llia/%s/%s/%s already exists" % (self.app.global_osc_id(), synthType, oscID)
             self.warning(msg)
             return False
         self._send("add-synth", [synthType, oscID, keymode, outbus, inbus, voice_count])
@@ -239,10 +239,9 @@ class LliaProxy(object):
             sproxy = spec.create_proxy_synth(self.app)
             sproxy.info = info
             self.synths[key] = sproxy
-            #sleep(4)
             return sproxy
         else:
-            msg = "Synth %s %s could not be added" % (synthType, oscID)
+            msg = "Synth /Llia/%s/%s/%s could not be added" % (self.app.global_osc_id(), synthType, oscID)
             self.warning(msg)
             return False
 
