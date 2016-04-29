@@ -41,7 +41,7 @@ Poly1 : Keymode {
 			\keynumber, keynumber, \outbus, super.outbus];
 		var sy = Synth(synthType, paramlist);
 		var old = activeNotes[keynumber];
-		//postf("DEBUG Poly1 super.outbus --> %\n", super.outbus);
+		//postf("DEBUG Poly1 keynum [%] freq % vel %\n", keynumber, frequency, velocity);
 		sy.set(\gate, 1);
 		old.set(\gate, 0);
 		activeNotes[keynumber] = sy;
@@ -52,8 +52,5 @@ Poly1 : Keymode {
 		activeNotes[keynumber] = nil;
 	}
 
-} // end Poly1
+}
 		
-	
-		
-	

@@ -37,6 +37,7 @@ class LliaProxy(object):
         self.osc_receiver.add_handler("llia-booting-server", self._expect_response)
         self.osc_receiver.add_handler("llia-server-quit", self._expect_response)
         self.osc_receiver.add_handler("llia-kill-all-servers", self._expect_response)
+        self.osc_receiver.add_handler("bus-info", self._expect_response)
         self.osc_receiver.add_handler("ERROR", self._expect_response)
 
     def _expect_response(self, path, tags, args, source):
@@ -128,6 +129,20 @@ class LliaProxy(object):
         self.app.log_event("synthtypes: %s" % st)
         return st
 
+    def q_bus_and_buffer_info(self):
+        st = self._query_host("query-bus-and-buffer-info")
+        if st == ['']:
+            return False
+        else:
+            return {"audio-bus-count" : int(st[0]),
+                    "output-buses" : int(st[1]),
+                    "input-buses" : int(st[2]),
+                    "first-private-bus" : int(st[3]),
+                    "control-bus-count" : int(st[4]),
+                    "buffer-count" : int(st[5])
+                    }
+
+    
     def q_audio_buses(self):
         b = self._query_bus_names("query-audio-buses")
         self.app.log_event("audio buses: %s" % b)
@@ -193,7 +208,6 @@ class LliaProxy(object):
             rs = self._expect("llia-audio-buses")
             if rs:
                 self.audio_buses[name] = numchan
-                #sleep(4)
                 return True
             else:
                 msg = "Audio bus '%s' could not be created" % name

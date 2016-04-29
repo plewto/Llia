@@ -484,7 +484,20 @@ LliaHandler : Object {
 					postf("  %\n", bcc)});
 				this.respond("llia-active-synths", acc)},
 				this.path("query-active-synths")),
-					
+
+			OSCFunc({|msg|
+				var o = ServerOptions.new();
+				var numb = o.numAudioBusChannels;
+				var ib = o.numInputBusChannels;
+				var ob = o.numOutputBusChannels;
+				var fpb = o.firstPrivateBus;
+				var cbc = o.numControlBusChannels;
+				var nbuf = o.numBuffers;
+				var acc = numb.asString + ob.asString + ib.asString + fpb.asString;
+				acc = acc + cbc.asString + nbuf.asString;
+				this.respond("bus-info", acc)},
+				this.path("query-bus-and-buffer-info")),
+			
 			/*
             ** query-audio-buses
             ** Display list of audio bus aliases

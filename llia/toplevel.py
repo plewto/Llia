@@ -2,13 +2,16 @@
 # 2016.04.23
 #
 
-from __future__ import print_function
-import abc, sys
+from __future__ import (print_function)
+import abc, sys, threading
 
 from llia.proxy import LliaProxy
 from llia.midi_receiver import get_midi_receiver
 from llia.keytab.registry import KeyTableRegistry
 from llia.gui.appwindow import DummyApplicationWindow
+from llia.lsl.parser import LSLParser
+import llia.constants as con
+
 
 class LliaTopLevel(object):
 
@@ -33,9 +36,10 @@ class LliaTopLevel(object):
         midi_in_port = config["midi-receiver-name"]
         self.midi_receiver = get_midi_receiver(midi_in_port,midi_in_trace)
         self.keytables = KeyTableRegistry()
+        self._repl_thread = None
+        self.lsl_parser = LSLParser(self)
         if not skip_mainloop:
             self.start_main_loop()
-            
         
     def global_osc_id(self):
         return self.config.global_osc_id()
@@ -52,6 +56,7 @@ class LliaTopLevel(object):
             self.status("Exit...")
         if self.logfile:
             self.logfile.close()
+        self._main_window.exit_gui()
         sys.exit(xcode)
 
     def status(self, msg, timeout=-1):
@@ -74,6 +79,33 @@ class LliaTopLevel(object):
         self.log_event(acc)
         print(acc)
         self.exit(errnum)
+
+    # def repl(self):
+    #     print(con.BANNER)
+    #     print(con.VERSION)
+    #     print()
+    #     pyver = sys.version_info[0]
+    #     if pyver <= 2:
+    #         infn = raw_input
+    #     else:
+    #         infn = input
+    #     while True:
+    #         usrin = infn("Llia> ")
+    #         print(usrin)
+
+
+
         
+    # def start_main_loop(self):
+    #     # self._main_window.start_gui_loop()
+    #     self.gui_thread = threading.Thread(target = self._main_window.start_gui_loop)
+    #     self.gui_thread.setDaemon(True)
+    #     self.gui_thread.start()
+    #     self.repl()
+
+
     def start_main_loop(self):
-        self._main_window.start_main_loop()
+        self._repl_thread = threading.Thread(target = self.lsl_parser.repl)
+        self._repl_thread.start()
+        self._main_window.start_gui_loop()
+        

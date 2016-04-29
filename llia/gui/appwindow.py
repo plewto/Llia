@@ -30,9 +30,13 @@ class AbstractApplicationWindow(object):
         return None
 
     @abc.abstractmethod
-    def start_main_loop(self):
+    def start_gui_loop(self):
+        return None
+    @abc.abstractmethod
+    def exit_gui(self):
         return None
         
+    
 class DummyApplicationWindow(AbstractApplicationWindow):
 
     def __init__(self, app, *_):
@@ -41,10 +45,5 @@ class DummyApplicationWindow(AbstractApplicationWindow):
     def as_widget(self):
         return DUMMY_WIDGET
 
-    def start_main_loop(self):
-        self.app.status("Satring main loop")
-        while True:
-            pass
         
-        
-        
+    
