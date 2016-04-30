@@ -8,6 +8,7 @@ from time import sleep
 from llia.osc_transmitter import OSCTransmitter
 from llia.osc_receiver import OSCReceiver
 from llia.synth_proxy import SynthSpecs
+from llia.generic import is_int
 
 class LliaProxy(object):
 
@@ -21,7 +22,21 @@ class LliaProxy(object):
         caddress, cport  = config["client"], config["client_port"]
         self.osc_receiver = OSCReceiver(self.global_osc_id(), caddress, cport)
         self.synths = {}
-        self.audio_buses = {}
+
+        # Keep track of allocated proivate audio buses.
+        # _first_private_audio_bus is initially set to a default but
+        # should be updated by polling the sc server by calling
+        # self.q_bus_and_buffer_info()
+        # The value _private_audio_bus_counter is incremented
+        # as busses are added and is relative to the first private value.
+        #
+        # Entries in _audio_buses dictionary are tuples
+        # (Alias, bus_index, numer_channels)
+        #     
+        self._first_private_audio_bus = 16
+        self._private_audio_bus_counter = 0
+        self._audio_buses = {}
+        
         self.control_buses = {}
         self._callback_message = {}
         self.osc_receiver.add_handler("llia-ping-response", self._expect_response)
@@ -39,6 +54,8 @@ class LliaProxy(object):
         self.osc_receiver.add_handler("llia-kill-all-servers", self._expect_response)
         self.osc_receiver.add_handler("bus-info", self._expect_response)
         self.osc_receiver.add_handler("ERROR", self._expect_response)
+
+        
 
     def _expect_response(self, path, tags, args, source):
         self._callback_message = {"path" : path,
@@ -134,14 +151,14 @@ class LliaProxy(object):
         if st == ['']:
             return False
         else:
-            return {"audio-bus-count" : int(st[0]),
+            info = {"audio-bus-count" : int(st[0]),
                     "output-buses" : int(st[1]),
                     "input-buses" : int(st[2]),
                     "first-private-bus" : int(st[3]),
                     "control-bus-count" : int(st[4]),
-                    "buffer-count" : int(st[5])
-                    }
-
+                    "buffer-count" : int(st[5])}
+            self._first_private_audio_bus = info["first-private-bus"]
+            return info
     
     def q_audio_buses(self):
         b = self._query_bus_names("query-audio-buses")
@@ -199,38 +216,53 @@ class LliaProxy(object):
         return self._expect("set-llia-client")
 
     def add_audio_bus(self, name, numchan=1):
-        if self.audio_buses.has_key(name):
+        if self._audio_buses.has_key(name):
             msg = "Audio bus '%s' already exists" % name
             self.warning(msg)
             return False
         else:
             self._send("add-audio-bus", [name, numchan])
             rs = self._expect("llia-audio-buses")
+            index = self._first_private_audio_bus +\
+                    self._private_audio_bus_counter
+            data = (name, index, numchan)
             if rs:
-                self.audio_buses[name] = numchan
+                self._audio_buses[name] = data
+                self._private_audio_bus_counter += numchan
                 return True
             else:
                 msg = "Audio bus '%s' could not be created" % name
                 self.warning(msg)
                 return False
 
-    def add_control_bus(self, name, numchan=1):
-        if self.control_buses.has_key(name):
-            msg = "Control bus '%s' already exists" % name
-            self.warning(msg)
-            return False
+    def get_audio_bus_index(self, name, offset=0):
+        if is_int(name):
+            bi = int(name)
         else:
-            self._send("add-control-bus", [name, numchan])
-            rs = self._expect("llia-control-buses")
-            if rs:
-                self.control_buses[name] = numchan
-                return True
-            else:
-                msg = "Control bus '%s' could not be created" % name
-                self.warning(msg)
-                return False
+            info = self._audio_buses[name]
+            bi = info[1]
+        return bi+int(offset)
 
-    def add_synth(self, synthType, oscID, keymode="Poly1", outbus=0, inbus=100, voice_count=8):
+    # def add_control_bus(self, name, numchan=1):
+    #     if self.control_buses.has_key(name):
+    #         msg = "Control bus '%s' already exists" % name
+    #         self.warning(msg)
+    #         return False
+    #     else:
+    #         self._send("add-control-bus", [name, numchan])
+    #         rs = self._expect("llia-control-buses")
+    #         if rs:
+    #             self.control_buses[name] = numchan
+    #             return True
+    #         else:
+    #             msg = "Control bus '%s' could not be created" % name
+    #             self.warning(msg)
+    #             return False
+
+    def add_synth(self, synthType, oscID, keymode="Poly1",
+                  outbus=(0,0),      # (alias, offset)
+                  inbus=(1000, 0),   # (alias, offset)
+                  voice_count=8):
         if not SynthSpecs.is_known_synth_type(synthType):
             msg = "Unknown synth type: '%s'" % synthType
             self.warning(msg)
@@ -240,7 +272,9 @@ class LliaProxy(object):
             msg = "Synth /Llia/%s/%s/%s already exists" % (self.app.global_osc_id(), synthType, oscID)
             self.warning(msg)
             return False
-        self._send("add-synth", [synthType, oscID, keymode, outbus, inbus, voice_count])
+        obi = self.get_audio_bus_index(outbus[0], outbus[1])
+        ibi = self.get_audio_bus_index(inbus[0], inbus[1])
+        self._send("add-synth", [synthType, oscID, keymode, obi, ibi, voice_count])
         rs = self._expect("llia-added-synth")
         if rs:
             info = {"synthType" : synthType,
@@ -259,7 +293,8 @@ class LliaProxy(object):
             self.warning(msg)
             return False
 
-    def add_efx(self, synthType, oscID, inbus, outbus=0):
+    def add_efx(self, synthType, oscID, inbus, outbus=(0, 0)):
+        # inbus a tuple (index,offset)
         s = self.add_synth(synthType, oscID, "EFX", outbus, inbus, 1)
         if s: s.is_efx = True
         return s 

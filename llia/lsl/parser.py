@@ -161,7 +161,7 @@ class LSLParser(object):
             return False
 
     def add_synth(self, tokens):
-        # synth stype id [keymode outbus inbus voive_count]
+        # synth stype id [keymode outbus outbus-offset inbus inbus-offset voive_count]
         if self.expect_n_tokens(tokens, 2):
             stype = tokens[0]
             try:
@@ -171,37 +171,51 @@ class LSLParser(object):
                 self.error(msg)
                 return False
             keymode = self.default_token(tokens, 2, "Poly1")
-            outbus = self.default_token(tokens, 3, 0)
-            inbus = self.default_token(tokens, 4, 1000)
-            vcount = self.default_token(tokens, 5, 8)
+            outbus_alias = self.default_token(tokens, 3, 0)
+            outbus_offset = self.default_token(tokens, 4, 0)
+            outbus = (outbus_alias, outbus_offset)
+            inbus_alias = self.default_token(tokens, 5, 1000)
+            inbus_offset = self.default_token(tokens, 6, 0)
+            inbus = (inbus_alias, inbus_offset)
+            vcount = self.default_token(tokens, 7, 8)
             try:
                 vcount = int(vcount)
             except ValueError:
                 msg = "Expected int voice count, encountered: %s" % vcount
                 self.error(msg)
                 return False
+            outbus_index = self.proxy.get_audio_bus_index(outbus[0], outbus[1])
+            inbus_index = self.proxy.get_audio_bus_index(inbus[0], inbus[1])
             rs = self.proxy.add_synth(stype, id_, keymode, outbus, inbus, vcount)
             if not rs:
-                self.error("Could not add synth %s.%s" % (stype, id_))
+                self.error("Could not add synth %s/%s" % (stype, id_))
             return rs
         else:
             return False
-
+ 
     def add_efx_synth(self, tokens):
-        # efx stype id inbus [outbus]
+        # efx stype id inbus [inbus-offset outbus outbus-offset]
         if self.expect_n_tokens(tokens, 3):
             stype = tokens[0]
             try:
                 id_ = int(tokens[1])
             except ValueError:
-                msg = "Expected int OSC EFX ID, encountered: %s" % id_
+                msg = "Expected inc id, encounterd: %s" % id_
                 self.error(msg)
                 return False
-            inbus = tokens[2]
-            outbus = self.default_token(tokens, 3, 0)
-            rs = self.proxy.add_efx(stype, id_, inbus, outbus)
+            inbus_alias = tokens[2]
+            inbus_offset = self.default_token(tokens, 3, 0)
+            inbus_index = self.proxy.get_audio_bus_index(inbus_alias, inbus_offset)
+
+            outbus_alias = self.default_token(tokens, 4, 0)
+            outbus_offset = self.default_token(tokens, 5, 0)
+            outbus_index = self.proxy.get_audio_bus_index(outbus_alias, outbus_offset)
+            rs = self.proxy.add_efx(stype, id_, (inbus_index, 0), (outbus_index, 0))
             if not rs:
-                self.error("Could not add efx synth %s.%s" % (stype, id_))
+                self.error("Could not ad efx synth %s/%s" % (stype, id_))
             return rs
         else:
             return False    
+                           
+            
+            
