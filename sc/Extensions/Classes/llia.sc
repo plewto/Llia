@@ -2,9 +2,9 @@
 ** llia.sc 2016.04.20
 **
 ** Error numbers:
-** 1 - Attempt to add bus with existing bus name.
+** 1 - Attempt to add bus or buffer with existing bus name.
 ** 2 - Attempt to add synth with existing synth id.
-**
+** 3 - Bus, bufer or synth does not exist.
 */
 
 LliaHandler : Object {
@@ -17,6 +17,7 @@ LliaHandler : Object {
 	var controlBuses;					// Dictionary
 	var oscHandlers;					//
 	var <dead;							// flag
+	var serverOptions;
 
 	// See Llia/docs/keymodes
 	*validKeyModes {
@@ -35,7 +36,7 @@ LliaHandler : Object {
     ** RETURNS:
     **   true if n is an integer or string representation of an integer
     */
-	*isIntegerBusNumber {|n|
+	*isInteger {|n|
 		if(n.isInteger,
 			{
 				^true;
@@ -72,6 +73,7 @@ LliaHandler : Object {
 		this.setClient(clientAddress, clientPort);
 		lliaHost = NetAddr.new(ip, port);
 		oscID = oscid.asString;
+		serverOptions = ServerOptions.new;
 		synths = Dictionary.new(8);
 		audioBuses = Dictionary.new(8);
 		controlBuses = Dictionary.new(8);
@@ -86,12 +88,12 @@ LliaHandler : Object {
 		postf("\n%%LliaHandler   oscID: '%'\n", pad, isDead, oscID);
 		postf("%client: %\n", pad2, lliaClient);
 		postf("%self  : %\n", pad2, lliaHost);
-		postf("%Audio Buses  :", pad2);
-		this.audioBusNames.do({|n| postf(" %",n)});
-		postf("\n");
-		postf("%Control Buses:", pad2);
-		this.controlBusNames.do({|n| postf(" %",n)});
-		postf("\n");
+		// postf("%Audio Buses  :", pad2);
+		// this.audioBusNames.do({|n| postf(" %",n)});
+		// postf("\n");
+		// postf("%Control Buses:", pad2);
+		// this.controlBusNames.do({|n| postf(" %",n)});
+		// postf("\n");
 		postf("%Synths:\n", pad2);
 		synths.values.do({|si| si.lliaDump(pad3)});
 		postf("\n");
@@ -115,6 +117,150 @@ LliaHandler : Object {
 		lliaClient = NetAddr.new(ip, port);
 	}
 
+	/* *******************************************************
+	**                   Audio Buses
+	** ******************************************************* */
+
+	audioBusNames {
+		^audioBuses.keys;
+	}
+
+	audioBusExists {|name|
+		if(LliaHandler.isInteger(name),
+			{
+				var mx = serverOptions.numAudioBusChannels();
+				^(name >= 0) && (name < mx);
+			},{
+				var flag = true;
+				name = name.asString;
+				audioBuses.atFail(name, {flag=false});
+				^flag;
+			})
+	}
+
+	// NOTE: bus id may not contain white-space.
+	assignAudioBus {|id, numchans=1|
+		id = id.asString;
+		if(this.audioBusExists(id),
+			{
+				postf("WARNING: Audio bus '%' already exists!\n", id);
+				^false
+			},{
+				var b, index;
+				numchans = numchans.asInteger.max(1);
+				b = Bus.audio(nil, numchans);
+				index = b.index;
+				audioBuses.add(id -> b);
+				postf("Audio bus [%] created.  Index: %   channels: %\n", id, index, numchans);
+				^index;
+			})
+	}
+			
+	audioBus {|id|
+		var b = 0;
+		if(id == nil, {id=0});
+		if(this.audioBusExists(id),
+			{
+				if(LliaHandler.isInteger(id),
+					{
+						b = Bus.new('audio', id.asInteger);
+					},{
+						b = audioBuses.at(id);
+					})
+			},{
+				postf("WARNING: Audio bus '%' does not exists! - Using bus 0\n", id);
+			});
+		^b;
+	}
+
+	// ONLY works for llia assigned buses.
+	// Do not use integer bus index.
+	audioBusInfo {|id|
+		var b, acc;
+		if(id == nil, {id=0});
+		if(this.audioBusExists(id),
+			{
+				id = id.asString;
+				b = this.audioBus(id);
+				acc = [id.asString, true, b.rate.asString, b.index.asString, b.numChannels];
+			},{
+				acc = [id.asString, false, nil, nil, "0"];
+			})
+		^acc;
+	}
+
+	/* *******************************************************
+	**                   Control Buses
+	** ******************************************************* */
+
+	controlBusNames {
+		^controlBuses.keys;
+	}
+
+	controlBusExists {|name|
+		if(LliaHandler.isInteger(name),
+			{
+				var mx = serverOptions.numControlBusChannels();
+				^(name >= 0) && (name < mx);
+			},{
+				var flag = true;
+				name = name.asString;
+				controlBuses.atFail(name, {flag=false});
+				^flag;
+			})
+	}
+
+	// NOTE: bus id may not contain white-space.
+	assignControlBus {|id, numchans=1|
+		id = id.asString;
+		if(this.controlBusExists(id),
+			{
+				postf("WARNING: Control bus '%' already exists!\n", id);
+				^false
+			},{
+				var b, index;
+				numchans = numchans.asInteger.max(1);
+				b = Bus.control(nil, numchans);
+				index = b.index;
+				controlBuses.add(id -> b);
+				postf("Control bus [%] created.  Index: %   channels: %\n", id, index, numchans);
+				^index;
+			})
+	}
+			
+	controlBus {|id|
+		var b = 0;
+		if(id == nil, {id=0});
+		if(this.controlBusExists(id),
+			{
+				if(LliaHandler.isInteger(id),
+					{
+						b = Bus.new('control', id.asInteger);
+					},{
+						b = controlBuses.at(id);
+					})
+			},{
+				postf("WARNING: Control bus '%' does not exists! - Using bus 0\n", id);
+			});
+		^b;
+	}
+
+	// ONLY works for llia assigned buses.
+	// Do not use integer bus index.
+	controlBusInfo {|id|
+		var b, acc;
+		if(id == nil, {id=0});
+		if(this.controlBusExists(id),
+			{
+				id = id.asString;
+				b = this.controlBus(id);
+				acc = [id.asString, true, b.rate.asString, b.index.asString, b.numChannels];
+			},{
+				acc = [id.asString, false, nil, nil, "0"];
+			})
+		^acc;
+	}
+	
 	/*
 	** Return a list OSC id's for all managed synths.
 	*/
@@ -210,137 +356,6 @@ LliaHandler : Object {
 	}
 
 	/*
-    ** Returns a list of audio bus aliases.
-	*/
-	audioBusNames {
-		^audioBuses.keys;
-	}
-
-	/*
-    ** Predicate test if audio bus alias exists.
-    ** If name is an integer >= 0 the bus is assumed to exists.
-	*/
-	audioBusExists {|name|
-		if(LliaHandler.isIntegerBusNumber(name),
-			{
-				^true;
-			},{
-				var flag = true;
-				audioBuses.atFail(name, {flag=false});
-				^flag;
-			})
-	}
-
-	/*
-    ** Add an new audio bus alias
-    ** ARGS:
-    **  id       - String, the bus name. If a bus with the same name already
-    **             exists a new bus with the same name may not be created.
-    **  numchans - int, number of channels.
-    **
-    ** RETURNS:
-    **   false -> A bus with identical name already exits.
-    **   int -> the bus index.
-	*/
-	addAudioBusAlias {|id, numchans=1|
-		id = id.asString;
-		if(this.audioBusExists(id),
-			{
-				postf("WARNING: Audio bus '%' already exists!\n", id);
-				^false;
-			},{
-				// var b = Bus.audio(nil, numchans);
-				// var index = b.index;
-				var b, index;
-				id = id.asString;
-				numchans = numchans.asInteger.max(1);
-				b = Bus.audio(nil, numchans);
-				index = b.index;
-				audioBuses.add(id -> b);
-				postf("Created % audio bus alias [%] -> %\n", oscID, id, index);
-				^index;
-			})
-	}
-
-	/*
-	** Return audio bus.
-    ** ARGS:
-    **   id - String or int
-    **
-    ** RETURN:
-    **   bus index or nil.
-    */
-	audioBus {|id|
-		if(id == nil, {id=0});
-		if(LliaHandler.isIntegerBusNumber(id),
-			{
-				^id
-			},{
-				if(this.audioBusExists(id),
-				{
-					^audioBuses.at(id);
-				},{
-					postf("WARNING: Audio bus '%' does not exists!\n", id);
-					^0;
-				})
-			})
-	}
-
-
-	/* ****************************************************************
-    ** All control bus methods have the same name and usage as with 
-    ** audio buses:   'controlBusBlahBlah' instead of 'audioBusBlahBlah'.
-    **
-    ** Control buses have been added for completeness, currently they 
-    ** are not actually used for anything.
-	*/
-
-	controlBusNames {
-		^controlBuses.keys;
-	}
-
-	controlBusExists {|name|
-		if(LliaHandler.isIntegerBusNumber(name),
-			{
-				^true;
-			},{
-				var flag = true;
-				controlBuses.atFail(name, {flag=false});
-				^flag;
-			})
-	}
-
-	addControlBusAlias {|id, numchans=1|
-		id = id.asString;
-		if(this.controlBusExists(id),
-			{
-				postf("WARNING: Control bus '%' already exists!\n", id);
-				^false;
-			},{
-				var b, index;
-				id = id.asString;
-				numchans = numchans.asInteger.max(1);
-				b = Bus.control(nil, numchans);
-				index = b.index;
-				controlBuses.add(id -> b);
-				postf("Created % control bus alias [%] -> %\n", oscID, id, index);
-				^index;
-			})
-	}
-
-	controlBus {|id|
-		if(LliaHandler.isIntegerBusNumber(id),
-			{^id},
-			{if(this.controlBusExists(id),
-				{
-					^controlBuses.at(id);
-				},{
-					postf("WARNING: Audio bus '%' does not exists!\n", id);
-					^nil;
-				})})
-	}
-
-	/*
     ** Return SuperCollider server
     ** ARGS:
     **   s - Server name, may be "local", "internal" or "default"
@@ -429,9 +444,7 @@ LliaHandler : Object {
 					{
 						msg[i].post;
 						i = i + 1;
-					});
-				// this.respond("llia-post-response", [])
-			},
+					})},
 				this.path("post")),
 
 			/*
@@ -486,6 +499,17 @@ LliaHandler : Object {
 				this.respond("llia-active-synths", acc)},
 				this.path("query-active-synths")),
 
+			/*
+            ** query-bus-and-buffer-info
+            **
+            ** -> bus-info [numb ob ib fpb cb nbuf]
+            **               numb - number of audio buses
+            **               ob   - number of output buses
+            **               ib   - number of input buses
+            **               fpb  - index of first private (audio) bus
+            **               cb   - number of control buses
+            **               nbuf - number of buffers
+            */
 			OSCFunc({|msg|
 				var o = ServerOptions.new();
 				var numb = o.numAudioBusChannels;
@@ -521,7 +545,7 @@ LliaHandler : Object {
 			OSCFunc({|msg|
 				var name = msg[1];
 				var numchans = msg[2];
-				var flag = this.addAudioBusAlias(name, numchans);
+				var flag = this.assignAudioBus(name, numchans);
 				if(flag == false,
 					{
 						var errmsg = "Audio bus '"++name++"' already exists!";
@@ -531,6 +555,20 @@ LliaHandler : Object {
 					})},
 				this.path("add-audio-bus")),
 
+			/*
+            ** audio-bus-info [bus_id]
+            ** Returns information about audio bus
+            ** -> audio-bus-info [bus_id flag rate index numchans]
+            */
+			OSCFunc({|msg|
+				var id = msg.at(1);
+				var info = this.audioBusInfo(id);
+				var acc = "";
+				info.do({|n| acc = acc + n.asString});
+				postf("Audio bus info: %\n", acc);
+				this.respond("audio-bus-info", acc)},
+				this.path("audio-bus-info")),
+			
 			/*
 			** query-control-buses
             ** Display list of control bus aliases.
@@ -553,7 +591,7 @@ LliaHandler : Object {
 			OSCFunc({|msg|
 				var name = msg[1];
 				var num = msg[2];
-				var flag = this.addControlBusAlias(name, num);
+				var flag = this.assignControlBus(name, num);
 				if(flag == false,
 					{
 						var errmsg = "Control bus '"++name++"' already exists!";
@@ -563,6 +601,20 @@ LliaHandler : Object {
 					})},
 				this.path("add-control-bus")),
 
+			/*
+            ** control-bus-info [bus_id]
+            ** Returns information about control bus
+            ** -> control-bus-info [bus_id flag rate index numchans]
+            */
+			OSCFunc({|msg|
+				var id = msg.at(1);
+				var info = this.controlBusInfo(id);
+				var acc = "";
+				info.do({|n| acc = acc + n.asString});
+				postf("Control bus info: %\n", acc);
+				this.respond("control-bus-info", acc)},
+				this.path("control-bus-info")),
+			
 			/*
             ** add-synth [synthType, id, keymode, outbus, inbus, vcount]
             ** Adds new synth.  See addSynth method.
@@ -587,14 +639,11 @@ LliaHandler : Object {
 				var key = synthType++"_"++id;
 				if(this.synthExists(key),
 					{
-						//var errmsg = "Synth '" ++key++ "' already exists!";
-						//var errmsg = "Llia:"++oscID++":"++synthType++":"++id++"  already exists";
 						var errmsg = "/Llia/"++oscID++"/"++synthType++"/"++id++" already exists";
 						postf("WARNING: %\n", errmsg);
 						this.respondWithError(2, errmsg);
 					},{
 						this.addSynth(synthType, id, keymode, outbus, inbus, vcount);
-						//this.post("Added synth: %\n", id);
 						this.respond("llia-added-synth", id.asString);
 					})},
 				this.path("add-synth")),

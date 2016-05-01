@@ -28,7 +28,7 @@ class LSLParser(object):
         self.prompt = "Lila> "
 
     def _init_dispatch_table(self):
-        # self._dispatch_table["test"] = self.test_with_options # DEBUG
+        self._dispatch_table["test"] = self.test
         self._dispatch_table[REMARK_TOKEN] = self.remark
         self._dispatch_table["?"] = self.help_
         self._dispatch_table["help"] = self.help_
@@ -140,8 +140,6 @@ class LSLParser(object):
             index += 1
         return acc
 
- 
-
     @staticmethod
     def parse_line_keywords(tokens, required_args, order=[], keyword_args={}):
         acc = LSLParser.parse_line_required(tokens, required_args)
@@ -169,24 +167,18 @@ class LSLParser(object):
             acc.append(value)
         return acc
 
-    # def test_pos(self, tokens):
-    #     # NOTE: MUST include "command" token in requierd list
-    #     rs = LSLParser.parse_line_positional(tokens, ["str", "int"])
-    #     print("TEST_POS ", tokens)
-
-    # def test_with_options(self,tokens):
-    #     values = LSLParser.parse_line_positional(tokens,
-    #                                              ["str", "str"],
-    #                                              [["int", 19]])
-    #     print(values)
-
     @staticmethod
     def echo(flag):
         if flag:
             print("OK")
         else:
             print("ERROR")
-    
+
+    def test(self, tokens):
+        id_ = tokens[1]
+        rs = self.proxy.q_control_bus_info(id_)
+        print(rs)
+            
     def help_(self, tokens):
         topic = LSLParser.parse_line_positional(tokens,
                                                 ["str"],

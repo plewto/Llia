@@ -49,15 +49,20 @@ class LliaProxy(object):
         self.osc_receiver.add_handler("set-llia-client", self._expect_response)
         self.osc_receiver.add_handler("llia-keymodes", self._expect_response)
         self.osc_receiver.add_handler("llia-synthtypes", self._expect_response)
+
         self.osc_receiver.add_handler("llia-audio-buses", self._expect_response)
+        self.osc_receiver.add_handler("audio-bus-info", self._expect_response)
+        
         self.osc_receiver.add_handler("llia-control-buses", self._expect_response)
+        self.osc_receiver.add_handler("control-bus-info", self._expect_response)
+        
         self.osc_receiver.add_handler("llia-added-synth", self._expect_response)
         self.osc_receiver.add_handler("llia-active-synths", self._expect_response)
         self.osc_receiver.add_handler("all-running-servers", self._expect_response)
         self.osc_receiver.add_handler("llia-booting-server", self._expect_response)
         self.osc_receiver.add_handler("llia-server-quit", self._expect_response)
         self.osc_receiver.add_handler("llia-kill-all-servers", self._expect_response)
-        self.osc_receiver.add_handler("bus-info", self._expect_response)
+        
         self.osc_receiver.add_handler("ERROR", self._expect_response)
 
         
@@ -167,11 +172,51 @@ class LliaProxy(object):
         self.app.log_event("audio buses: %s" % b)
         return b
 
+    def q_audio_bus_info(self, bus_id):
+        self._send("audio-bus-info", [str(bus_id)])
+        self.osc_receiver.handle_request()
+        cbm = self._get_callback_message()
+        args = cbm.get("args", [""])
+        args = args[0].strip().split(" ")
+        flag = args[1].upper() == "TRUE"
+        rate = args[2]
+        if flag:
+            index = int(args[3])
+            channels = int(args[4])
+        else:
+            index = None
+            channels = None
+        return {"id": bus_id,
+                "flag" : flag,
+                "rate" : rate,
+                "index" : index,
+                "channels" : channels}
+    
     def q_control_buses(self):
         b = self._query_bus_names("query-control-buses")
         self.app.log_event("control buses: %s" % b)
         return b
 
+    def q_control_bus_info(self, bus_id):
+        self._send("control-bus-info", [str(bus_id)])
+        self.osc_receiver.handle_request()
+        cbm = self._get_callback_message()
+        args = cbm.get("args", [""])
+        args = args[0].strip().split(" ")
+        flag = args[1].upper() == "TRUE"
+        rate = args[2]
+        if flag:
+            index = int(args[3])
+            channels = int(args[4])
+        else:
+            index = None
+            channels = None
+        return {"id": bus_id,
+                "flag" : flag,
+                "rate" : rate,
+                "index" : index,
+                "channels" : channels}
+    
     # Request server be booted.
     # s : {"local", "internal", "default"}
     # and wait 2 seconds.
