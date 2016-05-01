@@ -3,4 +3,4 @@
 
 from llia.constants import *
 
-REMARK = "#"
+REMARK_TOKEN = "#"

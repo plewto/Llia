@@ -32,12 +32,17 @@ class LliaProxy(object):
         #
         # Entries in _audio_buses dictionary are tuples
         # (Alias, bus_index, numer_channels)
-        #     
+        #
+        # ISSUE: Llia does not keep track of buses or buffers which are created
+        # by external processes.  If an audio_bus, control_bus or buffer
+        # is created by some external to Llia then indexing to these objects
+        # from Llia will fail!!!!
+        #
         self._first_private_audio_bus = 16
-        self._private_audio_bus_counter = 0
+        self._private_audio_bus_counter = 0 
+        self._control_bus_counter = 0
         self._audio_buses = {}
-        
-        self.control_buses = {}
+        self._control_buses = {}
         self._callback_message = {}
         self.osc_receiver.add_handler("llia-ping-response", self._expect_response)
         self.osc_receiver.add_handler("llia-dump-response", self._expect_response)
@@ -62,9 +67,6 @@ class LliaProxy(object):
                                   "tags" : tags,
                                   "args" : args,
                                   "source" : source}
-        
-    def dump(self):
-        return "Llia Dump not implemented"
 
     def warning(self, msg):
         self.app.warning(msg)
@@ -204,7 +206,7 @@ class LliaProxy(object):
 
     def dump(self):
         self._send("dump")
-        print(self.dump())
+        #print(self.dump())
         return self._expect("llia-dump-response")
 
     def post_message(self, text):
@@ -215,6 +217,10 @@ class LliaProxy(object):
         self._send("set-llia-client", [ip, port])
         return self._expect("set-llia-client")
 
+    def audio_bus_exists(self, name):
+        return (is_int(name) and int(name) >= 0) or\
+            self._audio_buses.has_key(name)
+    
     def add_audio_bus(self, name, numchan=1):
         if self._audio_buses.has_key(name):
             msg = "Audio bus '%s' already exists" % name
@@ -242,7 +248,37 @@ class LliaProxy(object):
             info = self._audio_buses[name]
             bi = info[1]
         return bi+int(offset)
+        
+    def add_control_bus(self, name, numchan=1):
+        if self._control_buses.has_key(name):
+            msg = "Control bus '%s' already exists" % name
+            self.warning(msg)
+            return False
+        else:
+            self._send("add-control-bus", [name, numchan])
+            rs = self._expect("llia-control-buses")
+            # index = self._first_private_control_bus +\
+            #         self._private_control_bus_counter
+            index = self._control_bus_counter
+            data = (name, index, numchan)
+            if rs:
+                self._control_buses[name] = data
+                self._control_bus_counter += numchan
+                return True
+            else:
+                msg = "Control bus '%s' could not be created" % name
+                self.warning(msg)
+                return False
 
+    def get_control_bus(self, name, offset=0):
+        if is_int(name):
+            bi = int(name)
+        else:
+            info = self._control_buses[name]
+            bi = info[1]
+        return bi+int(offset)
+
+    
     # def add_control_bus(self, name, numchan=1):
     #     if self.control_buses.has_key(name):
     #         msg = "Control bus '%s' already exists" % name

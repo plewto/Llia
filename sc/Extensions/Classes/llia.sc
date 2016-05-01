@@ -266,6 +266,7 @@ LliaHandler : Object {
 	** Return audio bus.
     ** ARGS:
     **   id - String or int
+    **
     ** RETURN:
     **   bus index or nil.
     */
