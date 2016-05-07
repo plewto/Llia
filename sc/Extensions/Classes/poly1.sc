@@ -17,12 +17,12 @@ Poly1 : Keymode {
 
 	var activeNotes;
 
-	*new {|synthType, oscid=nil, globalID="llia"|
-		^super.new().init(synthType, oscid, globalID);
+	*new {|lliaApp, synthType, oscid=nil, globalID="llia"|
+		^super.new().init(lliaApp, synthType, oscid, globalID);
 	}
 
-	init {|synthType, oscid=nil, globalID="llia"|
-		super.init(synthType, oscid, globalID);
+	init {|lliaApp, synthType, oscid=nil, globalID="llia"|
+		super.init(lliaApp, synthType, oscid, globalID);
 		activeNotes = Array.newClear(128);
 	}
 
@@ -37,11 +37,13 @@ Poly1 : Keymode {
 	}
 
 	noteOn {|keynumber, frequency, velocity|
-		var paramlist = super.synthParams ++ [\gate, 0, \freq, frequency,
-			\keynumber, keynumber, \outbus, super.outbus];
-		var sy = Synth(synthType, paramlist);
-		var old = activeNotes[keynumber];
+		var paramList, sy, old;
+		paramList = super.synthParams ++
+		    [\gate, 0, \freq, frequency, \keynumber, keynumber];
+		sy = Synth(synthType, paramList);
+		old = activeNotes[keynumber];
 		//postf("DEBUG Poly1 keynum [%] freq % vel %\n", keynumber, frequency, velocity);
+		postf("DEBUG Poly1.noteOn  paramList -> %\n", paramList);
 		sy.set(\gate, 1);
 		old.set(\gate, 0);
 		activeNotes[keynumber] = sy;

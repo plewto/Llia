@@ -17,12 +17,12 @@ Mono1 : Keymode {
 
 	var stack, activeVoice;
 
-	*new {|synthType, id=nil, globalID="llia"|
+	*new {|lliaApp, synthType, id=nil, globalID="llia"|
 		^super.new().init(synthType, id, globalID);
 	}
 
-	init {|synthType, id=nil, globalID="llia"|
-		super.init(synthType, id, globalID);
+	init {|lliaApp, synthType, id=nil, globalID="llia"|
+		super.init(lliaApp, synthType, id, globalID);
 		stack = Stack.new;
 		activeVoice = Synth(synthType, [\gate, 0, \doneAction, 0]);
 	}

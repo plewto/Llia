@@ -10,12 +10,12 @@ EfxKeymode : Keymode {
 	var activeVoice;
 	var keyDownCounter;
 
-	*new {|synthType, id, globalID, inbus, outbus|
+	*new {|lliaApp, synthType, id, globalID, inbus, outbus|
 		^super.new().init(synthType, id, globalID);
 	}
 
-	init {|synthType, id, globalID, inbus, outbus|
-		super.init(synthType, id, globalID);
+	init {|lliaApp, synthType, id, globalID, inbus, outbus|
+		super.init(lliaApp, synthType, id, globalID);
 		activeVoice = Synth(synthType, [\gate, 0, \doneAction, 0, 
 			\inbus, inbus, \outbus, outbus]);
 		keyDownCounter = 0;

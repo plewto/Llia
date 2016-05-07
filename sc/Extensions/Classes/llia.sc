@@ -13,10 +13,10 @@ LliaHandler : Object {
 	var lliaHost;						// NetAddr
 	var <oscID;							// String
 	var synths;							// Dictionary
-	var audioBuses;						// Dictionary
-	var controlBuses;					// Dictionary
-	var oscHandlers;					//
-	var <dead;							// flag
+	var audioBuses, controlBuses;		// LliaBuses
+	var <buffers;						// LliaBuffers
+	var oscHandlers;					// Array
+	var <isDead;						// flag
 	var serverOptions;
 
 	// See Llia/docs/keymodes
@@ -28,29 +28,6 @@ LliaHandler : Object {
 	*validSynthTypes {
 		^"Orgn Saw3 Echo1";
 	}
-	
-	/*
-	** Predicate test if argument is integer bus number.
-    ** ARGS:
-    **   n - Object.
-    ** RETURNS:
-    **   true if n is an integer or string representation of an integer
-    */
-	*isInteger {|n|
-		if(n.isInteger,
-			{
-				^true;
-			},{
-				var q = n.asInteger;
-				if(q == 0,
-					{
-						^(n=="0");
-					},{
-						^true;
-					})
-			})
-	}
-
 
 	/*
     ** Create new instance of LliaHandler.
@@ -75,215 +52,123 @@ LliaHandler : Object {
 		oscID = oscid.asString;
 		serverOptions = ServerOptions.new;
 		synths = Dictionary.new(8);
-		audioBuses = Dictionary.new(8);
-		controlBuses = Dictionary.new(8);
+		audioBuses = LliaBuses.new(\audio);
+		controlBuses = LliaBuses.new(\control);
+		buffers = LliaBuffers.new;
 		this.initOscHandlers;
 	}
 
-	lliaDump {|pad=""|
-		var pad2 = pad++"    ";
-		var pad3 = pad2++"    ";
-		var isDead = "";
-		if(dead==true, {isDead="+DEAD+ "});
-		postf("\n%%LliaHandler   oscID: '%'\n", pad, isDead, oscID);
-		postf("%client: %\n", pad2, lliaClient);
-		postf("%self  : %\n", pad2, lliaHost);
-		// postf("%Audio Buses  :", pad2);
-		// this.audioBusNames.do({|n| postf(" %",n)});
-		// postf("\n");
-		// postf("%Control Buses:", pad2);
-		// this.controlBusNames.do({|n| postf(" %",n)});
-		// postf("\n");
-		postf("%Synths:\n", pad2);
-		synths.values.do({|si| si.lliaDump(pad3)});
-		postf("\n");
-	}
-
-	/*
-    ** Free this and all resources under it.
-    ** Once freed further OSC communication is not possible.
-	*/
 	free {
-		dead = true;
-		oscHandlers.do({|h| h.free});
-		synths.values.do({|si| si.free});
-		postf("Freed LliaHandler %\n", oscID);
+		oscHandlers.do.free;
+		isDead = true;
+		audioBuses.freeAll;
+		controlBuses.freeAll;
+		buffers.freeAll;
+		synths.values.do({|sy| sy.free});
 	}
-
-	/*
-    ** Set client address and port.
-    */
-	setClient {|ip, port|
-		lliaClient = NetAddr.new(ip, port);
-	}
-
-	/* *******************************************************
-	**                   Audio Buses
-	** ******************************************************* */
-
-	audioBusNames {
-		^audioBuses.keys;
-	}
-
-	audioBusExists {|name|
-		if(LliaHandler.isInteger(name),
-			{
-				var mx = serverOptions.numAudioBusChannels();
-				^(name >= 0) && (name < mx);
-			},{
-				var flag = true;
-				name = name.asString;
-				audioBuses.atFail(name, {flag=false});
-				^flag;
-			})
-	}
-
-	// NOTE: bus id may not contain white-space.
-	assignAudioBus {|id, numchans=1|
-		id = id.asString;
-		if(this.audioBusExists(id),
-			{
-				postf("WARNING: Audio bus '%' already exists!\n", id);
-				^false
-			},{
-				var b, index;
-				numchans = numchans.asInteger.max(1);
-				b = Bus.audio(nil, numchans);
-				index = b.index;
-				audioBuses.add(id -> b);
-				postf("Audio bus [%] created.  Index: %   channels: %\n", id, index, numchans);
-				^index;
-			})
-	}
-			
-	audioBus {|id|
-		var b = 0;
-		if(id == nil, {id=0});
-		if(this.audioBusExists(id),
-			{
-				if(LliaHandler.isInteger(id),
-					{
-						b = Bus.new('audio', id.asInteger);
-					},{
-						b = audioBuses.at(id);
-					})
-			},{
-				postf("WARNING: Audio bus '%' does not exists! - Using bus 0\n", id);
-			});
-		^b;
-	}
-
-	// ONLY works for llia assigned buses.
-	// Do not use integer bus index.
-	audioBusInfo {|id|
-		var b, acc;
-		if(id == nil, {id=0});
-		if(this.audioBusExists(id),
-			{
-				id = id.asString;
-				b = this.audioBus(id);
-				acc = [id.asString, true, b.rate.asString, b.index.asString, b.numChannels];
-			},{
-				acc = [id.asString, false, nil, nil, "0"];
-			})
-		^acc;
-	}
-
-	/* *******************************************************
-	**                   Control Buses
-	** ******************************************************* */
-
-	controlBusNames {
-		^controlBuses.keys;
-	}
-
-	controlBusExists {|name|
-		if(LliaHandler.isInteger(name),
-			{
-				var mx = serverOptions.numControlBusChannels();
-				^(name >= 0) && (name < mx);
-			},{
-				var flag = true;
-				name = name.asString;
-				controlBuses.atFail(name, {flag=false});
-				^flag;
-			})
-	}
-
-	// NOTE: bus id may not contain white-space.
-	assignControlBus {|id, numchans=1|
-		id = id.asString;
-		if(this.controlBusExists(id),
-			{
-				postf("WARNING: Control bus '%' already exists!\n", id);
-				^false
-			},{
-				var b, index;
-				numchans = numchans.asInteger.max(1);
-				b = Bus.control(nil, numchans);
-				index = b.index;
-				controlBuses.add(id -> b);
-				postf("Control bus [%] created.  Index: %   channels: %\n", id, index, numchans);
-				^index;
-			})
-	}
-			
-	controlBus {|id|
-		var b = 0;
-		if(id == nil, {id=0});
-		if(this.controlBusExists(id),
-			{
-				if(LliaHandler.isInteger(id),
-					{
-						b = Bus.new('control', id.asInteger);
-					},{
-						b = controlBuses.at(id);
-					})
-			},{
-				postf("WARNING: Control bus '%' does not exists! - Using bus 0\n", id);
-			});
-		^b;
-	}
-
-	// ONLY works for llia assigned buses.
-	// Do not use integer bus index.
-	controlBusInfo {|id|
-		var b, acc;
-		if(id == nil, {id=0});
-		if(this.controlBusExists(id),
-			{
-				id = id.asString;
-				b = this.controlBus(id);
-				acc = [id.asString, true, b.rate.asString, b.index.asString, b.numChannels];
-			},{
-				acc = [id.asString, false, nil, nil, "0"];
-			})
-		^acc;
-	}
+		
 	
-	/*
-	** Return a list OSC id's for all managed synths.
-	*/
+
+	//  ---------------------------------------------------------------------- 
+	// 								   Buses
+
+	// Used internally
+	selectBusList {|rate|
+		if (rate == \audio,
+			{
+				^audioBuses;
+			},{
+				if (rate == \control,
+					{
+						^controlBuses;
+					},{
+						var msg = "Invalid bus rate: '" ++ rate.asString ++ "'";
+						Error(msg).throw;
+					});
+			})
+	}
+			
+	busCount {|rate|
+		var bl = this.selectBusList(rate);
+		^bl.busCount;
+	}
+
+	busList {|rate|
+		var bl = this.selectBusList(rate);
+		^bl.busList;
+	}
+
+	busExists {|rate, busName|
+		var bl = this.selectBusList(rate);
+		^bl.busExists(busName);
+	}
+
+	addBus {|rate, busName, numChannels=1|
+		var bl = this.selectBusList(rate);
+		^bl.addBus(busName, numChannels);
+	}
+
+	getBusIndex {|rate, busName, offset=0|
+		var bl;
+		bl = this.selectBusList(rate);
+		^bl.getBusIndex(busName, offset);
+	}
+
+	freeBus {|rate, busName|
+		var bl = this.selectBusList(rate);
+		bl.free(busName);
+	}
+		
+	//  ---------------------------------------------------------------------- 
+	// 								  Buffers
+    // 
+	// TODO: Buffer related methods are by no means complete.
+
+	bufferCount {
+		^buffers.bufferCount;
+	}
+
+	bufferList {
+		^buffers.bufferList;
+	}
+
+	bufferExists {|bufferName|
+		^buffers.bufferExists(bufferName);
+	}
+
+	addBuffer {|bufferName, frames=1024, numChannels=1|
+		^buffers.addBuffer(bufferName, frames, numChannels);
+	}
+
+	getBuffer {|bufferName|
+		^buffers.getBuffer(bufferName);
+	}
+
+	freeBuffer {|bufferName|
+		buffers.free(bufferName);
+	}
+
+
+	//  ---------------------------------------------------------------------- 
+	// 								  Synths
+
 	synthNames {
 		^synths.keys;
 	}
 
-	/*
-	** Predicate returns true if Synth with osc id exists.
-	*/
-	synthExists {|id|
+	// sid format: combined synthType and numeric index: "stype_n"
+	// for int n 0, 1, 2, ...
+	//
+	synthExists {|sid|
 		var flag = true;
-		synths.atFail(id, {flag=false});
-		^flag;
+		synths.atFail(sid, {flag=false});
+		^flag
 	}
 
-	/*
-	** Free the synth with matching OSC id.
-	*/
-	freeSynth {|id|
-		if(this.synthExists(id),
+	freeSynth {|sid|
+		if(this.synthExists(sid),
 			{
-				var info = synths.at(id);
+				var info = synths.at(sid);
 				info.panic;
 				info.free;
 				^true;
@@ -292,91 +177,87 @@ LliaHandler : Object {
 			});
 	}
 
-
-	/*
-	** Add new synth.
-    ** ARGS:
-    ** synthType    - String, the synth name.  See Llia/docs/synthtypes
-    ** id           - int, synth OSC id
-    **                id must be unique for any given sunth type.
-    **                The OSC path to this synth becomes /llia/aynthType/id/
-    **                If an identical synth is already in use it is 
-    **                resources are first freed and then replaced by 
-    **                a new synth.
-    **   keymode    - Sting, see Llia/docs/keymodes
-    **                See Llia/docs/keymodes for possible values.
-    **   outbus     - String or int, sets audio outbus bus.
-    **                The bus maybe specified as an absolute bus number
-    **                or as a bus name alias. See audioBusNames
-    **   inbus      - String or int, sets input bus names.
-    **                inbus is mostly used for effects synths.  For synths
-    **                which do not use an input bus this value is ignored.
-    **                The bus maybe specified as an absolute bus number
-    **                or by bus alias. See audioBusNames. 
-    **   voiceCount - int, sets number of allocated synth voices.
-    **                voiceCount is only used by keymodes which have a
-    **                fixed number of voices and ignored otherwise.
-    **                Currently all keymodes ignore voiceCount. 
-	*/
-	addSynth {|synthType, id, keymode, outbus, inbus, voiceCount|
-		var outb, inb, sinfo, key, msg;
-		outb = this.audioBus(outbus);
-		inb = this.audioBus(inbus);
-		sinfo = LliaSynthInfo(synthType, id, oscID, keymode, outb, inb, voiceCount);
-		key = synthType++"_"++id;
-		this.freeSynth(key);
-		synths.add(key -> sinfo);
-		msg = "Added synth /Llia/"++oscID++"/"++synthType++"/"++id;
-		postf("%\n", msg);
-	}
-
-	/*
-    ** A convenience method for adding effects synths.
-    ** All arguments have same usage as with addSynth.
-    */
-	addEfx {|synthType, id, outbus, inbus|
-		^this.addSynth(synthType, id, "EFX", outbus, inbus, 1);
-	}
-
-	/*
-    ** Get info for indicated synth
-    ** ARGS:
-    **   id - String, the synths OSC id.
-	**
-    ** RETURNS: 
-    **   LliaSynthInfo or nil.
-    */
-	getSynthInfo {|id|
-		if(this.synthExists(id),
+	// NOTE: At a minimum an output bus for the synth must be established
+	//       after it has been added.
+	addSynth {|stype, id, km="Poly1", voiceCount=8|
+		var sid, sy;
+		sid = stype.asString ++ "_" ++ id.asString;
+		sy = LliaSynthInfo.new(this, stype, id, oscID, km, voiceCount);
+		if (this.synthExists(sid),
 			{
-				^synths.at[id];
+				postf("WARNING: Replacing existing % synth %\n", stype, id);
+			});
+		this.freeSynth(sid);
+		synths.put(sid, sy);
+		^sy;
+	}
+
+
+	addEfx {|stype, id|
+		var sy;
+		sy = this.addSynth(stype, id, "EFX");
+		sy.isEfx_(true);
+		^sy;
+	}
+
+
+	getSynthInfo {|stype, id|
+		var sid = (stype.asString ++ "_" ++ id.asString);
+		var sy = synths.at(sid);
+		^sy;
+	}
+
+	assignSynthBus {|stype, id, param, rate, busName, offset=0|
+		var sy;
+		sy = this.getSynthInfo(stype, id);
+	    if (sy == nil,
+			{
+				postf("WARNING: % synth % does not exists\n", stype, id);
+				^false;
 			},{
-				^nil;
+				if (this.busExists(rate, busName),
+					{
+						var kmobj;
+						kmobj = sy.keymodeObject;
+						kmobj.setBusParameter(param, rate, busName, offset);
+						^true;
+					},{
+						postf("WARNING: % bus % does not exists\n", rate, busName);
+						^false;
+					})
 			})
 	}
 
-	/*
-    ** Return SuperCollider server
-    ** ARGS:
-    **   s - Server name, may be "local", "internal" or "default"
-    */
-	getServer {|s|
-		var rs;
-		s = s.asString.toLower;
-		case {s == "local"}{rs = Server.local}
-		     {s == "internal"}{rs = Server.internal}
-		     {true}{rs = Server.default};
-		^rs;
+	assignSynthBuffer {|stype, id, param, bufferName|
+		var sy;
+		sy = this.getSynthInfo(stype, id);
+		if (sy == nil,
+			{
+				posrf("WARNING: % synth % does not exists\n", stype, id);
+				^false;
+			},{
+				if (this.bufferExists(bufferName),
+					{
+						var kmobj;
+						kmobj = sy.keymodeObject;
+						kmobj.setBufferParameter(param, bufferName);
+						^true;
+					},{
+						postf("WARNING: Buffer '%' does not exists\n", bufferName);
+						^false;
+					})
+			})
 	}
+	
+	
+	//  ---------------------------------------------------------------------- 
+	// 									OSC
 
-	/*
-    ** Send panic (all-notes-off) message to all manged synths.
-	*/
-	panic {
-		synths.do({|si| si.panic;});
-		postf("% PANIC\n", oscID);
+	setClient {|ip, port|
+		lliaClient.free;
+		lliaClient = NetAddr.new(ip, port);
 	}
-
+	
 	/*
     ** Generate and send an OSC response message to the Llia client app.
     ** msg - The OSC address 
@@ -406,324 +287,204 @@ LliaHandler : Object {
 		^rs;
 	}
 	
-	/* used internally - do not use */
-	
-	initOscHandlers {
-		oscHandlers.do.free;
-		oscHandlers = [
 
-			/*
-            ** ping 
-            ** Post message indicating ping message reception
-            ** -> llia-ping-response
-            */
-			OSCFunc({|msg|
-				"LliaHandler.ping".postln;
-				this.respond("llia-ping-response", [])},
+	lliaDump {|pad=""|
+		var pad2 = pad++"    ";
+		postf("%LliaHandler  isDead: % :\n", pad, isDead);
+		postf("%oscID  : %\n", pad2, oscID);
+		postf("%host   : %\n", pad2, lliaHost);
+		postf("%client : %\n", pad2, lliaClient);
+		audioBuses.lliaDump(pad2);
+		controlBuses.lliaDump(pad2);
+		buffers.lliaDump(pad2);
+		postf("%synths:\n", pad2);
+		this.synthNames.do{|sid|
+			postf("%   %\n", pad2, sid);
+		}
+	}
+		
+	initOscHandlers {
+		var ary;
+		oscHandlers.do.free;
+		ary = [
+
+			OSCFunc ({|msg|
+				postf("Llia/%/ping\n", oscID);
+				this.respond("ping-response", "")},
 				this.path("ping")),
 
-			/*
-            ** dump
-            ** Post diagnostic info on this.
-            ** -> (none)
-			*/
-			OSCFunc({|msg|
-				this.lliaDump;
-				this.respond("llia-dump-response", [])},
+			OSCFunc ({|msg|
+				postf("Llia/%/free\n", oscID);
+				this.free},
+				this.path("free")),
+
+			OSCFunc ({|msg|
+				this.lliaDump},
 				this.path("dump")),
 
-			/*
-			** post [lines...]
-            ** Display lines in post window
-			** -> (none)  
-			*/
-			OSCFunc({|msg|
-				var s = msg.size;
-				var i = 1;
-				while({i<s},
-					{
-						msg[i].post;
-						i = i + 1;
-					})},
-				this.path("post")),
-
-			/*
-            ** set-llia-client [ip port]
-            ** Set Llia client app ip address and port number
-            ** -> set-llia-client [oscId, ip, port]
-            */
-			OSCFunc({|msg|
-				var ip = msg[1];
-				var port = msg[2];
-				lliaClient = NetAddr.new(ip.asString, port);
-				this.respond("set-llia-client", [oscID, ip, port])},
-				this.path("set-llia-client")),
-
-			/*
-            ** query-keymodes
-            ** Display list of valid keymodes.
-            ** -> llia-keymodes [...]
-            */
-			OSCFunc({|msg|
-				postf("Llia keymodes: %\n", LliaHandler.validKeyModes);
-				this.respond("llia-keymodes", LliaHandler.validKeyModes)},
-				this.path("query-keymodes")),
-
-			/*
-            ** query-synthtypes
-            ** Display list of known synthtypes.
-            ** -> llia-synthtypes [...]
-            ** ISSUE: Is this message necessary?
-            */
-			OSCFunc({|msg|
-				postf("Llia synthtypes: %\n", LliaHandler.validSynthTypes);
-				this.respond("llia-synthtypes", LliaHandler.validSynthTypes)},
-				this.path("query-synthtypes")),
-
-			/*
-			** query-active-synths
-            ** Display list of all active synths
-            ** -> llia-active-synths [...]
-			*/
-			OSCFunc({|msg|
-				var acc = "";
-				postf("active synths:\n");
-				synths.do({|si|
-					//var bcc = "<synth>" + si.synthType + si.oscID.asString + si.buses.asString;
-					var bcc = "<synth>" + si.synthType + si.oscID.asString;
-					var ib = "inbus: " + si.buses[0].asString;
-					var ob = "outbus: " + si.buses[1].asString;
-					bcc = bcc + ib + ob;
-					acc = acc ++ bcc;
-					postf("  %\n", bcc)});
-				this.respond("llia-active-synths", acc)},
-				this.path("query-active-synths")),
-
-			/*
-            ** query-bus-and-buffer-info
-            **
-            ** -> bus-info [numb ob ib fpb cb nbuf]
-            **               numb - number of audio buses
-            **               ob   - number of output buses
-            **               ib   - number of input buses
-            **               fpb  - index of first private (audio) bus
-            **               cb   - number of control buses
-            **               nbuf - number of buffers
-            */
-			OSCFunc({|msg|
-				var o = ServerOptions.new();
-				var numb = o.numAudioBusChannels;
-				var ib = o.numInputBusChannels;
-				var ob = o.numOutputBusChannels;
-				var fpb = o.firstPrivateBus;
-				var cbc = o.numControlBusChannels;
-				var nbuf = o.numBuffers;
-				var acc = numb.asString + ob.asString + ib.asString + fpb.asString;
-				acc = acc + cbc.asString + nbuf.asString;
-				this.respond("bus-info", acc)},
-				this.path("query-bus-and-buffer-info")),
-			
-			/*
-            ** query-audio-buses
-            ** Display list of audio bus aliases
-            ** -> llia-audio-buses [...]
-			*/
-			OSCFunc({|msg|
-				var names = this.audioBusNames;
-				var acc = "";
-				names.do({|n| acc = acc + n.asString});
-				postf("Audio buses: %\n", acc);
-				this.respond("llia-audio-buses", acc)},
-				this.path("query-audio-buses")),
-
-			/*
-			** add-audio-bus [name, numchans]
-            ** Add new audio bus alias.
-            ** -> llia-audio-buses [...]
-            ** -> ERROR: bus already exists.
-			*/
-			OSCFunc({|msg|
-				var name = msg[1];
-				var numchans = msg[2];
-				var flag = this.assignAudioBus(name, numchans);
-				if(flag == false,
-					{
-						var errmsg = "Audio bus '"++name++"' already exists!";
-						this.respondWithError(1, errmsg);
-					},{
-						this.respond("llia-audio-buses", this.audioBusNames);
-					})},
-				this.path("add-audio-bus")),
-
-			/*
-            ** audio-bus-info [bus_id]
-            ** Returns information about audio bus
-            ** -> audio-bus-info [bus_id flag rate index numchans]
-            */
-			OSCFunc({|msg|
-				var id = msg.at(1);
-				var info = this.audioBusInfo(id);
-				var acc = "";
-				info.do({|n| acc = acc + n.asString});
-				postf("Audio bus info: %\n", acc);
-				this.respond("audio-bus-info", acc)},
-				this.path("audio-bus-info")),
-			
-			/*
-			** query-control-buses
-            ** Display list of control bus aliases.
-            ** -> llia-control-buses [...]
-			*/
-			OSCFunc({|msg|
-				var names = this.controlBusNames;
-				var acc = "";
-				names.do({|n| acc = acc + n.asString});
-				postf("Control buses: %\n", acc);
-				this.respond("llia-control-buses", acc)},
-				this.path("query-control-buses")),
-
-			/*
-            ** add-control-bus [name numchans]
-            ** Add new control bus alias.
-            ** -> llia-control-buses [...]
-            ** -> ERROR: bus already exists.
-			*/
-			OSCFunc({|msg|
-				var name = msg[1];
-				var num = msg[2];
-				var flag = this.assignControlBus(name, num);
-				if(flag == false,
-					{
-						var errmsg = "Control bus '"++name++"' already exists!";
-						this.respondWithError(1, errmsg);
-					},{
-						this.respond("llia-control-buses", this.controlBusNames);
-					})},
-				this.path("add-control-bus")),
-
-			/*
-            ** control-bus-info [bus_id]
-            ** Returns information about control bus
-            ** -> control-bus-info [bus_id flag rate index numchans]
-            */
-			OSCFunc({|msg|
-				var id = msg.at(1);
-				var info = this.controlBusInfo(id);
-				var acc = "";
-				info.do({|n| acc = acc + n.asString});
-				postf("Control bus info: %\n", acc);
-				this.respond("control-bus-info", acc)},
-				this.path("control-bus-info")),
-			
-			/*
-            ** add-synth [synthType, id, keymode, outbus, inbus, vcount]
-            ** Adds new synth.  See addSynth method.
-            ** ARGS:
-            **   synthType - String
-            **   id - OSC id for this synth, must be unique.
-            **   keymode - See Llia/docs/keymodes
-            **   outbus - int or bus name alias
-            **   inbus - int or bus name alias
-            **   vcount - int, voice count.
-            **
-            ** -> llia-added-synth id
-            ** -> ERROR: Synth with identical id already exists.
-			*/
-			OSCFunc({|msg|
-				var synthType = msg[1].asString;
-				var id = msg[2].asString;
-				var keymode = msg[3].asString;
-				var outbus = msg[4].asString;
-				var inbus = msg[5].asString;
-				var vcount = msg[6].asInteger.max(1);
-				var key = synthType++"_"++id;
-				if(this.synthExists(key),
-					{
-						var errmsg = "/Llia/"++oscID++"/"++synthType++"/"++id++" already exists";
-						postf("WARNING: %\n", errmsg);
-						this.respondWithError(2, errmsg);
-					},{
-						this.addSynth(synthType, id, keymode, outbus, inbus, vcount);
-						this.respond("llia-added-synth", id.asString);
-					})},
-				this.path("add-synth")),
-
-			/*
-            ** llia-add-efx-synth [synthType, id, outbus,inbus]
-            ** Convenience message same as add-syhth with keymode = "EFX"
-            ** and voiceCount = 1
-            ** -> llia-added-efx-synth
-            ** -> ERROR: synth with identical id already exists.
-			*/
-			OSCFunc({|msg|
-				var synthType = msg[1].asString;
-				var id = msg[2].asString;
-				var outbus = msg[3].asString;
-				var inbus = msg[4].asString;
-				if(this.synthExists(id),
-					{
-						var errmsg = "EFX Synth '"++id++"' already exists!";
-						postf("WARNING: %\n", errmsg);
-						this.respondWithError(2, errmsg);
-					},{
-						this.addEfx(synthType, id, outbus, inbus);
-						this.post("Added efx synth: %\n", id);
-						this.respond("llia-added-efx-synth", id.asString);
-					})},
-				this.path("add-efx-synth")),
-
-			/*
-            ** query-all-running-servers
-            ** Display list of all running SuperCollider servers.
-            ** -> all-running-servers [...]
-			*/
-			OSCFunc({|msg|
-				var acc = "";
-				var s = Server.allRunningServers; 
-				s.do({|srv| acc=acc+srv.asString});
-				postf("All running servers: %\n", acc);
-				this.respond("all-running-servers", acc)},
-				this.path("query-all-running-servers")),
-
-			/*
-            ** boot-server [name]
-            ** Boot a SuperCollider server. Name may be one of
-            ** 'local', 'internal' or 'default'.
-            ** -> llia-booting-server [name]
-			*/
-			OSCFunc({|msg|
-				var n = msg[1];
-				var s = this.getServer(n);
-				postf("Llia booting server: %\n", s);
-				s.boot;
-				this.respond("llia-booting-server", s)},
+			OSCFunc ({|msg|
+				var sname = msg[0];
+				case {sname == "local"}{Server.local.boot}
+				     {sname == "internal"}{Server.internal.boot}
+				     {true}{Server.default.boot}},
 				this.path("boot-server")),
 
-			/*
-            ** quit-server [name]
-            ** Send quit message to SuperCollider server. 
-            ** name may be one of 'local', 'internal or 'default'.
-            ** -> llia-server-quit [name]
-			*/
-			OSCFunc({|msg|
-				var n = msg[1];
-				var s = this.getServer(n);
-				postf("Llia server quit: %\n", s);
-				s.quit;
-				this.respond("llia-server-quit", s.asString)},
-				this.path("quit-server")),
+			OSCFunc ({|msg|
+				var oid = msg[1];
+				var addr = msg[2];
+				var port = msg[3];
+				oscID = oid;
+				lliaClient = NetAddress.new(addr, port);
+				this.initOscHandlers},
+				this.path("set-client")),
 
-			/*
-            ** kill-all-servers
-            ** -> llia-kill-all-servers
-            */
-			OSCFunc({|msg|
-				"Llia server killAll".postln;
-				Server.killAll;
-				this.respond("llia-kill-all-servers")},
-				this.path("kill-all-servers")),
-								
-		]
+			OSCFunc ({|msg|
+				var rate = msg[1].asSymbol;
+				var bname = msg[2];
+				var numChannels = msg[3].asInt;
+				var rs = this.addBus(rate, bname, numChannels);
+				this.respond("bus-added", rs)},
+				this.path("add-bus")),
+
+			OSCFunc ({|msg|
+				var rate = msg[1].asSymbol;
+				var bname = msg[2];
+				this.freeBus(rate, bname)},
+				this.path("free-bus"));
+
+			OSCFunc ({|msg|
+				var rate = msg[1].asSymbol;
+				var maxBus, numOut, numIn, fpb, allocated, rsmsg;
+				if (rate == \audio,
+					{
+						maxBus = serverOptions.numAudioBuses.asString;
+						numOut = serverOptions.numOutputBuses.asString;
+						numIn = serverOptions.numInputBuses.asString;
+						fpb = serverOptions.firstPrivateBus.asString;
+						allocated = audioBuses.size.asString;
+						rsmsg = rate.asString + maxBus + numOut + numIn + fpb + allocated;
+						postf("AUDIO BUS STATS: rate: %   max: %,  in: %,  out: %,  first-private: %,  allocated: %\n",
+							rate, maxBus, numOut, numIn,fpb,allocated);
+						this.respond("bus-stats", rsmsg)
+					},{
+						maxBus = serverOptions.numControlBuses.asString;
+						allocated = controlBuses.size.asString;
+						rsmsg = rate.asString + maxBus + allocated;
+						postf("CONTROL BUS STATS: max: %, allocated: %\n", maxBus, allocated);
+						this.respond("bus-stats", rsmsg);
+					})},
+				this.path("get-bus-stats")),
+
+			OSCFunc ({|msg|
+				var rate = msg[1].asSymbol;
+				var name = msg[2].asString;
+				var bus, acc, index, numChans;
+				try {
+					if (rate == \audio,
+					{
+						bus = audioBuses.getBus(name);
+					},{
+						rate = \control;
+						bus = controlBuses.getBus(name);
+					});
+					index = bus.index.asString;
+					numChans = bus.numChannels.asString;
+					acc = name + rate.asString + index + numChans;
+					postf("BUS INFO: name: %,  rate: %,  index: %,  channels: %\n",
+						name, rate, index, numChans);
+					this.respond("bus-info", acc);
+				}{
+					postf("BUS INFO: name: %, rate: %,  ***DOES NOT EXISTS***\n",
+						name, rate);
+					this.respond("bus-info", "DOES-NOT-EXISTS");
+				}},
+				this.path("get-bus-info")),
+			
+			OSCFunc ({|msg|
+				var rate, buses, acc;
+				rate = msg[1];
+				if (rate == \audio,
+					{
+						buses = audioBuses;
+					},{
+						buses = controlBuses;
+					});
+				acc = buses.busList.asList.sort.asString;
+				acc = rate.asString + acc;
+				postf("BUSES: %\n", acc);
+				this.respond("bus-list", acc)},
+				this.path("get-bus-list")),
+
+			OSCFunc ({|msg|
+				var name, frames, numChannels, rs;
+				name = msg[1].asString;
+				frames = msg[2].asInt;
+				numChannels = [3].asInt;
+				rs = this.addBuffer(name, frames, numChannels);
+				this.respond("buffer-added", rs)},
+				this.path("add-buffer")),
+
+			OSCFunc ({|msg|
+				var name = msg[1].asString;
+				this.bufferFree(name)},
+				this.path("free-buffer")),
+			
+			OSCFunc ({|msg|
+				var maxBuffer, allocated, rsmsg;
+				maxBuffer = serverOptions.numBuffers.asString;
+				allocated = buffers.size.asString;
+				rsmsg = maxBuffer + allocated;
+				postf("BUFER STATS:  max %,   allocated: %\n", maxBuffer, allocated)},
+				this.path("get-buffer-stats")),
+
+			OSCFunc ({|msg|
+				var acc;
+				acc = buffers.buferList.asList.sort.asString;
+				this.respond("buffer-list", acc)},
+				this.path("get-buffer-list")),
+
+			OSCFunc ({|msg|
+				var name = msg[1].asString;
+				try {
+					var buffer, index, frames, channels ,sr, fpath, acc;
+					buffer = buffers.getBuffer(name);
+					index = buffer.bufnum.asString;
+					frames = buffer.numFrames.asString;
+					channels = buffer.numChannels.asString;
+					sr = buffer.sampleRate.asString;
+					fpath = buffer.path.asString;
+					postf("BUFFER INFO: %  frames: %,  channels: % ", name, frames, channels);
+					postf("sample-rate: %  path: '%'\n", sr, fpath);
+					acc = name + index + frames + channels + sr + fpath;
+					this.respond("buffer-info", acc);
+				}{
+					var acc = name + "DOES-NOT-EXISTS";
+					this.respond("buffer-info", acc);
+				}},
+				this.path("get-buffer-info")),
+			
+			OSCFunc ({|msg|
+				var stype = msg[1].asString;
+				var id = msg[2].asInt;
+				var km = msg[3].asString;
+				var vc = msg[4].asInt;
+				this.addSynth(stype, id, km, vc)},
+				this.path("add-synth")),
+
+			OSCFunc ({|msg|
+				var stype = msg[1].asString;
+				var id = msg[2].asInt;
+				this.addEfx(stype, id)},
+				this.path("add-efx")),
+			
+		];
+		oscHandlers = ary;
 	}
-}
+
+				
+		
+
+
+	
+} // end class
 					
