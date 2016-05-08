@@ -18,7 +18,7 @@ class LliaTopLevel(object):
     def __init__(self, config, skip_mainloop=False):
         super(LliaTopLevel, self).__init__()
         self.config = config
-        self.proxy = LliaProxy(config, self)
+        self._main_window = DummyApplicationWindow(self, None)
         logfile_name = config.log_file()
         self.logfile = None
         if logfile_name:
@@ -31,7 +31,7 @@ class LliaTopLevel(object):
         if not self.logfile:
             print("No log file specified")
         print(logfile_name)
-        self._main_window = DummyApplicationWindow(self, None)
+        self.proxy = LliaProxy(config, self)
         midi_in_trace = config.trace_midi_reception_enabled()
         midi_in_port = config["midi-receiver-name"]
         self.midi_receiver = get_midi_receiver(midi_in_port,midi_in_trace)
@@ -80,32 +80,12 @@ class LliaTopLevel(object):
         print(acc)
         self.exit(errnum)
 
-    # def repl(self):
-    #     print(con.BANNER)
-    #     print(con.VERSION)
-    #     print()
-    #     pyver = sys.version_info[0]
-    #     if pyver <= 2:
-    #         infn = raw_input
-    #     else:
-    #         infn = input
-    #     while True:
-    #         usrin = infn("Llia> ")
-    #         print(usrin)
-
-
-
-        
-    # def start_main_loop(self):
-    #     # self._main_window.start_gui_loop()
-    #     self.gui_thread = threading.Thread(target = self._main_window.start_gui_loop)
-    #     self.gui_thread.setDaemon(True)
-    #     self.gui_thread.start()
-    #     self.repl()
-
-
     def start_main_loop(self):
         self._repl_thread = threading.Thread(target = self.lsl_parser.repl)
         self._repl_thread.start()
         self._main_window.start_gui_loop()
-        
+
+    # ISSUE: FIX ME  update all GUI windows.
+    def sync_all(self):
+        self.proxy.sync_to_host()
+        print("LliaTopLevel.sync_all is not compleatly implemented")

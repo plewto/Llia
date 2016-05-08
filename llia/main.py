@@ -221,9 +221,6 @@ app = LliaTopLevel(config, True)
 # app.proxy.add_efx("Echo1", id_, inbus="Alpha", outbus=0)
 # app.proxy.add_synth("ORGN", id_, outbus=0)
 
-
-
-
 app.start_main_loop()
 
 

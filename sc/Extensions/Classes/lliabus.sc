@@ -7,7 +7,7 @@
 LliaBuses : Object {
 	
 	var sopts;							// ServerOptions
-	var rate;							// Symbol 'audio' or 'control'
+	var <rate;							// Symbol 'audio' or 'control'
 	var <busCount;						// int
 	var buses;							// Dictionary
 
@@ -104,8 +104,11 @@ LliaBuses : Object {
     **   bool - true  -> if a new assignment was made.
     **          false -> bus already exists.
 	*/
+	
 	addBus {|id, numChans=1|
 		var b;
+		id = id.asString;
+		numChans = numChans.asInt;
 		if (this.busExists(id),
 			{
 				var msg = "WARNING: Attempt to replace existing";
@@ -125,6 +128,8 @@ LliaBuses : Object {
 			});
 	}
 
+
+	
 	/*
     ** Retrieve the Bus object associated with id.
     ** ARGS:

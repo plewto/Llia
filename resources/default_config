@@ -159,7 +159,7 @@ keyswitch-transpose : -40
 trace-midi-reception : False
 
 [OSC]
-global-id : dog
+global-id : llia
 host-address : 127.0.0.1
 host-port : 57120
 client-address : 127.0.0.1

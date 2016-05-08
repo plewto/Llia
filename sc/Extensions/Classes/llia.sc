@@ -59,7 +59,7 @@ LliaHandler : Object {
 	}
 
 	free {
-		oscHandlers.do.free;
+		oscHandlers.do({|hfn| hfn.free});
 		isDead = true;
 		audioBuses.freeAll;
 		controlBuses.freeAll;
@@ -104,8 +104,10 @@ LliaHandler : Object {
 	}
 
 	addBus {|rate, busName, numChannels=1|
-		var bl = this.selectBusList(rate);
-		^bl.addBus(busName, numChannels);
+		var bl, rs;
+		bl = this.selectBusList(rate);
+		rs = bl.addBus(busName, numChannels);
+		^rs;
 	}
 
 	getBusIndex {|rate, busName, offset=0|
@@ -264,9 +266,10 @@ LliaHandler : Object {
     ** payload - additional values.
     */
 	respond {|msg, payload|
-		var id = oscID.asString;
-		var addr = "/Llia/"++id++"/"++msg;
-	    //postf("Response:  addr = '%'\n", addr); // DEBUG
+		var id, addr;
+		id = oscID.asString;
+		addr = "/Llia/"++id++"/"++msg;
+	    // postf("Response:  addr = '%'\n", addr); // DEBUG
 		lliaClient.sendMsg(addr, payload);
 	}
 
@@ -324,6 +327,7 @@ LliaHandler : Object {
 
 			OSCFunc ({|msg|
 				var sname = msg[0];
+				this.respond("booting-server");
 				case {sname == "local"}{Server.local.boot}
 				     {sname == "internal"}{Server.internal.boot}
 				     {true}{Server.default.boot}},
@@ -331,19 +335,23 @@ LliaHandler : Object {
 
 			OSCFunc ({|msg|
 				var oid = msg[1];
-				var addr = msg[2];
-				var port = msg[3];
+				var addr = msg[2].asString;
+				var port = msg[3].asInt;
 				oscID = oid;
-				lliaClient = NetAddress.new(addr, port);
-				this.initOscHandlers},
+				lliaClient = NetAddr.new(addr, port);
+				this.initOscHandlers;
+				postf("OSC client  id: '%',  address: %,  port: %\n", oid, addr, port);
+				this.respond("ping-response")},
 				this.path("set-client")),
 
 			OSCFunc ({|msg|
-				var rate = msg[1].asSymbol;
-				var bname = msg[2];
-				var numChannels = msg[3].asInt;
-				var rs = this.addBus(rate, bname, numChannels);
-				this.respond("bus-added", rs)},
+				var rate, bname, numChannels, rs;
+				rate = msg[1].asSymbol;
+				bname = msg[2];
+				numChannels = msg[3].asInt;
+				rs = this.addBus(rate, bname, numChannels);
+				this.respond("bus-added", rs);
+			},
 				this.path("add-bus")),
 
 			OSCFunc ({|msg|
@@ -357,20 +365,17 @@ LliaHandler : Object {
 				var maxBus, numOut, numIn, fpb, allocated, rsmsg;
 				if (rate == \audio,
 					{
-						maxBus = serverOptions.numAudioBuses.asString;
-						numOut = serverOptions.numOutputBuses.asString;
-						numIn = serverOptions.numInputBuses.asString;
+						maxBus = serverOptions.numAudioBusChannels.asString;
+						numOut = serverOptions.numOutputBusChannels.asString;
+						numIn = serverOptions.numInputBusChannels.asString;
 						fpb = serverOptions.firstPrivateBus.asString;
 						allocated = audioBuses.size.asString;
 						rsmsg = rate.asString + maxBus + numOut + numIn + fpb + allocated;
-						postf("AUDIO BUS STATS: rate: %   max: %,  in: %,  out: %,  first-private: %,  allocated: %\n",
-							rate, maxBus, numOut, numIn,fpb,allocated);
 						this.respond("bus-stats", rsmsg)
 					},{
-						maxBus = serverOptions.numControlBuses.asString;
+						maxBus = serverOptions.numControlBusChannels.asString;
 						allocated = controlBuses.size.asString;
 						rsmsg = rate.asString + maxBus + allocated;
-						postf("CONTROL BUS STATS: max: %, allocated: %\n", maxBus, allocated);
 						this.respond("bus-stats", rsmsg);
 					})},
 				this.path("get-bus-stats")),
@@ -390,12 +395,8 @@ LliaHandler : Object {
 					index = bus.index.asString;
 					numChans = bus.numChannels.asString;
 					acc = name + rate.asString + index + numChans;
-					postf("BUS INFO: name: %,  rate: %,  index: %,  channels: %\n",
-						name, rate, index, numChans);
 					this.respond("bus-info", acc);
 				}{
-					postf("BUS INFO: name: %, rate: %,  ***DOES NOT EXISTS***\n",
-						name, rate);
 					this.respond("bus-info", "DOES-NOT-EXISTS");
 				}},
 				this.path("get-bus-info")),
@@ -411,15 +412,14 @@ LliaHandler : Object {
 					});
 				acc = buses.busList.asList.sort.asString;
 				acc = rate.asString + acc;
-				postf("BUSES: %\n", acc);
-				this.respond("bus-list", acc)},
+				this.respond("get-bus-list", acc)},
 				this.path("get-bus-list")),
 
 			OSCFunc ({|msg|
 				var name, frames, numChannels, rs;
 				name = msg[1].asString;
 				frames = msg[2].asInt;
-				numChannels = [3].asInt;
+				numChannels = msg[3].asInt;
 				rs = this.addBuffer(name, frames, numChannels);
 				this.respond("buffer-added", rs)},
 				this.path("add-buffer")),
@@ -433,14 +433,13 @@ LliaHandler : Object {
 				var maxBuffer, allocated, rsmsg;
 				maxBuffer = serverOptions.numBuffers.asString;
 				allocated = buffers.size.asString;
-				rsmsg = maxBuffer + allocated;
-				postf("BUFER STATS:  max %,   allocated: %\n", maxBuffer, allocated)},
+				rsmsg = maxBuffer + allocated},
 				this.path("get-buffer-stats")),
 
 			OSCFunc ({|msg|
 				var acc;
-				acc = buffers.buferList.asList.sort.asString;
-				this.respond("buffer-list", acc)},
+				acc = buffers.bufferList.asList.sort.asString;
+				this.respond("get-buffer-list", acc)},
 				this.path("get-buffer-list")),
 
 			OSCFunc ({|msg|
@@ -453,13 +452,11 @@ LliaHandler : Object {
 					channels = buffer.numChannels.asString;
 					sr = buffer.sampleRate.asString;
 					fpath = buffer.path.asString;
-					postf("BUFFER INFO: %  frames: %,  channels: % ", name, frames, channels);
-					postf("sample-rate: %  path: '%'\n", sr, fpath);
 					acc = name + index + frames + channels + sr + fpath;
-					this.respond("buffer-info", acc);
+					this.respond("get-buffer-info", acc);
 				}{
 					var acc = name + "DOES-NOT-EXISTS";
-					this.respond("buffer-info", acc);
+					this.respond("get-buffer-info", acc);
 				}},
 				this.path("get-buffer-info")),
 			
@@ -476,6 +473,37 @@ LliaHandler : Object {
 				var id = msg[2].asInt;
 				this.addEfx(stype, id)},
 				this.path("add-efx")),
+
+			OSCFunc ({|msg|
+				synths.do({|sy| sy.panic});
+				postln("PANIC!")},
+				this.path("panic")),
+
+			OSCFunc ({|msg|
+				var txt, i;
+				i = 1;
+				txt = "";
+				while({i < msg.size},
+					{
+						txt = txt ++ msg[i];
+						i = i + 1;
+					});
+				txt.post},
+				this.path("post")),
+
+			OSCFunc ({|msg|
+				var txt, i;
+				i = 1;
+				txt = "";
+				while({i < msg.size},
+					{
+						txt = txt ++ msg[i];
+						i = i + 1;
+					});
+				txt.postln},
+				this.path("postln"))
+
+			
 			
 		];
 		oscHandlers = ary;

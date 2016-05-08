@@ -175,7 +175,7 @@ class SynthProxy(object):
         sm = self._get_source_mapper(source)
         if source.lower() == "keynumber":
             range_ = range_ or self.key_range()
-        sm.add_parameter(param, curve,modifier, range_, limits)
+        sm.add_parameter(param,curve,modifier, range_,limits)
 
     def remove_source_map(self, source, param="ALL"):
         sm = self._get_source_mapper(source)
