@@ -14,8 +14,12 @@ BANNER ="""
 
 
 GUI_OPTIONS = (("None", "Use Llia without GUI."),
-               ("QT", "May not be avilaible on all systems."),
+               # ("QT", "May not be avilaible on all systems."),
                ("TK", "Aviliable wherever Python is sold."))
+
+KEY_MODES = ("Poly1", "Mono1", "EFX")
+SYNTH_TYPES = ("ORGN", )
+EFFECT_TYPES = ("Echo1", )
 
 MAX_UNDO = 10
 BANK_LENGTH = 128

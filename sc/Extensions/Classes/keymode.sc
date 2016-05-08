@@ -9,7 +9,7 @@ Keymode : Object {
 	var synthID;
 	var <netAddress;
 	var <synthType;
-	var fixedParameters;
+	var <fixedParameters;
 	var currentProgram;
 	var oscHandlers;
 	var <isDead;
@@ -39,7 +39,8 @@ Keymode : Object {
 		var rs = "/Llia/";
 		rs = rs ++ globalID;
 		rs = rs ++ "/" ++ synthType ++ "/" ++ synthID.asString;
-		rs = rs ++ tail.asString;
+		rs = rs ++ "/" ++ tail.asString;
+		// postf("DEBUG Keynod.path  rs = '%'\n", rs);
 		^rs;
 	}
 

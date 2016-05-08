@@ -25,6 +25,7 @@ class LSLParser(object):
         self._init_dispatch_table()
         self.prompt = "Lila> "
         self._current_line = ""
+        self._current_synth = None  # String stype_id
 
     def _init_dispatch_table(self):
         self._dispatch_table["test"] = self.test
@@ -50,7 +51,8 @@ class LSLParser(object):
         self._dispatch_table["run"] = self.run_script
         # self._dispatch_table["save"] = self.save
         self._dispatch_table["sync"] = self.sync_all
-        # self._dispatch_table["synth"] = self.add_synth
+        self._dispatch_table["synth"] = self.add_synth
+        self._dispatch_table["with"] = self.with_synth
 
     def status(self, msg):
         self.app.status(msg)
@@ -368,6 +370,62 @@ class LSLParser(object):
                                                   ["str", "str"])[1]
         print("DEBUG filename '%s'" % filename)
         self.exec_scriptfile(filename)
+
+
+    # synth stype id_ [:keymode km][:voice-count vc]
+    #                 [:outbus busName][:outbus-offset n][:outbus-param param]
+    def add_synth(self, tokens):
+        args = LSLParser.parse_line_keywords(tokens,
+                                             ["str", "str", "int"],
+                                             [":keymode", ":voice-count",
+                                              ":outbus", ":outbus-offset",
+                                              ":outbus-param"],
+                                             {":keymode" : ["str", "Poly1"],
+                                              ":voice-count" : ["int", 8],
+                                              ":outbus" : ["str", "out_0"],
+                                              ":outbus-offset" : ["int", 0],
+                                              ":outbus-param" : ["str", "outbus"]})
+        cmd, stype, id_, keymode, voice_count, obusName, obusOffset, obusParam = args
+        sid = "%s_%d" % (stype, id_)
+        if stype not in SYNTH_TYPES:
+            msg = "Unkown synth type: '%s'" % stype
+            self.warning(msg)
+            return False
+        if keymode not in KEY_MODES:
+            msg = "Invalid keymode: '%s'" % keymode
+            self.warning(msg)
+            return False
+        if self.proxy.synth_exists(stype, id_):
+            msg = "Synth %s already exists" % sid
+            self.warning(msg)
+            return False
+        if not self.proxy.audio_bus_exists(obusName):
+            msg = "Audio bus '%s' does not exists" % obusName
+            self.warning(msg)
+            return False
+        rs = self.proxy.add_synth(stype, id_, keymode, voice_count)
+        self.proxy.assign_synth_audio_bus(stype, id_, obusParam, obusName, obusOffset)
+        self._current_synth = sid
+        self.prompt = "Llia(%s)> " % sid
+        return rs
+
+    # with stype id_
+    # Select synth for editing.
+    #
+    def with_synth(self, tokens):
+        args = LSLParser.parse_line_positional(tokens,
+                                               ["str", "str", "int"])
+        cmd, stype, id_ = args
+        sid = "%s_%d" % (stype, id_)
+        if self.proxy.synth_exists(stype, id_):
+            msg = "Using synth '%s'" % sid
+            self.status(msg)
+            self.prompt = "Llia(%s)> " % sid
+        else:
+            msg = "Synth '%s' does not exists" % sid
+            self.warning(msg)
+        
+        
         
     def test(self,tokens):
         pass

@@ -42,8 +42,8 @@ Poly1 : Keymode {
 		    [\gate, 0, \freq, frequency, \keynumber, keynumber];
 		sy = Synth(synthType, paramList);
 		old = activeNotes[keynumber];
-		//postf("DEBUG Poly1 keynum [%] freq % vel %\n", keynumber, frequency, velocity);
-		postf("DEBUG Poly1.noteOn  paramList -> %\n", paramList);
+		// postf("DEBUG Poly1 keynum [%] freq % vel %\n", keynumber, frequency, velocity);
+		// postf("DEBUG Poly1.noteOn  super.fixedParameters -> %\n", super.fixedParameters);
 		sy.set(\gate, 1);
 		old.set(\gate, 0);
 		activeNotes[keynumber] = sy;

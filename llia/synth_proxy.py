@@ -14,7 +14,7 @@ from llia.osc_transmitter import OSCTransmitter
 class SynthSpecs(dict):
 
     global_synth_type_registry = {}
-    synth_counter = {}
+    # synth_counter = {}
 
     @staticmethod
     def available_synth_types():
@@ -26,12 +26,24 @@ class SynthSpecs(dict):
     def is_known_synth_type(stype):
         return SynthSpecs.global_synth_type_registry.has_key(stype)
     
+    # @staticmethod
+    # def create_id(ss):
+    #     format_ = ss["format"]
+    #     count = SynthSpecs.synth_counter.get(format_, 1)
+    #     SynthSpecs.synth_counter[format_] = count+1
+    #     return count
+
     @staticmethod
-    def create_id(ss):
-        format_ = ss["format"]
-        count = SynthSpecs.synth_counter.get(format_, 1)
-        SynthSpecs.synth_counter[format_] = count+1
-        return count
+    def create_synth_proxy(app, stype, id_):
+        try:
+            specs = SynthSpecs.global_synth_type_registry[stype]
+            # id_ = id_ or SynthSpecs.create_id(stype)
+            cfn = specs["constructor"]
+            syproxy = cfn(app, id_)
+            return syproxy
+        except KeyError:
+            return None
+
     
     def __init__(self, format_):
         super(SynthSpecs, self).__init__()

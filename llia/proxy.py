@@ -32,7 +32,7 @@ class LliaProxy(object):
                      "buffer-added"):
             self.osc_receiver.add_handler(rmsg, self._expect_response)
         self.sync_to_host()
-
+        
     # def init(self):
     #     self._synths = {}
     #     self._audio_buses = {}
@@ -40,7 +40,7 @@ class LliaProxy(object):
     #     self._bufers = {}
     #     self.establish_default_buses()
     #     self.status("LliaProxy initialized")
-            
+
     def _expect_response(self, path, tags, args, source):
         self._callback_message = {"path" : path,
                                   "tags" : tags,
@@ -127,7 +127,6 @@ class LliaProxy(object):
         print("%shost    : %s" % (pad1, self.osc_host()))
         print("%sclient  : ('%s', %s)" % (pad1, self.config["client"], self.config["client_port"]))
         print("%saudio buses:" % pad1)
-        
         abl = self._audio_buses.keys()
         acc = []
         for b in abl:
@@ -136,7 +135,6 @@ class LliaProxy(object):
         acc = sorted(acc, key=lambda n: n[1])
         for binfo in acc:
             print("%sindex: %3d, name: '%-12s', channels: %s" % (pad2, binfo[1], binfo[0], binfo[2]))
-
         print("%scontrol buses:" % pad1)
         abl = self._control_buses.keys()
         acc = []
@@ -146,7 +144,6 @@ class LliaProxy(object):
         acc = sorted(acc, key=lambda n: n[1])
         for binfo in acc:
             print("%sindex: %3d, name: '%-12s', channels: %s" % (pad2, binfo[1], binfo[0], binfo[2]))
-
         print("%sbuffers:" % pad1)
         frmt = "%sindex: %3d, name: '%-12s', frames: %4d, channels: %2d, "
         frmt = frmt + "sr: %d,  filename: '%s'"
@@ -159,6 +156,9 @@ class LliaProxy(object):
             sr = binfo["sample-rate"]
             filename = binfo["filename"]
             print(frmt % (pad2, index, bname, frames, chans, sr, filename))
+        print("%sSynths:" % pad1)
+        for s in sorted(self._synths.keys()):
+            print("%s%s" % (pad2, s))
         
     def boot_server(self, s="default"):
         self._send("boot-server", [s])
@@ -171,22 +171,14 @@ class LliaProxy(object):
         self._send("set-client", payload)
         return self._expect("ping-response")
 
-    # def establish_default_buses(self):
-    #     print("WANING: establish_default_buses DEPRECIATED")
-    #     raw = self._query_host("get-bus-stats", ["audio"])[0].strip()
-    #     rate, max_, out, in_, fpb, alloc= raw.split(' ')
-    #     out, in_ = int(out), int(in_)
-    #     counter = 0
-    #     for n in range(out):
-    #         bname = "out_%d" % n
-    #         self._audio_buses[bname] = (bname, counter, 1)
-    #         counter += 1
-    #     for n in range(in_):
-    #         bname = "in_%d" % n
-    #         self._audio_buses[bname] = (bname, counter, 1)
-    #         counter += 1
-    #     self.status("%d Output buses" % out)
-    #     self.status("%d Input buses" % in_)
+    def panic(self):
+        self._send("panic")
+
+    def post(self, text):
+        self._send("post", [text])
+
+    def postln(self, text):
+        self._send("postln", [text])
         
     def get_bus_list(self, rate):
         payload = [rate]
@@ -247,12 +239,13 @@ class LliaProxy(object):
               "sample-rate" : int(sr),
               "filename" : fname}
         return rs
-        
-    
 
+    def audio_bus_exists(self, bname):
+        return self._audio_buses.has_key(bname)
+    
     def add_audio_bus(self, bname, channels=1):
         rate = "audio"
-        if self._audio_buses.has_key(bname):
+        if self.audio_bus_exists(bname):
             self.warning("Audio bus %s already exists" % bname)
             return False
         else:
@@ -260,7 +253,6 @@ class LliaProxy(object):
             rs = self._expect("bus-added")
             self.sync_to_host()
             return rs
-
 
     def add_control_bus(self, bname, channels=1):
         rate = "control"
@@ -281,6 +273,54 @@ class LliaProxy(object):
             self.sync_to_host()
             return rs
 
+    def list_audio_buses(self):
+        print("Audio buses:")
+        for k in sorted(self._audio_buses.keys()):
+            print("    ", k)
+
+    def list_control_buses(self):
+        print("Control Buses:")
+        for k in sorted(self._control_buses.keys()):
+            print("    ", k)
+
+    def list_buffers(self):
+        print("Buffers:")
+        for k in sorted(self._buffers.keys()):
+            print("    ", k)
+
+    def synth_exists(self, stype, id_):
+        sid = "%s_%d" % (stype, int(id_))
+        return self._synths.has_key(sid)
+    
+    # ISSUE: FIX ME list_synths
+    def list_synths(self):
+        print("LliaProxy.list_synths not implemented")
+
+    # ISSUE: FIX ME lsit_efx
+    def list_efx(self):
+        print("LlisProxy.list_efx not implemented")
+
+    def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
+       sid = "%s_%d" % (stype, int(id_))
+       if self.synth_exists(stype, id_):
+           msg = "Synth %s already exists" % sid
+           self.warning(msg)
+           return False
+       else:
+           sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
+           if not sy:
+               msg = "Synth %s could not be created" % sid
+               self.warning(msg)
+               return False
+           else:
+               self._synths[sid] = sy
+               rs = self._send("add-synth", [stype, id_, keymode, voice_count])
+               return rs
+
+    def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset):
+        payload = [stype, id_, param, bus_name, offset]
+        rs = self._send("assign-synth-audio-bus", payload)
+           
     def sync_to_host(self):
         self._audio_buses = {}
         self._control_buses = {}
@@ -303,36 +343,4 @@ class LliaProxy(object):
         for bname in bls:
             binfo = self.get_buffer_info(bname)
             if binfo:
-                self._buffers[bname] = binfo
-
-    def list_audio_buses(self):
-        print("Audio buses:")
-        for k in sorted(self._audio_buses.keys()):
-            print("    ", k)
-
-    def list_control_buses(self):
-        print("Control Buses:")
-        for k in sorted(self._control_buses.keys()):
-            print("    ", k)
-
-    def list_buffers(self):
-        print("Buffers:")
-        for k in sorted(self._buffers.keys()):
-            print("    ", k)
-
-    # ISSUE: FIX ME list_synths
-    def list_synths(self):
-        print("LliaProxy.list_synths not implemented")
-
-    # ISSUE: FIX ME lsit_efx
-    def list_efx(self):
-        print("LlisProxy.list_efx not implemented")
-
-    def panic(self):
-        self._send("panic")
-
-    def post(self, text):
-        self._send("post", [text])
-
-    def postln(self, text):
-        self._send("postln", [text])
+                self._buffers[bname] = binfo        

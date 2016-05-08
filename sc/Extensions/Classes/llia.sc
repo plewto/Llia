@@ -179,7 +179,13 @@ LliaHandler : Object {
 			});
 	}
 
-	// NOTE: At a minimum an output bus for the synth must be established
+	// freeSynth {|sid|
+	// 	var info = synths.at(sid);
+	// 	info.free;
+	// }
+		
+
+	// NOTE: At a minimum an output bus for the synth must be established.
 	//       after it has been added.
 	addSynth {|stype, id, km="Poly1", voiceCount=8|
 		var sid, sy;
@@ -191,6 +197,7 @@ LliaHandler : Object {
 			});
 		this.freeSynth(sid);
 		synths.put(sid, sy);
+		postf("Synth % added\n", sid);
 		^sy;
 	}
 
@@ -211,6 +218,7 @@ LliaHandler : Object {
 
 	assignSynthBus {|stype, id, param, rate, busName, offset=0|
 		var sy;
+		postf("DEBUG llia.assginSynthBus executed  busName is '%'\n", busName);
 		sy = this.getSynthInfo(stype, id);
 	    if (sy == nil,
 			{
@@ -501,9 +509,21 @@ LliaHandler : Object {
 						i = i + 1;
 					});
 				txt.postln},
-				this.path("postln"))
+				this.path("postln")),
 
-			
+			// cmd stype id param busName offset
+			// 0   1     2  3     4       5
+			OSCFunc ({|msg|
+				var stype, id, param, busName, offset, rate, rs;
+				stype = msg[1].asString;
+				id = msg[2].asInt;
+				param = msg[3].asString;
+				busName = msg[4].asString;
+				offset = msg[5].asInt;
+				rate = \audio;
+				rs = this.assignSynthBus(stype, id, param, rate, busName, offset)},
+				this.path("assign-synth-audio-bus")),
+				
 			
 		];
 		oscHandlers = ary;
