@@ -11,7 +11,7 @@ EfxKeymode : Keymode {
 	var keyDownCounter;
 
 	*new {|lliaApp, synthType, id, globalID, inbus, outbus|
-		^super.new().init(synthType, id, globalID);
+		^super.new().init(lliaApp, synthType, id, globalID);
 	}
 
 	init {|lliaApp, synthType, id, globalID, inbus, outbus|
@@ -31,9 +31,14 @@ EfxKeymode : Keymode {
 	}
 
 	noteOn {|keynumber, frequency, velocity|
-		activeVoice.set(\gate, 1, \freq, frequency, \keynumber, keynumber,
-		\velocity, velocity);
-		keyDownCounter = keyDownCounter - 1;
+		var params = [\gate, 1, \freq, frequency, \keynumber, keynumber,
+			\velocity, velocity];
+		params = params ++ super.fixedParameters;
+		Keymode.zip(params).do({|q|
+			var param = q[0];
+			var value = q[1];
+			activeVoice.set(param, value)});
+		keyDownCounter = keyDownCounter + 1;
 	}
 
 	noteOff {|keynumber|

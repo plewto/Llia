@@ -14,6 +14,24 @@ Keymode : Object {
 	var oscHandlers;
 	var <isDead;
 
+	/* 
+    ** Zip list into 2-element sublist
+    ** zip([a,b,c,d,e,f]) --> [[a,b],[c,d],[e,f]]
+	*/
+	*zip {|lst|
+		var acc = List.new;
+		var i = 0;
+		while ({i < lst.size},
+			{
+				var a, b;
+				a = lst.at(i);
+				b = lst.at(i+1);
+				acc.add([a,b]);
+				i = i+2;
+			});
+		^acc;
+	}
+	
 	*new {
 		^super.new;
 	}
@@ -35,12 +53,12 @@ Keymode : Object {
 	}
 
 	path {|tail|
-		var globalID = lliaApp.oscID;
-		var rs = "/Llia/";
+		var globalID, rs;
+		globalID = lliaApp.oscID;
+		rs = "/Llia/";
 		rs = rs ++ globalID;
 		rs = rs ++ "/" ++ synthType ++ "/" ++ synthID.asString;
 		rs = rs ++ "/" ++ tail.asString;
-		// postf("DEBUG Keynod.path  rs = '%'\n", rs);
 		^rs;
 	}
 
@@ -91,7 +109,6 @@ Keymode : Object {
 				var value = msg[2];
 				this.set_(param, value)},
 				this.path("synth-param")),
-
 		];
 		oscHandlers = ary;
 	}

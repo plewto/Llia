@@ -42,13 +42,13 @@ LliaSynthInfo : Object {
 		isEfx = false;
 		keymodeObject = case
 		    {keymodeName == "Poly1"}
-		    {Poly1.new(lliaApp, synthType, id, globalAppID)}
+		    {Poly1.new(lliaApp, synthType, oscID, globalAppID)}
 
 		    {keymodeName == "Mono1"}
-		    {Mono1.new(lliaApp, synthType, id, globalAppID)}
+		    {Mono1.new(lliaApp, synthType, oscID, globalAppID)}
 
 		    {keymodeName == "EFX"}
-		    {EfxKeymode.new(lliaApp, synthType, id, globalAppID)}
+		    {EfxKeymode.new(lliaApp, synthType, oscID, globalAppID)}
 
 		    {True == True}
 		    {error("Invalid Llia keymode '"++km.asString++"'")};

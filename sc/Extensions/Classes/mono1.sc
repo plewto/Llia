@@ -17,12 +17,12 @@ Mono1 : Keymode {
 
 	var stack, activeVoice;
 
-	*new {|lliaApp, synthType, id=nil, globalID="llia"|
-		^super.new().init(synthType, id, globalID);
+	*new {|lliaApp, synthType, oscid=nil, globalID="llia"|
+		^super.new().init(lliaApp, synthType, oscid, globalID);
 	}
 
-	init {|lliaApp, synthType, id=nil, globalID="llia"|
-		super.init(lliaApp, synthType, id, globalID);
+	init {|lliaApp, synthType, oscid=nil, globalID="llia"|
+		super.init(lliaApp, synthType, oscid, globalID);
 		stack = Stack.new;
 		activeVoice = Synth(synthType, [\gate, 0, \doneAction, 0]);
 	}
@@ -37,8 +37,13 @@ Mono1 : Keymode {
 	}
 
 	noteOn {|keynumber, frequency, velocity|
-		activeVoice.set(\gate, 1, \freq, frequency, \keynumber, keynumber,
-			\outbus, super.outbus);
+		var params;
+		params = [\gate, 1, \freq, frequency, \keynumber, keynumber];
+		params = params ++ super.fixedParameters;
+		Keymode.zip(params).do({|q|
+			var param = q[0];
+			var value = q[1];
+			activeVoice.set(param, value)});
 		stack.push(keynumber);
 	}
 

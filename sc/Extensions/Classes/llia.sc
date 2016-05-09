@@ -218,7 +218,6 @@ LliaHandler : Object {
 
 	assignSynthBus {|stype, id, param, rate, busName, offset=0|
 		var sy;
-		postf("DEBUG llia.assginSynthBus executed  busName is '%'\n", busName);
 		sy = this.getSynthInfo(stype, id);
 	    if (sy == nil,
 			{
