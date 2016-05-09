@@ -1,0 +1,9 @@
+LLia Bugs
+
+---------------------------------------------------------------------- OPEN
+BUG 0000 2016.05.08 OPEN
+Effected files: llia.sc, proxy.py
+
+LliaProxy.sync_to_host does not detect first control bus added to host.
+After a second control bus has been added sync_to_host correctly identifies
+all control buses.
