@@ -124,7 +124,6 @@ LliaHandler : Object {
 	//  ---------------------------------------------------------------------- 
 	// 								  Buffers
     // 
-	// TODO: Buffer related methods are by no means complete.
 
 	bufferCount {
 		^buffers.bufferCount;
@@ -135,22 +134,28 @@ LliaHandler : Object {
 	}
 
 	bufferExists {|bufferName|
+		bufferName = bufferName.asString;
 		^buffers.bufferExists(bufferName);
 	}
 
 	addBuffer {|bufferName, frames=1024, numChannels=1|
+		bufferName = bufferName.asString;
 		^buffers.addBuffer(bufferName, frames, numChannels);
 	}
 
 	getBuffer {|bufferName|
-		^buffers.getBuffer(bufferName);
+		var rs;
+		bufferName = bufferName.asString;
+		rs = buffers.getBuffer(bufferName);
+		^rs
 	}
 
 	freeBuffer {|bufferName|
+		bufferName = bufferName.asString;
 		buffers.free(bufferName);
 	}
 
-
+	
 	//  ---------------------------------------------------------------------- 
 	// 								  Synths
 
@@ -296,7 +301,6 @@ LliaHandler : Object {
 		rs = "/Llia/"++id++"/"++tail;
 		^rs;
 	}
-	
 
 	lliaDump {|pad=""|
 		var pad2 = pad++"    ";
@@ -511,7 +515,6 @@ LliaHandler : Object {
 				this.path("postln")),
 
 			// cmd stype id param busName offset
-			// 0   1     2  3     4       5
 			OSCFunc ({|msg|
 				var stype, id, param, busName, offset, rate, rs;
 				stype = msg[1].asString;
@@ -522,7 +525,39 @@ LliaHandler : Object {
 				rate = \audio;
 				rs = this.assignSynthBus(stype, id, param, rate, busName, offset)},
 				this.path("assign-synth-audio-bus")),
+
+			// cmd busname, maxharm decay skip mode cutoff depth frames
+			// 0   1        2       3     4    5    6      7     8
+			OSCFunc ({|msg|
+				var bufferName, rs;
+				var maxHarm, decay, skip, mode, cutoff, depth, frames;
+				bufferName = msg[1].asString;
+				maxHarm = msg[2].asInt.max(1);
+				decay = msg[3].asFloat.max(0).min(1);
+				skip = msg[4].asInt.max(1);
+				mode = msg[5].asString;
+				cutoff = msg[6].asInt.max(0).min(maxHarm);
+				depth = msg[6].asFloat.max(0).min(1);
+				frames = msg[7].asInt;
+				rs = buffers.wave(bufferName, maxHarm, decay, skip, mode, cutoff, depth, frames)},
+				this.path("create-wavetable")),
 				
+			
+			// OSCFunc ({|msg|
+			// 	var bufferName, acc, index;
+			// 	bufferName = msg[1];
+			// 	acc = Array.new();
+			// 	index = 3;
+			// 	while ({index < msg.size},
+			// 		{
+			// 			var amp = msg[index];
+			// 			acc = acc.add(amp);
+			// 			index = index + 1;
+			// 		});
+			// 	this.newBufferSine1(bufferName, acc)},
+			// 	this.path("new-buffer-sine1")),
+				
+
 			
 		];
 		oscHandlers = ary;

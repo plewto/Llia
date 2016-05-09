@@ -9,8 +9,8 @@ LliaBuffers : Object {
 	var sopts;							// ServerOptions
 	var buffers;						// Dictionary
 
-	*bufferDoesNotExistsException {|id|
-		var msg = "Buffer '" ++ id.asString ++ "' does not exists.";
+	*bufferDoesNotExistsException {|name|
+		var msg = "Buffer '" ++ name.asString ++ "' does not exists.";
 		Error(msg).throw;
 	}
 
@@ -35,52 +35,152 @@ LliaBuffers : Object {
 		^buffers.keys;
 	}
 
-	bufferExists {|id|
+	bufferExists {|name|
 		var flag = true;
-		buffers.atFail(id, {flag=false});
+		buffers.atFail(name, {flag=false});
 		^flag;
 	}
 
-	addBuffer {|id, frames=1024, numChans=1|
-		if (this.bufferExists(id),
+	addBuffer {|name, frames=1024, numChans=1|
+		if (this.bufferExists(name),
 			{
-				var msg = "WARNING: Buffer '" ++ id.asString ++ "' already exists";
+				var msg = "WARNING: Buffer '" ++ name.asString ++ "' already exists";
 				postln(msg);
 				^false;
 			},{
 				var b = Buffer.new(nil, frames, numChans);
-				buffers.add(id -> b);
+				buffers.add(name -> b);
 				^true;
 			})
 	}
 
-	getBuffer {|id|
-		if (this.bufferExists(id),
+	getBuffer {|name|
+		if (this.bufferExists(name),
 			{
-				^buffers.at(id);
+				^buffers.at(name);
 			},{
-				LliaBuffers.bufferDoesNotExistsException(id);
+				LliaBuffers.bufferDoesNotExistsException(name);
 			})
 	}
 
-	free {|id|
-		if(this.bufferExists(id),
+	free {|name|
+		if(this.bufferExists(name),
 			{
-				var b = buffers.at(id);
+				var b = buffers.at(name);
 				b.free;
-				buffers.removeAt(id);
+				buffers.removeAt(name);
 			});
 	}
 
 	freeAll {
-		this.bufferList.do({|id|
-			this.free(id)});
+		this.bufferList.do({|name|
+			this.free(name)});
+	}
+
+	*lowpass {|ary, cutoff, depth|
+		var acc;
+		acc = Array.new;
+		ary.do ({|amp, i|
+			if (i > cutoff,
+				{
+					amp = amp * depth;
+					depth = depth * depth;
+				});
+			acc = acc.add(amp)});
+		^acc;
+	}
+
+	*highpass {|ary, cutoff, depth|
+		var acc;
+		acc = Array.new;
+		cutoff = ary.size-cutoff;
+		acc = LliaBuffers.lowpass(ary.reverse, cutoff, depth);
+		acc = acc.reverse;
+		^acc;
+	}
+
+	*bandpass {|ary, center, depth|
+		var acc;
+		acc = Array.new;
+		ary.do ({|amp, i|
+			var diff = (center-i).abs;
+			var scale = depth**diff;
+			acc = acc.add(amp*scale);
+		});
+		^acc;
+	}
+
+	*bandreject {|ary, center, depth|
+		var acc, bcc;
+		acc = LliaBuffers.lowpass(ary, center, depth);
+		acc = LliaBuffers.highpass(acc, center, depth);
+		acc = acc.normalize(0.0, 1.0);
+		bcc = [];
+		acc.do ({|amp|
+			bcc = bcc.add(1-amp);
+		});
+		^bcc;
 	}
 	
-	sine1 {|id, amps, frames=1024|
-		if (this.addBuffer(id, frames),
+	*filter {|ary, mode, cutoff, depth|
+		var acc = [];
+		case
+			{mode == "lowpass"}
+			{acc = LliaBuffers.lowpass(ary, cutoff, depth)}
+			
+			{mode == "highpass"}
+			{acc = LliaBuffers.highpass(ary, cutoff, depth)}
+			
+			{mode == "bandpass"}
+			{acc = LliaBuffers.bandpass(ary, cutoff, depth)}
+
+		    {mode == "bandreject"}
+		    {acc = LliaBuffers.bandreject(ary, cutoff, depth)}
+		
+			{true} 
+			{acc = ary};
+		^acc;
+	}
+
+
+	/*
+    ** harmgen1 generates an array of harmonic amplitudes suitable for use
+    ** with sine1.
+    ** 
+    ** maxHarmonic - int, the maximum harmonic number
+    ** decay - int, sets the decay rate for higher harmonics.
+    **         for decay = 0 all amplitudes are 1.0
+    **         for decay = 1 amplitudes are reciprocal of frequency
+    **         for decay = 2 amplitudes are reciprocal of frequency squared.
+    ** skip - int, set every nth harmonic to 0, to disable set skip to a value
+    **        greater then maxHarmonic.
+    ** mode - String, filter,  mode one of: "lowpass", "highpass", "bandpass"
+    **        or "bandreject".  Any other value disables the filter.
+    ** cutoff - filter cutoff/center in terms of harmonic number.
+    ** depth  - float, filter scale factor. 0 < scale <= 1
+	*/
+
+	*harmgen1 {|maxHarmonic, decay=1, skip=nil, mode="", cutoff=nil, depth=0.5|
+		var acc;
+		if (skip == nil, {skip = maxHarmonic+1});
+		if (cutoff == nil, {cutoff = maxHarmonic/2});
+		acc = [];
+		maxHarmonic.do ({|i|
+			var freq, skipFlag, amp;
+			freq = i+1;
+			amp = 1.0/(freq**decay);
+			skipFlag = (freq % skip) == 0;
+			if (skipFlag, {amp = 0});
+			acc = acc.add(amp);
+		});
+		acc = LliaBuffers.filter(acc, mode, cutoff, depth);
+		^acc;
+	}
+
+	sine1 {|name, amps, frames=1024|
+		if (this.addBuffer(name, frames),
 			{
-				var b = this.getBuffer(id);
+				var b = this.getBuffer(name);
 				b.sine1(amps, true, true, true);
 				^true;
 			},{
@@ -88,37 +188,28 @@ LliaBuffers : Object {
 			})
 	}
 
-	sine {|id="sine", frames=1024|
-		^this.sine1(id, [1.0], frames);
+	/*
+    ** Recipes:
+    ** sawtooth - use defaut values
+    ** sqaure   - skip = 2
+    ** triangle - decay = 2, skip = 2
+    ** narrow pulse (all amps = 1) - decay = 0
+    ** 33% pulse - skip = 3
+    ** 25% pulse - skip = 4
+    ** 20% pulse - skip = 5
+	*/
+	wave {|name, maxHarmonic=128, decay=1, skip=nil, mode="", cutoff=nil, depth=0.5, frames=1024|
+		if (this.addBuffer(name, frames),
+			{
+				var b = this.getBuffer(name);
+				var amps = LliaBuffers.harmgen1(maxHarmonic, decay, skip, mode, cutoff, depth);
+				b.sine1(amps, true, true, true);
+				^true;
+			},{
+				^false;
+			})
 	}
-			
-	sawtooth {|id="sawtooth", harmonics=16, frames=1024|
-		var acc = List.new;
-		harmonics.do({|n|
-			var freq = n+1;
-			var amp = 1.0/freq;
-			acc.add(amp)});
-		^this.sine1(id, acc, frames);
-	}
-
-	square {|id="square", harmonics=16, frames=1024|
-		var acc = List.new;
-		harmonics.do({|n|
-			var freq = (n+1)*2-1;
-			var amp = 1.0/freq;
-			acc.add(amp)});
-		^this.sine1(id, acc, frames);
-	}
-
-	triangle {|id="triangle", harmonics=16, frames=1024|
-		var acc = List.new;
-		harmonics.do({|n|
-			var freq = (n+1)*2-1;
-			var amp = 1.0/(freq*freq);
-			acc.add(amp)});
-		^this.sine1(id, acc, frames);
-	}
-
+	
 	lliaDump {|pad=""|
 		var pad2 = pad ++ "    ";
 		var blist = this.bufferList.asList;
