@@ -9,8 +9,6 @@ from ConfigParser import RawConfigParser,NoOptionError,NoSectionError
 import llia.constants as constants
 from llia.alias import CCAssignments, ChannelAssignments
 
-
-
 MSG_NO_MIDI_PORT = """
 ERROR:
 No MIDI input port specified.

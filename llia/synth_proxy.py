@@ -79,6 +79,7 @@ class SynthProxy(object):
     def __init__(self, app, specs, id_, bank):
         super(SynthProxy, self).__init__()
         self.is_efx = False
+        self.id_ = id_
         self.app = app
         self.specs = specs
         self.synth_format = specs["format"]

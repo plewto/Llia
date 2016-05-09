@@ -21,11 +21,13 @@ class LSLParser(object):
         self.proxy = app.proxy
         self.config = app.config
         self._exit_repl = False
+        self.history = ""
         self._dispatch_table = {}
         self._init_dispatch_table()
         self.prompt = "Lila> "
         self._current_line = ""
         self._current_synth = None  # String stype_id
+
 
     def _init_dispatch_table(self):
         self._dispatch_table["test"] = self.test
@@ -36,12 +38,13 @@ class LSLParser(object):
         self._dispatch_table["boot"] = self.boot_server
         self._dispatch_table["buffer"] = self.add_buffer    
         self._dispatch_table["cbus"] = self.add_control_bus
+        self._dispatch_table["clear-history"] = self.clear_history
         self._dispatch_table["dump"] = self.dump
         self._dispatch_table["efx"] = self.add_efx
         self._dispatch_table["x"] = self.exit_ # FPO Change to 'exit' after testing
         self._dispatch_table["free"] = self.free
-        self._dispatch_table["id-self"] = self.id_self
-        # self._dispatch_table["load"] = self.load
+        self._dispatch_table["history"] = self.print_history
+        self._dispatch_table["id-self"] = self.id_self  # BROKEN See BUG 0001
         self._dispatch_table["ls"] = self.list_
         self._dispatch_table["panic"] = self.panic
         self._dispatch_table["ping"] = self.ping
@@ -49,7 +52,6 @@ class LSLParser(object):
         self._dispatch_table["postln"] = self.postln
         self._dispatch_table["python"] = self.exec_python
         self._dispatch_table["run"] = self.run_script
-        # self._dispatch_table["save"] = self.save
         self._dispatch_table["sync"] = self.sync_all
         self._dispatch_table["synth"] = self.add_synth
         self._dispatch_table["with"] = self.with_synth
@@ -61,8 +63,7 @@ class LSLParser(object):
         self.app.warning(msg)
         
     def add_to_history(self, tokens):
-        pass
-        # print("HISTORY ", tokens)
+        self.history += self._current_line + "\n"
 
     def remark(self, tokens):
         pass
@@ -133,12 +134,14 @@ class LSLParser(object):
                 dispatch_token = tokens[0].lower()
                 try:
                     dfn = self._dispatch_table[dispatch_token]
-                    dfn(tokens)
+                    rs = dfn(tokens)
                     self.add_to_history(usrin)
+                    self.echo(rs)
                 except KeyError:
                     print("%s ?" % dispatch_token)
                 except LliaParseError as err:
                     print(err.message)
+        self.sync_all([])
 
     @staticmethod
     def expect(ttype, token):
@@ -236,6 +239,7 @@ class LSLParser(object):
 
     def sync_all(self, tokens):
         self.app.sync_all()
+        return True
     
     def exit_(self, tokens):
         self._exit_repl = True
@@ -255,7 +259,6 @@ class LSLParser(object):
         self.proxy.dump()
         return True
         
-        
     # boot [server=internal]
     # Possible servers: internal, local, default
     #
@@ -266,8 +269,12 @@ class LSLParser(object):
         target = str(target[1])
         self.app.status("Booting %s server..." % target)
         return self.proxy.boot_server(target)
-        
+
+    # BROKEN: see BUG 0001
     def id_self(self, tokens):
+        ip, port = self.config["client"], self.config["client_port"]
+        payload = (self.app.global_osc_id(), ip, port)
+        print(payload)
         return self.proxy.id_self()
 
     # ls abus|cbus|buffer|synth|efx
@@ -300,30 +307,33 @@ class LSLParser(object):
     # abus name [channels]
     #
     def add_audio_bus(self, tokens):
-        values = LSLParser.parse_line_positional(tokens,
+        args = LSLParser.parse_line_positional(tokens,
                                                  ["str", "str"],
                                                  [["int", 1]])
-        cmd, bname, chans = values
-        self.proxy.add_audio_bus(bname, chans)
+        cmd, bname, chans = args
+        rs = self.proxy.add_audio_bus(bname, chans)
+        return rs
 
     # cbus name [channels]
     #
     def add_control_bus(self, tokens):
-        values = LSLParser.parse_line_positional(tokens,
+        args = LSLParser.parse_line_positional(tokens,
                                                  ["str", "str"],
                                                  [["int", 1]])
-        cmd, bname, chans = values
-        self.proxy.add_control_bus(bname, chans)
+        cmd, bname, chans = args
+        rs = self.proxy.add_control_bus(bname, chans)
+        return rs
 
     # buffer name [:frames :channels]
     def add_buffer(self, tokens):
-        values = LSLParser.parse_line_keywords(tokens,
+        args = LSLParser.parse_line_keywords(tokens,
                                               ["str","str"],
                                               [":frames", ":channels"],
                                               {":frames" : ["int", 1024],
                                                ":channels" : ["int", 1]})
-        cmd, bname, frames, channels = values
-        self.proxy.add_buffer(bname, frames, channels)
+        cmd, bname, frames, channels = args
+        rs = self.proxy.add_buffer(bname, frames, channels)
+        return rs
 
     # python filename
     # Execute python file
@@ -346,7 +356,7 @@ class LSLParser(object):
             global_ns = {"app" : self.app, "rs" : rs}
             execfile(filename, global_ns)
             print("rs -> ", rs.value)
-            return rs
+            return rs.value
         else:
             msg = "Python file '%s' does not exist" % filename
             self.warning(msg)
@@ -354,11 +364,13 @@ class LSLParser(object):
 
     def panic(self, tokens):
         self.proxy.panic()
+        return True
         
     def post(self, tokens):
         cl = self._current_line[4:].strip()
         print(cl, end="")
         self.proxy.post(cl)
+        return True
 
     def postln(self, tokens):
         cl = self._current_line[6:].strip()
@@ -368,7 +380,8 @@ class LSLParser(object):
     def run_script(self, tokens):
         filename = LSLParser.parse_line_positional(tokens,
                                                   ["str", "str"])[1]
-        self.exec_scriptfile(filename)
+        rs = self.exec_scriptfile(filename)
+        return rs
 
 
     # synth stype id_ [:keymode km][:voice-count vc]
@@ -403,9 +416,10 @@ class LSLParser(object):
             self.warning(msg)
             return False
         rs = self.proxy.add_synth(stype, id_, keymode, voice_count)
-        self.proxy.assign_synth_audio_bus(stype, id_, obusParam, obusName, obusOffset)
-        self._current_synth = sid
-        self.prompt = "Llia(%s)> " % sid
+        if rs:
+            self.proxy.assign_synth_audio_bus(stype, id_, obusParam, obusName, obusOffset)
+            self._current_synth = sid
+            self.prompt = "Llia(%s)> " % sid
         return rs
 
     
@@ -436,14 +450,15 @@ class LSLParser(object):
             return False
         for bs in (obs, ibs):
             if not self.proxy.audio_bus_exists(bs):
-                msg = "Audio bus '%s' does not exists"
-                self.warnng(msg)
+                msg = "Audio bus '%s' does not exists" % bs
+                self.warning(msg)
                 return False
         rs = self.proxy.add_efx(stype, id_)
-        self.proxy.assign_synth_audio_bus(stype, id_, obprm, obs, oboff)
-        self.proxy.assign_synth_audio_bus(stype, id_, ibprm, ibs, iboff)
-        self._current_synth = sid
-        self.prompt = "Llia(%s)> " % sid
+        if rs:
+            self.proxy.assign_synth_audio_bus(stype, id_, obprm, obs, oboff)
+            self.proxy.assign_synth_audio_bus(stype, id_, ibprm, ibs, iboff)
+            self._current_synth = sid
+            self.prompt = "Llia(%s)> " % sid
         return rs
     
     # with stype id_
@@ -458,11 +473,20 @@ class LSLParser(object):
             msg = "Using synth '%s'" % sid
             self.status(msg)
             self.prompt = "Llia(%s)> " % sid
+            return True
         else:
             msg = "Synth '%s' does not exists" % sid
             self.warning(msg)
+            return False
         
-        
-        
+    def print_history(self, tokens):
+        print("History")
+        print(self.history)
+        return True
+
+    def clear_history(self, tokens):
+        self.history = ""
+        return True
+
     def test(self,tokens):
-        pass
+        return False

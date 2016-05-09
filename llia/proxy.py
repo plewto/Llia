@@ -165,11 +165,14 @@ class LliaProxy(object):
         sleep(2)
         return self._expect("booting-server")
 
+    # BROKEN see BUG 0001
     def id_self(self):
         ip, port = self.config["client"], self.config["client_port"]
         payload = [self.global_osc_id(), ip, port]
-        self._send("set-client", payload)
-        return self._expect("ping-response")
+        print("BUG 0001 id_self disabled")
+        # self._send("set-client", payload)
+        # self._expect("ping-response")
+        return False
 
     def panic(self):
         self._send("panic")
@@ -291,14 +294,30 @@ class LliaProxy(object):
     def synth_exists(self, stype, id_):
         sid = "%s_%d" % (stype, int(id_))
         return self._synths.has_key(sid)
+
+    @staticmethod
+    def _list_synth(sy):
+        specs = sy.specs
+        stype = specs["format"]
+        id_ = sy.id_
+        print("    %s %s" % (stype, id_))
     
     # ISSUE: FIX ME list_synths
     def list_synths(self):
-        print("LliaProxy.list_synths not implemented")
+        print("Synths:")
+        for k in sorted(self._synths.keys()):
+            sy = self._synths[k]
+            if not sy.is_efx:
+                self._list_synth(sy)
 
     # ISSUE: FIX ME lsit_efx
     def list_efx(self):
-        print("LlisProxy.list_efx not implemented")
+        print("EFX Synths:")
+        for k in sorted(self._synths.keys()):
+            sy = self._synths[k]
+            if sy.is_efx:
+                self._list_synth(sy)
+                
 
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
        sid = "%s_%d" % (stype, int(id_))
@@ -314,8 +333,8 @@ class LliaProxy(object):
                return False
            else:
                self._synths[sid] = sy
-               rs = self._send("add-synth", [stype, id_, keymode, voice_count])
-               return rs
+               self._send("add-synth", [stype, id_, keymode, voice_count])
+               return True
 
     def add_efx(self, stype, id_):
         sid = "%s_%d" % (stype, id_)
@@ -332,8 +351,8 @@ class LliaProxy(object):
             else:
                 sy.is_efx = True
                 self._synths[sid] = sy
-                rs = self._send("add-efx", [stype, id_])
-                return rs
+                self._send("add-efx", [stype, id_])
+                return True
            
     def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
