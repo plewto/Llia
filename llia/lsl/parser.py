@@ -37,7 +37,7 @@ class LSLParser(object):
         self._dispatch_table["buffer"] = self.add_buffer    
         self._dispatch_table["cbus"] = self.add_control_bus
         self._dispatch_table["dump"] = self.dump
-        # self._dispatch_table["efx"] = self.add_efx
+        self._dispatch_table["efx"] = self.add_efx
         self._dispatch_table["x"] = self.exit_ # FPO Change to 'exit' after testing
         self._dispatch_table["free"] = self.free
         self._dispatch_table["id-self"] = self.id_self
@@ -368,7 +368,6 @@ class LSLParser(object):
     def run_script(self, tokens):
         filename = LSLParser.parse_line_positional(tokens,
                                                   ["str", "str"])[1]
-        print("DEBUG filename '%s'" % filename)
         self.exec_scriptfile(filename)
 
 
@@ -388,7 +387,7 @@ class LSLParser(object):
         cmd, stype, id_, keymode, voice_count, obusName, obusOffset, obusParam = args
         sid = "%s_%d" % (stype, id_)
         if stype not in SYNTH_TYPES:
-            msg = "Unkown synth type: '%s'" % stype
+            msg = "Unknown synth type: '%s'" % stype
             self.warning(msg)
             return False
         if keymode not in KEY_MODES:
@@ -409,6 +408,44 @@ class LSLParser(object):
         self.prompt = "Llia(%s)> " % sid
         return rs
 
+    
+    # efx stype id_ inbus [:outbus name][:outbus-offset n][:outbus-param p]
+    #                     [:inbus-offset n][:inbus-param p]
+    def add_efx(self, tokens):
+        req_args = ["str", "str", "int", "str"]
+        key_arg_order =  [":outbus", ":outbus-offset",":outbus-param", 
+                          ":inbus-offset",":inbus-param"]
+        key_args = {":outbus" : ["str", "out_0"],
+                    ":outbus-offset" : ["int", 0],
+                    ":outbus-param" : ["str", "outbus"],
+                    ":inbus-offset" : ["int", 0],
+                    ":inbus-param" : ["str", "inbus"]}
+        args = LSLParser.parse_line_keywords(tokens,
+                                             req_args,
+                                             key_arg_order,
+                                             key_args)
+        cmd, stype, id_, ibs, obs, oboff, obprm, iboff, ibprm = args
+        sid = "%s_%d" % (stype, id_)
+        if stype not in EFFECT_TYPES:
+            msg = "Unknown EFX synth type: '%s'" % stype
+            self.warning(msg)
+            return False
+        if self.proxy.synth_exists(stype, id_):
+            msg = "Synth %s already exists" % sid
+            self.warning(msg)
+            return False
+        for bs in (obs, ibs):
+            if not self.proxy.audio_bus_exists(bs):
+                msg = "Audio bus '%s' does not exists"
+                self.warnng(msg)
+                return False
+        rs = self.proxy.add_efx(stype, id_)
+        self.proxy.assign_synth_audio_bus(stype, id_, obprm, obs, oboff)
+        self.proxy.assign_synth_audio_bus(stype, id_, ibprm, ibs, iboff)
+        self._current_synth = sid
+        self.prompt = "Llia(%s)> " % sid
+        return rs
+    
     # with stype id_
     # Select synth for editing.
     #

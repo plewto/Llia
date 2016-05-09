@@ -317,6 +317,24 @@ class LliaProxy(object):
                rs = self._send("add-synth", [stype, id_, keymode, voice_count])
                return rs
 
+    def add_efx(self, stype, id_):
+        sid = "%s_%d" % (stype, id_)
+        if self.synth_exists(stype, id_):
+            msg = "EFX Synth %s already exists" % sid
+            self.warning(msg)
+            return False
+        else:
+            sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
+            if not sy:
+                msg ="EFX Synth %s could not be created" % sid
+                self.warning(msg)
+                return False
+            else:
+                sy.is_efx = True
+                self._synths[sid] = sy
+                rs = self._send("add-efx", [stype, id_])
+                return rs
+           
     def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-audio-bus", payload)
