@@ -1,6 +1,6 @@
 /*
 ** lliabus.sc
-** LliaBus, a helper class to manage bus assignments
+** LliaBuses, a helper class to manage bus assignments
 */
 
 
@@ -18,7 +18,7 @@ LliaBuses : Object {
 	}
 
 	/*
-    ** Creates new instance of LliaBus
+    ** Creates new instance of LliaBuses
     ** ARGS:
     **   srate - symbol, either \audio or \control.
     **           any other value throws an exception.
@@ -144,7 +144,7 @@ LliaBuses : Object {
 			{
 				^buses.at(id);
 			},{
-				LliaBus.busDoesNotExistsException(rate, id);
+				LliaBuses.busDoesNotExistsException(rate, id);
 			});
 	}
 

@@ -26,7 +26,8 @@ class LliaProxy(object):
         self._control_buses = {}
         self._buffers = {}
         self._callback_message = {}
-        for rmsg in ("ping-response", "booting-server", "client-address-change",
+        for rmsg in ("ok",
+                "ping-response", "booting-server", "client-address-change",
                      "bus-stats", "bus-info", "get-bus-list", "get-buffer-list",
                      "get-buffer-info", "get-buffer-info", "bus-added",
                      "buffer-added"):
@@ -198,10 +199,16 @@ class LliaProxy(object):
     def get_bus_info(self, rate, busName):
         payload = [rate, busName]
         raw = self._query_host("get-bus-info", payload)[0].strip().split(" ")
-        rs = {"name" : raw[0],
-              "rate" : raw[1],
-              "index": int(raw[2]),
-              "channels": int(raw[3])}
+        if raw[0] == 'DOES-NOT-EXISTS':
+            rs = {"name" : "DOES-NOT-EXISTS",
+                  "rate" : -1,
+                  "index" : -1,
+                  "channels" : -1}
+        else:
+            rs = {"name" : raw[0],
+                  "rate" : raw[1],
+                  "index": int(raw[2]),
+                  "channels": int(raw[3])}
         return rs
 
     def get_buffer_list(self):
