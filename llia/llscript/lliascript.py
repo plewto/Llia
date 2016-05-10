@@ -1,8 +1,8 @@
-# llia.lsl.lliscript
+# llia.llscript.lliscript
 # 2016.05.09
 
-from llia.lsl.bufferhelper import BufferHelper
-from llia.lsl.parser import LSLParser
+from llia.llscript.bufferhelper import BufferHelper
+from llia.llscript.parser import LSLParser
 
 
 

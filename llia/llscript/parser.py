@@ -1,12 +1,12 @@
-# llia.lsl.parser
+# llia.llscript.parser
 # 2016.04.27
 
 from __future__ import print_function
 import sys, os.path
 
-from llia.lsl.lsl_constants import *
-from llia.lsl.lsl_errors import LliascriptParseError
-from llia.lsl.util import parse_positional_args, parse_keyword_args
+import llia.constants as con
+from llia.llscript.lserrors import LliascriptParseError
+from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
 from generic import is_int
 
 class LSLParser(object):
@@ -28,7 +28,7 @@ class LSLParser(object):
 
     def _init_dispatch_table(self):
         self.dispatch_table["test"] = self.test
-        self.dispatch_table[REMARK_TOKEN] = self.remark
+        self.dispatch_table["#"] = self.remark
         self.dispatch_table["?"] = self.help_
         self.dispatch_table["help"] = self.help_
         self.dispatch_table["abus"] = self.add_audio_bus
@@ -86,7 +86,7 @@ class LSLParser(object):
                 return acc
             else:
                 for t in tokens:
-                    if t[0] == REMARK_TOKEN:
+                    if t[0] == "#":
                         break
                     else:
                         acc.append(t)
@@ -128,8 +128,8 @@ class LSLParser(object):
             return False
             
     def repl(self):
-        print(BANNER)
-        print(VERSION)
+        print(con.BANNER)
+        print(con.VERSION)
         print()
         pyver = sys.version_info[0]
         if pyver <= 2:

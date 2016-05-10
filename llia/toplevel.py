@@ -9,7 +9,7 @@ from llia.proxy import LliaProxy
 from llia.midi_receiver import get_midi_receiver
 from llia.keytab.registry import KeyTableRegistry
 from llia.gui.appwindow import DummyApplicationWindow
-import llia.lsl.lliascript
+import llia.llscript.lliascript
 import llia.constants as con
 
 
@@ -37,7 +37,7 @@ class LliaTopLevel(object):
         self.midi_receiver = get_midi_receiver(midi_in_port,midi_in_trace)
         self.keytables = KeyTableRegistry()
         self._repl_thread = None
-        self.lsl_parser = llia.lsl.lliascript.get_lliascript_parser(self)
+        self.lsl_parser = llia.llscript.lliascript.get_lliascript_parser(self)
         if not skip_mainloop:
             self.start_main_loop()
         

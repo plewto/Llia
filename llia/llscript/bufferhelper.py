@@ -1,8 +1,10 @@
+# llia.llscript.bufferhelper
+# 2016.05.09
 
 from __future__ import print_function
 
-from llia.lsl.lsl_errors import LliascriptParseError
-from llia.lsl.util import parse_positional_args, parse_keyword_args
+from llia.llscript.lserrors import LliascriptParseError
+from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
 
 class BufferHelper(object):
 

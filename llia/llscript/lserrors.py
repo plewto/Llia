@@ -1,5 +1,5 @@
-# llia.lsl.lsl_errors
-#
+# llia.llscript.lserrors
+# 2016.05.09
 
 class LliascriptError(Exception):
 
