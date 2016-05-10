@@ -14,3 +14,13 @@ Effected files: llia.sc, proxy.py, parser.py
 
 Lliscript command id-this breaks communication between host and server
 Temporary fix: Disabled command
+
+---------------------------------------------------------------------- OPEN
+BUG 0002 2016.05.10
+Effected files: llia.sc, lliabuses.sc
+
+Freeing LliaHandler.free frees ALL audio buses, even default hardware
+IO buses, causing mayhem with future SC operations.
+
+This should be a simple fix.
+
