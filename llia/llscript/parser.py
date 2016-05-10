@@ -7,6 +7,7 @@ import sys, os.path
 import llia.constants as con
 from llia.llscript.lserrors import LliascriptParseError
 from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
+from llia.llscript.lshelp import help_topics
 from generic import is_int
 
 class LSLParser(object):
@@ -22,42 +23,38 @@ class LSLParser(object):
         self._init_dispatch_table()
         self.prompt = "Llia> "
         self._current_line = ""
-        self._current_synth = None  # String stype_id
-        #self._current_buffer = None
+        self.current_synth = None  # String stype_id
         self.buffer_helper = None
 
     def _init_dispatch_table(self):
-        self.dispatch_table["test"] = self.test
+        self.dispatch_table["test"] = self.test # ISSUE: Remove after testing
         self.dispatch_table["#"] = self.remark
         self.dispatch_table["?"] = self.help_
         self.dispatch_table["help"] = self.help_
         self.dispatch_table["abus"] = self.add_audio_bus
         self.dispatch_table["boot"] = self.boot_server
-        # self.dispatch_table["buffer"] = self.add_buffer
-        # self.dispatch_table["?buffer"] = self.buffer_info
-        # self.dispatch_table["sine1"] = self.new_buffer_sine1
         self.dispatch_table["cbus"] = self.add_control_bus
         self.dispatch_table["clear-history"] = self.clear_history
         self.dispatch_table["dump"] = self.dump
         self.dispatch_table["efx"] = self.add_efx
-        self.dispatch_table["x"] = self.exit_ # FPO Change to 'exit' after testing
+        self.dispatch_table["exit"] = self.exit_ 
+        self.dispatch_table["x"] = self.exit_ # ISSUE: Remove after testing
         self.dispatch_table["free"] = self.free
         self.dispatch_table["history"] = self.print_history
         self.dispatch_table["id-self"] = self.id_self  # BROKEN See BUG 0001
         self.dispatch_table["ls"] = self.list_
         self.dispatch_table["panic"] = self.panic
         self.dispatch_table["ping"] = self.ping
-        self.dispatch_table["post"] = self.post
-        self.dispatch_table["postln"] = self.postln
+        # self.dispatch_table["post"] = self.post   # ISSUE: Not well implemented
+        # self.dispatch_table["postln"] = self.postln
         self.dispatch_table["python"] = self.exec_python
         self.dispatch_table["run"] = self.run_script
         self.dispatch_table["sync"] = self.sync_all
         self.dispatch_table["synth"] = self.add_synth
-        self.dispatch_table["with"] = self.with_synth
-        #self.dispatch_table["with-buffer"] = self.with_buffer
+        self.dispatch_table["with-synth"] = self.with_synth
 
     def update_prompt(self):
-        cs = str(self._current_synth)
+        cs = str(self.current_synth)
         cb = str(self.buffer_helper.current_buffer)
         self.prompt = "Lila(synth: %s, buffer: %s)> " % (cs, cb)
         
@@ -165,9 +162,26 @@ class LSLParser(object):
         topic = parse_positional_args(tokens,
                                                 ["str"],
                                                 [["str", "help"]])
-        topic = topic[1]
-        print("FPO help topic: ", topic)
-        return True
+        topic = topic[1].lower()
+        if topic == "help" or topic == "?":
+            print("Help topics:")
+            for t in sorted(help_topics.keys()):
+                print("   %s" % t)
+            return True
+        else:
+            try:
+                help_text = help_topics[topic]
+                print("%s topic: %s" % ("*"*50, topic))
+                print(help_text)
+                print()
+                return True
+            except KeyError:
+                msg = "Unknown help topic: '%s'" % topic
+                self.warning(msg)
+                msg = "Enter help without a topic to see avaliable topics."
+                self.warning(msg)
+                return False
+
 
     def sync_all(self, tokens):
         self.app.sync_all()
@@ -213,26 +227,48 @@ class LSLParser(object):
     def list_ (self, tokens):
         target = parse_positional_args(tokens,
                                                  ["str", "str"])[1]
-        head = target[0].upper()
-        if head == "A":
+        target = target.upper()
+        if target == "ABUS":
             self.proxy.list_audio_buses()
             return True
-        elif head == "C":
+        elif target == "CBUS":
             self.proxy.list_control_buses()
             return True
-        elif head == "B":
+        elif target == "COMMANDS":
+            for cmd in sorted(self.dispatch_table.keys()):
+                print("   %s" % cmd)
+            print()
+            return True
+        elif target == "BUFFERS":
             self.proxy.list_buffers()
             return True
-        elif head == "S":
+        elif target == "SYNTHS":
             self.proxy.list_synths()
             return True
-        elif head == "E":
+        elif target == "EFX":
             self.proxy.list_efx()
             return True
+        elif target in ("SYNTH-TYPES", "EFX-TYPES", "KEYMODES"):
+            print("Valid synth types:")
+            for s in sorted(con.SYNTH_TYPES):
+                print("   %s" % s)
+            print("Valid EFX Synth types:")
+            for s in sorted(con.EFFECT_TYPES):
+                print("   %s" % s)
+                print("Valid keymodes:")
+            for s in sorted(con.KEY_MODES):
+                print("   %s" % s)
+            return True
         else:
-            msg = "Expected one of 'abus', 'cbus', 'buffer', 'synth' or 'efx', "
-            msg = msg + "not %s" % target
-            self.warning(msg)
+            ls_targets = ("abus", "cbus", "buffers", "synths", "efx", "command",
+                          "syhth-types", "efx-types", "keymodes")
+            
+            #msg = "Expected one of 'abus', 'cbus', 'buffers', 'synths', 'efx', or 'command', "
+            #msg = msg + "not %s" % target
+            #self.warning(msg)
+            self.warning("Expected one of the following ls targets, not '%s'" % target)
+            for t in sorted(ls_targets):
+                print("   %s" % t)
             return False
 
     
@@ -256,18 +292,6 @@ class LSLParser(object):
         rs = self.proxy.add_control_bus(bname, chans)
         return rs
 
-    # # buffer name [:frames :channels]
-    # def add_buffer(self, tokens):
-    #     args = _LSLParser.parse_line_keywords(tokens,
-    #                                           ["str","str"],
-    #                                           [":frames", ":channels"],
-    #                                           {":frames" : ["int", 1024],
-    #                                            ":channels" : ["int", 1]})
-    #     cmd, bname, frames, channels = args
-    #     rs = self.proxy.add_buffer(bname, frames, channels)
-    #     self.with_buffer(["", bname])
-    #     return rs
-
     # python filename
     # Execute python file
     #
@@ -277,9 +301,8 @@ class LSLParser(object):
     #        use rs.value = x to return a value from the script
     #
     def exec_python(self, tokens):
-        values = parse_positional_args(tokens,
-                                                 ["str", "str"])
-        filename = values[1]
+        args = parse_positional_args(tokens,["str", "str"])
+        filename = args[1]
         filename = os.path.expanduser(filename)
         if os.path.exists(filename):
             class RS:
@@ -311,8 +334,7 @@ class LSLParser(object):
         self.proxy.postln(cl)
 
     def run_script(self, tokens):
-        filename = parse_positional_args(tokens,
-                                                  ["str", "str"])[1]
+        filename = parse_positional_args(tokens, ["str", "str"])[1]
         rs = self.exec_scriptfile(filename)
         return rs
 
@@ -351,7 +373,7 @@ class LSLParser(object):
         rs = self.proxy.add_synth(stype, id_, keymode, voice_count)
         if rs:
             self.proxy.assign_synth_audio_bus(stype, id_, obusParam, obusName, obusOffset)
-            self._current_synth = sid
+            self.current_synth = sid
             self.update_prompt()
         return rs
 
@@ -390,7 +412,7 @@ class LSLParser(object):
         if rs:
             self.proxy.assign_synth_audio_bus(stype, id_, obprm, obs, oboff)
             self.proxy.assign_synth_audio_bus(stype, id_, ibprm, ibs, iboff)
-            self._current_synth = sid
+            self.current_synth = sid
             self.update_prompt()
         return rs
     
@@ -420,5 +442,3 @@ class LSLParser(object):
     def clear_history(self, tokens):
         self.history = ""
         return True
-
- 

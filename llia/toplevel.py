@@ -88,4 +88,4 @@ class LliaTopLevel(object):
     # ISSUE: FIX ME  update all GUI windows.
     def sync_all(self):
         self.proxy.sync_to_host()
-        print("LliaTopLevel.sync_all is not compleatly implemented")
+        # print("LliaTopLevel.sync_all is not compleatly implemented")

@@ -1,5 +1,8 @@
 # llia.llscript.bufferhelper
 # 2016.05.09
+#
+# ISSUE: TODO SuperCollider Wavetable class may be useful here.
+#
 
 from __future__ import print_function
 
@@ -20,7 +23,10 @@ class BufferHelper(object):
         self.dispatch_table["with-buffer"] = self.with_buffer
         self.dispatch_table["?buffer"] = self.buffer_info
         self.dispatch_table["wavetab"] = self.create_wavetable
-        self.dispatch_table["sinetab"] = self.create_sinetable
+        # convenience short cuts for wavetab
+        self.dispatch_table["sinetab"] = self.create_sinetable    
+        self.dispatch_table["sawtab"] = self.create_sawtable
+        self.dispatch_table["pulsetab"] = self.create_pulsetable
 
     def status(self, msg):
         self.parser.status(msg)
@@ -135,4 +141,40 @@ class BufferHelper(object):
                   ":frames", frames]
         rs = self.create_wavetable(tokens)
         return rs
-    
+
+    # cmd name [:harmonis][:frames]
+    #
+    def create_sawtable(self, tokens):
+        req = ["str", "str"]
+        pos = [":harmonics", ":frames"]
+        kw = {":harmonics" : ["int", 64],
+              ":frames" : ["int", 1024]}
+        args = parse_keyword_args(tokens, req, pos, kw)
+        cmd, name, harm, frames = args
+        tokens = ["", name,
+                  ":harmonics", harm,
+                  ":decay", 1,
+                  ":skip", harm+1,
+                  ":mode", "",
+                  ":frames", frames]
+        rs = self.create_wavetable(tokens)
+        return rs
+
+    # cmd name [:harmonics][:skip][:frames]
+    #
+    def create_pulsetable(self, tokens):
+        req = ["str", "str"]
+        pos = [":harmonics", ":skip", ":frames"]
+        kw = {":harmonics" : ["int", 64],
+              ":skip" : ["int", 2],
+              ":frames" : ["int", 1024]}
+        args = parse_keyword_args(tokens, req, pos, kw)
+        cmd, name, harm, skip, frames = args
+        if skip <= 1:
+            tokens = ["", name, ":harmonics", harm, ":decay", 0,
+                      ":skip", harm+1, ":mode", "", ":frames", frames]
+        else:
+            tokens = ["", name, ":harmonics", harm, ":decay", 0,
+                      ":skip", skip, ":mode", "", ":frames", frames]
+        rs = self.create_wavetable(tokens)
+        return rs
