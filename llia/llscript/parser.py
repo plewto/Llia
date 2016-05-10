@@ -153,8 +153,6 @@ class LSLParser(object):
                 self.sync_all([])
             except LliaPingError as err:
                 self.warning(err.message)
-            except ValueError as err:
-                self.warning(err.message)
  
     def echo(self, flag):
         if flag:
@@ -199,29 +197,33 @@ class LSLParser(object):
     def ping(self, tokens):
         args = parse_positional_args(tokens, ["str"],[["str", ""]])
         cmd, target = args
-        if not target:
-            rs = self.proxy.ping();
-        elif target == "*":
+        if target == "*":
             rs = self.synth_helper.ping_synth()
+        else:
+            rs = self.proxy.ping();
         return rs
 
     def free(self, tokens):
         self.proxy.free()
         return True
 
-    # dump 
+    # dump [*] 
     # 
     def dump(self, tokens):
-        self.proxy.dump()
-        return True
+        args = parse_positional_args(tokens, ["str"],[["str", ""]])
+        cmd, target = args
+        if target == "*":
+            rs = self.synth_helper.dump_synth()
+        else:
+            self.proxy.dump()
+            rs = True
+        return rs
         
     # boot [server=internal]
     # Possible servers: internal, local, default
     #
     def boot_server(self, tokens):
-        target = parse_positional_args(tokens,
-                                                 ["str"],
-                                                 [["str","internal"]])
+        target = parse_positional_args(tokens,["str"],[["str","internal"]])
         target = str(target[1])
         self.app.status("Booting %s server..." % target)
         return self.proxy.boot_server(target)

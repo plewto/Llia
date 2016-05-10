@@ -161,7 +161,7 @@ Keymode : Object {
 	}
 
 	lliaDump {|pad=""|
-		postf("Keymode.dump FPO\n");
+		postf("ISSUE: Fix me: Keymode.lliaDump\n");
 	}
 	
 

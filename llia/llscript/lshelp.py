@@ -116,11 +116,14 @@ See also history
 """
 
 dump = """
-dump 
+dump [*]
 
 Causes informational dump on both the client and the host.  
-This may be useful for diagnostics and for checking that both the client
+This may be useful for diagnostics and for checking that both client
 and host states are consistent. 
+
+If the optional '*' argument is present, display information about the
+current synth.
 """
 
 efx = """

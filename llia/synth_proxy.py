@@ -212,7 +212,10 @@ class SynthProxy(object):
             msg = msg % (self.app.global_osc_id(), sid)
             raise LliaPingError(msg)
         return rs
-        
+
+    def x_dump(self):
+        self._osc_transmitter.x_dump()
+    
     def x_param_change(self, param, value):
         self._osc_transmitter.x_synth_param(param, value)
 
@@ -281,5 +284,7 @@ class SynthProxy(object):
                 slot = min(max(slot, 0), 127)
                 self.use_program(slot)
                 
+    def dump(self):
+        print("ISSUE: FIX ME SynthProxy.dump")
         
             

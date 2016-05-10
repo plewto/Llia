@@ -178,6 +178,12 @@ class SynthHelper(object):
         else:
             return False
         
-    def dump_synth(self, sid):
-        pass
+    def dump_synth(self, *_):
+        rs = self.ping_synth()
+        if rs:
+            sp = self.get_synth()
+            sp.x_dump()
+            sp.dump()
+        return rs
+        
         
