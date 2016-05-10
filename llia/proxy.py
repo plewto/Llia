@@ -235,14 +235,37 @@ class LliaProxy(object):
                 fname = fname + p + " "
             fname = fname.strip()
         bname, index, frames, channels, sr = raw[:5]
+        def asInt(key, value, default):
+            try:
+                v = int(value)
+                return v
+            except ValueError:
+                msg = "WARNING: LliaProxy.get_buffer_info %s = %s" % (key, value)
+                print(msg)
+                return default
+        bname = str(bname)
         rs = {"name" : bname,
-              "index" : int(index),
-              "frames" : int(frames),
-              "channels" : int(channels),
-              "sample-rate" : int(sr),
+              "index" : asInt("index", index, 0),
+              "frames" : asInt("frames", frames, 1024),
+              "channels" : asInt("channels", channels, 1),
+              "sample-rate" : asInt("sample-rate", sr, 44100),
               "filename" : fname}
         return rs
 
+  
+    # def new_buffer_sine1(self, bufferName, amps):
+    #     payload = [bufferName] + amps
+    #     self._send("new-buffer-sine1", payload)
+
+    def create_wavetable(self, name, maxharm=64, decay=0.5, skip=None, mode="",
+                          cutoff=None, depth=0.5, frames=1024):
+        skip = skip or maxHarm+1
+        if cutoff is None: cutoff = maxHarm/2
+        payload = [name, maxharm, decay, skip, mode, cutoff, depth, frames]
+        self._send("create-wavetable", payload)
+            
+        
+    
     def audio_bus_exists(self, bname):
         return self._audio_buses.has_key(bname)
     

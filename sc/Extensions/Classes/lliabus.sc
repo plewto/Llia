@@ -116,7 +116,7 @@ LliaBuses : Object {
 				postln(msg);
 				^false;
 			},{
-				var b;
+				var b, msg;
 				if (rate == \audio,
 					{
 						b = Bus.audio(nil, numChans);
@@ -124,6 +124,7 @@ LliaBuses : Object {
 						b = Bus.control(nil, numChans);
 					});
 				buses.add(id -> b);
+				postf("Added % bus '%' with % channels.\n", rate, id, numChans);
 				^true;
 			});
 	}

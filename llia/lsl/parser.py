@@ -5,13 +5,9 @@ from __future__ import print_function
 import sys, os.path
 
 from llia.lsl.lsl_constants import *
-from llia.lsl.lsl_errors import *
+from llia.lsl.lsl_errors import LliascriptParseError
+from llia.lsl.util import parse_positional_args, parse_keyword_args
 from generic import is_int
-
-# class LliaParseError(Exception):
-
-#     def __init__(self, msg=""):
-#         super(LliaParseError, self).__init__(msg)
 
 class LSLParser(object):
 
@@ -22,45 +18,59 @@ class LSLParser(object):
         self.config = app.config
         self._exit_repl = False
         self.history = ""
-        self._dispatch_table = {}
+        self.dispatch_table = {}
         self._init_dispatch_table()
-        self.prompt = "Lila> "
+        self.prompt = "Llia> "
         self._current_line = ""
         self._current_synth = None  # String stype_id
-
+        #self._current_buffer = None
+        self.buffer_helper = None
 
     def _init_dispatch_table(self):
-        self._dispatch_table["test"] = self.test
-        self._dispatch_table[REMARK_TOKEN] = self.remark
-        self._dispatch_table["?"] = self.help_
-        self._dispatch_table["help"] = self.help_
-        self._dispatch_table["abus"] = self.add_audio_bus
-        self._dispatch_table["boot"] = self.boot_server
-        self._dispatch_table["buffer"] = self.add_buffer    
-        self._dispatch_table["cbus"] = self.add_control_bus
-        self._dispatch_table["clear-history"] = self.clear_history
-        self._dispatch_table["dump"] = self.dump
-        self._dispatch_table["efx"] = self.add_efx
-        self._dispatch_table["x"] = self.exit_ # FPO Change to 'exit' after testing
-        self._dispatch_table["free"] = self.free
-        self._dispatch_table["history"] = self.print_history
-        self._dispatch_table["id-self"] = self.id_self  # BROKEN See BUG 0001
-        self._dispatch_table["ls"] = self.list_
-        self._dispatch_table["panic"] = self.panic
-        self._dispatch_table["ping"] = self.ping
-        self._dispatch_table["post"] = self.post
-        self._dispatch_table["postln"] = self.postln
-        self._dispatch_table["python"] = self.exec_python
-        self._dispatch_table["run"] = self.run_script
-        self._dispatch_table["sync"] = self.sync_all
-        self._dispatch_table["synth"] = self.add_synth
-        self._dispatch_table["with"] = self.with_synth
+        self.dispatch_table["test"] = self.test
+        self.dispatch_table[REMARK_TOKEN] = self.remark
+        self.dispatch_table["?"] = self.help_
+        self.dispatch_table["help"] = self.help_
+        self.dispatch_table["abus"] = self.add_audio_bus
+        self.dispatch_table["boot"] = self.boot_server
+        # self.dispatch_table["buffer"] = self.add_buffer
+        # self.dispatch_table["?buffer"] = self.buffer_info
+        # self.dispatch_table["sine1"] = self.new_buffer_sine1
+        self.dispatch_table["cbus"] = self.add_control_bus
+        self.dispatch_table["clear-history"] = self.clear_history
+        self.dispatch_table["dump"] = self.dump
+        self.dispatch_table["efx"] = self.add_efx
+        self.dispatch_table["x"] = self.exit_ # FPO Change to 'exit' after testing
+        self.dispatch_table["free"] = self.free
+        self.dispatch_table["history"] = self.print_history
+        self.dispatch_table["id-self"] = self.id_self  # BROKEN See BUG 0001
+        self.dispatch_table["ls"] = self.list_
+        self.dispatch_table["panic"] = self.panic
+        self.dispatch_table["ping"] = self.ping
+        self.dispatch_table["post"] = self.post
+        self.dispatch_table["postln"] = self.postln
+        self.dispatch_table["python"] = self.exec_python
+        self.dispatch_table["run"] = self.run_script
+        self.dispatch_table["sync"] = self.sync_all
+        self.dispatch_table["synth"] = self.add_synth
+        self.dispatch_table["with"] = self.with_synth
+        #self.dispatch_table["with-buffer"] = self.with_buffer
 
+    def update_prompt(self):
+        cs = str(self._current_synth)
+        cb = str(self.buffer_helper.current_buffer)
+        self.prompt = "Lila(synth: %s, buffer: %s)> " % (cs, cb)
+        
+    def test(self,tokens):
+        return False
+        
     def status(self, msg):
         self.app.status(msg)
+        self.history += "# %s\n" % msg
 
     def warning(self, msg):
         self.app.warning(msg)
+        self.history += "# WARNING: %s\n" % msg
         
     def add_to_history(self, tokens):
         self.history += self._current_line + "\n"
@@ -93,13 +103,13 @@ class LSLParser(object):
             if tokens:
                 dispatch_token = tokens[0].lower()
                 try:
-                    dfn = self._dispatch_table[dispatch_token]
+                    dfn = self.dispatch_table[dispatch_token]
                     dfn(tokens)
                     self.add_to_history(usrin)
                 except KeyError:
                     print("ERROR: Line %d : %s ?" % (line_counter, dispatch_token))
                     return False
-                except LliaParseError as err:
+                except LliascriptParseError as err:
                     msg = "ERROR: Line %d\n" + err.message
                     print(msg)
                     return False
@@ -133,104 +143,26 @@ class LSLParser(object):
             if tokens:
                 dispatch_token = tokens[0].lower()
                 try:
-                    dfn = self._dispatch_table[dispatch_token]
+                    dfn = self.dispatch_table[dispatch_token]
                     rs = dfn(tokens)
                     self.add_to_history(usrin)
                     self.echo(rs)
                 except KeyError:
                     print("%s ?" % dispatch_token)
-                except LliaParseError as err:
+                except LliascriptParseError as err:
                     print(err.message)
-        self.sync_all([])
+            self.sync_all([])
 
-    @staticmethod
-    def expect(ttype, token):
-        if ttype == "str":
-            return token
-        elif ttype == "strint":
-            try:
-                value = int(token)
-            except ValueError:
-                value= token
-            return value
-        elif ttype == "int":
-            try:
-                value = int(token)
-                return value
-            except ValueError:
-                msg = "Expected int, encountered %s" % token
-                raise LliaParseError(msg)
-        else:
-            return token
-        
-    @staticmethod
-    def parse_line_required(tokens, required_args):
-        acc = []
-        min_count = len(required_args)
-        if len(tokens) < min_count:
-            msg = "Expected at least %d tokens, found %d"
-            msg = msg % (min_count, len(tokens))
-            raise LliaParseError(msg)
-        # Required args
-        for i,exptype in enumerate(required_args):
-            token = tokens[i]
-            value = LSLParser.expect(exptype, token)
-            acc.append(value)
-        return acc
-    
-    @staticmethod
-    def parse_line_positional(tokens, required_args, opt_args=[]):
-        acc = LSLParser.parse_line_required(tokens, required_args)
-        index = len(required_args)
-        for j,arg in enumerate(opt_args):
-            try:
-                token = tokens[index]
-            except IndexError:
-                token = arg[1]
-            exptype = arg[0]
-            value = LSLParser.expect(exptype, token)
-            acc.append(value)
-            index += 1
-        return acc
-
-    @staticmethod
-    def parse_line_keywords(tokens, required_args, order=[], keyword_args={}):
-        acc = LSLParser.parse_line_required(tokens, required_args)
-        bcc = {}
-        index = len(required_args)
-        while index < len(tokens):
-            try:
-                kw = tokens[index].lower()
-                token = tokens[index+1]
-                try:
-                    spec = keyword_args[kw]
-                except KeyError:
-                    msg = "Unexpected keyword %s" % kw
-                    raise LliaParseError(msg)
-                value = LSLParser.expect(spec[0], token)
-                bcc[kw] = value
-            except IndexError:
-                msg = "Expected matching keyword/value pairs"
-                raise LliaParseError(msg)
-            index += 2
-        for kw in order:
-            kw = kw.lower()
-            dflt = keyword_args[kw][1]
-            value = bcc.get(kw, dflt)
-            acc.append(value)
-        return acc
-
-    @staticmethod
-    def echo(flag):
+ 
+    def echo(self, flag):
         if flag:
             print("OK")
         else:
             print("ERROR")
-
- 
+            self.history += "# ERROR\n"
             
     def help_(self, tokens):
-        topic = LSLParser.parse_line_positional(tokens,
+        topic = parse_positional_args(tokens,
                                                 ["str"],
                                                 [["str", "help"]])
         topic = topic[1]
@@ -263,7 +195,7 @@ class LSLParser(object):
     # Possible servers: internal, local, default
     #
     def boot_server(self, tokens):
-        target = LSLParser.parse_line_positional(tokens,
+        target = parse_positional_args(tokens,
                                                  ["str"],
                                                  [["str","internal"]])
         target = str(target[1])
@@ -279,7 +211,7 @@ class LSLParser(object):
 
     # ls abus|cbus|buffer|synth|efx
     def list_ (self, tokens):
-        target = LSLParser.parse_line_positional(tokens,
+        target = parse_positional_args(tokens,
                                                  ["str", "str"])[1]
         head = target[0].upper()
         if head == "A":
@@ -307,7 +239,7 @@ class LSLParser(object):
     # abus name [channels]
     #
     def add_audio_bus(self, tokens):
-        args = LSLParser.parse_line_positional(tokens,
+        args = parse_positional_args(tokens,
                                                  ["str", "str"],
                                                  [["int", 1]])
         cmd, bname, chans = args
@@ -317,23 +249,24 @@ class LSLParser(object):
     # cbus name [channels]
     #
     def add_control_bus(self, tokens):
-        args = LSLParser.parse_line_positional(tokens,
+        args = parse_positional_args(tokens,
                                                  ["str", "str"],
                                                  [["int", 1]])
         cmd, bname, chans = args
         rs = self.proxy.add_control_bus(bname, chans)
         return rs
 
-    # buffer name [:frames :channels]
-    def add_buffer(self, tokens):
-        args = LSLParser.parse_line_keywords(tokens,
-                                              ["str","str"],
-                                              [":frames", ":channels"],
-                                              {":frames" : ["int", 1024],
-                                               ":channels" : ["int", 1]})
-        cmd, bname, frames, channels = args
-        rs = self.proxy.add_buffer(bname, frames, channels)
-        return rs
+    # # buffer name [:frames :channels]
+    # def add_buffer(self, tokens):
+    #     args = _LSLParser.parse_line_keywords(tokens,
+    #                                           ["str","str"],
+    #                                           [":frames", ":channels"],
+    #                                           {":frames" : ["int", 1024],
+    #                                            ":channels" : ["int", 1]})
+    #     cmd, bname, frames, channels = args
+    #     rs = self.proxy.add_buffer(bname, frames, channels)
+    #     self.with_buffer(["", bname])
+    #     return rs
 
     # python filename
     # Execute python file
@@ -344,7 +277,7 @@ class LSLParser(object):
     #        use rs.value = x to return a value from the script
     #
     def exec_python(self, tokens):
-        values = LSLParser.parse_line_positional(tokens,
+        values = parse_positional_args(tokens,
                                                  ["str", "str"])
         filename = values[1]
         filename = os.path.expanduser(filename)
@@ -378,7 +311,7 @@ class LSLParser(object):
         self.proxy.postln(cl)
 
     def run_script(self, tokens):
-        filename = LSLParser.parse_line_positional(tokens,
+        filename = parse_positional_args(tokens,
                                                   ["str", "str"])[1]
         rs = self.exec_scriptfile(filename)
         return rs
@@ -387,7 +320,7 @@ class LSLParser(object):
     # synth stype id_ [:keymode km][:voice-count vc]
     #                 [:outbus busName][:outbus-offset n][:outbus-param param]
     def add_synth(self, tokens):
-        args = LSLParser.parse_line_keywords(tokens,
+        args = parse_keyword_args(tokens,
                                              ["str", "str", "int"],
                                              [":keymode", ":voice-count",
                                               ":outbus", ":outbus-offset",
@@ -419,7 +352,7 @@ class LSLParser(object):
         if rs:
             self.proxy.assign_synth_audio_bus(stype, id_, obusParam, obusName, obusOffset)
             self._current_synth = sid
-            self.prompt = "Llia(%s)> " % sid
+            self.update_prompt()
         return rs
 
     
@@ -434,7 +367,7 @@ class LSLParser(object):
                     ":outbus-param" : ["str", "outbus"],
                     ":inbus-offset" : ["int", 0],
                     ":inbus-param" : ["str", "inbus"]}
-        args = LSLParser.parse_line_keywords(tokens,
+        args = parse_keyword_args(tokens,
                                              req_args,
                                              key_arg_order,
                                              key_args)
@@ -458,21 +391,21 @@ class LSLParser(object):
             self.proxy.assign_synth_audio_bus(stype, id_, obprm, obs, oboff)
             self.proxy.assign_synth_audio_bus(stype, id_, ibprm, ibs, iboff)
             self._current_synth = sid
-            self.prompt = "Llia(%s)> " % sid
+            self.update_prompt()
         return rs
     
     # with stype id_
     # Select synth for editing.
     #
     def with_synth(self, tokens):
-        args = LSLParser.parse_line_positional(tokens,
+        args = parse_positional_args(tokens,
                                                ["str", "str", "int"])
         cmd, stype, id_ = args
         sid = "%s_%d" % (stype, id_)
         if self.proxy.synth_exists(stype, id_):
             msg = "Using synth '%s'" % sid
             self.status(msg)
-            self.prompt = "Llia(%s)> " % sid
+            self.update_prompt()
             return True
         else:
             msg = "Synth '%s' does not exists" % sid
@@ -488,5 +421,25 @@ class LSLParser(object):
         self.history = ""
         return True
 
-    def test(self,tokens):
-        return False
+    # # sine1 bname amps.....
+    # def new_buffer_sine1(self, tokens):
+    #     if len(tokens) < 3:
+    #         msg = "Expected at least 3 tokens"
+    #         self.warning(msg)
+    #         return False
+    #     bname = tokens[1]
+    #     if self.assert_buffer_does_not_exists(bname):
+    #         amps = tokens[2:]
+    #         for n in amps:
+    #             try:
+    #                 v = float(n)
+    #             except ValueError:
+    #                 msg = "Expected float, encountered: %s" % v
+    #                 self.warning(msg)
+    #                 return False
+    #         self.proxy.new_buffer_sine1(bname, amps)
+    #         self._current_buffer = bname
+    #         self.update_prompt()
+    #         return True
+    #     else:
+    #         return False

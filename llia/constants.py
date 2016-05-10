@@ -18,7 +18,7 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
                ("TK", "Aviliable wherever Python is sold."))
 
 KEY_MODES = ("Poly1", "Mono1", "EFX")
-SYNTH_TYPES = ("ORGN", )
+SYNTH_TYPES = ("ORGN", "BufferTest")
 EFFECT_TYPES = ("Echo1", )
 
 MAX_UNDO = 10

@@ -2,6 +2,10 @@
 s = Server.local.boot;
 )
 
+(
+a = LliaHandler.new;
+)
+
 (SynthDef (\ORGN,
 	{|freq = 440,
 		detune = 1.0,

@@ -66,8 +66,6 @@ LliaHandler : Object {
 		buffers.freeAll;
 		synths.values.do({|sy| sy.free});
 	}
-		
-	
 
 	//  ---------------------------------------------------------------------- 
 	// 								   Buses
@@ -541,23 +539,6 @@ LliaHandler : Object {
 				frames = msg[7].asInt;
 				rs = buffers.wave(bufferName, maxHarm, decay, skip, mode, cutoff, depth, frames)},
 				this.path("create-wavetable")),
-				
-			
-			// OSCFunc ({|msg|
-			// 	var bufferName, acc, index;
-			// 	bufferName = msg[1];
-			// 	acc = Array.new();
-			// 	index = 3;
-			// 	while ({index < msg.size},
-			// 		{
-			// 			var amp = msg[index];
-			// 			acc = acc.add(amp);
-			// 			index = index + 1;
-			// 		});
-			// 	this.newBufferSine1(bufferName, acc)},
-			// 	this.path("new-buffer-sine1")),
-				
-
 			
 		];
 		oscHandlers = ary;

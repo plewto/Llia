@@ -210,6 +210,7 @@ if args.listgui:
 config = LliaConfig.create_instance(args)
 from llia.toplevel import LliaTopLevel
 import llia.synths.orgn.orgn_proxy
+import llia.synths.buffertest.bufftest_proxy
 import llia.synths.echo1.echo1_proxy
 app = LliaTopLevel(config, True)
 
