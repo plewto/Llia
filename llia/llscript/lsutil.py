@@ -1,7 +1,7 @@
 # llia.llscript.lsutil
 # 2016.05.09
 
-from llia.llscript.lserrors import LliascriptParseError
+from llia.llerrors import LliascriptParseError
 
 
 def expect(ttype, token):

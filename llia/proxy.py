@@ -6,6 +6,7 @@ from __future__ import print_function
 from time import sleep
 import sys
 
+from llia.llerrors import LliaPingError
 from llia.osc_transmitter import OSCTransmitter
 from llia.osc_receiver import OSCReceiver
 from llia.synth_proxy import SynthSpecs
@@ -73,7 +74,7 @@ class LliaProxy(object):
     # Return True if expected message has been received.
     # Return False otherwise
     #
-    def _expect(self, msg):
+    def expect_osc_response(self, msg):
         rs = False
         try:
             sleep(0.05)
@@ -114,7 +115,12 @@ class LliaProxy(object):
     # returns bool
     def ping(self):
         self._send("ping")
-        return self._expect("ping-response")
+        rs = self.expect_osc_response("ping-response")
+        if not rs:
+            msg = "Did not receive expected ping response from '/Llia/%s'"
+            msg = msg % self.global_osc_id()
+            raise LliaPingError(msg)
+        return rs
     
     def free(self):
         self._send("free")
@@ -164,7 +170,7 @@ class LliaProxy(object):
     def boot_server(self, s="default"):
         self._send("boot-server", [s])
         sleep(2)
-        return self._expect("booting-server")
+        return self.expect_osc_response("booting-server")
 
     # BROKEN see BUG 0001
     def id_self(self):
@@ -172,7 +178,7 @@ class LliaProxy(object):
         payload = [self.global_osc_id(), ip, port]
         print("BUG 0001 id_self disabled")
         # self._send("set-client", payload)
-        # self._expect("ping-response")
+        # self.expect_osc_response("ping-response")
         return False
 
     def panic(self):
@@ -214,7 +220,7 @@ class LliaProxy(object):
                 msg += "*** ValueError in LliaProxy.get_bus_info        ***\n"
                 msg += "*** We have seen this before.  Check that there ***\n"
                 msg += "*** are not two copies of Llia with identical   ***\n"
-                msg += "*** gloabl OSC ids running on the host.         ***\n"
+                msg += "*** global OSC ids running on the host.         ***\n"
                 msg += "***************************************************\n"
                 print(msg)
                 sys.exit(1)
@@ -285,7 +291,7 @@ class LliaProxy(object):
             return False
         else:
             self._send("add-bus", [rate, bname, channels])
-            rs = self._expect("bus-added")
+            rs = self.expect_osc_response("bus-added")
             self.sync_to_host()
             return rs
 
@@ -299,7 +305,7 @@ class LliaProxy(object):
             self.warning("Control bus %s already exists"  % bname)
         else:
             self._send("add-bus", [rate, bname, channels])
-            rs = self._expect("bus-added")
+            rs = self.expect_osc_response("bus-added")
             self.sync_to_host()
             return rs
 
@@ -311,7 +317,7 @@ class LliaProxy(object):
             self.warning("Buffer %s already exists" % bname)
         else:
             self._send("add-buffer", [bname, frames, channels])
-            rs = self._expect("buffer-added")
+            rs = self.expect_osc_response("buffer-added")
             self.sync_to_host()
             return rs
 
@@ -334,6 +340,11 @@ class LliaProxy(object):
         sid = sid or "%s_%d" % (stype, int(id_))
         return self._synths.has_key(sid)
 
+    def get_synth(self, sid):
+        rs = self._synths[sid]
+        # print("Proxy.get_synth  sid %s   '%s'   rs -> %s" % (type(sid), sid, rs))
+        return rs
+    
     @staticmethod
     def _list_synth(sy):
         specs = sy.specs
@@ -349,7 +360,7 @@ class LliaProxy(object):
             if not sy.is_efx:
                 self._list_synth(sy)
 
-    # ISSUE: FIX ME lsit_efx
+    # ISSUE: FIX ME list_efx
     def list_efx(self):
         print("EFX Synths:")
         for k in sorted(self._synths.keys()):

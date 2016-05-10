@@ -5,7 +5,7 @@
 from __future__ import print_function
 
 import llia.constants as con
-from llia.llscript.lserrors import LliascriptParseError
+from llia.llerrors import LliascriptParseError
 from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
 
 class SynthHelper(object):
@@ -21,7 +21,7 @@ class SynthHelper(object):
         self.dispatch_table["efx"] = self.add_efx
         self.dispatch_table["synth"] = self.add_synth
         self.dispatch_table["with-synth"] = self.with_synth
-        
+        self.dispatch_table["ping-synth"] = self.ping_synth
     
     def status(self, msg):
         self.parser.status(msg)
@@ -32,9 +32,37 @@ class SynthHelper(object):
     def update_prompt(self):
         self.parser.update_prompt()
 
+    def assert_current_synth(self):
+        if not self.current_synth:
+            msg = "No current synth selected."
+            self.warning(msg)
+            return False
+        else:
+            return True
+        
+    # Split synth_Id string in form "stype_n" into components (stype, n)
+    # 
+    def parse_sid(self, sid=None):
+        sid = sid or self.current_synth
+        pos = sid.rfind('_')
+        if pos > -1:
+            haed, tail = sid[:pos], sid[pos+1:]
+        else:
+            head, tail = sid, ""
+        return (head, tail)
+
+    def get_synth(self, sid=None):
+        sid = sid or self.current_synth
+        rs = self.proxy.get_synth(sid or self.current_synth)
+        return rs
+    
     def synth_exists(self, sid):
         return self.proxy.synth_exists(nil, nil, sid)
 
+    def synth_proxy(self, sid=None):
+        sid = sid or self.current_synth
+        return self.proxy.synth_proxy[sid]
+    
     def audio_bus_exists(self, bname):
         return self.proxy.audio_bus_exists(bname)
 
@@ -44,6 +72,7 @@ class SynthHelper(object):
     def buffer_exists(self, bname):
         return self.proxy.buffer_exists(bname)
 
+    
     # synth stype id_ [:keymode km][:voice-count vc]
     #                 [:outbus busName][:outbus-offset n][:outbus-param param]
     def add_synth(self, tokens):
@@ -81,7 +110,6 @@ class SynthHelper(object):
             self.current_synth = sid
             self.update_prompt()
         return rs
-    
     
     # efx stype id_ inbus [:outbus name][:outbus-offset n][:outbus-param p]
     #                     [:inbus-offset n][:inbus-param p]
@@ -138,3 +166,18 @@ class SynthHelper(object):
             msg = "Synth '%s' does not exists" % sid
             self.warning(msg)
             return False
+
+    def ping_synth(self, *_):
+        if self.assert_current_synth():
+            sp = self.get_synth()
+            if sp:
+                sp.x_ping()
+                return True
+            else:
+                return False
+        else:
+            return False
+        
+    def dump_synth(self, sid):
+        pass
+        

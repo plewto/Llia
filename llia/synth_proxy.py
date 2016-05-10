@@ -5,6 +5,7 @@ from __future__ import print_function
 
 import llia.constants as con
 import llia.curves as curves
+from llia.llerrors import LliaPingError
 from llia.generic import is_instrument, clone, dump
 from llia.osc_transmitter import OSCTransmitter
 
@@ -201,6 +202,16 @@ class SynthProxy(object):
     def remove_controller_map(self, ctrl, param="ALL"):
         cm = self.current_performance().controller_maps
         cm.remove_parameter(ctrl, param)
+
+    def x_ping(self):
+        self._osc_transmitter.x_ping()
+        rs = self.app.proxy.expect_osc_response("ping-response")
+        if not rs:
+            sid = "%s_%d" % (self.synth_format, self.id_)
+            msg = "Did not receive expected ping responce from '/Llia/%s/%s'"
+            msg = msg % (self.app.global_osc_id(), sid)
+            raise LliaPingError(msg)
+        return rs
         
     def x_param_change(self, param, value):
         self._osc_transmitter.x_synth_param(param, value)

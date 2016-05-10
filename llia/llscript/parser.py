@@ -5,7 +5,7 @@ from __future__ import print_function
 import sys, os.path
 
 import llia.constants as con
-from llia.llscript.lserrors import LliascriptParseError
+from llia.llerrors import LliaPingError, LliascriptParseError
 from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
 from llia.llscript.lshelp import help_topics
 from generic import is_int
@@ -54,6 +54,8 @@ class LSLParser(object):
         self.prompt = "Lila(synth: %s, buffer: %s)> " % (cs, cb)
         
     def test(self,tokens):
+        msg = "A self infliced wound"
+        raise ValueError(msg)
         return False
         
     def status(self, msg):
@@ -87,26 +89,30 @@ class LSLParser(object):
         return acc
 
     def exec_script(self, script):
-        line_counter = 0
-        for line in script.split("\n"):
-            usrin = line
-            self._current_line = usrin
-            tokens = self._strip_remarks(usrin.split(" "))
-            if tokens:
-                dispatch_token = tokens[0].lower()
-                try:
-                    dfn = self.dispatch_table[dispatch_token]
-                    dfn(tokens)
-                    self.add_to_history(usrin)
-                except KeyError:
-                    print("ERROR: Line %d : %s ?" % (line_counter, dispatch_token))
-                    return False
-                except LliascriptParseError as err:
-                    msg = "ERROR: Line %d\n" + err.message
-                    print(msg)
-                    return False
-            line_counter += 1
-        return True
+        try:
+            line_counter = 0
+            for line in script.split("\n"):
+                usrin = line
+                self._current_line = usrin
+                tokens = self._strip_remarks(usrin.split(" "))
+                if tokens:
+                    dispatch_token = tokens[0].lower()
+                    try:
+                        dfn = self.dispatch_table[dispatch_token]
+                        dfn(tokens)
+                        self.add_to_history(usrin)
+                    except KeyError:
+                        print("ERROR: Line %d : %s ?" % (line_counter, dispatch_token))
+                        return False
+                    except LliascriptParseError as err:
+                        msg = "ERROR: Line %d\n" + err.message
+                        print(msg)
+                        return False
+                line_counter += 1
+            return True
+        except LliaPingError as err:
+            self.warning(err.message)
+            return False
                     
     def exec_scriptfile(self, filename):
         filename = os.path.expanduser(filename)
@@ -129,22 +135,26 @@ class LSLParser(object):
         else:
             infn = input
         while not self._exit_repl:
-            usrin = infn(self.prompt).strip()
-            self._current_line = usrin
-            tokens = self._strip_remarks(usrin.split(" "))
-            if tokens:
-                dispatch_token = tokens[0].lower()
-                try:
-                    dfn = self.dispatch_table[dispatch_token]
-                    rs = dfn(tokens)
-                    self.add_to_history(usrin)
-                    self.echo(rs)
-                except KeyError:
-                    print("%s ?" % dispatch_token)
-                except LliascriptParseError as err:
-                    print(err.message)
-            self.sync_all([])
-
+            try:
+                usrin = infn(self.prompt).strip()
+                self._current_line = usrin
+                tokens = self._strip_remarks(usrin.split(" "))
+                if tokens:
+                    dispatch_token = tokens[0].lower()
+                    try:
+                        dfn = self.dispatch_table[dispatch_token]
+                        rs = dfn(tokens)
+                        self.add_to_history(usrin)
+                        self.echo(rs)
+                    except KeyError:
+                        print("%s ?" % dispatch_token)
+                    except LliascriptParseError as err:
+                        print(err.message)
+                self.sync_all([])
+            except LliaPingError as err:
+                self.warning(err.message)
+            except ValueError as err:
+                self.warning(err.message)
  
     def echo(self, flag):
         if flag:
@@ -154,9 +164,7 @@ class LSLParser(object):
             self.history += "# ERROR\n"
             
     def help_(self, tokens):
-        topic = parse_positional_args(tokens,
-                                                ["str"],
-                                                [["str", "help"]])
+        topic = parse_positional_args(tokens,["str"],[["str", "help"]])
         topic = topic[1].lower()
         if topic == "help" or topic == "?":
             print("Help topics:")
@@ -184,9 +192,17 @@ class LSLParser(object):
     def exit_(self, tokens):
         self._exit_repl = True
         self.app.exit()
-        
+
+    # ping [*]
+    #   without arguments ping global app
+    #   with * argument ping current synth
     def ping(self, tokens):
-        rs = self.proxy.ping();
+        args = parse_positional_args(tokens, ["str"],[["str", ""]])
+        cmd, target = args
+        if not target:
+            rs = self.proxy.ping();
+        elif target == "*":
+            rs = self.synth_helper.ping_synth()
         return rs
 
     def free(self, tokens):

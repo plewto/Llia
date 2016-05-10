@@ -193,9 +193,18 @@ Request host to stop all sound.
 """
 
 ping = """
-Request host to display message that it has received a ping message and
-also to return a response message.  ping is used for diagnostics to test
-the OSC connection between client and host.
+ping [*]
+
+Request host to display 'ping received' message and send a response.
+Ping is used to test the connection between client and host.
+
+If the client does not receiver an appropriate response a warning message
+is displayed.  In batch mode the script is terminated.
+
+Ping takes two forms:
+
+    ping      - Test top level host/client connection
+    ping *    - Test host/client connection for the current synth     
 """
 
 python = """

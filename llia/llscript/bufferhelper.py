@@ -6,7 +6,7 @@
 
 from __future__ import print_function
 
-from llia.llscript.lserrors import LliascriptParseError
+from llia.llerrors import LliascriptParseError
 from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
 
 class BufferHelper(object):

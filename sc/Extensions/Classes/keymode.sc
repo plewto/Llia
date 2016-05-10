@@ -68,7 +68,8 @@ Keymode : Object {
 		ary = [
 
 			OSCFunc({|msg|
-				postf("PING Synth % %\n", synthType, synthID)},
+				postf("PING Synth % %\n", synthType, synthID);
+				lliaApp.respond("ping-response", "")},
 				this.path("ping")),
 
 			OSCFunc({|msg|
