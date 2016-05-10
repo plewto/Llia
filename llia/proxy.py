@@ -267,10 +267,6 @@ class LliaProxy(object):
               "filename" : fname}
         return rs
 
-  
-    # def new_buffer_sine1(self, bufferName, amps):
-    #     payload = [bufferName] + amps
-    #     self._send("new-buffer-sine1", payload)
 
     def create_wavetable(self, name, maxharm=64, decay=0.5, skip=None, mode="",
                           cutoff=None, depth=0.5, frames=1024):
@@ -278,8 +274,6 @@ class LliaProxy(object):
         if cutoff is None: cutoff = maxHarm/2
         payload = [name, maxharm, decay, skip, mode, cutoff, depth, frames]
         self._send("create-wavetable", payload)
-            
-        
     
     def audio_bus_exists(self, bname):
         return self._audio_buses.has_key(bname)
@@ -295,9 +289,13 @@ class LliaProxy(object):
             self.sync_to_host()
             return rs
 
+    def control_bus_exists(self, bname):
+        return self._control_buses.has_key(bname)
+
+        
     def add_control_bus(self, bname, channels=1):
         rate = "control"
-        if self._control_buses.has_key(bname):
+        if self.control_bus_exists(bname):
             self.warning("Control bus %s already exists"  % bname)
         else:
             self._send("add-bus", [rate, bname, channels])
@@ -305,8 +303,11 @@ class LliaProxy(object):
             self.sync_to_host()
             return rs
 
+    def buffer_exists(self, bname):
+        return self._buffers.has_key(bname)
+    
     def add_buffer(self, bname, frames=1024, channels=1):
-        if self._buffers.has_key(bname):
+        if self.buffer_exists(bname):
             self.warning("Buffer %s already exists" % bname)
         else:
             self._send("add-buffer", [bname, frames, channels])
@@ -329,8 +330,8 @@ class LliaProxy(object):
         for k in sorted(self._buffers.keys()):
             print("    ", k)
 
-    def synth_exists(self, stype, id_):
-        sid = "%s_%d" % (stype, int(id_))
+    def synth_exists(self, stype, id_, sid=None):
+        sid = sid or "%s_%d" % (stype, int(id_))
         return self._synths.has_key(sid)
 
     @staticmethod
