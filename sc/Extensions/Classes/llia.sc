@@ -192,6 +192,8 @@ LliaHandler : Object {
 	//       after it has been added.
 	addSynth {|stype, id, km="Poly1", voiceCount=8|
 		var sid, sy;
+		var frmt = "Added Synth: '%'\n";
+		if (km == "EFX", {frmt = "Added EFX Synth: '%'\n"});
 		sid = stype.asString ++ "_" ++ id.asString;
 		sy = LliaSynthInfo.new(this, stype, id, oscID, km, voiceCount);
 		if (this.synthExists(sid),
@@ -200,7 +202,7 @@ LliaHandler : Object {
 			});
 		this.freeSynth(sid);
 		synths.put(sid, sy);
-		postf("Synth % added\n", sid);
+		postf(frmt, sid);
 		^sy;
 	}
 
@@ -359,8 +361,7 @@ LliaHandler : Object {
 				bname = msg[2];
 				numChannels = msg[3].asInt;
 				rs = this.addBus(rate, bname, numChannels);
-				this.respond("bus-added", rs);
-			},
+				this.respond("bus-added", rs)},
 				this.path("add-bus")),
 
 			OSCFunc ({|msg|
@@ -393,6 +394,7 @@ LliaHandler : Object {
 				var rate = msg[1].asSymbol;
 				var name = msg[2].asString;
 				var bus, acc, index, numChans;
+				// var frmt = "% bus '%' info  index: %   channels: %\n";
 				try {
 					if (rate == \audio,
 					{
@@ -404,6 +406,7 @@ LliaHandler : Object {
 					index = bus.index.asString;
 					numChans = bus.numChannels.asString;
 					acc = name + rate.asString + index + numChans;
+					//postf(frmt, rate, name, index, numChans);
 					this.respond("bus-info", acc);
 				}{
 					this.respond("bus-info", "DOES-NOT-EXISTS");
@@ -421,6 +424,7 @@ LliaHandler : Object {
 					});
 				acc = buses.busList.asList.sort.asString;
 				acc = rate.asString + acc;
+				// postf("buslist: %\n", acc);
 				this.respond("get-bus-list", acc)},
 				this.path("get-bus-list")),
 
@@ -433,10 +437,10 @@ LliaHandler : Object {
 				this.respond("buffer-added", rs)},
 				this.path("add-buffer")),
 
-			OSCFunc ({|msg|
-				var name = msg[1].asString;
-				this.bufferFree(name)},
-				this.path("free-buffer")),
+			// OSCFunc ({|msg|
+			// 	var name = msg[1].asString;
+			// 	this.bufferFree(name)},
+			// 	this.path("free-buffer")),
 			
 			OSCFunc ({|msg|
 				var maxBuffer, allocated, rsmsg;

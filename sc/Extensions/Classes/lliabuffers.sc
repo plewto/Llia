@@ -49,7 +49,9 @@ LliaBuffers : Object {
 				^false;
 			},{
 				var b = Buffer.new(nil, frames, numChans);
+				var frmt = "Added buffer '%'  frames: %  channels: %\n";
 				buffers.add(name -> b);
+				postf(frmt, name, frames, numChans);
 				^true;
 			})
 	}

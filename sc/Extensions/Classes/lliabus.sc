@@ -187,6 +187,7 @@ LliaBuses : Object {
 						b.free;
 						buses.removeAt(id);
 					});
+				postf("% bus '%' freed\n", rate, id);
 			});
 	}
 

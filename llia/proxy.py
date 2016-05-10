@@ -229,8 +229,7 @@ class LliaProxy(object):
                 acc.append(r[:-1])
             else:
                 acc.append(r)
-        if acc == ['']:
-            acc = []        
+        if acc == ['']: acc = []        
         return acc
 
     def get_buffer_info(self, bname):

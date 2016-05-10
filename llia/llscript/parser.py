@@ -332,11 +332,11 @@ class LSLParser(object):
                                               ":outbus-param" : ["str", "outbus"]})
         cmd, stype, id_, keymode, voice_count, obusName, obusOffset, obusParam = args
         sid = "%s_%d" % (stype, id_)
-        if stype not in SYNTH_TYPES:
+        if stype not in con.SYNTH_TYPES:
             msg = "Unknown synth type: '%s'" % stype
             self.warning(msg)
             return False
-        if keymode not in KEY_MODES:
+        if keymode not in con.KEY_MODES:
             msg = "Invalid keymode: '%s'" % keymode
             self.warning(msg)
             return False
@@ -373,7 +373,7 @@ class LSLParser(object):
                                              key_args)
         cmd, stype, id_, ibs, obs, oboff, obprm, iboff, ibprm = args
         sid = "%s_%d" % (stype, id_)
-        if stype not in EFFECT_TYPES:
+        if stype not in con.EFFECT_TYPES:
             msg = "Unknown EFX synth type: '%s'" % stype
             self.warning(msg)
             return False
@@ -421,25 +421,4 @@ class LSLParser(object):
         self.history = ""
         return True
 
-    # # sine1 bname amps.....
-    # def new_buffer_sine1(self, tokens):
-    #     if len(tokens) < 3:
-    #         msg = "Expected at least 3 tokens"
-    #         self.warning(msg)
-    #         return False
-    #     bname = tokens[1]
-    #     if self.assert_buffer_does_not_exists(bname):
-    #         amps = tokens[2:]
-    #         for n in amps:
-    #             try:
-    #                 v = float(n)
-    #             except ValueError:
-    #                 msg = "Expected float, encountered: %s" % v
-    #                 self.warning(msg)
-    #                 return False
-    #         self.proxy.new_buffer_sine1(bname, amps)
-    #         self._current_buffer = bname
-    #         self.update_prompt()
-    #         return True
-    #     else:
-    #         return False
+ 
