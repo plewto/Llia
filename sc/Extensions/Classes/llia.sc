@@ -327,15 +327,11 @@ LliaHandler : Object {
 
 			OSCFunc ({|msg|
 				postf("Llia/%/free\n", oscID);
-				this.free;
-				// this.respond("ok")
-			},
+				this.free},
 				this.path("free")),
 
 			OSCFunc ({|msg|
-				this.lliaDump;
-				// this.respond("ok")
-			},
+				this.lliaDump},
 				this.path("dump")),
 
 			OSCFunc ({|msg|

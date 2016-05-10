@@ -3,7 +3,8 @@ s = Server.local.boot;
 )
 
 (
-a = LliaHandler.new;
+// a.free;
+a = LliaHandler.new("dog");
 )
 
 (SynthDef (\ORGN,
