@@ -44,7 +44,6 @@ class SynthSpecs(dict):
             return syproxy
         except KeyError:
             return None
-
     
     def __init__(self, format_):
         super(SynthSpecs, self).__init__()
@@ -56,7 +55,7 @@ class SynthSpecs(dict):
         super(SynthSpecs, self).__setitem__("help", None)
         super(SynthSpecs, self).__setitem__("notes", None)
         SynthSpecs.global_synth_type_registry[format_] = self
-
+        
     def __setitem__(self, key, item):
         if self.has_key(key):
             super(SynthSpecs, self).__setitem__(key, item)
@@ -84,6 +83,7 @@ class SynthProxy(object):
         self.app = app
         self.specs = specs
         self.synth_format = specs["format"]
+        self.sid = "%s_%d" % (self.synth_format, self.id_)
         global_oscid = app.proxy.global_osc_id()
         self.oscID = "%s/%s/%s" % (global_oscid,self.synth_format, id_)
         self._bank = bank.clone()
@@ -203,13 +203,14 @@ class SynthProxy(object):
         cm = self.current_performance().controller_maps
         cm.remove_parameter(ctrl, param)
 
+        
     def x_ping(self):
         self._osc_transmitter.x_ping()
         rs = self.app.proxy.expect_osc_response("ping-response")
         if not rs:
-            sid = "%s_%d" % (self.synth_format, self.id_)
+            #sid = "%s_%d" % (self.synth_format, self.id_)
             msg = "Did not receive expected ping responce from '/Llia/%s/%s'"
-            msg = msg % (self.app.global_osc_id(), sid)
+            msg = msg % (self.app.global_osc_id(), self.sid)
             raise LliaPingError(msg)
         return rs
 

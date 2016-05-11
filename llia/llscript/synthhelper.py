@@ -22,6 +22,8 @@ class SynthHelper(object):
         self.dispatch_table["synth"] = self.add_synth
         self.dispatch_table["with-synth"] = self.with_synth
         self.dispatch_table["ping-synth"] = self.ping_synth
+        self.dispatch_table["abus>"] = self.assign_audio_bus
+        self.dispatch_table["cbus>"] = self.assign_control_bus
     
     def status(self, msg):
         self.parser.status(msg)
@@ -185,5 +187,41 @@ class SynthHelper(object):
             sp.x_dump()
             sp.dump()
         return rs
-        
-        
+
+    # cmd bus-name param [offset]
+    #
+    def assign_audio_bus(self, tokens):
+        if self.assert_current_synth():
+            req = ["str", "str", "str"]
+            opt = [["int", 0]]
+            args = parse_positional_args(tokens, req, opt)
+            cmd, bname, param, offset = args
+            if not self.proxy.audio_bus_exists(bname):
+                msg = "Audio bus '%s' does not exists." % bname
+                self.warning(msg)
+                return False
+            sp = self.get_synth()
+            stype, id_ = sp.synth_format, sp.id_
+            self.proxy.assign_synth_audio_bus(stype, id_, param, bname, offset)
+            return True
+        else:
+            return False
+            
+    # cmd bus-name param [offset]
+    #
+    def assign_control_bus(self, tokens):
+        if self.assert_current_synth():
+            req = ["str", "str", "str"]
+            opt = [["int", 0]]
+            args = parse_positional_args(tokens, req, opt)
+            cmd, bname, param, offset = args
+            if not self.proxy.control_bus_exists(bname):
+                msg = "Control bus '%s' does not exists." % bname
+                self.warning(msg)
+                return False
+            sp = self.get_synth()
+            stype, id_ = sp.synth_format, sp.id_
+            self.proxy.assign_synth_control_bus(stype, id_, param, bname, offset)
+            return True
+        else:
+            return False

@@ -525,8 +525,30 @@ LliaHandler : Object {
 				busName = msg[4].asString;
 				offset = msg[5].asInt;
 				rate = \audio;
-				rs = this.assignSynthBus(stype, id, param, rate, busName, offset)},
+				if(this.assignSynthBus(stype, id, param, rate, busName, offset),
+					{
+						postf("Audio bus % -> synth %_% parameter %\n", busName, stype, id, param);
+					},{
+						postf("ERROR: Audio bus % -> synth %_% parameter %\n", busName, stype, id, param);
+					})},
 				this.path("assign-synth-audio-bus")),
+
+			// cmd stype id param busName offset
+			OSCFunc ({|msg|
+				var stype, id, param, busName, offset, rate, rs;
+				stype = msg[1].asString;
+				id = msg[2].asInt;
+				param = msg[3].asString;
+				busName = msg[4].asString;
+				offset = msg[5].asInt;
+				rate = \control;
+				if(this.assignSynthBus(stype, id, param, rate, busName, offset),
+					{
+						postf("Control bus % -> synth %_% parameter %\n", busName, stype, id, param);
+					},{
+						postf("ERROR: Control bus % -> synth %_% parameter %\n", busName, stype, id, param);
+					})},
+				this.path("assign-synth-control-bus")),
 
 			// cmd busname, maxharm decay skip mode cutoff depth frames
 			// 0   1        2       3     4    5    6      7     8

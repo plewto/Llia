@@ -345,6 +345,47 @@ A special case version of wavtab for creating pulse wave tables.
 See also wavtab, buffer, with-buffer, ?buffer, sintab and sawtab
 """
 
+assign_abus = """
+abus> bus-name param [offset]
+
+Assign audio bus to current-synth parameter.
+
+bus-name - An audio bus name.
+param    - The synth parameter
+offset   - optional int, bus number offset from bus-name, default 0.
+
+See also abus, cbus>
+"""
+
+assign_cbus = """
+cbus> bus-name param [offset]
+
+Assign audio bus to current-synth parameter.
+
+bus-name - A control bus name.
+param    - The synth parameter
+offset   - optional int, bus number offset from bus-name, default 0.
+
+BUG WARNING:
+cbus> is effected by BUG 0000 where the first control bus to be created is
+not recognized until a second control bus has been created.  The following
+code does not work:
+
+     cbus eggs
+     synth Spam 1
+     cbus> eggs param
+
+The following work around creates two control buses before trying to access 
+the first bus.
+
+     cbus eggs
+     cbus bacon
+     synth Spam 1
+     cbus> eggs param
+
+See also abus, cbus>
+"""
+
 help_topics = {
     "overview" : overview,
     "examples" : examples,
@@ -372,6 +413,7 @@ help_topics = {
     "wavetab" : wavetab,
     "sinetab" : sinetab,
     "sawtab" : sawtab,
-    "pulsetab" : pulsetab
-    
+    "pulsetab" : pulsetab,
+    "abus>" : assign_abus,
+    "cbus>" : assign_cbus
     }
