@@ -255,6 +255,7 @@ LliaHandler : Object {
 						var kmobj;
 						kmobj = sy.keymodeObject;
 						kmobj.setBufferParameter(param, bufferName);
+						// postf("Buffer % -> %_% parameter %\n", bufferNAme, stype, id, param);
 						^true;
 					},{
 						postf("WARNING: Buffer '%' does not exists\n", bufferName);
@@ -527,7 +528,7 @@ LliaHandler : Object {
 				rate = \audio;
 				if(this.assignSynthBus(stype, id, param, rate, busName, offset),
 					{
-						postf("Audio bus % -> synth %_% parameter %\n", busName, stype, id, param);
+						postf("Audio bus % -> synth %_% parameter %  (offset %)\n", busName, stype, id, param, offset);
 					},{
 						postf("ERROR: Audio bus % -> synth %_% parameter %\n", busName, stype, id, param);
 					})},
@@ -544,13 +545,28 @@ LliaHandler : Object {
 				rate = \control;
 				if(this.assignSynthBus(stype, id, param, rate, busName, offset),
 					{
-						postf("Control bus % -> synth %_% parameter %\n", busName, stype, id, param);
+						postf("Control bus % -> synth %_% parameter % (offset %)\n", busName, stype, id, param, offset);
 					},{
 						postf("ERROR: Control bus % -> synth %_% parameter %\n", busName, stype, id, param);
 					})},
 				this.path("assign-synth-control-bus")),
 
-			// cmd busname, maxharm decay skip mode cutoff depth frames
+			// cmd stype id param buffer-name
+			OSCFunc ({|msg|
+				var stype, id, param, bufname, rs;
+				stype = msg[1].asString;
+				id = msg[2].asInt;
+				param = msg[3].asString;
+				bufname = msg[4].asString;
+				if(this.assignSynthBuffer(stype, id, param, bufname),
+					{
+						postf("Buffer % -> synth %_% parameter %\n", bufname, stype, id, param);
+					},{
+						postf("ERROR: Buffer % -> synth %_% parameter %\n", bufname, stype, id, param);
+					})},
+				this.path("assign-synth-buffer")),
+			
+			// cmd buffer-name, maxharm decay skip mode cutoff depth frames
 			// 0   1        2       3     4    5    6      7     8
 			OSCFunc ({|msg|
 				var bufferName, rs;
@@ -565,7 +581,7 @@ LliaHandler : Object {
 				frames = msg[7].asInt;
 				rs = buffers.wave(bufferName, maxHarm, decay, skip, mode, cutoff, depth, frames)},
 				this.path("create-wavetable")),
-			
+
 		];
 		oscHandlers = ary;
 	}

@@ -1,8 +1,9 @@
 # llia.llscript.lsutil
 # 2016.05.09
 
-from llia.llerrors import LliascriptParseError
+from __future__ import print_function
 
+from llia.llerrors import LliascriptParseError
 
 def expect(ttype, token):
     if ttype == "str":

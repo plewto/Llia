@@ -1,8 +1,8 @@
 # llia.llscript.lshelp
 # 2016.05.09
 
+# ********************************************************************
 overview = """ 
-
 lliascript is a simple scripting language used to automate Llia. 
 lliasript commands are entered interactively or executed from an external
 file.  For more complex operations external Python files may be executed.  
@@ -25,6 +25,7 @@ To see a tutorial enter:
 """
 
 
+# ********************************************************************
 examples = """
 lliascript syntax is extremely simple and never spans more then one line.
 Each line is broken into a sequence of tokens delineated by spaces with 
@@ -52,8 +53,10 @@ Comments:
 
 """
 
+# ********************************************************************
 comments = """All text on a line after # is ignored."""
 
+# ********************************************************************
 abus = """
 abus name [channels]
 
@@ -77,9 +80,10 @@ automatically created.  The names of these buses have the form:
 
     'in_0', 'in_1', ..., 'in_n'
 
-See also cbus, ls.
+See also cbus, ls, assign
 """
 
+# ********************************************************************
 boot = """
 boot [server]
 
@@ -93,6 +97,7 @@ optional argument may be one of:
 """
 
 
+# ********************************************************************
 cbus = """
 cbus name [channels]
 
@@ -104,9 +109,17 @@ bus with an existing name results in a warning message.  Audio and control
 buses do not share the same name space, it is therefore possible for both an
 audio bus and a control bus to have the same name.
 
-See also abus, ls
+BUG 0000 WARNING: 
+    the first control bus created is not recognized by the client until
+    after a second bus has been created.
+
+    cbus foo    # foo exists on the server but the client doesn't think so.
+    cbus bar    # After bar is created the client is able to see foo.
+
+See also abus, ls, assign
 """
 
+# ********************************************************************
 clear_history = """
 clear-history
 
@@ -115,6 +128,7 @@ Clears the lliscript history.
 See also history
 """
 
+# ********************************************************************
 dump = """
 dump [*]
 
@@ -126,6 +140,7 @@ If the optional '*' argument is present, display information about the
 current synth.
 """
 
+# ********************************************************************
 efx = """
 efx synth-type id inbus [:inbus-offset][:inbus-param][:outbus][:outbus-offset][:outbus-param]
 
@@ -146,9 +161,10 @@ inbus     -  The name of the primary input audio bus.
 :outbus-offset - Integer offset from outbus, default 0.
 :outbus-param  - Synth param for primary output bus, default 'outbus'
 
-See also synth, ls, with, with-synth
+See also synth, ls, with-synth, assign
 """
 
+# ********************************************************************
 free = """
 free
 
@@ -156,6 +172,7 @@ Free LliaHandler and all of it's resource on the SuperCollider host.
 Once freed further communication  between client and host is not possible
 """
 
+# ********************************************************************
 history = """
 history
 
@@ -164,6 +181,7 @@ Display the lliascript command line history.
 See also clear-history
 """
 
+# ********************************************************************
 id_self = """
 id-self
 
@@ -174,6 +192,7 @@ NOTE: inform-host is broken and causes bad things.  It is disabled.
 see BUG 0001
 """
 
+# ********************************************************************
 ls = """
 ls target
 
@@ -191,10 +210,12 @@ efx-types   - Same as synth-types
 keymodes    - Same as synth-types
 """
 
+# ********************************************************************
 panic = """
 Request host to stop all sound.
 """
 
+# ********************************************************************
 ping = """
 ping [*]
 
@@ -210,6 +231,7 @@ Ping takes two forms:
     ping *    - Test host/client connection for the current synth     
 """
 
+# ********************************************************************
 python = """
 python filename
 
@@ -224,12 +246,14 @@ The python facility is in place but not well developed at this time.
 SECURITY WARNING: Running arbitrary python code can be dangerous, run only
 trusted code. """
 
+# ********************************************************************
 run = """
 run filename
 
 Load and execute external lliascript file.
 """
 
+# ********************************************************************
 sync = """
 sync
 
@@ -239,6 +263,7 @@ executes.   It is not executed for each line of an external lliascript
 file.
 """
 
+# ********************************************************************
 with_synth = """
 with-synth stype id
 
@@ -250,12 +275,36 @@ synth.
 See also synth, efx, ls 
 """
 
+# ********************************************************************
+synth = """
+synth stype id [:keymode][:voice-count][:outbus][:outbus-offset][:outbus-param]
+
+Creates a new synth instance.
+
+stype - The synthesizer type.
+        Use 'ls synth-types' to see list of available synthesizers.
+id    - Integer id. The id value MUST be unique for any given stype.  
+        Two synths may have the same id if they are of different types.
+:keymode       - To see a list of available keymodes type 'ls keymodes'
+                 Default 'Poly1'
+:voice-count   - int number of voices to allocated. Whether voice-count
+                 is used is dependent on the keymode.  For Poly1, Mono1 and 
+                 EFX keymodes the voice count is ignored. Default 8.
+:outbus        - The outbus audio bus, defaults to 'out_0'
+:outbus-offset - An integer offset added to outbus index, default 0.
+:outbus-param  - Synth parameter used for output bus, default 'outbus'.
+
+See also efx, ls, with-synth, assign
+"""
+
+# ********************************************************************
 exit_ = """
 exit
 
 Shutdown Llia.
 """
 
+# ********************************************************************
 buffer_ = """ 
 buffer name [:frames][:channels]
 
@@ -266,9 +315,10 @@ name      - A unique name
             wave table frames must be a power of 2. 
 :channels - Number of channels, default 1
 
-see also with-buffer
+See also with-buffer, ls, assign
 """
 
+# ********************************************************************
 with_buffer = """
 with-buffer name
 
@@ -278,6 +328,7 @@ specifically with the current buffer.
 The current buffer is displayed in the lliascript prompt.
 """
 
+# ********************************************************************
 buffer_info = """
 buffer_info [name]
 
@@ -285,6 +336,7 @@ Display information about the named buffer.  If no name is specified use the
 current buffer.
 """
 
+# ********************************************************************
 wavetab = """
 wavetab name [:harmonics][:decay][:skip][:mode][:cutoff][:depth][:frames] 
 
@@ -310,6 +362,7 @@ name - The buffers name must be unique.  The new buffer becomes the
 See also buffer, with-buffer, ?buffer, sinetab, sawtab and pulsetab
 """
 
+# ********************************************************************
 sinetab = """
 sinetab name [:frames]
 
@@ -318,6 +371,7 @@ A special case version of wavtab for creating sine tables.
 See also wavtab, buffer, with-buffer, ?buffer, sawtab and pulsetab
 """
 
+# ********************************************************************
 sawtab = """
 sawtab name [:harmonics][:frames]
 
@@ -328,6 +382,7 @@ A special case version of wavtab for creating sawtooth tables.
 See also wavtab, buffer, with-buffer, ?buffer, sintab and pulsetab
 """
 
+# ********************************************************************
 pulsetab = """
 pulsetab name [:harmonics][:skip][:frames]
 
@@ -345,45 +400,41 @@ A special case version of wavtab for creating pulse wave tables.
 See also wavtab, buffer, with-buffer, ?buffer, sintab and sawtab
 """
 
-assign_abus = """
-abus> bus-name param [offset]
+# ********************************************************************
+assign = """
+assign entity name to param [:offset]
 
-Assign audio bus to current-synth parameter.
+Assign buffer or bus to current-synth parameter.
 
-bus-name - An audio bus name.
-param    - The synth parameter
-offset   - optional int, bus number offset from bus-name, default 0.
+entity  - Selects type of object to be assigned, must be one of:
+          'abus', 'cbus' or 'buffer'.  
+name    - The name of the bus or buffer to be assigned. 
+to      - The literal word 'to'
+param   - The synth parameter the bus or buffer is assigned to.  
+          No checks are made to ensure param is valid.
+:offset - An optional offset added to the bus index, default 0.
 
-See also abus, cbus>
-"""
+BUG 0000 WARNING: 
+   If only a single control bus has been created the
+   the client app does not recognize it.  The following
+   valid lliascript code does not work (valid assuming a
+   there is a synth type 'Spam' with a parameter 'foo')
 
-assign_cbus = """
-cbus> bus-name param [offset]
 
-Assign audio bus to current-synth parameter.
+          cbus eggs       # client does not recognize eggs exists
+          synth Spam 1
+          assign cbus eggs to foo
 
-bus-name - A control bus name.
-param    - The synth parameter
-offset   - optional int, bus number offset from bus-name, default 0.
 
-BUG WARNING:
-cbus> is effected by BUG 0000 where the first control bus to be created is
-not recognized until a second control bus has been created.  The following
-code does not work:
+  As a work around a 2nd control bus can be created.
 
-     cbus eggs
-     synth Spam 1
-     cbus> eggs param
 
-The following work around creates two control buses before trying to access 
-the first bus.
+          cbus eggs
+          cbus dummy      #  client now recognizes eggs
+          synth Spam 1
+          assign cbus eggs to foo
 
-     cbus eggs
-     cbus bacon
-     synth Spam 1
-     cbus> eggs param
-
-See also abus, cbus>
+See also abus, cbus, buffer
 """
 
 help_topics = {
@@ -405,6 +456,7 @@ help_topics = {
     "python" : python,
     "run" : run,
     "sync" : sync,
+    "synth" : synth,
     "with-synth" : with_synth,
     "exit" : exit_,
     "buffer" : buffer_,
@@ -414,6 +466,5 @@ help_topics = {
     "sinetab" : sinetab,
     "sawtab" : sawtab,
     "pulsetab" : pulsetab,
-    "abus>" : assign_abus,
-    "cbus>" : assign_cbus
+    "assign" : assign
     }

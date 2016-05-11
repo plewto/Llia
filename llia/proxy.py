@@ -411,6 +411,10 @@ class LliaProxy(object):
     def assign_synth_control_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-control-bus", payload)
+
+    def assign_synth_buffer(self, stype, id_, param, buffer_name):
+        payload = [stype, id_, param, buffer_name]
+        rs = self._send("assign-synth-buffer", payload)
         
     def sync_to_host(self):
         self._audio_buses = {}

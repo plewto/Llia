@@ -6,7 +6,7 @@ from __future__ import print_function
 
 import llia.constants as con
 from llia.llerrors import LliascriptParseError
-from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
+from llia.llscript.lsutil import (parse_positional_args, parse_keyword_args)
 
 class SynthHelper(object):
 
@@ -22,8 +22,7 @@ class SynthHelper(object):
         self.dispatch_table["synth"] = self.add_synth
         self.dispatch_table["with-synth"] = self.with_synth
         self.dispatch_table["ping-synth"] = self.ping_synth
-        self.dispatch_table["abus>"] = self.assign_audio_bus
-        self.dispatch_table["cbus>"] = self.assign_control_bus
+        self.dispatch_table["assign"] = self.assign_buffer_or_bus
     
     def status(self, msg):
         self.parser.status(msg)
@@ -188,40 +187,56 @@ class SynthHelper(object):
             sp.dump()
         return rs
 
-    # cmd bus-name param [offset]
-    #
-    def assign_audio_bus(self, tokens):
+
+    # assign <what> <name> to <param> [:offset]
+    # <what> is 'abus', 'cbus' or 'buffer
+    # <name> is name of buffer or bus
+    # 'to' is literal
+    # <param> is current synth parameter
+    #  
+    def assign_buffer_or_bus(self, tokens):
         if self.assert_current_synth():
-            req = ["str", "str", "str"]
-            opt = [["int", 0]]
-            args = parse_positional_args(tokens, req, opt)
-            cmd, bname, param, offset = args
-            if not self.proxy.audio_bus_exists(bname):
-                msg = "Audio bus '%s' does not exists." % bname
-                self.warning(msg)
-                return False
             sp = self.get_synth()
             stype, id_ = sp.synth_format, sp.id_
-            self.proxy.assign_synth_audio_bus(stype, id_, param, bname, offset)
-            return True
-        else:
-            return False
-            
-    # cmd bus-name param [offset]
-    #
-    def assign_control_bus(self, tokens):
-        if self.assert_current_synth():
-            req = ["str", "str", "str"]
-            opt = [["int", 0]]
-            args = parse_positional_args(tokens, req, opt)
-            cmd, bname, param, offset = args
-            if not self.proxy.control_bus_exists(bname):
-                msg = "Control bus '%s' does not exists." % bname
+            req = ["str", "str", "str", "str", "str"]
+            pos = [":offset"]
+            kw = {":offset" : ["int", 0]}
+            args = parse_keyword_args(tokens, req, pos, kw)
+            cmd, entity, name, to, param, offset = args
+            entity = entity.lower()
+            if to.upper() != "TO":
+                msg = "Expected literal word 'to', encountered '%s'" % to
                 self.warning(msg)
                 return False
-            sp = self.get_synth()
-            stype, id_ = sp.synth_format, sp.id_
-            self.proxy.assign_synth_control_bus(stype, id_, param, bname, offset)
-            return True
+            if entity == "abus":
+                if self.proxy.audio_bus_exists(name):
+                    self.proxy.assign_synth_audio_bus(stype, id_, param, name, offset)
+                    return True
+                else:
+                    msg = "Audio bus '%s' does not exists." % name
+                    self.warning(msg)
+                    return False
+            elif entity == "cbus":
+                if self.proxy.control_bus_exists(name):
+                    self.proxy.assign_synth_control_bus(stype, id_, param, name, offset)
+                    return True
+                else:
+                    msg = "Control bus '%s' does not exists." % name
+                    self.warning(msg)
+                    return False
+            elif entity == "buffer":
+                if self.parser.buffer_helper.buffer_exists(name):
+                    self.proxy.assign_synth_buffer(stype, id_, param, name)
+                    return True
+                else:
+                    msg = "Buffer '%s' does not exists." % name
+                    self.warning(msg)
+                    return False
+            else:
+                self.warning("Invalid first argument.")
+                self.warning("Expected either 'abus', 'cbus' or 'buffer'.")
+                self.warning("Encountered '%s'" % entity)
+                return False
         else:
             return False
+                    
