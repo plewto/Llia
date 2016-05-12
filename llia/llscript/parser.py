@@ -5,7 +5,7 @@ from __future__ import print_function
 import sys, os.path
 
 import llia.constants as con
-from llia.llerrors import LliaPingError, LliascriptParseError
+from llia.llerrors import LliaPingError, LliascriptParseError, LliascriptError
 from llia.llscript.lsutil import parse_positional_args, parse_keyword_args
 from llia.llscript.lshelp import help_topics
 from generic import is_int
@@ -89,8 +89,9 @@ class LSLParser(object):
         return acc
 
     def exec_script(self, script):
+        line_number = 0
+        dispatch_token = ""
         try:
-            line_counter = 0
             for line in script.split("\n"):
                 usrin = line
                 self._current_line = usrin
@@ -99,20 +100,24 @@ class LSLParser(object):
                     dispatch_token = tokens[0].lower()
                     try:
                         dfn = self.dispatch_table[dispatch_token]
-                        dfn(tokens)
+                        rs = dfn(tokens)
                         self.add_to_history(usrin)
+                        if not rs:
+                            errmsg = "Command '%s' failed" % dispatch_token
+                            raise LliascriptError(errmsg)
                     except KeyError:
-                        print("ERROR: Line %d : %s ?" % (line_counter, dispatch_token))
-                        return False
+                        errmsg = "'%s'" % dispatch_token
+                        raise LliascriptError(errmsg)
                     except LliascriptParseError as err:
-                        msg = "ERROR: Line %d\n" + err.message
-                        print(msg)
-                        return False
-                line_counter += 1
+                        errmsg = "Parse Error: %s" % err.message
+                        raise LliascriptError(errmsg)
+                line_number += 1
             return True
-        except LliaPingError as err:
+        except (LliaPingError, LliascriptError) as err:
+            msg = "ERROR line %d, %s" % (line_number, err.message)
             self.warning(err.message)
             return False
+        
                     
     def exec_scriptfile(self, filename):
         filename = os.path.expanduser(filename)
@@ -279,23 +284,41 @@ class LSLParser(object):
                 print("   %s" % t)
             return False
     
-    # abus name [channels]
+    # abus name [:channels :nodup]
     #
     def add_audio_bus(self, tokens):
-        args = parse_positional_args(tokens,
-                                                 ["str", "str"],
-                                                 [["int", 1]])
-        cmd, bname, chans = args
+        args = parse_keyword_args(tokens,
+                                  ["str", "str"],
+                                  [":channels", ":nodup"],
+                                  {":channels" : ["int", 1],
+                                   ":nodup" : ["int", 0]})
+        cmd, bname, chans, nodup = args
+        if self.proxy.audio_bus_exists(bname):
+            nodup = nodup != 0
+            if nodup:
+                return False
+            else:
+                # self.with_audio_bus(bname)
+                return True
         rs = self.proxy.add_audio_bus(bname, chans)
         return rs
 
-    # cbus name [channels]
+    # cbus name [:channels :nodup]
     #
     def add_control_bus(self, tokens):
-        args = parse_positional_args(tokens,
-                                                 ["str", "str"],
-                                                 [["int", 1]])
-        cmd, bname, chans = args
+        args = parse_keyword_args(tokens,
+                                  ["str", "str"],
+                                  [":channels", ":nodup"],
+                                  {":channels" : ["int", 1],
+                                   ":nodup" : ["int", 0]})
+        cmd, bname, chans, nodup = args
+        if self.proxy.control_bus_exists(bname):
+            nodup = nodup != 0
+            if nodup:
+                return False
+            else:
+                # self.with_control_bus(bname)
+                return True
         rs = self.proxy.add_control_bus(bname, chans)
         return rs
 

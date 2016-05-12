@@ -276,10 +276,14 @@ class LliaProxy(object):
 
     def create_wavetable(self, name, maxharm=64, decay=0.5, skip=None, mode="",
                           cutoff=None, depth=0.5, frames=1024):
-        skip = skip or maxHarm+1
-        if cutoff is None: cutoff = maxHarm/2
-        payload = [name, maxharm, decay, skip, mode, cutoff, depth, frames]
-        self._send("create-wavetable", payload)
+        if self.buffer_exists(name):
+            self.warning("Buffer %s already exists" % name)
+            return False
+        else:
+            skip = skip or maxHarm+1
+            if cutoff is None: cutoff = maxHarm/2
+            payload = [name, maxharm, decay, skip, mode, cutoff, depth, frames]
+            self._send("create-wavetable", payload)
     
     def audio_bus_exists(self, bname):
         return self._audio_buses.has_key(bname)
@@ -315,6 +319,7 @@ class LliaProxy(object):
     def add_buffer(self, bname, frames=1024, channels=1):
         if self.buffer_exists(bname):
             self.warning("Buffer %s already exists" % bname)
+            return False
         else:
             self._send("add-buffer", [bname, frames, channels])
             rs = self.expect_osc_response("buffer-added")

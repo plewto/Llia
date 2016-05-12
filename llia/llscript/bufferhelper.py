@@ -64,15 +64,24 @@ class BufferHelper(object):
         else:
             return True
         
-    # buffer name [:frames :channels]
+    # buffer name [:frames :channels :nodup]
     def add_buffer(self, tokens):
         req = ["str", "str"]
-        pos = [":frames", ":channels"]
+        pos = [":frames", ":channels", ":nodup"]
         dflt = {":frames" : ["int", 1024],
+                ":nodup" : ["int", 0],
                 ":channels" : ["int", 1]}
         args = parse_keyword_args(tokens, req, pos, dflt)
-        cmd, bname, frames, channels = args
-        rs = self.proxy.add_buffer(bname, frames, channels)
+        cmd, bname, frames, channels, nodup = args
+        nodup = nodup != 0
+        if self.proxy.buffer_exists(bname):
+            if nodup:
+                return False
+            else:
+                self.with_buffer(["", bname])
+                return True
+        else:
+            rs = self.proxy.add_buffer(bname, frames, channels)
         self.with_buffer(["", bname])
         return rs
     
@@ -104,77 +113,93 @@ class BufferHelper(object):
         else:
             return False
 
-    # cmd name [:harmonics][:decay][:skip][:mode][:cutoff][:depth][:frames]
+    # cmd name [:harmonics :decay :skip :mode :cutoff :depth :frames :nodup]
     #
     def create_wavetable(self, tokens):
         req = ["str","str"]
         pos = [":harmonics", ":decay", ":skip",
-               ":mode", ":cutoff", ":depth", ":frames"]
+               ":mode", ":cutoff", ":depth", ":frames",
+               ":nodup"]
         kw = {":harmonics" : ["int", 64],
               ":decay" : ["float", 0.5],
               ":skip" : ["int", -1],
               ":mode" : ["str", ""],
               ":cutoff" : ["int", -1],
               ":depth" : ["float", 0.5],
-              ":frames" : ["int", 1024]}
+              ":frames" : ["int", 1024],
+              ":nodup" : ["int", 1]}
         args = parse_keyword_args(tokens, req, pos, kw)
-        cmd, name, harm, decay, skip, mode, cutoff, depth, frames = args
+        cmd, name, harm, decay, skip, mode, cutoff, depth, frames, nodup = args
+        if self.proxy.buffer_exists(name):
+            nodup = nodup != 0
+            if nodup:
+                return False
+            else:
+                self.with_buffer(["", name])
+                return True
         if skip == -1: skip = harm+1
         if cutoff == -1: cutoff = harm/2
         self.proxy.create_wavetable(name, harm, decay, skip, mode, cutoff, depth, frames)
         self.with_buffer(["", name])
         return True
 
-    # cmd name [:frames]
+    # cmd name [:frames :nodup]
     #
     def create_sinetable(self, tokens):
         req = ["str","str"]
-        pos = [":frames"]
-        kw = {":frames" : ["int", 1024]}
+        pos = [":frames", ":nodup"]
+        kw = {":frames" : ["int", 1024],
+              ":nodup" : ["int", 0]}
         args = parse_keyword_args(tokens, req, pos, kw)
-        cmd, name, frames = args
+        cmd, name, frames, nodup = args
         tokens = ["", name,
                   ":harmonics",1,
                   ":decay", 1,
                   ":skip", 2,
                   ":mode", "",
-                  ":frames", frames]
+                  ":frames", frames,
+                  ":nodup", nodup]
         rs = self.create_wavetable(tokens)
         return rs
 
-    # cmd name [:harmonis][:frames]
+    # cmd name [:harmonis :frames :nodup]
     #
     def create_sawtable(self, tokens):
         req = ["str", "str"]
-        pos = [":harmonics", ":frames"]
+        pos = [":harmonics", ":frames", ":nodup"]
         kw = {":harmonics" : ["int", 64],
+              ":nodup" : ["int", 0],
               ":frames" : ["int", 1024]}
         args = parse_keyword_args(tokens, req, pos, kw)
-        cmd, name, harm, frames = args
+        cmd, name, harm, frames, nodup = args
         tokens = ["", name,
                   ":harmonics", harm,
                   ":decay", 1,
                   ":skip", harm+1,
                   ":mode", "",
+                  ":nodup", nodup,
                   ":frames", frames]
         rs = self.create_wavetable(tokens)
         return rs
 
-    # cmd name [:harmonics][:skip][:frames]
+    # cmd name [:harmonics :skip :frames :nodup]
     #
     def create_pulsetable(self, tokens):
         req = ["str", "str"]
-        pos = [":harmonics", ":skip", ":frames"]
+        pos = [":harmonics", ":skip", ":frames", ":nodup"]
         kw = {":harmonics" : ["int", 64],
               ":skip" : ["int", 2],
+              ":nodup" : ["int", 0],
               ":frames" : ["int", 1024]}
         args = parse_keyword_args(tokens, req, pos, kw)
-        cmd, name, harm, skip, frames = args
+        cmd, name, harm, skip, frames, nodup = args
         if skip <= 1:
             tokens = ["", name, ":harmonics", harm, ":decay", 0,
-                      ":skip", harm+1, ":mode", "", ":frames", frames]
+                      ":skip", harm+1, ":mode", "", ":frames", frames,
+                      ":nodup", nudup]
         else:
             tokens = ["", name, ":harmonics", harm, ":decay", 0,
-                      ":skip", skip, ":mode", "", ":frames", frames]
+                      ":skip", skip, ":mode", "", ":frames", frames,
+                      ":nodup", nodup]
         rs = self.create_wavetable(tokens)
         return rs

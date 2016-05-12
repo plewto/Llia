@@ -24,7 +24,6 @@ def expect(ttype, token):
     elif ttype == "float":
         try:
             value = float(token)
-            print("value is ", value)
             return value
         except ValueError:
             msg = "Expected float, encounterd %s" % token
