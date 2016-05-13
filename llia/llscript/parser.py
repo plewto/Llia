@@ -45,7 +45,7 @@ class LSLParser(object):
         self.dispatch_table["panic"] = self.panic
         self.dispatch_table["ping"] = self.ping
         self.dispatch_table["python"] = self.exec_python
-        self.dispatch_table["run"] = self.run_script
+        self.dispatch_table["batch"] = self.run_script
         self.dispatch_table["sync"] = self.sync_all
 
     def update_prompt(self):

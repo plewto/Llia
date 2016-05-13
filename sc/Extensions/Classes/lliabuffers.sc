@@ -18,7 +18,7 @@ LliaBuffers : Object {
 		^super.new.init();
 	}
 
-	init {
+	init {|app|
 		sopts = ServerOptions.new;
 		buffers = Dictionary.new(8);
 	}
@@ -37,10 +37,24 @@ LliaBuffers : Object {
 
 	bufferExists {|name|
 		var flag = true;
+		name = name.asString;
 		buffers.atFail(name, {flag=false});
 		^flag;
 	}
 
+	plot {|name|
+		name = name.asString;
+		if (this.bufferExists(name),
+			{
+				var b;
+				b = buffers.at(name);
+				b.plot(name);
+				^true;
+			},{
+				^false;
+			})}
+			
+	
 	addBuffer {|name, frames=1024, numChans=1|
 		if (this.bufferExists(name),
 			{
@@ -48,8 +62,8 @@ LliaBuffers : Object {
 				postln(msg);
 				^false;
 			},{
-				var b = Buffer.new(nil, frames, numChans);
-				var frmt = "Added buffer '%'  frames: %  channels: %\n";
+				var b = Buffer.alloc(nil, frames, numChans);
+				var frmt = "Added buffer '%'  frames: %   channels: %\n";
 				buffers.add(name -> b);
 				postf(frmt, name, frames, numChans);
 				^true;
@@ -57,6 +71,7 @@ LliaBuffers : Object {
 	}
 
 	getBuffer {|name|
+		name = name.asString;
 		if (this.bufferExists(name),
 			{
 				^buffers.at(name);
@@ -205,7 +220,7 @@ LliaBuffers : Object {
 			{
 				var b = this.getBuffer(name);
 				var amps = LliaBuffers.harmgen1(maxHarmonic, decay, skip, mode, cutoff, depth);
-				b.sine1(amps, true, true, true);
+				b = b.sine1(amps, true, true, true);
 				^true;
 			},{
 				^false;

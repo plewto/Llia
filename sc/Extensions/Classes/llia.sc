@@ -17,7 +17,8 @@ LliaHandler : Object {
 	var <buffers;						// LliaBuffers
 	var oscHandlers;					// Array
 	var <isDead;						// flag
-	var serverOptions;
+	var serverOptions;					//
+	//var <server;							// 
 
 	// See Llia/docs/keymodes
 	*validKeyModes {
@@ -48,6 +49,7 @@ LliaHandler : Object {
 
 	init {|clientAddress, clientPort, ip, port, oscid|
 		this.setClient(clientAddress, clientPort);
+		//server = Server.local;
 		lliaHost = NetAddr.new(ip, port);
 		oscID = oscid.asString;
 		serverOptions = ServerOptions.new;
@@ -340,9 +342,13 @@ LliaHandler : Object {
 			OSCFunc ({|msg|
 				var sname = msg[0];
 				this.respond("booting-server");
-				case {sname == "local"}{Server.local.boot}
-				     {sname == "internal"}{Server.internal.boot}
-				     {true}{Server.default.boot}},
+				case  {sname == "local"}
+				      {Server.local.boot}
+            
+				      {sname == "internal"}
+				      {Server.internal.boot}
+            
+				      {Server.default.boot}},
 				this.path("boot-server")),
 
 			OSCFunc ({|msg|
@@ -577,11 +583,25 @@ LliaHandler : Object {
 				skip = msg[4].asInt.max(1);
 				mode = msg[5].asString;
 				cutoff = msg[6].asInt.max(0).min(maxHarm);
-				depth = msg[6].asFloat.max(0).min(1);
-				frames = msg[7].asInt;
+				depth = msg[7].asFloat.max(0).min(1);
+				frames = msg[8].asInt;
 				rs = buffers.wave(bufferName, maxHarm, decay, skip, mode, cutoff, depth, frames)},
 				this.path("create-wavetable")),
 
+			// cmd buffer-name
+			//
+			OSCFunc ({|msg|
+				var bufferName, rs;
+				bufferName = msg[1];
+				rs = buffers.plot(bufferName);
+				if (rs,
+					{
+						postf("Ploting buffer '%'\n", bufferName);
+					},{
+						postf("Can not plot buffer '%'\n", bufferName);
+					})},
+				this.path("plot-buffer")),
+			
 		];
 		oscHandlers = ary;
 	}

@@ -58,7 +58,7 @@ comments = """All text on a line after # is ignored."""
 
 # ********************************************************************
 abus = """
-abus name [channels]
+abus name [:channels :nodup]
 
 Creates a new audio bus (actually it doesn't really cause a bus to be
 created, all buses are created on SuperCollider startup).  
@@ -99,7 +99,7 @@ optional argument may be one of:
 
 # ********************************************************************
 cbus = """
-cbus name [channels]
+cbus name [:channels :nudup]
 
 Create new control bus (actually it doesn't really cause a bus to be
 created, all buses are created on SuperCollider startup).  
@@ -247,8 +247,8 @@ SECURITY WARNING: Running arbitrary python code can be dangerous, run only
 trusted code. """
 
 # ********************************************************************
-run = """
-run filename
+batch = """
+batch filename
 
 Load and execute external lliascript file.
 """
@@ -306,7 +306,7 @@ Shutdown Llia.
 
 # ********************************************************************
 buffer_ = """ 
-buffer name [:frames][:channels]
+buffer name [:frames :channels :nodup]
 
 Create a new empty buffer. 
 
@@ -338,7 +338,7 @@ current buffer.
 
 # ********************************************************************
 wavetab = """
-wavetab name [:harmonics][:decay][:skip][:mode][:cutoff][:depth][:frames] 
+wavetab name [:harmonics :decay :skip :mode :cutoff :depth :frames :nodup]
 
 Create and fill new buffer.
 
@@ -364,7 +364,7 @@ See also buffer, with-buffer, ?buffer, sinetab, sawtab and pulsetab
 
 # ********************************************************************
 sinetab = """
-sinetab name [:frames]
+sinetab name [:frames :nodup]
 
 A special case version of wavtab for creating sine tables.
 
@@ -373,7 +373,7 @@ See also wavtab, buffer, with-buffer, ?buffer, sawtab and pulsetab
 
 # ********************************************************************
 sawtab = """
-sawtab name [:harmonics][:frames]
+sawtab name [:harmonics :frames :nodup]
 
 A special case version of wavtab for creating sawtooth tables.
 
@@ -384,7 +384,7 @@ See also wavtab, buffer, with-buffer, ?buffer, sintab and pulsetab
 
 # ********************************************************************
 pulsetab = """
-pulsetab name [:harmonics][:skip][:frames]
+pulsetab name [:harmonics :skip :frames :nodup]
 
 A special case version of wavtab for creating pulse wave tables.
 :harmonics - default 64
@@ -454,7 +454,7 @@ help_topics = {
     "panic" : panic,
     "ping" : ping,
     "python" : python,
-    "run" : run,
+    "batch" : batch,
     "sync" : sync,
     "synth" : synth,
     "with-synth" : with_synth,

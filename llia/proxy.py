@@ -420,6 +420,10 @@ class LliaProxy(object):
     def assign_synth_buffer(self, stype, id_, param, buffer_name):
         payload = [stype, id_, param, buffer_name]
         rs = self._send("assign-synth-buffer", payload)
+
+    def plot_buffer(self, buffer_name):
+        payload = [buffer_name]
+        rs = self._send("plot-buffer", payload)
         
     def sync_to_host(self):
         self._audio_buses = {}
