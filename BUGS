@@ -24,3 +24,21 @@ IO buses, causing mayhem with future SC operations.
 
 This should be a simple fix.
 
+---------------------------------------------------------------------- OPEN
+BUG 0003 2016.05.13
+Multiple identical parameters can pile up in Keymode.fixedParameters.
+
+Keymode.fixedParameters is an Array used to hold fixed synth parameters such
+as bus and buffer assignments.  When a bus or buffer assignment is made in
+lliascript the change is reflected in fixedParameters.  If a lliascript
+assignment is made repeatedly, such as happens when reevaluating a script
+file, the the new assignment is appended to the end of fixedParameters with
+the original assignment left in place.
+
+
+Possible fix:
+Switch from using an array to some sort of Dictionary, most likely an sclang
+Event. 
+
+
+
