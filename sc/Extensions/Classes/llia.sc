@@ -401,7 +401,6 @@ LliaHandler : Object {
 				var rate = msg[1].asSymbol;
 				var name = msg[2].asString;
 				var bus, acc, index, numChans;
-				// var frmt = "% bus '%' info  index: %   channels: %\n";
 				try {
 					if (rate == \audio,
 					{
@@ -413,7 +412,6 @@ LliaHandler : Object {
 					index = bus.index.asString;
 					numChans = bus.numChannels.asString;
 					acc = name + rate.asString + index + numChans;
-					//postf(frmt, rate, name, index, numChans);
 					this.respond("bus-info", acc);
 				}{
 					this.respond("bus-info", "DOES-NOT-EXISTS");
@@ -431,7 +429,6 @@ LliaHandler : Object {
 					});
 				acc = buses.busList.asList.sort.asString;
 				acc = rate.asString + acc;
-				// postf("buslist: %\n", acc);
 				this.respond("get-bus-list", acc)},
 				this.path("get-bus-list")),
 
@@ -589,18 +586,18 @@ LliaHandler : Object {
 				this.path("create-wavetable")),
 
 			// cmd buffer-name
-			//
-			OSCFunc ({|msg|
-				var bufferName, rs;
-				bufferName = msg[1];
-				rs = buffers.plot(bufferName);
-				if (rs,
-					{
-						postf("Ploting buffer '%'\n", bufferName);
-					},{
-						postf("Can not plot buffer '%'\n", bufferName);
-					})},
-				this.path("plot-buffer")),
+			// 
+			// OSCFunc ({|msg|
+			// 	var bufferName, rs;
+			// 	bufferName = msg[1];
+			// 	rs = buffers.plot(bufferName);
+			// 	if (rs,
+			// 		{
+			// 			postf("Ploting buffer '%'\n", bufferName);
+			// 		},{
+			// 			postf("Can not plot buffer '%'\n", bufferName);
+			// 		})},
+			// 	this.path("plot-buffer")),
 			
 		];
 		oscHandlers = ary;

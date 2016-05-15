@@ -34,6 +34,8 @@ class LSLParser(object):
         self.dispatch_table["abus"] = self.add_audio_bus
         self.dispatch_table["boot"] = self.boot_server
         self.dispatch_table["cbus"] = self.add_control_bus
+        self.dispatch_table["channel-name"] = self.set_midi_channel_name
+        self.dispatch_table["controller-name"] = self.set_midi_controller_name
         self.dispatch_table["clear-history"] = self.clear_history
         self.dispatch_table["dump"] = self.dump
         self.dispatch_table["exit"] = self.exit_ 
@@ -49,7 +51,7 @@ class LSLParser(object):
         self.dispatch_table["sync"] = self.sync_all
 
     def update_prompt(self):
-        cs = str(self.synth_helper.current_synth)
+        cs = str(self.synth_helper.current_sid)
         cb = str(self.buffer_helper.current_buffer)
         self.prompt = "Lila(synth: %s, buffer: %s)> " % (cs, cb)
         
@@ -276,6 +278,21 @@ class LSLParser(object):
             for s in sorted(con.KEY_MODES):
                 print("   %s" % s)
             return True
+        elif target == "CHANNELS":
+            print("MIDI channels:")
+            for i in range(16):
+                j = i+1
+                print("    [%2d] '%s'" % (j, self.config.channel_name(j)))
+            return True
+        elif target == "CTRL" or target == "CONTROLLERS":
+            print("MIDI Controllers:")
+            for r in range(32):
+                for c in range(4):
+                    ctrl = c*32+r
+                    name = self.config.controller_name(ctrl)
+                    print("[%3d] %-12s  " % (ctrl, name[:12]), end = "")
+                print()
+            return True
         else:
             ls_targets = ("abus", "cbus", "buffers", "synths", "efx", "command",
                           "syhth-types", "efx-types", "keymodes")
@@ -376,3 +393,45 @@ class LSLParser(object):
     def clear_history(self, tokens):
         self.history = ""
         return True
+
+    # cmd c [name]
+    # Assign alias to MIDI channel c
+    # Without name argument, print current alias for c.
+    #
+    def set_midi_channel_name(self, tokens):
+        req = ["str","int"]
+        opt = [["str", ""]]
+        args = parse_positional_args(tokens, req, opt)
+        cmd, chan, name = args
+        if 0 < chan <= 16:
+            if name == '':
+                name = self.config.channel_name(chan)
+            else:
+                self.config.channel_name(chan, name)
+            print("MIDI channel [%d] -> '%s'" % (chan, name))
+            return True
+        else:
+            msg = "Invalid MIDI channel: %s" % chan
+            self.warning(msg)
+            return False
+
+    # cmd ctrl [name]
+    # Assign alias to MIDI controller.
+    # Without name argument, print current alias for ctrl.
+    def set_midi_controller_name(self, tokens):
+        req = ["str","int"]
+        opt = [["str",""]]
+        args = parse_positional_args(tokens, req, opt)
+        cmd, ctrl, name = args
+        if 0 <= ctrl < 128:
+            if name:
+                self.config.controller_name(ctrl, name)
+            else:
+                name = self.config.controller_name(ctrl)
+            print("MIDI Controller [%d] -> '%s'" % (ctrl, name))
+            return True
+        else:
+            msg = "Invalid MIDI controller number: %s" % ctrl
+            self.warning(msg)
+            return False
+        

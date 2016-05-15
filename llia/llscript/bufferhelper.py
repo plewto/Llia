@@ -27,7 +27,7 @@ class BufferHelper(object):
         self.dispatch_table["sinetab"] = self.create_sinetable    
         self.dispatch_table["sawtab"] = self.create_sawtable
         self.dispatch_table["pulsetab"] = self.create_pulsetable
-        self.dispatch_table["plot-buffer"] = self.plot_buffer
+        #self.dispatch_table["plot-buffer"] = self.plot_buffer
 
     def status(self, msg):
         self.parser.status(msg)
@@ -80,6 +80,7 @@ class BufferHelper(object):
                 return False
             else:
                 self.with_buffer(["", bname])
+                self.status("Using buffer '%s'" % bname)
                 return True
         else:
             rs = self.proxy.add_buffer(bname, frames, channels)
@@ -205,10 +206,10 @@ class BufferHelper(object):
         rs = self.create_wavetable(tokens)
         return rs
 
-    def plot_buffer(self, tokens):
-        args = parse_positional_args(tokens, ["str"],[["str", "*"]])
-        bname = args[1]
-        if bname == "*": bname = self.current_buffer
-        self.proxy.plot_buffer(bname)
-        return True
+    # def plot_buffer(self, tokens):
+    #     args = parse_positional_args(tokens, ["str"],[["str", "*"]])
+    #     bname = args[1]
+    #     if bname == "*": bname = self.current_buffer
+    #     self.proxy.plot_buffer(bname)
+    #     return True
         

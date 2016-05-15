@@ -81,8 +81,8 @@ class LliaConfig(dict):
         self._select_gui(args)
         # self._midi_receiver = None
         # self._midi_transmitter = None
-        self._controller_assignments = CCAssignments(self._parser)
-        self._channel_assignments = ChannelAssignments(self._parser)
+        self.controller_assignments = CCAssignments(self._parser)
+        self.channel_assignments = ChannelAssignments(self._parser)
         
     def _select_backend(self, args):
         try:
@@ -255,30 +255,30 @@ class LliaConfig(dict):
             name = str(new_name)
             section = "MIDI-CHANNELS"
             key = "C%02d" % channel
-            self._channel_assignments[channel] = name
-        return self._channel_assignments[channel]
+            self.channel_assignments[channel] = name
+        return self.channel_assignments[channel]
 
     def reset_channel_names(self):
         for c in range(1, 17):
             self.channel_name(c, "")
 
     def formatted_channel_names(self):
-        return self._channel_assignments.formatted_list()
+        return self.channel_assignments.formatted_list()
     
     def controller_name(self, ctrl, new_name=None):
         if new_name is not None:
             name = str(new_name)
             section = "MIDI-CONTROLLERS"
             key = "CTRL%03d" % ctrl
-            self._controller_assignments[ctrl] = name
-        return self._controller_assignments[ctrl]
+            self.controller_assignments[ctrl] = name
+        return self.controller_assignments[ctrl]
 
     def reset_controller_names(self):
         for c in range(128):
             self.controller_name(c, "")
 
     def formatted_controller_names(self):
-        return self._controller_assignments.formatted_list()
+        return self.controller_assignments.formatted_list()
     
 
     def __get_value(self, section, key, default):

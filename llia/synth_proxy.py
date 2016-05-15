@@ -117,7 +117,7 @@ class SynthProxy(object):
         if new_channel is not None:
             c = int(new_channel)-1
             self._midi_chan0 = min(max(c, 0), 15)
-        return self._midi_chan0
+        return self._midi_chan0+1
 
     def current_program(self):
         return self._bank[None]
@@ -130,7 +130,7 @@ class SynthProxy(object):
         prf = self.current_performance()
         if n is not None:
             prf.transpose = n
-        return prf
+        return prf.transpose
 
     def key_range(self, range_=None):
         prf = self.current_performance()
@@ -155,6 +155,11 @@ class SynthProxy(object):
             prf.bend_parameter = new_param
         return prf.bend_parameter
 
+    def keytable(self, tabname=None):
+        if tabname:
+            self._key_table_name = tabname
+        return self._key_table_name
+    
     def use_program(self, slot):
         cp = self._bank.use(slot)
         self.x_program(cp)

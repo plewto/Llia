@@ -9,7 +9,7 @@ Keymode : Object {
 	var synthID;
 	var <netAddress;
 	var <synthType;
-	var <fixedParameters;
+	var <fixedParameters;  // See BUG 0003
 	var currentProgram;
 	var oscHandlers;
 	var <isDead;

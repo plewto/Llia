@@ -188,6 +188,9 @@ class ChannelAssignments(object):
             msg += "encountered %s" % channel
             raise IndexError(msg)
 
+    def channel_defined(self, name):
+        return self._rvs_map.has_key(name)
+        
     def get_channel(self, channel_name, default=1):
         """
         Returns channel associated with name.
