@@ -283,7 +283,7 @@ class LliaProxy(object):
             skip = skip or maxHarm+1
             if cutoff is None: cutoff = maxHarm/2
             payload = [name, maxharm, decay, skip, mode, cutoff, depth, frames]
-            self._send("create-wavetable", payload)
+            rs = self._send("create-wavetable", payload)
     
     def audio_bus_exists(self, bname):
         return self._audio_buses.has_key(bname)
@@ -291,7 +291,7 @@ class LliaProxy(object):
     def add_audio_bus(self, bname, channels=1):
         rate = "audio"
         if self.audio_bus_exists(bname):
-            self.warning("Audio bus %s already exists" % bname)
+            #self.warning("Audio bus %s already exists" % bname)
             return False
         else:
             self._send("add-bus", [rate, bname, channels])
@@ -306,7 +306,8 @@ class LliaProxy(object):
     def add_control_bus(self, bname, channels=1):
         rate = "control"
         if self.control_bus_exists(bname):
-            self.warning("Control bus %s already exists"  % bname)
+            #self.warning("Control bus %s already exists"  % bname)
+            return False
         else:
             self._send("add-bus", [rate, bname, channels])
             rs = self.expect_osc_response("bus-added")
@@ -327,20 +328,26 @@ class LliaProxy(object):
             return rs
 
     def list_audio_buses(self):
+        keys = sorted(self._audio_buses.keys())
         print("Audio buses:")
-        for k in sorted(self._audio_buses.keys()):
+        for k in keys:
             print("    ", k)
-
+        return keys
+            
     def list_control_buses(self):
+        keys = sorted(self._control_buses.keys())
         print("Control Buses:")
-        for k in sorted(self._control_buses.keys()):
+        for k in keys:
             print("    ", k)
-
+        return keys
+            
     def list_buffers(self):
+        keys = sorted(self._buffers.keys())
         print("Buffers:")
-        for k in sorted(self._buffers.keys()):
+        for k in keys:
             print("    ", k)
-
+        return keys
+            
     def synth_exists(self, stype, id_, sid=None):
         sid = sid or "%s_%d" % (stype, int(id_))
         return self._synths.has_key(sid)
@@ -355,23 +362,27 @@ class LliaProxy(object):
         specs = sy.specs
         stype = specs["format"]
         id_ = sy.id_
-        print("    %s %s" % (stype, id_))
+        sid = "%s_%s" % (stype, id_)
+        print("    %s" % sid)
+        return sid
     
-    # ISSUE: FIX ME list_synths
     def list_synths(self):
+        acc = []
         print("Synths:")
         for k in sorted(self._synths.keys()):
             sy = self._synths[k]
             if not sy.is_efx:
-                self._list_synth(sy)
+                acc.append(self._list_synth(sy))
+        return acc
 
-    # ISSUE: FIX ME list_efx
     def list_efx(self):
+        acc = []
         print("EFX Synths:")
         for k in sorted(self._synths.keys()):
             sy = self._synths[k]
             if sy.is_efx:
-                self._list_synth(sy)
+                acc.append(self._list_synth(sy))
+        return acc
                 
 
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
@@ -387,6 +398,7 @@ class LliaProxy(object):
                self.warning(msg)
                return False
            else:
+               print("Creating synth: %s" % sid)
                self._synths[sid] = sy
                self._send("add-synth", [stype, id_, keymode, voice_count])
                return True

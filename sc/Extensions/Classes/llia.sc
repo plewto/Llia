@@ -201,10 +201,11 @@ LliaHandler : Object {
 		if (this.synthExists(sid),
 			{
 				postf("WARNING: Replacing existing % synth %\n", stype, id);
+			},{
+				postf(frmt, sid);
 			});
 		this.freeSynth(sid);
 		synths.put(sid, sy);
-		postf(frmt, sid);
 		^sy;
 	}
 

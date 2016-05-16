@@ -124,7 +124,7 @@ LliaBuses : Object {
 						b = Bus.control(nil, numChans);
 					});
 				buses.add(id -> b);
-				postf("Added % bus '%' with % channels.\n", rate, id, numChans);
+				postf("Added % bus: '%' with % channels.\n", rate, id, numChans);
 				^true;
 			});
 	}

@@ -11,30 +11,10 @@ a = LliaHandler.new();
 
 )
 
-b = ~buffers.getBuffer("saw4");
-b.sine1([1,2,3]);
 
-b;
-b.numFrames;
+q = Synth(\ORGN);
+q.free;
 
-
-
-b.plot;
-:
-(
-b = a.buffers.getBuffer("saw4");
-b.sine1([1, 1, 1, 1]);
-// b.plot;
-)
-
-
-
-a.lliaDump;
-
-
-q = Buffer.alloc(s, 1024);
-q.sine1([1,1,1,1]);
-q.get(15);
 
 (SynthDef (\ORGN,
 	{|freq = 440,

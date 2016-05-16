@@ -146,7 +146,7 @@
 log-file : ~/t/llia.log
 
 [MIDI]
-input-port : Launchkey Mini 28:0
+input-port : Launchkey Mini 16:0
 ; input-port : E-MU Xmidi 2x2 24:0
 output-port :
 backend : mido.backends.rtmidi
