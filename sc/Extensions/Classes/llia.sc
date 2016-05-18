@@ -571,7 +571,6 @@ LliaHandler : Object {
 				this.path("assign-synth-buffer")),
 			
 			// cmd buffer-name, maxharm decay skip mode cutoff depth frames
-			// 0   1        2       3     4    5    6      7     8
 			OSCFunc ({|msg|
 				var bufferName, rs;
 				var maxHarm, decay, skip, mode, cutoff, depth, frames;

@@ -8,7 +8,7 @@ from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
 from llia.performance_edit import performance, smap, ccmap
 
-prototype = {"amp" : 0.50,
+prototype = {"amp" : 0.10,
              "pan" : 0.0,
              "lfoFreq" : 5.0,
              "lfoDepth" : 0.0,
@@ -26,7 +26,7 @@ prototype = {"amp" : 0.50,
              "ratioB" : 1.0,
              "decayB" : 0.0,
              "sustainB" : 1.0,
-             "mixB" : 0.0}
+             "mixB" : 1.0}
 
 class Orgn(Program):
 
@@ -44,8 +44,8 @@ def orgn(slot, name, amp=0.05, pan=0.0,
          lfo = [5.0, 0.0, 0.0],
          vib = [0.0, 0.01],
          chorus = [0.0, 0.0],
-         a = [0.4, 0.0, 1.0],
-         b = [0.4, 0.0, 1.0],
+         a = [0.4, 0.0, 1.0],   # [modDepth, trem, mix-db]  
+         b = [0.4, 0.0, 1.0],   # [modDepth, trem, mix-db]
          bfreq = [2, 2],
          benv = [1.0, 1.0],
          performance = performance()):
@@ -58,7 +58,7 @@ def orgn(slot, name, amp=0.05, pan=0.0,
     p["vsens"] = nlimit(vib[1])
     p["chorus"] = nlimit(chorus[0])
     p["chorusDelay"] = max(0.0, float(chorus[1]))
-    p["tremoloA"] = nlimit(a[1])
+    p["tremoloA"] = nlimit(a[1])  
     p["modDepthA"] = nlimit(a[0])
     p["mixA"] = db_to_amp(a[2])
     p["tremoloB"] = nlimit(b[1])

@@ -13,3 +13,15 @@ CHAN = 6
 CTRL = 7
 STYPE = 8
 KEYMODE = 9
+
+velocity = "velocity"
+aftertouch = "aftertouch"
+keynumber = "keynumber"
+pitchwheel = "pitchwheel"
+
+linear = "linear"
+exp = "exp"
+scurve = "s"
+step = "step"
+
+curves = (linear, exp, scurve, step)

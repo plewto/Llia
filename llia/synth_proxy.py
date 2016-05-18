@@ -92,7 +92,8 @@ class SynthProxy(object):
         host_and_port = app.config.host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
         trace_osc = app.config.osc_transmission_trace_enabled()
-        self._osc_transmitter = OSCTransmitter(self.oscID, host_and_port, trace_osc)
+        self.osc_transmitter = OSCTransmitter(self.oscID, host_and_port, trace_osc)
+        #self._osc_transmitter = OSCTransmitter(self.oscID, host_and_port, trace_os)c
         def register_midi_handler(event, hfn, fid=""):
             fid = "%s%s.%s" % (fid, self.oscID, event)
             app.midi_receiver.register_handler(event, fid, hfn)
@@ -200,7 +201,7 @@ class SynthProxy(object):
         sm = self._get_source_mapper(source)
         sm.remove_parameter(param)
 
-    def add_controller_map(self, ctrl, param,curve=None, modifier=None, range_=None, limits=None):
+    def add_controller_map(self, ctrl, param, curve=None, modifier=None, range_=None, limits=None):
         cm = self.current_performance().controller_maps
         cm.add_parameter(ctrl, param, curve, modifier, range_, limits)
 
@@ -210,7 +211,7 @@ class SynthProxy(object):
 
         
     def x_ping(self):
-        self._osc_transmitter.x_ping()
+        self.osc_transmitter.x_ping()
         rs = self.app.proxy.expect_osc_response("ping-response")
         if not rs:
             #sid = "%s_%d" % (self.synth_format, self.id_)
@@ -220,10 +221,10 @@ class SynthProxy(object):
         return rs
 
     def x_dump(self):
-        self._osc_transmitter.x_dump()
+        self.osc_transmitter.x_dump()
     
     def x_param_change(self, param, value):
-        self._osc_transmitter.x_synth_param(param, value)
+        self.osc_transmitter.x_synth_param(param, value)
 
     def x_program(self, program):
         for param, val in program.items():
@@ -239,13 +240,13 @@ class SynthProxy(object):
         if chan == self._midi_chan0 and lower <= keynumber <= upper:
             keynumber_t = min(max(keynumber+perf.transpose, 0), 127)
             if v127 == 0:
-                self._osc_transmitter.x_note_off(keynumber_t)
+                self.osc_transmitter.x_note_off(keynumber_t)
             else:
                 vnorm = v127/127.0
                 freq = self.app.keytables[self._key_table_name][keynumber_t]
                 perf.velocity_maps.update_synths(v127, self)
                 perf.keynumber_maps.update_synths(keynumber, self)
-                self._osc_transmitter.x_note_on(keynumber_t, freq, vnorm)
+                self.osc_transmitter.x_note_on(keynumber_t, freq, vnorm)
 
     def _note_off_handler(self, mmsg):
         perf = self.current_performance()
@@ -254,7 +255,7 @@ class SynthProxy(object):
             keynumber = mmsg.note
             if lower <= keynumber <= upper:
                 kn = min(max(keynumber+perf.transpose, 0), 127)
-                self._osc_transmitter.x_note_off(kn)
+                self.osc_transmitter.x_note_off(kn)
                 
     def _aftertouch_handler(self, mmsg):
         if mmsg.channel == self._midi_chan0:
@@ -290,7 +291,22 @@ class SynthProxy(object):
                 slot = min(max(slot, 0), 127)
                 self.use_program(slot)
                 
+    # def dump(self):
+    #     pad = " "*4
+    #     print("SynthProxy: sid = '%s'" % self.sid)
+    #     print("%sMIDI input channel : %2d" % (pad, self.midi_input_channel()))
+    #     print("%sKey table          : %s" % (pad, self._key_table_name))
+    #     self._bank.dump(1)
+
     def dump(self):
-        print("ISSUE: FIX ME SynthProxy.dump")
+        pad = " "*4
+        acc = "SynthProxy: sid = '%s'\n" % self.sid
+        acc += "%sMIDI input channel : %2d" % (pad, self.midi_input_channel())
+        acc += "%sKeytable           : %s" % (pad, self._key_table_name)
+        acc += self._bank.dump(1)
+        return acc
+        
+
+              
         
             

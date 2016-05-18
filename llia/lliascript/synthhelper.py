@@ -31,7 +31,10 @@ class SynthHelper(object):
         ns["ping_synth"] = self.ping_synth
         ns["synth"] = self.add_synth
         ns["transpose"] = self.transpose
-        ns["use_synth"] = self.use_synth
+        ns["with_synth"] = self.with_synth
+        #ns["dump_synth"] = self.dump_synth
+        #ns["mapsrc"] = self.mapsrc
+        ns["cc"] = self.map_cc
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -50,14 +53,17 @@ class SynthHelper(object):
         return self.proxy.synth_exists(None, None, sid)
 
     def get_synth(self, sid=None):
-        sid = sid or self.current_sid
+        if sid == "*":
+            sid = self.current_sid
+        else:
+            sid = sid or self.current_sid
         try:
             sy = self.proxy.get_synth(sid)
             return sy
         except KeyError:
           raise NoSuchSynthError(sid)
 
-    def use_synth(self, sid):
+    def with_synth(self, sid):
         self.get_synth(sid)
         self.current_sid = sid
         msg = "Using synth: %s" % sid
@@ -168,7 +174,7 @@ class SynthHelper(object):
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
-            self.use_synth(sid)
+            self.with_synth(sid)
             return True
         else:
             self.assert_synth_type(stype)
@@ -183,11 +189,12 @@ class SynthHelper(object):
     def add_efx(self, stype, id_):
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
-            self.use_synth(sid)
+            self.with_synth(sid)
             return True
         else:
             self.assert_efx_type(stype)
             rs = self.proxy.add_efx(stype, id_)
+            self.parser.register_entity(sid, "synth")
             if rs:
                 self.current_sid = sid
                 self.update_prompt()
@@ -235,3 +242,62 @@ class SynthHelper(object):
         sy = self.get_synth(sid)
         sy.x_ping()
         return True
+
+    @staticmethod
+    def _assert_map_curve(curve):
+        if curve in curves:
+            return True
+        else:
+            msg = "Expected one of the following for map_ curve argument:\n"
+            msg += "linear, exp, scurve or step.  Encounterd: %s"
+            msg = msg % curve
+            raise LliascriptError(msg)
+    
+    # def mapsrc(self, source, param, curve=linear, mod=None,
+    #            range_=(0.0, 1.0), limits=None, sid=None):
+    #     self._assert_map_curve(curve)
+    #     limits = limits or range_
+    #     if not mod:
+    #         if curve == step:
+    #             mod = 8
+    #         else:
+    #             mod = 1
+    #     sy = self.get_synth(sid)
+    #     if self.parser.is_controller(source):
+    #         sy.add_controller_map(source,param,curve,mod,range_,limits)
+    #         return True
+    #     elif source in (velocity, aftertouch, keynumber, pitchwheel):
+    #         sy.add_source_map(source,param,curve,mod,range_,limits)
+    #         return True
+    #     else:
+    #         msg = "Expected map_ source to be velocity, aftertouch, \n"
+    #         msg += "keynumber, pitchwheel or a MIDI controller.\n"
+    #         msg += "Encountered: %s"
+    #         msg = msg % source
+    #         raise LliascriptError(msg)
+
+    def _assert_map_args(self, curve, mod, range_, limits, sid):
+        self._assert_map_curve(curve)
+        range_ = range_ or (0.0, 1.0)
+        limits = limits or range_
+        if not mod:
+            if mod == step:
+                mod = 8
+            else:
+                mod = 1
+        sy = self.get_synth(sid)
+        return (curve, mod, range_, limits, sy)
+
+    def map_cc(self, ctrl, param, curve=linear, mod=None, range_=None, limits=None,sid=None):
+        curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
+        source = self.config.controller_assignments.get_controller_number(ctrl)
+        sy.add_controller_map(source,param,curve,mod,range_,limits)
+        return True
+        
+        
+
+        
+    def dump_synth(self, sid=None):
+        sy = self.get_synth(sid)
+        sy.x_dump()
+        print(sy._bank.current_program.dump(1))

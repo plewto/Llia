@@ -52,7 +52,15 @@ class Parser(object):
             ns["CTRL"] = CTRL
             ns["STYPE"] = STYPE
             ns["KEYMODE"] = KEYMODE
-            ns["HELP"] = self.help_
+            ns["velocity"] = velocity
+            ns["aftertouch"] = aftertouch
+            ns["keynumber"] = keynumber
+            ns["pitchwheel"] = pitchwheel
+            ns["linear"] = linear
+            ns["exp"] = exp
+            ns["scurve"] = scurve
+            ns["step"] = step
+            ns["help"] = self.help_
             ns["abus"] = self.abus
             ns["cbus"] = self.cbus
             ns["channel_name"] = self.channel_name
@@ -63,9 +71,11 @@ class Parser(object):
             ns["ls"] = self._lsCommand.ls
             ns["panic"] = self.panic
             ns["ping"] = self.ping
+            ns["pp"] = self.pretty_printer
             ns["load"] = self.load_python
             ns["sync"] = self.sync_all
-            ns["use"] = self.use
+            ns["trace_midi"] = self.trace_midi
+            ns["trace_osc"] = self.trace_osc
             ns["what_is"] = self.what_is_interactive
             ns["x"] = self.exit_  
         
@@ -114,31 +124,71 @@ class Parser(object):
             self.warning(msg)
             if sync: self.proxy.sync_to_host()
             return False
-            
         
     def _append_history(self, text, as_remark=True):
         if as_remark: text = "# " + text
         self._history += "%s\n" % text
         
     def warning(self, msg):
-        msg = "WARNING: %s" % msg
-        print(msg)
-        self._append_history(msg)
+        for line in msg.split("\n"):
+            line = "WARNING: %s" % line
+            print(line)
+            self._append_history(line)
 
     def status(self, msg):
-        print(msg)
-        self._append_history(msg)
+        for line in msg.split("\n"):
+            print(line)
+            self._append_history(line)
         
     def help_(self, topic=None):
         print("Help topic = %s, not implemented" % topic)
         return True
+
+    def is_abus(self, name):
+        ent = self._entities.get(name, None)
+        return ent and ent.lstype == "abus"
+
+    def is_cbus(self, name):
+        ent = self._entities.get(name, None)
+        return ent and ent.lstype == "cbus"
+
+    def is_buffer(self, name):
+        ent = self._entities.get(name, None)
+        return ent and ent.lstype == "buffer"
+
+    def is_synth(self, name):
+        ent = self._entities.get(name, None)
+        return ent and ent.lstype == "synth"
+
+    def is_channel(self, name):
+        try:
+            name = int(str(name))
+            return 1 <= name <= 16
+        except ValueError:
+            return self.config.channel_assignments.channel_defined(name)
+
+    def is_controller(self, name):
+        try:
+            ctrl = int(str(name))
+            return 0 <= ctrl <= 127
+        except ValueError:
+            return self.config.controller_assignments.controller_defined(name)
     
     def what_is(self, name):
         ent = self._entities.get(name, None)
         if ent:
             return ent.lstype
         else:
-            return ""
+            chnflag = self.is_channel(name)
+            ccflag = self.is_controller(name)
+            if chnflag and ccflag:
+                return "channel_or_controller"
+            else:
+                if chnflag:
+                    return "channel"
+                if ccflag:
+                    return "controller"
+                return ""
 
     def what_is_interactive(self, name):
         lstype = self.what_is(name)
@@ -148,22 +198,6 @@ class Parser(object):
             msg = "'%s' is a %s" % (name, lstype)
         self.status(msg)
         return lstype
-        
-    def use(self, name):
-        lstype = self.what_is(name)
-        if lstype == "buffer":
-            self.bufferhelper.use_buffer(name)
-        elif lstype == "synth":
-            self.synthhelper.use_synth(name)
-        elif lstype == "abus":
-            msg = "Can not use an abus"
-            self.warning(msg)
-        elif lstype == "cbus":
-            msg = "Can not use a cbus"
-            self.warning(msg)
-        else:
-            msg = "name '%s' ?" % name
-            raise LliascriptError(msg)
         
     def register_entity(self, name, lstype, data = {}):
         xtype = self.what_is(name)
@@ -230,8 +264,11 @@ class Parser(object):
     # ISSUE: FIX ME dump target not implemented
     #
     def dump(self, target=None):
-        self.proxy.dump()
-        return True
+        if not target:
+            self.proxy.dump()
+        else:
+            self.synthhelper.dump_synth(target)
+
 
     def panic(self):
         self.proxy.panic()
@@ -259,3 +296,42 @@ class Parser(object):
     def exit_(self):
         self._exit_repl = True
         self.app.exit()
+
+    def pretty_printer(self, flag=None):
+        if flag is not None:
+            if flag:
+                flag = True
+            else:
+                flag = False
+            self.config.set_option("MIDI", "enable-program-pp", flag)
+        flag = self.config.get_option("MIDI", "enable-program-pp")
+        msg = "Pretty printer "
+        if flag:
+            msg += "enabled."
+        else:
+            msg += "disabled."
+        print(msg)
+        return flag
+
+    def trace_midi(self, flag):
+        self.app.midi_receiver.enable_trace(flag)
+        msg = "MIDI trace "
+        if flag:
+            msg += "enabled."
+        else:
+            msg += "disabled."
+        print(msg)
+        return flag
+        
+    def trace_osc(self, flag):
+        self.proxy.osc_transmitter.trace = flag
+        for sy in self.proxy.get_all_synths():
+            sy.osc_transmitter.trace = flag
+        msg = "Trace OSC "
+        if flag:
+            msg += "enabled."
+        else:
+            msg += "disabled."
+        print(msg)
+        return flag
+            

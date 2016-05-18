@@ -338,7 +338,7 @@ class CCMapper(object):
             self[ctrl].update_synths(x, instrument)
         except KeyError:
             pass
-
+            
     def copy_ccmapper(self, other):
         self.reset()
         for ctrl,pm in other._maps.items():

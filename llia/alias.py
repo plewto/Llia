@@ -27,6 +27,7 @@ class CCAssignments(object):
                           from configuration file section [MIDI-CONTROLLERS].
         """
         self._names = None
+        self._rvsmap = {}
         self.reset()
         if config_parser:
             for cc in range(128):
@@ -47,6 +48,7 @@ class CCAssignments(object):
         for ctrl in range(len(self)):
             name = "%s" % ctrl
             self._names.append(name)
+            self._rvsmap[name] = ctrl
 
     def __setitem__(self, ctrl, name):
         """
@@ -56,7 +58,9 @@ class CCAssignments(object):
           name - String, the assigned name.  The name length is truncated 
                  to 12 characters.
         """
-        self._names[ctrl] = str(name)[:CCAssignments.MAX_NAME_LENGTH]
+        name = str(name)[:CCAssignments.MAX_NAME_LENGTH]
+        self._names[ctrl] = name
+        self._rvsmap[name] = ctrl
 
     def __getitem__(self, ctrl):
         """
@@ -69,6 +73,38 @@ class CCAssignments(object):
         """
         return self._names[ctrl]
 
+    def get_controller_number(self, id_):
+        """
+        Retrieve MIDI controller number either by it's int value or alias.
+        ARGS:
+          id_ - String or int, 
+                Either an int MIDI controller number 0 <= id_ < 128,
+                or an String alias.
+        RETURNS:
+           int
+        Raises:
+           ValueError if id_ is neither a valid MIDI controller number
+           or an assigned alias.
+        """
+        try:
+            ctrl = int(str(id_))
+            if 0 <= ctrl < 128:
+                return ctrl
+        except ValueError:
+            try:
+                ctrl = self._rvsmap[id_]
+                return ctrl
+            except KeyError:
+                msg = "Invalid MIDI controller: '%s'" % id_
+                raise ValueError(msg)
+    
+    def controller_defined(self, name):
+        flag = False
+        for n in self._names:
+            flag = n == name
+            if flag: break
+        return flag
+    
     def formatted_list(self):
         """
         RETURNS:

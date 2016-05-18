@@ -23,7 +23,7 @@ class BufferHelper(object):
         ns["sinetab"] = self.create_sine_table
         ns["sawtab"] = self.create_wave_table
         ns["pulsetab"] = self.create_pulse_table
-        ns["use_buffer"] = self.use_buffer
+        ns["with_buffer"] = self.with_buffer
 
     def status(self, msg):
         self.parser.status(msg)
@@ -42,7 +42,7 @@ class BufferHelper(object):
     def what_is(self, name):
         return self.parser.what_is(name)
 
-    def use_buffer(self, name=None):
+    def with_buffer(self, name=None):
         name = name or self.current_buffer
         if self.buffer_exists(name):
             self.current_buffer = name
@@ -54,7 +54,7 @@ class BufferHelper(object):
         
     def add_buffer(self, name, frames=1024, channels=1):
         if self.buffer_exists(name):
-            self.use_buffer(name)
+            self.with_buffer(name)
             return True
         flag = self.parser.register_entity(name, 
                                            "buffer",
@@ -62,7 +62,7 @@ class BufferHelper(object):
                                             "channels" : channels})
         if flag:
             rs = self.proxy.add_buffer(name, frames, channels)
-            self.use_buffer(name)
+            self.with_buffer(name)
             return rs
         else:
             return False
@@ -83,7 +83,7 @@ class BufferHelper(object):
                                         "buffer",
                                         {"frames" : frames,
                                          "channels" : 1})
-            self.use_buffer(name)
+            self.with_buffer(name)
             return True
         
     def create_sine_table(self, name, frames=1024):

@@ -356,6 +356,10 @@ class LliaProxy(object):
         rs = self._synths[sid]
         # print("Proxy.get_synth  sid %s   '%s'   rs -> %s" % (type(sid), sid, rs))
         return rs
+
+    def get_all_synths(self):
+        return self._synths.values()
+
     
     @staticmethod
     def _list_synth(sy):
@@ -383,7 +387,6 @@ class LliaProxy(object):
             if sy.is_efx:
                 acc.append(self._list_synth(sy))
         return acc
-                
 
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
        sid = "%s_%d" % (stype, int(id_))

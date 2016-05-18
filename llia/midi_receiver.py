@@ -46,15 +46,16 @@ class __MIDIReceiver(object):
         self._port = mido.open_input(self._port_name)
         self._thread = None
         self._active = False
-        if trace:
-            self.register_handler("note_on", "trace_on", trace_note_on)
-            self.register_handler("note_off","trace_off", trace_note_off)
-            self.register_handler("polytouch", "trace_polytouch", trace_polytouch)
-            self.register_handler("control_change", "trace_cc", trace_control_change)
-            self.register_handler("program_change", "trace_program", trace_program_change)
-            self.register_handler("pitchwheel", "trace_pitchwheel", trace_pitchwheel)
-            self.register_handler("aftertouch", "trace_aftertouch", trace_aftertouch)
-        
+        self.enable_trace(trace)
+        # if trace:
+        #     self.register_handler("note_on", "trace_on", trace_note_on)
+        #     self.register_handler("note_off","trace_off", trace_note_off)
+        #     self.register_handler("polytouch", "trace_polytouch", trace_polytouch)
+        #     self.register_handler("control_change", "trace_cc", trace_control_change)
+        #     self.register_handler("program_change", "trace_program", trace_program_change)
+        #     self.register_handler("pitchwheel", "trace_pitchwheel", trace_pitchwheel)
+        #     self.register_handler("aftertouch", "trace_aftertouch", trace_aftertouch)
+            
     def __run(self):
         while self._active:
             for msg in self._port:
@@ -124,7 +125,25 @@ class __MIDIReceiver(object):
                 del self._dispatch_table[mtype][name]
             except KeyError:
                 pass
-                
+
+    def enable_trace(self, flag):
+        if flag:
+            self.register_handler("note_on", "trace_on", trace_note_on)
+            self.register_handler("note_off","trace_off", trace_note_off)
+            self.register_handler("polytouch", "trace_polytouch", trace_polytouch)
+            self.register_handler("control_change", "trace_cc", trace_control_change)
+            self.register_handler("program_change", "trace_program", trace_program_change)
+            self.register_handler("pitchwheel", "trace_pitchwheel", trace_pitchwheel)
+            self.register_handler("aftertouch", "trace_aftertouch", trace_aftertouch)
+        else:
+            self.remove_handler("note_on", "trace_on")
+            self.remove_handler("note_off","trace_off")
+            self.remove_handler("polytouch", "trace_polytouch")
+            self.remove_handler("control_change", "trace_cc")
+            self.remove_handler("program_change", "trace_program")
+            self.remove_handler("pitchwheel", "trace_pitchwheel")
+            self.remove_handler("aftertouch", "trace_aftertouch")
+            
     def handler_names(self, mtype):
         """
         Return list of hander ID's for specific message type.
