@@ -8,6 +8,13 @@ LliaProxy.sync_to_host does not detect first control bus added to host.
 After a second control bus has been added sync_to_host correctly identifies
 all control buses.
 
+2016.05.18
+Control buses are detected if, and only if, there are more then one control
+bus defined.  If two control buses are created, the client and host agree
+thet ther are two buses.  If one of these buses is then removed, the
+client no longer "sees" the remaining bus.
+
+
 ---------------------------------------------------------------------- OPEN
 BUG 0001 2016.05.08 OPEN
 Effected files: llia.sc, proxy.py, parser.py

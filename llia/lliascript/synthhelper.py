@@ -35,6 +35,7 @@ class SynthHelper(object):
         #ns["dump_synth"] = self.dump_synth
         #ns["mapsrc"] = self.mapsrc
         ns["cc"] = self.map_cc
+        #ns["rm_synth"] = self.rm_synth
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -214,7 +215,7 @@ class SynthHelper(object):
 
     def keyrange(self, lower=None, upper=None, sid=None):
         sy = self.get_synth(sid)
-        if lower:
+        if lower or lower == 0:
             range_ = (lower, upper or 127)
             sy.key_range(range_)
         kr = sy.key_range()
@@ -293,11 +294,20 @@ class SynthHelper(object):
         source = self.config.controller_assignments.get_controller_number(ctrl)
         sy.add_controller_map(source,param,curve,mod,range_,limits)
         return True
-        
-        
 
+    def remove_synth(self, sid):
+        if sid == self.current_sid:
+            msg = "Can not free surrent synth: '%s'" % self.current_sid
+            raise LliascriptError(msg)
+        self.get_synth(sid)
+        stype, id_ = self.parse_sid(sid)
+        self.proxy.free_synth(stype, id_)
+        self.status("Rmoved synth: '%s'" % sid)
+        return True
         
     def dump_synth(self, sid=None):
         sy = self.get_synth(sid)
         sy.x_dump()
         print(sy._bank.current_program.dump(1))
+        stype, id_ = self.parse_sid(sid)
+        self.proxy.free_synth(stype, id_)

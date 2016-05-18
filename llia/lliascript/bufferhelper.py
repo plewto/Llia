@@ -6,7 +6,7 @@
 from __future__ import print_function
 
 from llia.lliascript.ls_constants import *
-
+from llia.llerrors import NoSuchBufferError
 
 
 class BufferHelper(object):
@@ -24,6 +24,7 @@ class BufferHelper(object):
         ns["sawtab"] = self.create_wave_table
         ns["pulsetab"] = self.create_pulse_table
         ns["with_buffer"] = self.with_buffer
+        # ns["rm_buffer"] = self.remove_buffer
 
     def status(self, msg):
         self.parser.status(msg)
@@ -97,3 +98,11 @@ class BufferHelper(object):
             decay = 1
         return self.create_wave_table(name, harmonics, decay, skip, frames=frames)
     
+    def remove_buffer(self, name):
+        if self.what_is(name) == "buffer":
+            self.proxy.remove_buffer(name)
+            self.status("Removed buffer: '%s'" % name)
+            return True
+        else:
+            raise NoSuchBufferError(name)
+            

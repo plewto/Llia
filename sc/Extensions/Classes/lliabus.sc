@@ -164,7 +164,8 @@ LliaBuses : Object {
 	}
 
 	/*
-    ** Free indicated bus.  The first n public audio input and outbus buses
+    ** Free indicated bus.  
+    ** The first n public audio input and outbus buses
     ** can not be freed.  Attempts to do so are ignored.
     ** ARGS:
     **   id - String

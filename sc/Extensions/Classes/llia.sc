@@ -176,6 +176,7 @@ LliaHandler : Object {
 		if(this.synthExists(sid),
 			{
 				var info = synths.at(sid);
+				synths.removeAt(sid);
 				info.panic;
 				info.free;
 				^true;
@@ -374,7 +375,7 @@ LliaHandler : Object {
 
 			OSCFunc ({|msg|
 				var rate = msg[1].asSymbol;
-				var bname = msg[2];
+				var bname = msg[2].asString;
 				this.freeBus(rate, bname)},
 				this.path("free-bus"));
 
@@ -442,10 +443,11 @@ LliaHandler : Object {
 				this.respond("buffer-added", rs)},
 				this.path("add-buffer")),
 
-			// OSCFunc ({|msg|
-			// 	var name = msg[1].asString;
-			// 	this.bufferFree(name)},
-			// 	this.path("free-buffer")),
+			OSCFunc ({|msg|
+				var name = msg[1].asString;
+				this.freeBuffer(name);
+				postf("Freeded buffer: '%'\n", name)},
+				this.path("free-buffer")),
 			
 			OSCFunc ({|msg|
 				var maxBuffer, allocated, rsmsg;
@@ -486,6 +488,12 @@ LliaHandler : Object {
 				this.addSynth(stype, id, km, vc)},
 				this.path("add-synth")),
 
+			OSCFunc ({|msg|
+				var sid = msg[1].asString;
+				this.freeSynth(sid);
+				postf("Freed synth: '%'\n", sid)},
+				this.path("free-synth")),
+			
 			OSCFunc ({|msg|
 				var stype = msg[1].asString;
 				var id = msg[2].asInt;

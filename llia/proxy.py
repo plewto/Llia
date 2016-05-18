@@ -6,7 +6,8 @@ from __future__ import print_function
 from time import sleep
 import sys
 
-from llia.llerrors import LliaPingError
+from llia.llerrors import (LliaPingError, LliaError, NoSuchSynthError,
+                           NoSuchBusError, NoSuchBufferError)
 from llia.osc_transmitter import OSCTransmitter
 from llia.osc_receiver import OSCReceiver
 from llia.synth_proxy import SynthSpecs
@@ -299,9 +300,20 @@ class LliaProxy(object):
             self.sync_to_host()
             return rs
 
+    def remove_audio_bus(self, bname):
+        if bname[:4] == "out_" or bname[:3] == "in_":
+            msg = "Can not remove protected audio bus: '%s'." % bname
+            raise LliaError(msg)
+        else:
+            try:
+                del self._audio_buses[bname]
+                self._send("free-bus", ["audio", bname])
+                return True
+            except KeyError:
+                raise NoSuchBusError(bname)
+        
     def control_bus_exists(self, bname):
         return self._control_buses.has_key(bname)
-
         
     def add_control_bus(self, bname, channels=1):
         rate = "control"
@@ -314,6 +326,14 @@ class LliaProxy(object):
             self.sync_to_host()
             return rs
 
+    def remove_control_bus(self, bname):
+        try:
+            del self._control_buses[bname]
+            self._send("free-bus", ["control", bname])
+            return True
+        except KeyError:
+            raise NoSuchBusError(bname)
+        
     def buffer_exists(self, bname):
         return self._buffers.has_key(bname)
     
@@ -327,6 +347,13 @@ class LliaProxy(object):
             self.sync_to_host()
             return rs
 
+    def remove_buffer(self, bname):
+        if self.buffer_exists(bname):
+            del self._buffers[bname]
+            self._send("free-buffer", [bname])
+        else:
+            raise NoSuchBufferError(bname)
+        
     def list_audio_buses(self):
         keys = sorted(self._audio_buses.keys())
         print("Audio buses:")
@@ -359,7 +386,6 @@ class LliaProxy(object):
 
     def get_all_synths(self):
         return self._synths.values()
-
     
     @staticmethod
     def _list_synth(sy):
@@ -423,7 +449,15 @@ class LliaProxy(object):
                 self._synths[sid] = sy
                 self._send("add-efx", [stype, id_])
                 return True
-           
+
+    def free_synth(self, stype, id_):
+        sid = "%s_%s" % (stype, id_)
+        try:
+            del self._synths[sid]
+            self._send("free-synth", [sid])
+        except KeyError:
+            raise NoSuchSynthError(sid)
+            
     def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-audio-bus", payload)

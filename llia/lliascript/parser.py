@@ -5,7 +5,8 @@ from __future__ import print_function
 import sys, os.path
 
 from llia.lliascript.ls_constants import *
-from llia.llerrors import LliaPingError, LliascriptParseError, LliascriptError
+from llia.llerrors import (LliaPingError, LliascriptParseError, LliascriptError,
+                           NoSuchBusError)
 from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
 from llia.lliascript.bufferhelper import BufferHelper
@@ -73,6 +74,8 @@ class Parser(object):
             ns["ping"] = self.ping
             ns["pp"] = self.pretty_printer
             ns["load"] = self.load_python
+            #ns["rm_bus"] = self.rm_bus
+            ns["rm"] = self.rm
             ns["sync"] = self.sync_all
             ns["trace_midi"] = self.trace_midi
             ns["trace_osc"] = self.trace_osc
@@ -130,13 +133,13 @@ class Parser(object):
         self._history += "%s\n" % text
         
     def warning(self, msg):
-        for line in msg.split("\n"):
+        for line in str(msg).split("\n"):
             line = "WARNING: %s" % line
             print(line)
             self._append_history(line)
 
     def status(self, msg):
-        for line in msg.split("\n"):
+        for line in str(msg).split("\n"):
             print(line)
             self._append_history(line)
         
@@ -335,3 +338,31 @@ class Parser(object):
         print(msg)
         return flag
             
+    def remove_bus(self, name):
+        lstype = self.what_is(name)
+        if lstype == "abus":
+            self.proxy.remove_audio_bus(name)
+            print("Removed audio bus: '%s'" % name)
+        elif lstype == "cbus":
+            self.proxy.remove_control_bus(name)
+            print("Removed control bus: '%s'" % name)
+        else:
+            raise NoSuchBusError(name)
+
+    # Universal remove  (bus, buffer or synth)
+    def rm(self, name):
+        lstype = self.what_is(name)
+        if lstype == "abus" or lstype == "cbus":
+            self.remove_bus(name)
+        elif lstype == "buffer":
+            self.bufferhelper.remove_buffer(name)
+        elif lstype == "synth" or lstype == "efx":
+            self.synthhelper.remove_synth(name)
+        else:
+            msg = "Can not remove '%s' (type '%s')" % (name,lstype)
+            raise LliascriptError(msg)
+        
+    
+        
+        
+        
