@@ -53,6 +53,7 @@ class Parser(object):
             ns["CTRL"] = CTRL
             ns["STYPE"] = STYPE
             ns["KEYMODE"] = KEYMODE
+            ns["ALL"] = ALL
             ns["velocity"] = velocity
             ns["aftertouch"] = aftertouch
             ns["keynumber"] = keynumber
@@ -220,7 +221,6 @@ class Parser(object):
         if lstype:
             rs = self.proxy.add_audio_bus(name, channels)
             if rs:
-                print("Adding audio bus: ", name)  # DEBUG
             return rs
         else:
             return lstype == "abus"
@@ -230,7 +230,6 @@ class Parser(object):
         if lstype:
             rs = self.proxy.add_control_bus(name, channels)
             if rs:
-                print("Adding control bus: ", name) # DEBUG
             return rs
         else:
             return lstype == "cbus"
@@ -349,8 +348,8 @@ class Parser(object):
         else:
             raise NoSuchBusError(name)
 
-    # Universal remove  (bus, buffer or synth)
-    def rm(self, name):
+    # Universal remove  (bus, buffer, synth, map)
+    def rm(self, name, param=ALL, sid=None):
         lstype = self.what_is(name)
         if lstype == "abus" or lstype == "cbus":
             self.remove_bus(name)
@@ -358,11 +357,10 @@ class Parser(object):
             self.bufferhelper.remove_buffer(name)
         elif lstype == "synth" or lstype == "efx":
             self.synthhelper.remove_synth(name)
+        elif "controller" in lstype:
+            self.synthhelper.remove_parameter_map(name, param, sid)
+        elif name in (velocity,aftertouch,keynumber,pitchwheel):
+            self.synthhelper.remove_parameter_map(name, param, sid)
         else:
             msg = "Can not remove '%s' (type '%s')" % (name,lstype)
             raise LliascriptError(msg)
-        
-    
-        
-        
-        

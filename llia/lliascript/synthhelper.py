@@ -32,10 +32,8 @@ class SynthHelper(object):
         ns["synth"] = self.add_synth
         ns["transpose"] = self.transpose
         ns["with_synth"] = self.with_synth
-        #ns["dump_synth"] = self.dump_synth
-        #ns["mapsrc"] = self.mapsrc
-        ns["cc"] = self.map_cc
-        #ns["rm_synth"] = self.rm_synth
+        ns["pmap"] = self.parameter_map
+        #ns["rm_pmap"] = self.remove_parameter_map
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -253,29 +251,6 @@ class SynthHelper(object):
             msg += "linear, exp, scurve or step.  Encounterd: %s"
             msg = msg % curve
             raise LliascriptError(msg)
-    
-    # def mapsrc(self, source, param, curve=linear, mod=None,
-    #            range_=(0.0, 1.0), limits=None, sid=None):
-    #     self._assert_map_curve(curve)
-    #     limits = limits or range_
-    #     if not mod:
-    #         if curve == step:
-    #             mod = 8
-    #         else:
-    #             mod = 1
-    #     sy = self.get_synth(sid)
-    #     if self.parser.is_controller(source):
-    #         sy.add_controller_map(source,param,curve,mod,range_,limits)
-    #         return True
-    #     elif source in (velocity, aftertouch, keynumber, pitchwheel):
-    #         sy.add_source_map(source,param,curve,mod,range_,limits)
-    #         return True
-    #     else:
-    #         msg = "Expected map_ source to be velocity, aftertouch, \n"
-    #         msg += "keynumber, pitchwheel or a MIDI controller.\n"
-    #         msg += "Encountered: %s"
-    #         msg = msg % source
-    #         raise LliascriptError(msg)
 
     def _assert_map_args(self, curve, mod, range_, limits, sid):
         self._assert_map_curve(curve)
@@ -295,17 +270,67 @@ class SynthHelper(object):
         sy.add_controller_map(source,param,curve,mod,range_,limits)
         return True
 
+    def map_velocity(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+        curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
+        sy.add_source_map("velocity", param, curve, mod, range_, limits)
+        return True
+
+    def map_aftertouch(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+        curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
+        sy.add_source_map("aftertouch", param, curve, mod, range_, limits)
+        return True
+
+    def map_pitchwheel(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+        curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
+        sy.add_source_map("pitchwheel", param, curve, mod, range_, limits)
+        return True
+
+    def map_keynumber(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+        curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
+        sy.add_source_map("keynumber", param, curve, mod, range_, limits)
+        return True
+
+    def parameter_map(self, source, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+        lstype = self.what_is(source)
+        if "controller" in lstype:
+            self.map_cc(source, param, curve, mod, range_, limits, sid)
+        elif source == velocity:
+            self.map_velocity(param, curve, mod, range_, limits, sid)
+        elif source == aftertouch:
+            self.map_aftertouch(param, curve, mod, range_, limits, sid)
+        elif source == pitchwheel:
+            self.map_pitchwheel(param, curve, mod, range_, limits, sid)
+        elif source == keynumber:
+            self.map_keynumber(param, curve, mod, range_, limits, sid)
+        else:
+            msg = "Do not understand parameter map source: '%s'" % source
+            raise LliascriptError(msg)
+
+    def remove_parameter_map(self, source, param=ALL, sid=None):
+        sy = self.get_synth(sid)
+        lstype = self.what_is(source)
+        if "controller" in lstype:
+            cca = self.config.controller_assignments
+            ctrl = cca.get_controller_number(source)
+            sy.remove_controller_map(ctrl, param)
+        elif source in (velocity, aftertouch, keynumber, pitchwheel):
+            sy.remove_source_map(source, param)
+        else:
+            msg = "Do not understand remove parameter map source: '%s'" % source
+            raise LliascriptError(msg)
+        
     def remove_synth(self, sid):
         if sid == self.current_sid:
-            msg = "Can not free surrent synth: '%s'" % self.current_sid
+            msg = "Can not free current synth: '%s'" % self.current_sid
             raise LliascriptError(msg)
         self.get_synth(sid)
         stype, id_ = self.parse_sid(sid)
         self.proxy.free_synth(stype, id_)
-        self.status("Rmoved synth: '%s'" % sid)
+        self.status("Removed synth: '%s'" % sid)
         return True
         
     def dump_synth(self, sid=None):
+        if sid == "*": sid = None # Force current sid
         sy = self.get_synth(sid)
         sy.x_dump()
         print(sy._bank.current_program.dump(1))
