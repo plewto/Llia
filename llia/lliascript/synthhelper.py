@@ -169,8 +169,11 @@ class SynthHelper(object):
             msg = "Can not assign %s %s to %s %s"
             msg = msg % (lstype, name, sid, param)
             raise LliascriptError(msg)
-          
-    def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
+
+
+    # outbus as list [bus-name, param, offset]
+    def add_synth(self, stype, id_, keymode="Poly1", voice_count=8, outbus=["out_0", "outbus", 0]):
+        
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
             self.with_synth(sid)
@@ -182,6 +185,16 @@ class SynthHelper(object):
             self.parser.register_entity(sid, "synth")
             if rs:
                 self.current_sid = sid
+                if outbus:
+                    if len(outbus) == 1:
+                        outbus.append("outbus")
+                        outbus.append(0)
+                    elif len(outbus) == 2:
+                        outbus.append(0)
+                    else:
+                        pass
+                    bname,param,offset = outbus
+                    self.assign_abus(param, bname, offset)
                 self.update_prompt()
             return rs
 
