@@ -20,20 +20,15 @@ class SynthHelper(object):
         self._init_namespace(local_namespace)
 
     def _init_namespace(self, ns):
-        ns["assign_abus"] = self.assign_abus
-        ns["assign_cbus"] = self.assign_cbus
-        ns["assign_buffer"] = self.assign_buffer
         ns["assign"] = self.assign_buffer_or_bus
         ns["bend"] = self.bend
         ns["efx"] = self.add_efx
         ns["input_channel"] = self.input_channel
         ns["keyrange"] = self.keyrange
-        ns["ping_synth"] = self.ping_synth
         ns["synth"] = self.add_synth
         ns["transpose"] = self.transpose
         ns["with_synth"] = self.with_synth
         ns["pmap"] = self.parameter_map
-        #ns["rm_pmap"] = self.remove_parameter_map
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -198,7 +193,7 @@ class SynthHelper(object):
                 self.update_prompt()
             return rs
 
-    def add_efx(self, stype, id_):
+    def add_efx(self, stype, id_, outbus=["out_0", "outbus", 0]):
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
             self.with_synth(sid)
@@ -209,6 +204,16 @@ class SynthHelper(object):
             self.parser.register_entity(sid, "synth")
             if rs:
                 self.current_sid = sid
+                if outbus:
+                    if len(outbus) == 1:
+                        outbus.append("outbus")
+                        outbus.append(0)
+                    elif len(outbus) == 2:
+                        outbus.append(0)
+                    else:
+                        pass
+                    bname,param,offset = outbus
+                    self.assign_abus(param, bname, offset)
                 self.update_prompt()
             return rs
                 
@@ -251,6 +256,7 @@ class SynthHelper(object):
         return x
 
     def ping_synth(self, sid=None):
+        if sid == "*": sid = None
         sy = self.get_synth(sid)
         sy.x_ping()
         return True

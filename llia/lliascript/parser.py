@@ -75,7 +75,6 @@ class Parser(object):
             ns["ping"] = self.ping
             ns["pp"] = self.pretty_printer
             ns["load"] = self.load_python
-            #ns["rm_bus"] = self.rm_bus
             ns["rm"] = self.rm
             ns["sync"] = self.sync_all
             ns["trace_midi"] = self.trace_midi
@@ -268,19 +267,17 @@ class Parser(object):
             self.proxy.dump()
         else:
             self.synthhelper.dump_synth(target)
-
-
+            
     def panic(self):
         self.proxy.panic()
         print("Panic!")
         return True
 
-    def ping(self, target=None):
+    def ping(self, sid=None):
         try:
-            if target:
+            if sid:
+                self.synthhelper.ping_synth(sid)
                 return True
-                pass                # ISSUE; FIX ME
-            
             else:
                 rs = self.proxy.ping()
                 return rs
