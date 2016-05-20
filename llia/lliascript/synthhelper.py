@@ -5,19 +5,23 @@
 
 from __future__ import print_function
 
-from llia.lliascript.ls_constants import *
+from llia.generic import is_list
 from llia.llerrors import LliascriptError, NoSuchSynthError, NoSuchBufferError
+from llia.lliascript.ls_constants import *
+
 
 
 class SynthHelper(object):
 
    
     def __init__(self,parser,local_namespace):
+        self._synth_serial_number = 0
         self.parser = parser
         self.proxy = parser.proxy
         self.config = self.proxy.config
         self.current_sid = ""
         self._init_namespace(local_namespace)
+        self._assignment_serial_number = 0
 
     def _init_namespace(self, ns):
         ns["assign"] = self.assign_buffer_or_bus
@@ -94,6 +98,7 @@ class SynthHelper(object):
         return (head, tail)
         
     def assign_abus(self, param, busname, offset=0, sid=None):
+        sid = sid or self.current_sid
         self.get_synth(sid)
         lstype = self.what_is(busname)
         if lstype == '':
@@ -104,6 +109,14 @@ class SynthHelper(object):
             stype, id_ = self.parse_sid(sid)
             if self.proxy.audio_bus_exists(busname):
                 self.proxy.assign_synth_audio_bus(stype, id_, param, busname, offset)
+                ename = "assign-audio-bus-%d" % self._assignment_serial_number
+                etype = "audio-bus-assignment"
+                data = {"param" : param,
+                        "bus-name" : busname,
+                        "offset" : offset,
+                        "sid" : sid}
+                self.parser.register_entity(ename, etype, data)
+                self._assignment_serial_number += 1
                 return True
             else:
                 msg = "Can not assign audio bus: '%s'." % busname
@@ -115,6 +128,7 @@ class SynthHelper(object):
             return False
 
     def assign_cbus(self, param, busname, offset=0, sid=None):
+        sid = sid or self.current_sid
         self.get_synth(sid)
         lstype = self.what_is(busname)
         if lstype == '':
@@ -125,6 +139,14 @@ class SynthHelper(object):
             stype, id_ = self.parse_sid(sid)
             if self.proxy.control_bus_exists(busname):
                 self.proxy.assign_synth_control_bus(stype, id_, param, busname, offset)
+                ename = "assign-control-bus-%d" % self._assignment_serial_number
+                etype = "control-bus-assignment"
+                data = {"param" : param,
+                        "bus-name" : busname,
+                        "offset" : offset,
+                        "sid" : sid}
+                self.parser.register_entity(ename, etype, data)
+                self._assignment_serial_number += 1
                 return True
             else:
                 msg = "Can not assign control bus: '%s'.  (See BUG 0000)" % busname
@@ -149,6 +171,14 @@ class SynthHelper(object):
         else:
           stype, id_ = self.parse_sid(sid)
           self.proxy.assign_synth_buffer(stype, id_, param, name)
+          ename = "buffer-assignment-%d" % self._assignment_serial_number
+          etype = "buffer-assignment"
+          data = {"param" : param,
+                  "buffer-name" : name,
+                  "sid" : sid}
+          self.parser.register_entity(ename, etype, data)
+          self._assignment_serial_number += 1
+          
 
     def assign_buffer_or_bus(self, param, name="", offset=0, sid=None):
         if not name:
@@ -166,6 +196,26 @@ class SynthHelper(object):
             raise LliascriptError(msg)
 
 
+    # Fill in default values for synth outbus argument
+    # obarg may be:  None
+    #             :  A single String bus name
+    #             :  list or tuple
+    # The result is a list [bus-name, synth-parameter, bus-offset]
+    #
+    @staticmethod
+    def fill_outbus_args(obarg):
+        if not obarg: obarg = ["out_0"]
+        if not is_list(obarg): obarg = [obarg]
+        obarg = list(obarg)
+        if len(obarg) == 0:
+            return ["out_0", "outbus", 0]
+        if len(obarg) == 1:
+            return obarg + ["outbus", 0]
+        if len(obarg) == 2:
+            return obarg + [0]
+        else:
+            return obarg
+
     # outbus as list [bus-name, param, offset]
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8, outbus=["out_0", "outbus", 0]):
         
@@ -177,19 +227,19 @@ class SynthHelper(object):
             self.assert_synth_type(stype)
             self.assert_keymode(keymode)
             rs = self.proxy.add_synth(stype, id_, keymode, voice_count)
-            self.parser.register_entity(sid, "synth")
+            self.parser.register_entity(sid, "synth",
+                                        {"serial-number" : self._synth_serial_number,
+                                         "stype" : stype,
+                                         "id" : id_,
+                                         "keymode" : keymode,
+                                         "voice-count" : voice_count,
+                                         "outbus" : outbus,
+                                         "is-efx" : False})
+            self._synth_serial_number += 1
             if rs:
                 self.current_sid = sid
-                if outbus:
-                    if len(outbus) == 1:
-                        outbus.append("outbus")
-                        outbus.append(0)
-                    elif len(outbus) == 2:
-                        outbus.append(0)
-                    else:
-                        pass
-                    bname,param,offset = outbus
-                    self.assign_abus(param, bname, offset)
+                bname,param,offset = self.fill_outbus_args(outbus)
+                self.assign_abus(param, bname, offset)
                 self.update_prompt()
             return rs
 
@@ -201,19 +251,17 @@ class SynthHelper(object):
         else:
             self.assert_efx_type(stype)
             rs = self.proxy.add_efx(stype, id_)
-            self.parser.register_entity(sid, "synth")
+            self.parser.register_entity(sid, "synth",
+                                        {"serial-number" : self._synth_serial_number,
+                                         "stype" : stype,
+                                         "id" : id_,
+                                         "outbus" : outbus,
+                                         "is-efx" : True})
+            self._synth_serial_number += 1
             if rs:
                 self.current_sid = sid
-                if outbus:
-                    if len(outbus) == 1:
-                        outbus.append("outbus")
-                        outbus.append(0)
-                    elif len(outbus) == 2:
-                        outbus.append(0)
-                    else:
-                        pass
-                    bname,param,offset = outbus
-                    self.assign_abus(param, bname, offset)
+                bname,param,offset = self.fill_outbus_args(outbus)
+                self.assign_abus(param, bname, offset)
                 self.update_prompt()
             return rs
                 

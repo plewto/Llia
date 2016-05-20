@@ -9,18 +9,18 @@ from ConfigParser import RawConfigParser,NoOptionError,NoSectionError
 import llia.constants as constants
 from llia.alias import CCAssignments, ChannelAssignments
 
-MSG_NO_MIDI_PORT = """
-ERROR:
-No MIDI input port specified.
-A MIDI input port must be specified in at least one of the following
-locations (in order of precedence)
-
-    1) --midiin command line option.
-    2) via the configuration file.
-    3) the LLIA_MIDI_IN environmental variable.
-
-Use --midi_ports command line flag to see a list of available ports.
-"""
+# MSG_NO_MIDI_PORT = """
+# ERROR:
+# No MIDI input port specified.
+# A MIDI input port must be specified in at least one of the following
+# locations (in order of precedence)
+#
+#     1) --midiin command line option.
+#     2) via the configuration file.
+#     3) the LLIA_MIDI_IN environmental variable.
+#
+# Use --midi_ports command line flag to see a list of available ports.
+# """
 
 MSG_NO_CONFIG_FILE = """
 ERROR:
@@ -109,6 +109,24 @@ class LliaConfig(dict):
             os.environ["MIDO_BACKEND"] = backend
             print("Backend: %s" % backend)
                   
+    # def _select_midi_input_port(self, args):
+    #     try:
+    #         env = os.environ["LLIA_MIDI_IN"]
+    #     except KeyError:
+    #         env = None
+    #     sources = (args.midiin, self._parser.get("MIDI", "input-port"), env)
+    #     port_name = None
+    #     for s in sources:
+    #         if s:
+    #             port_name = s
+    #             break
+    #     if not port_name:
+    #         print(MSG_NO_MIDI_PORT)
+    #         # sys.exit(1)
+    #     self["midi-receiver-name"] = port_name
+    #     print("MIDI input port: '%s'" % port_name)
+
+
     def _select_midi_input_port(self, args):
         try:
             env = os.environ["LLIA_MIDI_IN"]
@@ -120,28 +138,38 @@ class LliaConfig(dict):
             if s:
                 port_name = s
                 break
-        if not port_name:
-            print(MSG_NO_MIDI_PORT)
-            sys.exit(1)
-        self["midi-receiver-name"] = port_name
-        print("MIDI input port: '%s'" % port_name)
+        # if not port_name:
+        #     print(MSG_NO_MIDI_PORT)
+        #     # sys.exit(1)
+        if port_name:
+            self["midi-receiver-name"] = port_name
+        else:
+            self["midi-receiver-name"] = None
                 
     def _select_midi_output_port(self, args):
         try:
             env = os.environ["LLIA_MIDI_OUT"]
         except KeyError:
             env = None
-        sources = (args.midiout, self._parser.get("MIDI","output-port"),
-                   env, self["midi-receiver-name"])
+        #sources = (args.midiout, self._parser.get("MIDI","output-port"),
+        #           env, self["midi-receiver-name"])
+
+        sources = (args.midiout, self._parser.get("MIDI","output-port"),env)
         port_name = None
         for s in sources:
             if s:
                 port_name = s
                 break
-        if not port_name:
-            raise RuntimeError("No MIDI output port")
-        self["midi-transmitter-name"] = port_name
-        print("MIDI output port: '%s'" % port_name)
+        # if not port_name:
+        #     raise RuntimeError("No MIDI output port")
+        # self["midi-transmitter-name"] = port_name
+        # print("MIDI output port: '%s'" % port_name)
+        if port_name:
+            self["midi-transmitter-name"] = port_name
+            # print("MIDI output port: '%s'" % port_name)
+        else:
+            self["midi-transmitter-name"] = None
+                  
         
     def _select_gui(self, args):
         options = []

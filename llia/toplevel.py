@@ -5,10 +5,11 @@
 from __future__ import (print_function)
 import abc, sys, threading
 
+import llia.gui.splash
 from llia.proxy import LliaProxy
 from llia.midi_receiver import get_midi_receiver
 from llia.keytab.registry import KeyTableRegistry
-from llia.gui.appwindow import DummyApplicationWindow
+# from llia.gui.appwindow import DummyApplicationWindow
 from llia.lliascript.lliascript import lliascript_parser
 import llia.constants as con
 
@@ -17,8 +18,10 @@ class LliaTopLevel(object):
 
     def __init__(self, config, skip_mainloop=False):
         super(LliaTopLevel, self).__init__()
+        #llia.gui.splash.create_splash_screen(self, config)
+        # self._main_window = DummyApplicationWindow(self, None)
+        self._main_window = llia.gui.splash.create_splash_screen(self, config)
         self.config = config
-        self._main_window = DummyApplicationWindow(self, None)
         logfile_name = config.log_file()
         self.logfile = None
         if logfile_name:
@@ -37,7 +40,6 @@ class LliaTopLevel(object):
         self.midi_receiver = get_midi_receiver(midi_in_port,midi_in_trace)
         self.keytables = KeyTableRegistry()
         self._repl_thread = None
-        #self.lsl_parser = llia.lliascript.lliascript.get_lliascript_parser(self)
         self.ls_parser = lliascript_parser(self)
         if not skip_mainloop:
             self.start_main_loop()

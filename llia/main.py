@@ -12,13 +12,13 @@ from argparse import ArgumentParser
 
 import llia.constants as constants
 from llia.config import LliaConfig
-#from llia.api import LliaApp
-#import llia.gui.window_factory as wfactory
+from llia.toplevel import LliaTopLevel
 
-def banner():
-    print(constants.BANNER)
-    print("\nversion ",constants.VERSION)
-    print()
+
+import llia.synths.orgn.orgn_proxy
+import llia.synths.buffertest.bufftest_proxy
+import llia.synths.echo1.echo1_proxy
+
 
 HM_VERSION="display version and exit."
 HM_USAGE = "display detailed usage and exit."
@@ -194,38 +194,7 @@ if args.listgui:
     print()
     sys.exit(0)
     
-# banner()    
-# llia = LliaApp(LliaConfig.create_instance(args), skip_mainloop=args.skip_mainloop)
-# appwin = wfactory.create_main_window(llia)
-# llia.add_audio_bus("Alpha")
-# echo1 = llia.add_instrument("Echo1", "Echo1", "EFX", 0, "Alpha")
-# orgn1 = llia.add_instrument("ORGN", "Pig1", outbus=0)
-# #orgn2 = llia.add_instrument("ORGN", "Pig2")
-# #saw3 = llia.add_instrument("Saw3")
-# appwin.status("Llia...")
-# appwin.start_main_loop()
-
-
-
 config = LliaConfig.create_instance(args)
-from llia.toplevel import LliaTopLevel
-import llia.synths.orgn.orgn_proxy
-import llia.synths.buffertest.bufftest_proxy
-import llia.synths.echo1.echo1_proxy
-app = LliaTopLevel(config, True)
-
-
-# from random import randint
-# from time import sleep
-# id_ = 1 #randint(0, 10000)
-# app.proxy.add_audio_bus("Alpha", 2)
-# app.proxy.add_efx("Echo1", id_, inbus="Alpha", outbus=0)
-# app.proxy.add_synth("ORGN", id_, outbus=0)
-
-app.start_main_loop()
-
-
-
-
+app = LliaTopLevel(config, args.skip_mainloop)
 
 

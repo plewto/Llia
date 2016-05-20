@@ -147,8 +147,7 @@ log-file : ~/t/llia.log
 
 [MIDI]
 input-port : Launchkey Mini 16:0
-; input-port : E-MU Xmidi 2x2 24:0
-output-port :
+output-port : Launchkey Mini 16:0
 backend : mido.backends.rtmidi
 enable-program-pp : True
 autogen-program-slot : 0  # <DEPRECIATED>

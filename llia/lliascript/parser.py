@@ -10,6 +10,7 @@ from llia.llerrors import (LliaPingError, LliascriptParseError, LliascriptError,
 from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
 from llia.lliascript.bufferhelper import BufferHelper
+from llia.lliascript.rebuild import Rebuilder
 
 
 class LsEntity(object):
@@ -17,7 +18,7 @@ class LsEntity(object):
     def __init__(self, lsid, lstype):
         self.lsid = lsid
         self.lstype = lstype
-
+        self.data = {}
 
 class Parser(object):
 
@@ -27,14 +28,14 @@ class Parser(object):
         self.config = app.config
         self._exit_repl = False
         self._prompt = "Llia> "
-        self._entities = {}
+        self.entities = {}
         # ISSUE: Number of hardcoded input and output buses is hard coded.
         #
         for i in range(8):
             for n in ("out_", "in_"):
                 name = "%s%d" % (n, i)
                 e = LsEntity(name, "abus")
-                self._entities[name] = e
+                self.entities[name] = e
         self._history = ""
         self._global_namespace = {}
         self._local_namespace = {}
@@ -64,6 +65,7 @@ class Parser(object):
             ns["step"] = step
             ns["help"] = self.help_
             ns["abus"] = self.abus
+            ns["build"] = self.build
             ns["cbus"] = self.cbus
             ns["channel_name"] = self.channel_name
             ns["controller_name"] =self.controller_name
@@ -84,7 +86,7 @@ class Parser(object):
         
     def repl(self):
         print(BANNER)
-        print(VERSION)
+        #print(VERSION)
         print()
         pyver = sys.version_info[0]
         if pyver <= 2:
@@ -148,19 +150,19 @@ class Parser(object):
         return True
 
     def is_abus(self, name):
-        ent = self._entities.get(name, None)
+        ent = self.entities.get(name, None)
         return ent and ent.lstype == "abus"
 
     def is_cbus(self, name):
-        ent = self._entities.get(name, None)
+        ent = self.entities.get(name, None)
         return ent and ent.lstype == "cbus"
 
     def is_buffer(self, name):
-        ent = self._entities.get(name, None)
+        ent = self.entities.get(name, None)
         return ent and ent.lstype == "buffer"
 
     def is_synth(self, name):
-        ent = self._entities.get(name, None)
+        ent = self.entities.get(name, None)
         return ent and ent.lstype == "synth"
 
     def is_channel(self, name):
@@ -178,7 +180,7 @@ class Parser(object):
             return self.config.controller_assignments.controller_defined(name)
     
     def what_is(self, name):
-        ent = self._entities.get(name, None)
+        ent = self.entities.get(name, None)
         if ent:
             return ent.lstype
         else:
@@ -212,7 +214,7 @@ class Parser(object):
         else:
             ent = LsEntity(name, lstype)
             ent.data = data
-            self._entities[name] = ent
+            self.entities[name] = ent
             return True
         
     def abus(self, name, channels=1):
@@ -359,3 +361,8 @@ class Parser(object):
         else:
             msg = "Can not remove '%s' (type '%s')" % (name,lstype)
             raise LliascriptError(msg)
+
+    def build(self):
+        rb = Rebuilder(self)
+        code = rb.build()
+        print(code)

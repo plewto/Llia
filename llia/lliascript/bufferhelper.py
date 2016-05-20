@@ -83,12 +83,13 @@ class BufferHelper(object):
             self.proxy.create_wavetable(name, harmonics, decay, skip, mode, cutoff, depth, frames)
             self.parser.register_entity(name,
                                         "buffer",
-                                        {"is-wavetable" : True,
+                                    {"is-wavetable" : True,
                                          "harmonics" : harmonics,
                                          "decay" : decay,
                                          "skip" : skip,
                                          "mode" : mode,
                                          "cutoff" : cutoff,
+                                         "depth" : depth,
                                          "frames" : frames,
                                          "filename" : ""})
             self.with_buffer(name)
