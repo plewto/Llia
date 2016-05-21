@@ -3,26 +3,26 @@
 #
 
 from __future__ import print_function
-import abc
+import abc, sys
 
 from llia.gui.widget import DUMMY_WIDGET
+from llia.gui.splash import TextSplashScreen
 
 class AbstractApplicationWindow(object):
 
     def __init__(self, app, root):
         self.app = app
         self.root = root
+        self.config = app.config
 
     @abc.abstractmethod
     def status(self, msg, timeout=-1):
         oscid = self.app.global_osc_id()
-        #print("Status oscID %s : %s" % (oscid, msg))
         print("STATUS  : /Llia/%s : %s" % (oscid, msg))
 
     @abc.abstractmethod
     def warning(self, msg):
         oscid = self.app.global_osc_id()
-        #print("WARNING oscID %s : %s" % (oscid, msg))
         print("WARNING : /Llia/%s : %s" % (oscid, msg))
 
     @abc.abstractmethod
@@ -32,6 +32,7 @@ class AbstractApplicationWindow(object):
     @abc.abstractmethod
     def start_gui_loop(self):
         return None
+    
     @abc.abstractmethod
     def exit_gui(self):
         return None
@@ -45,5 +46,22 @@ class DummyApplicationWindow(AbstractApplicationWindow):
     def as_widget(self):
         return DUMMY_WIDGET
 
-        
+def create_application_window(app):
+    config = app.config
+    gui = str(config.gui())
+    if gui.upper() == "NONE":
+        TextSplashScreen(app)
+        return DummyApplicationWindow(app)
+    elif gui.upper() == "TK":
+        import llia.gui.tk.tk_appwindow as tkaw
+        import Tkinter as tk
+        import ttk
+        root = tk.Tk()
+        appwin = tkaw.TkApplicationWindow(root, app)
+        return appwin
+    else:
+        msg = "ERROR: Invalid gui: '%s'" % gui
+        print(msg)
+        sys.exit(1)
+    
     

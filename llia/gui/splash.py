@@ -7,78 +7,138 @@ import sys
 import mido
 import llia.constants as con
 
+pyver = sys.version_info[0]
+if pyver <= 2:
+    infn = raw_input
+else:
+    infn = input
 
-# Returns ApplicationWindow
-#
-def create_splash_screen(app, config):
-    gui = str(config.gui()).upper()
-    if gui == "NONE":
-        return _create_text_splash_screen(app, config)
-    elif gui == "TK":
-        return _create_tk_splash_screen(app, config)
-    else:
-        print("Using fallback without GUI")
-        return _create_text_splash_screen(app, config)
+    
+class TextSplashScreen(object):
 
+    def __init__(self, app):
+        self.app = app
+        self.config = app.config
+        self.main_menu()
         
-def _create_text_splash_screen(app, config):
-    from llia.gui.appwindow import DummyApplicationWindow
-    pyver = sys.version_info[0]
-    if pyver <= 2:
-        infn = raw_input
-    else:
-        infn = input
-    # Select MIDI input port
-    mrn = config["midi-receiver-name"]
-    if not mrn:
-        print("\nAvailable MIDI input ports:\n")
-        acc = []
-        for n,p in enumerate(mido.get_input_names()):
-            print("    [%d] %s" % (n, p))
-            acc.append(p)
-        print()
-        selection = None
-        limit = len(acc)-1
-        while selection is None:
-            prompt = "Select MIDI input port [0 - %d] > " % limit
-            user = infn(prompt)
+    def main_menu(self):
+        more = True
+        while more:
+            host = self.config["host"]
+            port = self.config["port"]
+            client = self.config["client"]
+            client_port = self.config["client_port"]
+            mrn = self.config["midi-receiver-name"]
+            mtn = self.config["midi-transmitter-name"]
+            print()
+            print("*"*40, end=" ")
+            print("Llia Setup\n")
+            print("    [1] - Set host   '%s'  port: %s" % (host, port)) 
+            print("    [2] - Set client '%s'  port: %s" % (client, client_port))
+            print("    [3] - Set MIDI input port : '%s'" % mrn)
+            print("    [4] - Set MIDI output port: '%s'" % mtn)
+            print()
+            print("    [X]    - Continue to Lliascript prompt")
+            print("    [Exit] - Exit Llia")
+            print("")
+            user = infn("Enter Selection > ")
+            user = user.upper()
+            if user == "1":
+                self.select_host()
+            elif user == "2":
+                self.select_client()
+            elif user == "3":
+                self.select_midi_input_port()
+            elif user == "4":
+                self.select_midi_output_port()
+            elif user == "X":
+                more = False
+            elif user == "EXIT":
+                print("Bye")
+                sys.exit(0)
+            else:
+                print("ERROR")
+
+
+    def select_host(self):
+        while True:
+            print("\n\nSelect OSC host address and port")
+            print("Press [Enter] to select default")
+            h, p = self.config["host"], self.config["port"]
+            hst = infn("Enter new host address (%s) > " % h)
+            prt = infn("Enter new host port (%s) > " % p)
+            if not hst: hst = h
+            if not prt: prt = p
             try:
-                n = int(user)
-                if 0 <= n <= limit:
-                    selection = n
+                self.config["port"] = int(prt)
+                self.config["host"] = hst
+                break
             except ValueError:
-                pass
-        config["midi-receiver-name"] = acc[n]
-    print("MIDI Input port: '%s'" % config["midi-receiver-name"])
-    # Select MIDI output port
-    mtn = config["midi-transmitter-name"]
-    if not mtn:
-        acc = []
-        print("\nAvailable MIDI output ports:\n")
-        for n,p in enumerate(mido.get_output_names()):
-            print("    [%d] %s" % (n, p))
-            acc.append(p)
-        print()
-        selection = None
-        limit = len(acc)-1
-        while selection is None:
-            prompt = "Select MIDI output port [0 - %d] > " % limit
-            user = infn(prompt)
+                print("ERROR")
+
+    def select_client(self):
+        while True:
+            print("\n\nSelect OSC client address and port")
+            print("Press [Enter] to select default")
+            h, p = self.config["client"], self.config["client_port"]
+            hst = infn("Enter new client address (%s) > " % h)
+            prt = infn("Enter new client port (%s) > " % p)
+            if not hst: hst = h
+            if not prt: prt = p
             try:
-                n = int(user)
-                if 0 <= n <= limit:
-                    selection = n
+                self.config["client_port"] = int(prt)
+                self.config["client"] = hst
+                break
             except ValueError:
-                pass
-        config["midi-transmitter-name"] = acc[n]
-    print("MIDI output port: '%s'" % config["midi-transmitter-name"])
-    print("Version %s.%s.%s" % con.VERSION[:3])
-    app_window = DummyApplicationWindow(app, config)
-    return app_window
+                print("ERROR")
+   
+
+    def select_midi_input_port(self):
+        acc = []
+        for p in mido.get_input_names():
+            acc.append(p)
+        while True:
+            print()
+            mrn = self.config["midi-receiver-name"]
+            for n, p in enumerate(acc):
+                print("    [%d] %s" % (n+1, p))
+            print("\nPress [Enter] to select default")
+            usr = infn("Select MIDI input port (%s) > " % mrn)
+            if not usr: break
+            try:
+                n = int(usr)
+                if 0 < n <= len(acc):
+                    mrn = acc[n-1]
+                    self.config["midi-receiver-name"] = mrn
+                    break
+                else:
+                    raise ValueError()
+            except ValueError:
+                print("ERROR")
+
+    def select_midi_output_port(self):
+        acc = []
+        for p in mido.get_output_names():
+            acc.append(p)
+        while True:
+            print()
+            mrn = self.config["midi-transmitter-name"]
+            for n, p in enumerate(acc):
+                print("    [%d] %s" % (n+1, p))
+            print()
+            print("\nPress [Enter] to select default")
+            usr = infn("Select MIDI output port (%s) > " % mrn)
+            if not usr: break
+            try:
+                n = int(usr)
+                if 0 < n <= len(acc):
+                    mrn = acc[n-1]
+                    self.config["midi-transmitter-name"] = mrn
+                    break
+                else:
+                    raise ValueError()
+            except ValueError:
+                print("ERROR")                
+
+   
                 
-
-
-def _create_tk_splash_screen(config):
-    print("DEBUG Crearte TK splash")
-            
-        

@@ -1,27 +1,25 @@
-# llia.toplevel
+# llia.llia_app
 # 2016.04.23
 #
 
 from __future__ import (print_function)
 import abc, sys, threading
 
-import llia.gui.splash
+# import llia.gui.splash
 from llia.proxy import LliaProxy
 from llia.midi_receiver import get_midi_receiver
 from llia.keytab.registry import KeyTableRegistry
-# from llia.gui.appwindow import DummyApplicationWindow
+from llia.gui.appwindow import create_application_window
 from llia.lliascript.lliascript import lliascript_parser
 import llia.constants as con
 
 
-class LliaTopLevel(object):
+class LliaApp(object):
 
     def __init__(self, config, skip_mainloop=False):
-        super(LliaTopLevel, self).__init__()
-        #llia.gui.splash.create_splash_screen(self, config)
-        # self._main_window = DummyApplicationWindow(self, None)
-        self._main_window = llia.gui.splash.create_splash_screen(self, config)
+        super(LliaApp, self).__init__()
         self.config = config
+        self._main_window = create_application_window(self)
         logfile_name = config.log_file()
         self.logfile = None
         if logfile_name:
@@ -91,4 +89,4 @@ class LliaTopLevel(object):
     # ISSUE: FIX ME  update all GUI windows.
     def sync_all(self):
         self.proxy.sync_to_host()
-        # print("LliaTopLevel.sync_all is not compleatly implemented")
+        # print("LliaApp.sync_all is not compleatly implemented")

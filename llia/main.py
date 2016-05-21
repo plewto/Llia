@@ -12,9 +12,7 @@ from argparse import ArgumentParser
 
 import llia.constants as constants
 from llia.config import LliaConfig
-from llia.toplevel import LliaTopLevel
-
-
+from llia.llia_app import LliaApp
 import llia.synths.orgn.orgn_proxy
 import llia.synths.buffertest.bufftest_proxy
 import llia.synths.echo1.echo1_proxy
@@ -166,7 +164,6 @@ parser.add_argument("-g", "--listgui", action="store_true", help=HM_LISTGUI)
 parser.add_argument("--gui", help=HM_GUI)
 parser.add_argument("--skip_mainloop", action="store_true", help = HM_SKIP_MAINLOOP)
 
-
 args = parser.parse_args()
 if args.version:
     print("Llia version %s.%s.%s" % constants.VERSION)
@@ -195,6 +192,6 @@ if args.listgui:
     sys.exit(0)
     
 config = LliaConfig.create_instance(args)
-app = LliaTopLevel(config, args.skip_mainloop)
+app = LliaApp(config, args.skip_mainloop)
 
 
