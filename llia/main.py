@@ -190,8 +190,7 @@ if args.listgui:
         print("\t%-12s%s" % g)
     print()
     sys.exit(0)
-    
+
+
 config = LliaConfig.create_instance(args)
 app = LliaApp(config, args.skip_mainloop)
-
-

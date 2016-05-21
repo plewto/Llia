@@ -16,7 +16,7 @@ class AbstractApplicationWindow(object):
         self.config = app.config
 
     @abc.abstractmethod
-    def status(self, msg, timeout=-1):
+    def status(self, msg):
         oscid = self.app.global_osc_id()
         print("STATUS  : /Llia/%s : %s" % (oscid, msg))
 
@@ -54,10 +54,10 @@ def create_application_window(app):
         return DummyApplicationWindow(app)
     elif gui.upper() == "TK":
         import llia.gui.tk.tk_appwindow as tkaw
-        import Tkinter as tk
-        import ttk
-        root = tk.Tk()
-        appwin = tkaw.TkApplicationWindow(root, app)
+        # import Tkinter as tk
+        # import ttk
+        # root = tk.Tk()
+        appwin = tkaw.TkApplicationWindow(app)
         return appwin
     else:
         msg = "ERROR: Invalid gui: '%s'" % gui

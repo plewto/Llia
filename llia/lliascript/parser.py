@@ -26,7 +26,7 @@ class Parser(object):
         self.app = app
         self.proxy = app.proxy
         self.config = app.config
-        self._exit_repl = False
+        self.exit_repl = False
         self._prompt = "Llia> "
         self.entities = {}
         # ISSUE: Number of hardcoded input and output buses is hard coded.
@@ -82,7 +82,8 @@ class Parser(object):
             ns["trace_midi"] = self.trace_midi
             ns["trace_osc"] = self.trace_osc
             ns["what_is"] = self.what_is_interactive
-            ns["x"] = self.exit_  
+            ns["exit"] = self.exit_
+            
         
     def repl(self):
         print(BANNER)
@@ -93,7 +94,7 @@ class Parser(object):
             infn = raw_input
         else:
             infn = input
-        while not self._exit_repl:
+        while not self.exit_repl:
             usrin = infn(self._prompt)
             self._append_history(usrin, False)
             try:
@@ -293,8 +294,8 @@ class Parser(object):
         return True
         
     def exit_(self):
-        self._exit_repl = True
-        self.app.exit()
+        self.exit_repl = True
+        self.app.exit_()
 
     def pretty_printer(self, flag=None):
         if flag is not None:

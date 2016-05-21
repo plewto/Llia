@@ -35,8 +35,8 @@ class SubEditor(object):
     def show(self):
         pass
     
-    def status(self, msg, timeout=-1):
-        self.parent.status(msg, timeout)
+    def status(self, msg):
+        self.parent.status(msg)
 
     def warning(self, msg):
         self.parent.warning(msg)

@@ -2,13 +2,20 @@
 # 2016.05.20
 
 from __future__ import print_function
-import Tkinter as tk
+from Tkinter import Toplevel, Label
 import ttk
 
-from llia.gui.tk.tk_appwindow import TkApplicationWindow
 
-def create_tk_splash_screen(app, config):
-    appwin = TkApplicationWindow(app)
-    return appwin
-    
+class TkSplashWindow(object):
+
+    def __init__(self, app):
+        self.app = app
+        self.config = app.config
+        self.top = Toplevel()
+        self.top.title("Llia Setup")
+
+        w = Label(self.top, text="Wht Up Dog?")
+        w.pack()
+        self.top.mainloop()
+
 

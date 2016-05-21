@@ -3,7 +3,7 @@
 #
 
 from __future__ import (print_function)
-import abc, sys, threading
+import abc, sys, thread
 
 # import llia.gui.splash
 from llia.proxy import LliaProxy
@@ -49,8 +49,7 @@ class LliaApp(object):
         if self.logfile:
             self.logfile.write(msg+'\n')
     
-    @abc.abstractmethod
-    def exit(self, xcode=0):
+    def exit_(self, xcode=0):
         if xcode != 0:
             self.status("Llia exits with code %s" % xcode)
         else:
@@ -58,12 +57,13 @@ class LliaApp(object):
         if self.logfile:
             self.logfile.close()
         self._main_window.exit_gui()
+        self.ls_parser.exit_repl = True
         sys.exit(xcode)
 
-    def status(self, msg, timeout=-1):
+    def status(self, msg):
         lgmsg = "Status oscID %s : %s" % (self.global_osc_id(), msg)
         self.log_event(lgmsg)
-        self._main_window.status(msg, timeout)
+        self._main_window.status(msg)
     
     def warning(self, msg):
         lgmsg = "WARNING /Llia/%s : %s" % (self.global_osc_id(), msg)
@@ -81,9 +81,15 @@ class LliaApp(object):
         print(acc)
         self.exit(errnum)
 
+    # def start_main_loop(self):
+    #     self._repl_thread = threading.Thread(target = self.ls_parser.repl)
+    #     self._repl_thread.start()
+    #     self._main_window.start_gui_loop()
+
+
     def start_main_loop(self):
-        self._repl_thread = threading.Thread(target = self.ls_parser.repl)
-        self._repl_thread.start()
+        self._repl_thread = thread.start_new_thread(self.ls_parser.repl, ())
+        #self._repl_thread.start()
         self._main_window.start_gui_loop()
 
     # ISSUE: FIX ME  update all GUI windows.
