@@ -9,8 +9,7 @@
 ;;         [GENERAL] [MIDI], [OSC], [GUI], [MIDI-CHANNELS] and [MIDI-CONTROLLERS]
 ;;
 ;;    [GENERAL]
-;;    log-file: <filename>              : If filename is provided, status, warning
-;;                                      : and error messages are loged to file.
+;;
 ;;    [MIDI]
 ;;    input-port : <port-name>          ; Set MIDI input port.  To see a list
 ;;                                      ; of available ports use the command
@@ -143,7 +142,7 @@
 
 
 [GENERAL]
-log-file : ~/t/llia.log
+
 
 [MIDI]
 input-port : Launchkey Mini 16:0

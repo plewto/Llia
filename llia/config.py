@@ -270,13 +270,6 @@ class LliaConfig(dict):
 
     def set_option(self, section, option, value):
         self._parser.set(section, option, value)
-
-    def log_file(self):
-        try:
-            fname = self.get_option("GENERAL", "log-file")
-            return os.path.expanduser(fname)
-        except NoOptionError:
-            return ""
         
     def channel_name(self, channel, new_name=None):
         if new_name is not None:
