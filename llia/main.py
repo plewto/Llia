@@ -8,6 +8,7 @@ project_root = os.path.dirname(abs_path)
 project_root = os.path.dirname(project_root)
 sys.path.insert(1, project_root)
 
+
 from argparse import ArgumentParser
 
 import llia.constants as constants

@@ -43,11 +43,9 @@ class LliaApp(object):
         sys.exit(xcode)
 
     def status(self, msg):
-        lgmsg = "Status oscID %s : %s" % (self.global_osc_id(), msg)
         self._main_window.status(msg)
-    
+            
     def warning(self, msg):
-        lgmsg = "WARNING /Llia/%s : %s" % (self.global_osc_id(), msg)
         self._main_window.warning(msg)
     
     def error(self, errnum, msg, exception=None):

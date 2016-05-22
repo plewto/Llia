@@ -243,6 +243,7 @@ class LliaConfig(dict):
         sources = (args.client_port,
                    self._parser.get("OSC", "client-port"),
                    env, 58000)
+        global_id = self.__get_value("OSC", "global-id", "Llia")
         for s in sources:
             if s:
                 client_port = int(s)
@@ -251,8 +252,10 @@ class LliaConfig(dict):
         self["port"] = port
         self["client"] = client
         self["client_port"] = client_port
+        self["global-osc-id"] = global_id
         print("OSC host '%s'  port %s" % (host, port))
         print("OSC client '%s'  port %s" % (client, client_port))
+        
 
     def write_config_file(self, filename):
         with open(filename, 'w') as output:
@@ -313,8 +316,13 @@ class LliaConfig(dict):
         port = self.__get_value("OSC","host-port", 57120)
         return (ip, port)
         
-    def global_osc_id(self):
-        return self.__get_value("OSC", "global-id", "Llia")
+    # def global_osc_id(self):
+    #     return self.__get_value("OSC", "global-id", "Llia")
+
+    def global_osc_id(self, new_id=None):
+        if new_id:
+            self["global-osc-id"] = str(new_id)
+        return self["global-osc-id"]
 
     def osc_transmission_trace_enabled(self):
         flg = str(self.__get_value("OSC", "trace-osc-transmission", False)).upper()

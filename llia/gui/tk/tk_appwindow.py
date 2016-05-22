@@ -6,8 +6,10 @@ from Tkinter import (Frame, Label, Menu, Tk, BOTH)
 import ttk
 
 from llia.gui.appwindow import AbstractApplicationWindow
+from llia.gui.tk.tk_splash import TkSplashWindow
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
+
 
 
 class TkApplicationWindow(AbstractApplicationWindow):
@@ -15,16 +17,23 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def __init__(self, app):
         self.root = Tk()
         self.root.title("Llia")
+        self.root.configure(background=factory.pallet["BG"])
         super(TkApplicationWindow, self).__init__(app, self.root)
+        self.root.withdraw()
+        splash = TkSplashWindow(self.root, app)
+        self.root.deiconify()
+        
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)
         self._main = layout.BorderFrame(self.root)
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
         self._init_status_panel()
         self._init_menu()
         self.status("Why ask?")
+
        
     def _init_status_panel(self):
         south = self._main.south
+        south.configure(padx=4, pady=4)
         self._lab_status = factory.label(south, "")
         b_panic = factory.button(south, "PANIC")
         ttip = "Clear status line"
@@ -32,12 +41,11 @@ class TkApplicationWindow(AbstractApplicationWindow):
         b_panic.grid(row=0, column=0, sticky="w")
         b_clear_status.grid(row=0, column=1, sticky="w")
         self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8) 
-        b_exit = factory.button(south, "Exit", self.app.exit_)
-        b_exit.grid(row=1)
-        
         
     def _init_menu(self):
         menu = Menu(self.root)
+        menu.configure(background=factory.pallet["BG"])
+        menu.configure(foreground=factory.pallet["FG"])
         self.root.config(menu=menu)
         file_menu = Menu(menu)
         io_menu = Menu(menu)

@@ -9,7 +9,12 @@ import ttk
 
 from llia.generic import is_string
 import llia.gui.tk.tk_factory as factory
+from llia.gui.tk.tk_factory import pallet
 
+
+def get_background():
+    return pallet["BG"]
+    
 
 #  ---------------------------------------------------------------------- 
 #                                 FormLayout
@@ -28,6 +33,7 @@ class FormLayout(Frame):
 
     def __init__(self, master, title=None):
         Frame.__init__(self, master)
+        self.configure(background=get_background())
         self._row_count = 0
         self.rows = []
         self.grid_columnconfigure(0, weight=0)
@@ -63,6 +69,7 @@ class VFrame(Frame):
 
     def __init__(self, master):
         Frame.__init__(self, master)
+        self.configure(background=get_background())
         self._row_count = 0
         self.rows = []
         self.grid_columnconfigure(0, weight=1)
@@ -88,6 +95,7 @@ class HFrame(Frame):
 
     def __init__(self, master):
         Frame.__init__(self, master)
+        self.configure(background=get_background())
         self._column_count = 0
         self.columns = []
         self.grid_rowconfigure(0, weight=1)
@@ -115,11 +123,13 @@ class BorderFrame(Frame):
 
     def __init__(self, master):
         Frame.__init__(self, master)
-        north = Frame(self)
-        south = Frame(self)
-        east = Frame(self)
-        west = Frame(self)
-        center = Frame(self)
+        bg = get_background()
+        self.configure(background=bg)
+        north = Frame(self, background=bg)
+        south = Frame(self, background=bg)
+        east = Frame(self, background=bg)
+        west = Frame(self, background=bg)
+        center = Frame(self, background=bg)
         span=1
         north.grid(row=0, column=0, rowspan=1, columnspan=span+2, sticky="ew")
         south.grid(row=span+1, column=0, rowspan=1, columnspan=span+2, sticky="ew")
