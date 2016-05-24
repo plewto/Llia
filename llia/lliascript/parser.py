@@ -85,11 +85,9 @@ class Parser(object):
             ns["trace_osc"] = self.trace_osc
             ns["what_is"] = self.what_is_interactive
             ns["exit"] = self.exit_
-            
         
     def repl(self):
         print(BANNER)
-        #print(VERSION)
         print()
         pyver = sys.version_info[0]
         if pyver <= 2:
