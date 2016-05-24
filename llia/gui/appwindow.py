@@ -50,7 +50,8 @@ def create_application_window(app):
     config = app.config
     gui = str(config.gui())
     if gui.upper() == "NONE":
-        TextSplashScreen(app)
+        if str(config["enable-splash"]).upper() != "FALSE":
+            TextSplashScreen(app)
         return DummyApplicationWindow(app)
     elif gui.upper() == "TK":
         import llia.gui.tk.tk_appwindow as tkaw

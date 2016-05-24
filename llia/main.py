@@ -33,6 +33,8 @@ HM_CLIENT_PORT = "set port number Llia is listing to."
 HM_LISTGUI = "list available GUI systems and exit."
 HM_GUI = "set GUI."
 HM_SKIP_MAINLOOP = "For testing, do not enter application main loop, load modules and exit"
+HM_NO_SPLASH = "Do not display initial splash menu"
+HM_NO_REPL = "Do not enter REPL"
 
 USAGE='''
 Llia is an OSC client for SuperCollider.
@@ -147,6 +149,17 @@ Command line options:
           For testing.  Do not enter application main loop.
           Load modules and exit.
 
+   --nosplash
+
+         Skip initial splash screen.  If a MIDI input port has not been
+         specified this flag is ignored.  nosplash is primarily used
+         for testing.
+
+   --norepl
+
+        Do not enter REPL.  This option is primarily used for testing and 
+        is positively useless if no GUI has been selected.
+
 '''
 
 parser = ArgumentParser(description="Llia ~ An OSC client for SuperCollider.")
@@ -164,6 +177,8 @@ parser.add_argument("--client_port", help=HM_CLIENT_PORT)
 parser.add_argument("-g", "--listgui", action="store_true", help=HM_LISTGUI)
 parser.add_argument("--gui", help=HM_GUI)
 parser.add_argument("--skip_mainloop", action="store_true", help = HM_SKIP_MAINLOOP)
+parser.add_argument("--nosplash", action="store_false", help = HM_NO_SPLASH)
+parser.add_argument("--norepl", action="store_false", help = HM_NO_REPL)
 
 args = parser.parse_args()
 if args.version:
@@ -186,7 +201,7 @@ if args.midi_ports:
     sys.exit(0)
 
 if args.listgui:
-    print("\nAvailabe GUI options:")
+    print("\nAvailable GUI options:")
     for g in constants.GUI_OPTIONS:
         print("\t%-12s%s" % g)
     print()

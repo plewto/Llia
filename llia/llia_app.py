@@ -5,7 +5,6 @@
 from __future__ import (print_function)
 import abc, sys, threading
 
-# import llia.gui.splash
 from llia.proxy import LliaProxy
 from llia.midi_receiver import get_midi_receiver
 from llia.keytab.registry import KeyTableRegistry
@@ -59,10 +58,12 @@ class LliaApp(object):
         self.exit(errnum)
 
     def start_main_loop(self):
-        self._repl_thread = threading.Thread(target = self.ls_parser.repl)
-        self._repl_thread.start()
+        if self.config["enable-repl"]:
+            self._repl_thread = threading.Thread(target = self.ls_parser.repl)
+            self._repl_thread.start()
+        else:
+            print("REPL disapled")
         self._main_window.start_gui_loop()
-        
 
     # ISSUE: FIX ME  update all GUI windows.
     def sync_all(self):

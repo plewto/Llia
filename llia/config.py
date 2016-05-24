@@ -9,19 +9,6 @@ from ConfigParser import RawConfigParser,NoOptionError,NoSectionError
 import llia.constants as constants
 from llia.alias import CCAssignments, ChannelAssignments
 
-# MSG_NO_MIDI_PORT = """
-# ERROR:
-# No MIDI input port specified.
-# A MIDI input port must be specified in at least one of the following
-# locations (in order of precedence)
-#
-#     1) --midiin command line option.
-#     2) via the configuration file.
-#     3) the LLIA_MIDI_IN environmental variable.
-#
-# Use --midi_ports command line flag to see a list of available ports.
-# """
-
 MSG_NO_CONFIG_FILE = """
 ERROR:
 Could not locate startup configuration file '%s'
@@ -66,7 +53,7 @@ class LliaConfig(dict):
             msg = MSG_NO_CONFIG_FILE % filename
             print("%s\n" % msg)
             sys.exit(0)
-        print("Using configuration file '%s'" % filename)
+        # print("Using configuration file '%s'" % filename)
         return LliaConfig(filename, args)
     
     def __init__(self, filename, args):
@@ -79,8 +66,7 @@ class LliaConfig(dict):
         self._select_midi_output_port(args)
         self._select_default_host_and_client(args)
         self._select_gui(args)
-        # self._midi_receiver = None
-        # self._midi_transmitter = None
+        self._select_startup_options(args)
         self.controller_assignments = CCAssignments(self._parser)
         self.channel_assignments = ChannelAssignments(self._parser)
         
@@ -109,24 +95,6 @@ class LliaConfig(dict):
             os.environ["MIDO_BACKEND"] = backend
             print("Backend: %s" % backend)
                   
-    # def _select_midi_input_port(self, args):
-    #     try:
-    #         env = os.environ["LLIA_MIDI_IN"]
-    #     except KeyError:
-    #         env = None
-    #     sources = (args.midiin, self._parser.get("MIDI", "input-port"), env)
-    #     port_name = None
-    #     for s in sources:
-    #         if s:
-    #             port_name = s
-    #             break
-    #     if not port_name:
-    #         print(MSG_NO_MIDI_PORT)
-    #         # sys.exit(1)
-    #     self["midi-receiver-name"] = port_name
-    #     print("MIDI input port: '%s'" % port_name)
-
-
     def _select_midi_input_port(self, args):
         try:
             env = os.environ["LLIA_MIDI_IN"]
@@ -138,9 +106,6 @@ class LliaConfig(dict):
             if s:
                 port_name = s
                 break
-        # if not port_name:
-        #     print(MSG_NO_MIDI_PORT)
-        #     # sys.exit(1)
         if port_name:
             self["midi-receiver-name"] = port_name
         else:
@@ -151,25 +116,16 @@ class LliaConfig(dict):
             env = os.environ["LLIA_MIDI_OUT"]
         except KeyError:
             env = None
-        #sources = (args.midiout, self._parser.get("MIDI","output-port"),
-        #           env, self["midi-receiver-name"])
-
         sources = (args.midiout, self._parser.get("MIDI","output-port"),env)
         port_name = None
         for s in sources:
             if s:
                 port_name = s
                 break
-        # if not port_name:
-        #     raise RuntimeError("No MIDI output port")
-        # self["midi-transmitter-name"] = port_name
-        # print("MIDI output port: '%s'" % port_name)
         if port_name:
             self["midi-transmitter-name"] = port_name
-            # print("MIDI output port: '%s'" % port_name)
         else:
             self["midi-transmitter-name"] = None
-                  
         
     def _select_gui(self, args):
         options = []
@@ -255,7 +211,17 @@ class LliaConfig(dict):
         self["global-osc-id"] = global_id
         print("OSC host '%s'  port %s" % (host, port))
         print("OSC client '%s'  port %s" % (client, client_port))
-        
+
+    def _select_startup_options(self, args):
+        # Splash screen enable
+        flag1 = str(self._parser.get("GUI","no-splash")).upper()
+        flag1 = flag1 != "TRUE" # true on disable
+        flag2 = self["midi-receiver-name"] # false -> enable
+        enable = flag1 or not flag2
+        self["enable-splash"] = enable
+        # Skip REPL
+        flag1 = str(self._parser.get("GENERAL", "no-repl")).upper()
+        self["enable-repl"] = flag1 != "TRUE"
 
     def write_config_file(self, filename):
         with open(filename, 'w') as output:
@@ -303,7 +269,6 @@ class LliaConfig(dict):
 
     def formatted_controller_names(self):
         return self.controller_assignments.formatted_list()
-    
 
     def __get_value(self, section, key, default):
         try:
@@ -316,9 +281,6 @@ class LliaConfig(dict):
         port = self.__get_value("OSC","host-port", 57120)
         return (ip, port)
         
-    # def global_osc_id(self):
-    #     return self.__get_value("OSC", "global-id", "Llia")
-
     def global_osc_id(self, new_id=None):
         if new_id:
             self["global-osc-id"] = str(new_id)
