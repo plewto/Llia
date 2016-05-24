@@ -12,7 +12,9 @@ class Pallet(dict):
         self["FG"] = "#b5b5b5"
         self["BUTTON-BG"] = "#192633"
         self["RADIO-SELECT"] = "gray11"
+        self["WARNING-FG"] = "yellow"
 
+        
     def __getitem__(self, name):
         try:
             return dict.__getitem__(self, name)

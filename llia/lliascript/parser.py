@@ -10,7 +10,9 @@ from llia.llerrors import (LliaPingError, LliascriptParseError, LliascriptError,
 from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
 from llia.lliascript.bufferhelper import BufferHelper
-from llia.lliascript.rebuild import Rebuilder
+from llia.gui.llhelp import help_topics, print_topic
+
+from llia.lliascript.rebuild import Rebuilder   # ISSUE: Rename this!
 
 
 class LsEntity(object):
@@ -65,7 +67,7 @@ class Parser(object):
             ns["step"] = step
             ns["help"] = self.help_
             ns["abus"] = self.abus
-            ns["build"] = self.build
+            ns["build"] = self.build  #  ISSUE: Change name
             ns["cbus"] = self.cbus
             ns["channel_name"] = self.channel_name
             ns["controller_name"] =self.controller_name
@@ -147,8 +149,19 @@ class Parser(object):
             self._append_history(line)
         
     def help_(self, topic=None):
-        print("Help topic = %s, not implemented" % topic)
-        return True
+        if not topic:
+            print("Help topics: ", end=" ")
+            counter = 13
+            for t in help_topics():
+                print("%s" % t, end = " ")
+                counter += len(t)+1
+                if counter > 70:
+                    print()
+                    counter = 0
+            print()
+        else:
+            print("*" * 70)
+            print_topic(str(topic))
 
     def is_abus(self, name):
         ent = self.entities.get(name, None)
@@ -199,7 +212,7 @@ class Parser(object):
     def what_is_interactive(self, name):
         lstype = self.what_is(name)
         if not lstype:
-            msg = "'%s' has no value" % name
+            msg = "'%s' is " % type(name)
         else:
             msg = "'%s' is a %s" % (name, lstype)
         self.status(msg)

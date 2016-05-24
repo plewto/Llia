@@ -374,6 +374,7 @@ class SynthHelper(object):
             raise LliascriptError(msg)
 
     def remove_parameter_map(self, source, param=ALL, sid=None):
+        if sid == "*" : sid = None
         sy = self.get_synth(sid)
         lstype = self.what_is(source)
         if "controller" in lstype:

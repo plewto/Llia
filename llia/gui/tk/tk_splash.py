@@ -27,7 +27,6 @@ class TkSplashWindow(Toplevel):
         south = Frame(main, background=factory.pallet["BG"])
         main.add(south)
         self._build_south_panel(south)
-        
         root.wait_window(self)
 
     def _build_south_panel(self, south):
@@ -43,28 +42,28 @@ class TkSplashWindow(Toplevel):
         init_input = self.config["midi-receiver-name"]
         init_output = self.config["midi-transmitter-name"]
         
-        var_id = StringVar()
-        var_host = StringVar()
-        var_port = StringVar()
-        var_client = StringVar()
-        var_client_port = StringVar()
-        var_input = StringVar()
-        var_output = StringVar()
+        self.var_id = StringVar()
+        self.var_host = StringVar()
+        self.var_port = StringVar()
+        self.var_client = StringVar()
+        self.var_client_port = StringVar()
+        self.var_input = StringVar()
+        self.var_output = StringVar()
 
         def restore_defaults():
-            var_id.set(init_id)
-            var_host.set(init_host)
-            var_port.set(init_port)
-            var_client.set(init_client)
-            var_client_port.set(init_client_port)
-            var_input.set(init_input)
-            var_output.set(init_output)
+            self.var_id.set(init_id)
+            self.var_host.set(init_host)
+            self.var_port.set(init_port)
+            self.var_client.set(init_client)
+            self.var_client_port.set(init_client_port)
+            self.var_input.set(init_input)
+            self.var_output.set(init_output)
         restore_defaults()
-        e_id = factory.entry(south, var_id)
-        e_host = factory.entry(south, var_host)
-        e_port = factory.entry(south, var_port)
-        e_client = factory.entry(south, var_client)
-        e_client_port = factory.entry(south, var_client_port)
+        e_id = factory.entry(south, self.var_id)
+        e_host = factory.entry(south, self.var_host)
+        e_port = factory.entry(south, self.var_port)
+        e_client = factory.entry(south, self.var_client)
+        e_client_port = factory.entry(south, self.var_client_port)
         padding = Frame(south)
         padding.grid(row=0, column=0, ipadx=8, ipady=8)
         padding.configure(background=factory.pallet["BG"])
@@ -93,25 +92,77 @@ class TkSplashWindow(Toplevel):
         lab_midi_input.grid(row=5, column=1, columnspan=2, ipady=8)
         lab_midi_output.grid(row=5, column=5, columnspan=2, ipady=8)
         for n,p in enumerate(self._midi_input_ports):
-            rb = factory.radio(south, str(p), var_input, str(p))
+            rb = factory.radio(south, str(p), self.var_input, str(p))
             rb.grid(row=n+6, column=1, sticky="W")
         for n,p in enumerate(self._midi_output_ports):
-            rb = factory.radio(south, str(p), var_output, str(p))
+            rb = factory.radio(south, str(p), self.var_output, str(p))
             rb.grid(row=n+6, column=5, sticky="W")
         padding = Frame(south)
         padding.grid(row=0, column=7, ipadx=36)
         padding.configure(background=factory.pallet["BG"])
         b_help = factory.help_button(south)
         b_about = factory.button(south, "About")
-        b_restore = factory.button(south, "Restore")
-        b_continue = factory.button(south, "Continue")
+        b_restore = factory.button(south, "Restore",
+                                   command=restore_defaults,
+                                   ttip="Restore default values")
+        b_continue = factory.button(south, "Accept",
+                                    command = self.accept,
+                                    ttip="Accept values and move on")
         b_help.grid(row=1, column=8, sticky="EW", pady=2)
         b_restore.grid(row=2, column=8, sticky="EW", pady=2)
         b_continue.grid(row=3, column=8, sticky="EW", pady=2)
         b_about.grid(row=4, column=8, sticky="EW", pady=2)
 
+        self.lab_warning = factory.warning_label(south)
+        self.lab_warning.grid(row=6, column=7, sticky="EW",columnspan=2, rowspan=4)
         
+    def warning(self, msg):
+        self.lab_warning.configure(text=msg)
 
-    def done(self):
-        self.destroy()
+    @staticmethod
+    def validate_port_number(prt):
+        try:
+            n = int(prt)
+            return 0 <= n <= 65535
+        except (ValueError, TypeError):
+            return False
+
+    @staticmethod
+    def validate_address(addr):
+        # Place holder function
+        # We are not validating anything at this time
+        return True
+        
+    def validate(self):
+        prt = self.var_port.get()
+        if not self.validate_port_number(prt):
+            msg = "Invalid port: %s" % prt
+            return msg
+        prt = self.var_client_port.get()
+        if not self.validate_port_number(prt):
+            msg = "Invalid port: %s" % prt
+            return msg
+        addr = self.var_host.get()
+        if not self.validate_address(addr):
+            msg = "Invalid address: '%s'" % addr
+            return msg
+        addr = self.var_client.get()
+        if not self.validate_address(addr):
+            msg = "Invalid address: '%s'" % addr
+            return msg
+        return ""
+        
+    def accept(self):
+        errmsg = self.validate()
+        if not errmsg:
+            self.config.global_osc_id(self.var_id.get())
+            self.config["host"] = self.var_host.get()
+            self.config["port"] = int(self.var_port.get())
+            self.config["client"] = self.var_client.get()
+            self.config["client_port"] = int(self.var_client_port.get())
+            self.config["midi-receiver-name"] = self.var_input.get()
+            self.config["midi-transmitter-name"] = self.var_output.get()
+            self.destroy()
+        else:
+            self.warning(errmsg)
         

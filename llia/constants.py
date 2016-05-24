@@ -13,6 +13,9 @@ BANNER ="""
 """
 
 
+HELP_PATH = "resources/help"
+HELP_EXT = "md"                 # Help file extension
+
 GUI_OPTIONS = (("None", "Use Llia without GUI."),
                # ("QT", "May not be avilaible on all systems."),
                ("TK", "Aviliable wherever Python is sold."))

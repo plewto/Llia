@@ -2,7 +2,8 @@
 # 2016.05.21
 
 from Tkinter import *
-import ttk, tkFont
+import ttk
+from tkFont import Font
 from PIL import Image, ImageTk
 
 
@@ -13,7 +14,8 @@ from llia.gui.tk.pallet import Pallet
 
 pallet = Pallet()
 
-
+# BIG_FONT = Font(family="Courier", size=30)
+# WARNING_FONT = Font(family="Courier", size=12)
 
 #  ---------------------------------------------------------------------- 
 #                                   ToolTip
@@ -44,10 +46,16 @@ def center_label(master, text):
     w.config(justify=CENTER)
     return w
 
-def big_label(master, text, var=None):
+# def big_label(master, text, var=None):
+#     w = label(master, text, var)
+#     w.config(font=BIG_FONT)
+#     return w
+
+def warning_label(master, text="", var=None):
     w = label(master, text, var)
-    w.config(font=BIG_FONT)
+    w.config(foreground=pallet["WARNING-FG"])
     return w
+
 
 # def image_label(master, filename):
 #     image = Image.open(filename)

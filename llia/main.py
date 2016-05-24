@@ -65,8 +65,8 @@ Command line options:
 
           A suitable configuration file is provided in the Llia resource
           directory.  Copy, or symlink, this file to the default location 
-          for your platform.  At a minimum the MIDI input port should 
-          be edited. 
+          for your platform.  
+
 
   -i PORT --midiin PORT
 
