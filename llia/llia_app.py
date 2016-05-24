@@ -58,10 +58,6 @@ class LliaApp(object):
         print(acc)
         self.exit(errnum)
 
-    # def start_main_loop(self):
-    #     self._repl_thread = thread.start_new_thread(self.ls_parser.repl, ())
-    #     self._main_window.start_gui_loop()
-
     def start_main_loop(self):
         self._repl_thread = threading.Thread(target = self.ls_parser.repl)
         self._repl_thread.start()
