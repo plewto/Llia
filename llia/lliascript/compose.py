@@ -1,4 +1,4 @@
-# llia.lliascript.rebuid
+# llia.lliascript.compose
 # 2016.05.19
 
 from llia.lliascript.synthhelper import SynthHelper
@@ -6,7 +6,7 @@ from llia.lliascript.synthhelper import SynthHelper
 
 fill_outbus_args = SynthHelper.fill_outbus_args
 
-class Rebuilder(object):
+class Composer(object):
 
     def __init__(self, parser):
         self.parser = parser

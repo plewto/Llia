@@ -41,6 +41,9 @@ class LliaApp(object):
         self.ls_parser.exit_repl = True
         sys.exit(xcode)
 
+    def main_window(self):
+        return self._main_window
+        
     def status(self, msg):
         self._main_window.status(msg)
             

@@ -82,11 +82,9 @@ def clear_button(master, command=None, ttip=""):
     b = button(master, 'X', command, ttip)
     return b
 
-
 def help_button(master):
     b = button(master, "?")
     return b
-
 
 def radio(master, text, var, value, ttip=""):
     rb = Radiobutton(master, text=text, variable=var, value=value)

@@ -12,7 +12,7 @@ from llia.lliascript.synthhelper import SynthHelper
 from llia.lliascript.bufferhelper import BufferHelper
 from llia.gui.llhelp import help_topics, print_topic
 
-from llia.lliascript.rebuild import Rebuilder   # ISSUE: Rename this!
+from llia.lliascript.compose import Composer
 
 
 class LsEntity(object):
@@ -46,6 +46,7 @@ class Parser(object):
         self.bufferhelper = BufferHelper(self, self._local_namespace)
         self._init_namespace(self._local_namespace)
 
+
     def _init_namespace(self, ns):
             ns["ABUS"] = ABUS
             ns["CBUS"] = CBUS
@@ -67,7 +68,7 @@ class Parser(object):
             ns["step"] = step
             ns["help"] = self.help_
             ns["abus"] = self.abus
-            ns["build"] = self.build  #  ISSUE: Change name
+            ns["compose"] = self.compose
             ns["cbus"] = self.cbus
             ns["channel_name"] = self.channel_name
             ns["controller_name"] =self.controller_name
@@ -269,6 +270,12 @@ class Parser(object):
         self._history = ""
         return True
 
+    def get_history(self):
+        return self._history
+
+    def set_history(self, txt):
+        self._history = txt
+    
     def print_history(self):
         print("HISTORY:")
         print(self._history)
@@ -374,7 +381,7 @@ class Parser(object):
             msg = "Can not remove '%s' (type '%s')" % (name,lstype)
             raise LliascriptError(msg)
 
-    def build(self):
-        rb = Rebuilder(self)
+    def compose(self):
+        rb = Composer(self)
         code = rb.build()
-        print(code)
+        self._history = code

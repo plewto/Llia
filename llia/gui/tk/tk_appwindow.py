@@ -80,14 +80,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._init_help_menu(help_menu)
 
     def _init_file_menu(self, fmenu):
-        fmenu.add_command(label="Edit Config File", command = None)
-        fmenu.add_command(label="Save Config File", command = None)
-        fmenu.add_command(label="Restore Config File", command = None)
-        fmenu.add_separator()
-        fmenu.add_command(label="Load Lliascript", command = None)
-        fmenu.add_command(label="Save History", command = None)
-        fmenu.add_command(label="Clear History", command = None)
-        fmenu.add_command(label="Compose State", command = None)
+        fmenu.add_command(label="Lliascript", command = self.show_history_editor)
         fmenu.add_separator()
         fmenu.add_command(label="Quit", command = self.exit_app)
 
@@ -178,6 +171,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkAboutDialog(self.root, self)
         self.root.wait_window(dialog)
 
-    def show_help_dialog(self):
+    def show_help_dialog(self, topic=None):
+        if topic:
+            self._help_dialog.display_topic(topic)
         self._help_dialog.deiconify()
         
+    def show_history_editor(self):
+        from llia.gui.tk.tk_history import TkHistoryEditor
+        dialog = TkHistoryEditor(self.root, self.app)
+        self.root.wait_window(dialog)
+
+    
