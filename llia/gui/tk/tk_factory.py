@@ -1,6 +1,8 @@
 # llia.gui.tk.factory
 # 2016.05.21
 
+from __future__ import print_function
+
 from Tkinter import *
 import ttk
 from tkFont import Font
@@ -58,21 +60,11 @@ def warning_label(master, text="", var=None):
 
 
 # def image_label(master, filename):
-#     image = Image.open(filename)
-#     photo = ImageTk.PhotoImage(image)
-#     print("DEBUG image %s" % image)
-#     print("DEBUG photo %s" % photo)
-#     w = Label(master)
-#     w.configure(image=photo)
-#     w.configure(background=pallet["BG"])
+#     img = Image.open(filename)
+#     photo = ImageTk.PhotoImage(img)
+#     w = Label(master, image=photo)
+#     w.configure(background="red")
 #     return w
-
-# def image_label(master, filename):
-#     logo = Image.open(filename)
-#     logo = ImageTk.PhotoImage(logo)
-#     w = Label(master, image=logo)
-#     return w
-
 
 #  ---------------------------------------------------------------------- 
 #                                   Buttons
@@ -107,6 +99,37 @@ def radio(master, text, var, value, ttip=""):
 
 
 #  ---------------------------------------------------------------------- 
+#                                   Listbox
+
+def listbox(master, command=None, ttip=""):
+    lbx = Listbox(master)
+    lbx.config(background=pallet["BG"])
+    lbx.config(foreground=pallet["FG"])
+    if command:
+        lbx.bind("<<ListboxSelect>>", command)
+    tooltip(lbx, ttip)
+    return lbx
+
+
+
+#  ---------------------------------------------------------------------- 
+#                                  Scrollbar
+
+def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
+    sb = Scrollbar(master)
+    sb.config(orient=orientation)
+    if xclient:
+        xclient.config(xscrollcommand=sb.set)
+        sb.config(command = xclient.xview)
+    if yclient:
+        yclient.config(yscrollcommand=sb.set)
+        sb.config(command = yclient.yview)
+    #print("DEBUG scrollbar config keys -> ", sb.config().keys())
+    sb.config(background=pallet["BG"])
+    sb.config(highlightbackground="red")
+    return sb
+
+#  ---------------------------------------------------------------------- 
 #                                    Text
 
 def entry(master, var, ttip=""):
@@ -114,5 +137,13 @@ def entry(master, var, ttip=""):
     t.configure(textvariable=var)
     t.configure(background=pallet["BG"])
     t.configure(foreground=pallet["FG"])
+    tooltip(t, ttip)
+    return t
+
+def text_widget(master, ttip=""):
+    t = Text(master)
+    #t.config(textvariable=var)
+    t.config(background=pallet["BG"])
+    t.config(foreground=pallet["FG"])
     tooltip(t, ttip)
     return t

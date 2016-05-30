@@ -62,10 +62,10 @@ class LliaApp(object):
             self._repl_thread = threading.Thread(target = self.ls_parser.repl)
             self._repl_thread.start()
         else:
-            print("REPL disapled")
+            print("REPL disabled")
         self._main_window.start_gui_loop()
 
     # ISSUE: FIX ME  update all GUI windows.
     def sync_all(self):
         self.proxy.sync_to_host()
-        # print("LliaApp.sync_all is not compleatly implemented")
+        # print("LliaApp.sync_all is not completely implemented")

@@ -4,12 +4,12 @@
 from __future__ import print_function
 from Tkinter import (Frame, Label, Menu, Tk, BOTH)
 import ttk
-
+from PIL import Image, ImageTk
+from llia.gui.tk.tk_help import TkHelpDialog
 from llia.gui.appwindow import AbstractApplicationWindow
 from llia.gui.tk.tk_splash import TkSplashWindow
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
-
 
 
 class TkApplicationWindow(AbstractApplicationWindow):
@@ -20,17 +20,19 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.configure(background=factory.pallet["BG"])
         super(TkApplicationWindow, self).__init__(app, self.root)
         self.root.withdraw()
-        splash = TkSplashWindow(self.root, app)
+        if app.config["enable-splash"]:
+            splash = TkSplashWindow(self.root, app)
         self.root.deiconify()
-        
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)
         self._main = layout.BorderFrame(self.root)
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
         self._init_status_panel()
         self._init_menu()
-        self.status("Why ask?")
-
-       
+        self.root.minsize(width=665, height=375)
+        self._help_dialog = TkHelpDialog(self.root)
+        self._help_dialog.withdraw()
+        
+        
     def _init_status_panel(self):
         south = self._main.south
         south.configure(padx=4, pady=4)
@@ -41,29 +43,110 @@ class TkApplicationWindow(AbstractApplicationWindow):
         b_panic.grid(row=0, column=0, sticky="w")
         b_clear_status.grid(row=0, column=1, sticky="w")
         self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8) 
-        
-    def _init_menu(self):
-        menu = Menu(self.root)
-        menu.configure(background=factory.pallet["BG"])
-        menu.configure(foreground=factory.pallet["FG"])
-        self.root.config(menu=menu)
-        file_menu = Menu(menu)
-        io_menu = Menu(menu)
-        bus_menu = Menu(menu)
-        buffer_menu = Menu(menu)
-        synth_menu = Menu(menu)
-        tune_menu = Menu(menu)
-        midimap_menu = Menu(menu)
-        help_menu = Menu(menu)
-        menu.add_cascade(label="File", menu=file_menu)
-        menu.add_cascade(label="IO", menu=io_menu)
-        menu.add_cascade(label="Bus", menu=bus_menu)
-        menu.add_cascade(label="Buffer", menu=buffer_menu)
-        menu.add_cascade(label="Synth", menu=synth_menu)
-        menu.add_cascade(label="Tune", menu=tune_menu)
-        menu.add_cascade(label="Map", menu=midimap_menu)
-        menu.add_cascade(label="Help", menu=help_menu)
 
+    @staticmethod
+    def menu(master):
+        m = Menu(master, tearoff=0)
+        m.configure(background=factory.pallet["BG"])
+        m.configure(foreground=factory.pallet["FG"])
+        return m
+    
+    def _init_menu(self):
+        main_menu = self.menu(self.root)
+        self.root.config(menu=main_menu)
+        file_menu = self.menu(main_menu)
+        osc_menu = self.menu(main_menu)
+        midi_menu = self.menu(main_menu)
+        bus_menu = self.menu(main_menu)
+        buffer_menu = self.menu(main_menu)
+        synth_menu = self.menu(main_menu)
+        tune_menu = self.menu(main_menu)
+        help_menu = self.menu(main_menu)
+        main_menu.add_cascade(label="File", menu=file_menu)
+        main_menu.add_cascade(label="OSC", menu=osc_menu)
+        main_menu.add_cascade(label="MIDI", menu=midi_menu)
+        main_menu.add_cascade(label="Buses", menu=bus_menu)
+        main_menu.add_cascade(label="Buffers", menu=buffer_menu)
+        main_menu.add_cascade(label="Synths", menu=synth_menu)
+        main_menu.add_cascade(label="Tune", menu=tune_menu)
+        main_menu.add_cascade(label="Help", menu=help_menu)
+        self._init_file_menu(file_menu)
+        self._init_osc_menu(osc_menu)
+        self._init_midi_menu(midi_menu)
+        self._init_bus_menu(bus_menu)
+        self._init_buffer_menu(buffer_menu)
+        self._init_synth_menu(synth_menu)
+        self._init_tune_menu(tune_menu)
+        self._init_help_menu(help_menu)
+
+    def _init_file_menu(self, fmenu):
+        fmenu.add_command(label="Edit Config File", command = None)
+        fmenu.add_command(label="Save Config File", command = None)
+        fmenu.add_command(label="Restore Config File", command = None)
+        fmenu.add_separator()
+        fmenu.add_command(label="Load Lliascript", command = None)
+        fmenu.add_command(label="Save History", command = None)
+        fmenu.add_command(label="Clear History", command = None)
+        fmenu.add_command(label="Compose State", command = None)
+        fmenu.add_separator()
+        fmenu.add_command(label="Quit", command = self.exit_app)
+
+    def _init_osc_menu(self, iomenu):
+        iomenu.add_command(label="OSC Info", command = None)
+        iomenu.add_command(label="Ping", command = None)
+        iomenu.add_command(label="Dump", command = None)
+        iomenu.add_command(label="Enable OSC Trace", command = None)
+
+    def _init_midi_menu(self, mmenu):
+        map_menu = self.menu(mmenu)
+        mmenu.add_command(label = "MIDI Info", command= None)
+        mmenu.add_command(label = "Channel Names", command = None)
+        mmenu.add_command(label = "Controller Names", command = None)
+        mmenu.add_cascade(label = "MIDI Maps", menu = map_menu)
+        mmenu.add_command(label = "Enable MIDI Trace", command = None)
+        
+    def _init_bus_menu(self, bmenu):
+        abus_menu = self.menu(bmenu)
+        cbus_menu = self.menu(bmenu)
+        bmenu.add_cascade(label="Audio", menu = abus_menu)
+        bmenu.add_cascade(label="Control", menu = cbus_menu)
+        abus_menu.add_command(label="View Audio Buses", command = None)
+        abus_menu.add_command(label="Add Audio Bus", command = None)
+        abus_menu.add_command(label="Remove Audio Bus", command = None)
+        cbus_menu.add_command(label="View Control Busses", command = None)
+        cbus_menu.add_command(label="Add Control Bus", command = None)
+        cbus_menu.add_command(label="Remove Control Bus", command = None)
+        
+    def _init_buffer_menu(self, bmenu):
+        bmenu.add_command(label="View Buffers", command = None)
+        bmenu.add_command(label="Add Buffer", command = None)
+        bmenu.add_command(label="Remov Buffer", command = None)
+        bmenu.add_command(label="Load Sound File", command = None)
+        wt_menu = self.menu(bmenu)
+        bmenu.add_cascade(label = "Wavetables", menu = wt_menu)
+        wt_menu.add_command(label="Load Wavetable", command = None)
+        wt_menu.add_command(label="Create Wavetable", command = None)
+        wt_menu.add_command(label="Create Sine Table", command = None)
+        wt_menu.add_command(label="Create Triangle Table", command = None)
+        wt_menu.add_command(label="Create Sawtooth Table", command = None)
+        wt_menu.add_command(label="Create Pulse Table", command = None)
+        
+    def _init_synth_menu(self, smenu):
+        smenu.add_command(label = "Show Synth", command = None)
+        smenu.add_command(label = "Hide Synth", command = None)
+        smenu.add_separator()
+        smenu.add_command(label = "Add Synth", command = None)
+        smenu.add_command(label = "Add EFX Synth", command = None)
+        smenu.add_command(label = "Remove Synth", command = None)
+
+    def _init_tune_menu(self, tmenu):
+        tmenu.add_command(label = "FIX ME: Nothing to see here")
+
+    def _init_help_menu(self, hmenu):
+        hmenu.add_command(label = "About", command = self.show_about_dialog)
+        hmenu.add_command(label = "Help", command = self.show_help_dialog)
+    
+        
     def exit_gui(self):
         try:
             self.root.destroy()
@@ -89,3 +172,12 @@ class TkApplicationWindow(AbstractApplicationWindow):
                                               
     def start_gui_loop(self):
         self.root.mainloop()
+
+    def show_about_dialog(self):
+        from llia.gui.tk.tk_about_dialog import TkAboutDialog
+        dialog = TkAboutDialog(self.root, self)
+        self.root.wait_window(dialog)
+
+    def show_help_dialog(self):
+        self._help_dialog.deiconify()
+        

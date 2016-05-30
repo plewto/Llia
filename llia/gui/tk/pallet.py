@@ -10,6 +10,7 @@ class Pallet(dict):
         super(dict, self).__init__()
         self["BG"] = "gray5"
         self["FG"] = "#b5b5b5"
+        self["HIGHLIGHT-TEXT"] = "#FFFDBF"
         self["BUTTON-BG"] = "#192633"
         self["RADIO-SELECT"] = "gray11"
         self["WARNING-FG"] = "yellow"
