@@ -96,7 +96,7 @@ class LliaProxy(object):
     #
     def _send(self, msg, payload=[]):
         if LliaProxy.trace:
-            self.status("LliaProxy._send '%s' %s" % (msg, payload))
+            print("LliaProxy._send '%s' %s" % (msg, payload))
         self.osc_transmitter.send(msg, payload)
 
     # Request host to return value(s)

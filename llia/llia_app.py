@@ -18,8 +18,8 @@ class LliaApp(object):
     def __init__(self, config, skip_mainloop=False):
         super(LliaApp, self).__init__()
         self.config = config
-        self._main_window = create_application_window(self)
         self.proxy = LliaProxy(config, self)
+        self._main_window = create_application_window(self)
         midi_in_trace = config.trace_midi_reception_enabled()
         midi_in_port = config["midi-receiver-name"]
         self.midi_receiver = get_midi_receiver(midi_in_port,midi_in_trace)

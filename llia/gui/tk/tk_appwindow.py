@@ -2,15 +2,16 @@
 # 2016.05.20
 
 from __future__ import print_function
-from Tkinter import (Frame, Label, Menu, Tk, BOTH)
+from Tkinter import (Frame, Label, Menu, Tk, BOTH, Toplevel)
 import ttk
+import tkMessageBox
 from PIL import Image, ImageTk
 from llia.gui.tk.tk_help import TkHelpDialog
 from llia.gui.appwindow import AbstractApplicationWindow
 from llia.gui.tk.tk_splash import TkSplashWindow
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
-
+from  llia.proxy import LliaProxy
 
 class TkApplicationWindow(AbstractApplicationWindow):
 
@@ -85,10 +86,10 @@ class TkApplicationWindow(AbstractApplicationWindow):
         fmenu.add_command(label="Quit", command = self.exit_app)
 
     def _init_osc_menu(self, iomenu):
-        iomenu.add_command(label="OSC Info", command = None)
-        iomenu.add_command(label="Ping", command = None)
-        iomenu.add_command(label="Dump", command = None)
-        iomenu.add_command(label="Enable OSC Trace", command = None)
+        iomenu.add_command(label="OSC Info", command = self.display_osc_info_dialog)
+        iomenu.add_command(label="Ping", command = self.ping_global)
+        iomenu.add_command(label="Dump", command = self.app.proxy.dump)
+        iomenu.add_command(label="Enable OSC Trace", command = self.toggle_osc_trace)
 
     def _init_midi_menu(self, mmenu):
         map_menu = self.menu(mmenu)
@@ -181,4 +182,29 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkHistoryEditor(self.root, self.app)
         self.root.wait_window(dialog)
 
+    def display_osc_info_dialog(self):
+        config = self.app.config
+        host, port = config['host'], config['port']
+        client, cport = config['client'], config['client_port']
+        acc = "OSC ID: '%s'\n" % config["global-osc-id"]
+        acc += "Host Address   : '%s'\n" % host
+        acc += "Host Port      : %s\n" % port
+        acc += "Client Address : '%s'\n" % client
+        acc += "Client Port    : %s\n" % cport
+        title = "OSC Info"
+        mb = tkMessageBox.showinfo(title, acc)
+
+    def ping_global(self):
+        rs = self.app.proxy.ping()
+        if rs:
+            self.status("Ping OK")
+        else:
+            self.warning("No Ping Response")
+
+    def toggle_osc_trace(self):
+        LliaProxy.trace = not LliaProxy.trace
+        if LliaProxy.trace:
+            self.status("OSC transmission trace enabled")
+        else:
+            self.status("OSC transmission trace disabled")
     
