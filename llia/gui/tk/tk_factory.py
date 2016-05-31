@@ -140,8 +140,14 @@ def entry(master, var, ttip=""):
 
 def text_widget(master, ttip=""):
     t = Text(master)
-    #t.config(textvariable=var)
     t.config(background=pallet["BG"])
     t.config(foreground=pallet["FG"])
     tooltip(t, ttip)
+    return t
+
+def read_only_text(master, text):
+    t = Text(master)
+    t.insert(END, text)
+    t.config(background=pallet["BG"])
+    t.config(foreground=pallet["FG"])
     return t

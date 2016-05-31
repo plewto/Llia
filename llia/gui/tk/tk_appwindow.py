@@ -86,18 +86,16 @@ class TkApplicationWindow(AbstractApplicationWindow):
         fmenu.add_command(label="Quit", command = self.exit_app)
 
     def _init_osc_menu(self, iomenu):
-        iomenu.add_command(label="OSC Info", command = self.display_osc_info_dialog)
         iomenu.add_command(label="Ping", command = self.ping_global)
         iomenu.add_command(label="Dump", command = self.app.proxy.dump)
-        iomenu.add_command(label="Enable OSC Trace", command = self.toggle_osc_trace)
+        iomenu.add_command(label="Toggle OSC Trace", command = self.toggle_osc_trace)
 
     def _init_midi_menu(self, mmenu):
         map_menu = self.menu(mmenu)
-        mmenu.add_command(label = "MIDI Info", command= None)
         mmenu.add_command(label = "Channel Names", command = None)
         mmenu.add_command(label = "Controller Names", command = None)
         mmenu.add_cascade(label = "MIDI Maps", menu = map_menu)
-        mmenu.add_command(label = "Enable MIDI Trace", command = None)
+        mmenu.add_command(label = "Toggle MIDI Trace", command = None)
         
     def _init_bus_menu(self, bmenu):
         abus_menu = self.menu(bmenu)
@@ -169,7 +167,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
 
     def show_about_dialog(self):
         from llia.gui.tk.tk_about_dialog import TkAboutDialog
-        dialog = TkAboutDialog(self.root, self)
+        dialog = TkAboutDialog(self.root, self.app)
         self.root.wait_window(dialog)
 
     def show_help_dialog(self, topic=None):
@@ -181,18 +179,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         from llia.gui.tk.tk_history import TkHistoryEditor
         dialog = TkHistoryEditor(self.root, self.app)
         self.root.wait_window(dialog)
-
-    def display_osc_info_dialog(self):
-        config = self.app.config
-        host, port = config['host'], config['port']
-        client, cport = config['client'], config['client_port']
-        acc = "OSC ID: '%s'\n" % config["global-osc-id"]
-        acc += "Host Address   : '%s'\n" % host
-        acc += "Host Port      : %s\n" % port
-        acc += "Client Address : '%s'\n" % client
-        acc += "Client Port    : %s\n" % cport
-        title = "OSC Info"
-        mb = tkMessageBox.showinfo(title, acc)
 
     def ping_global(self):
         rs = self.app.proxy.ping()
@@ -208,3 +194,5 @@ class TkApplicationWindow(AbstractApplicationWindow):
         else:
             self.status("OSC transmission trace disabled")
     
+  
+        

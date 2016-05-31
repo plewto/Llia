@@ -100,19 +100,16 @@ class TkSplashWindow(Toplevel):
         padding = Frame(south)
         padding.grid(row=0, column=7, ipadx=36)
         padding.configure(background=factory.pallet["BG"])
-        b_help = factory.help_button(south)
-        b_about = factory.button(south, "About")
         b_restore = factory.button(south, "Restore",
                                    command=restore_defaults,
                                    ttip="Restore default values")
         b_continue = factory.button(south, "Accept",
                                     command = self.accept,
                                     ttip="Accept values and move on")
-        b_help.grid(row=1, column=8, sticky="EW", pady=2)
-        b_restore.grid(row=2, column=8, sticky="EW", pady=2)
-        b_continue.grid(row=3, column=8, sticky="EW", pady=2)
-        b_about.grid(row=4, column=8, sticky="EW", pady=2)
-
+        row = port_count + 6
+        b_restore.grid(row=row, column=1, sticky="EW", pady=16)
+        b_continue.grid(row=row, column=5, sticky="EW", pady=16)
+        
         self.lab_warning = factory.warning_label(south)
         self.lab_warning.grid(row=6, column=7, sticky="EW",columnspan=2, rowspan=4)
         

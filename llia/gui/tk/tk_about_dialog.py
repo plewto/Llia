@@ -16,7 +16,13 @@ class TkAboutDialog(Toplevel):
 
     def __init__(self, root, app):
         Toplevel.__init__(self, root)
-        self.app = app
+        config = app.config
+        id_ = config["global-osc-id"]
+        host, port = config['host'], config['port']
+        client, cport = config['client'], config['client_port']
+        midi_receiver = app.midi_receiver.port_name()
+        midi_transmitter = "n/a" # FIX ME
+        
         main = VFrame(self)
         main.pack(anchor="nw", expand=True, fill=BOTH)
         image = Image.open("resources/logos/llia_logo_medium.png")
@@ -26,10 +32,15 @@ class TkAboutDialog(Toplevel):
         main.add(lab_logo)
         south = Frame(main, background=factory.pallet["BG"])
         main.add(south)
-        lab_version = factory.label(south, "LLia Version %s" % (VERSION,))
-        lab_copyright = factory.label(south, "(c) 2016 Steven Jones")
-        lab_version.pack()
-        lab_copyright.pack()
+        acc = "Llia Version %s.%s.%s \n" % VERSION[0:3]
+        acc += "(c) 2016 Steven Jones\n\n"
+        acc += "OSC ID      : %s\n" % id_
+        acc += "OSC Host    : %-12s port : %s\n" % (host, port)
+        acc += "OSC client  : %-12s port  : %s\n\n" % (client, cport)
+        acc += "MIDI Receiver    : %s\n" % midi_receiver
+        acc += "MIDI Transmitter : %s\n" % midi_transmitter
+        tx = factory.read_only_text(south, acc)
+        tx.pack(pady=32)
         self.grab_set()
         self.mainloop()
         #root.wait_window(self)
