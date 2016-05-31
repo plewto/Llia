@@ -12,6 +12,7 @@ class TkChannelNameEditor(Toplevel):
     def __init__(self, master, app):
         Toplevel.__init__(self, master)
         self.config = app.config
+        self.mw_title = "MIDI Channels"
         main = Frame(self)
         main.pack(expand=True, fill=BOTH)
         self.vars = []

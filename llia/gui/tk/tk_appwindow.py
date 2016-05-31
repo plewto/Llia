@@ -93,7 +93,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def _init_midi_menu(self, mmenu):
         map_menu = self.menu(mmenu)
         mmenu.add_command(label = "Channel Names", command = self.show_channel_name_dialog)
-        mmenu.add_command(label = "Controller Names", command = None)
+        mmenu.add_command(label = "Controller Names", command = self.show_controller_name_dialog)
         mmenu.add_cascade(label = "MIDI Maps", menu = map_menu)
         mmenu.add_command(label = "Toggle MIDI Trace", command = None)
         
@@ -199,4 +199,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkChannelNameEditor(self.root, self.app)
         self.root.wait_window(dialog)
   
-            
+    def show_controller_name_dialog(self):
+        from llia.gui.tk.tk_controller_name_editor import TkControllerNameEditor
+        dialog = TkControllerNameEditor(self.root, self.app)
+        self.root.wait_window(dialog)
+    

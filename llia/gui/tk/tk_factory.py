@@ -82,8 +82,8 @@ def clear_button(master, command=None, ttip=""):
     b = button(master, 'X', command, ttip)
     return b
 
-def help_button(master):
-    b = button(master, "?")
+def help_button(master, command=None):
+    b = button(master, "?", command=command)
     return b
 
 def radio(master, text, var, value, ttip=""):
@@ -101,6 +101,7 @@ def radio(master, text, var, value, ttip=""):
 
 def listbox(master, command=None, ttip=""):
     lbx = Listbox(master)
+    lbx.config(selectmode="SINGLE", exportselection=0)
     # lbx.config(background=pallet["BG"])
     # lbx.config(foreground=pallet["FG"])
     if command:
