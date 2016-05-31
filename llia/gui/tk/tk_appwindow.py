@@ -18,7 +18,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def __init__(self, app):
         self.root = Tk()
         self.root.title("Llia")
-        self.root.configure(background=factory.pallet["BG"])
+        #self.root.configure(background=factory.pallet["BG"])
         super(TkApplicationWindow, self).__init__(app, self.root)
         self.root.withdraw()
         if app.config["enable-splash"]:
@@ -48,8 +48,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
     @staticmethod
     def menu(master):
         m = Menu(master, tearoff=0)
-        m.configure(background=factory.pallet["BG"])
-        m.configure(foreground=factory.pallet["FG"])
+        #m.configure(background=factory.pallet["BG"])
+        #m.configure(foreground=factory.pallet["FG"])
         return m
     
     def _init_menu(self):
@@ -92,7 +92,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
 
     def _init_midi_menu(self, mmenu):
         map_menu = self.menu(mmenu)
-        mmenu.add_command(label = "Channel Names", command = None)
+        mmenu.add_command(label = "Channel Names", command = self.show_channel_name_dialog)
         mmenu.add_command(label = "Controller Names", command = None)
         mmenu.add_cascade(label = "MIDI Maps", menu = map_menu)
         mmenu.add_command(label = "Toggle MIDI Trace", command = None)
@@ -193,6 +193,10 @@ class TkApplicationWindow(AbstractApplicationWindow):
             self.status("OSC transmission trace enabled")
         else:
             self.status("OSC transmission trace disabled")
-    
+
+    def show_channel_name_dialog(self):
+        from llia.gui.tk.tk_channel_name_editor import TkChannelNameEditor
+        dialog = TkChannelNameEditor(self.root, self.app)
+        self.root.wait_window(dialog)
   
-        
+            

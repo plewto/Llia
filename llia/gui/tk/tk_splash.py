@@ -8,7 +8,7 @@ import ttk
 from PIL import Image, ImageTk
 from llia.gui.tk.tk_layout import VFrame
 import llia.gui.tk.tk_factory as factory
-import llia.gui.tk.pallet as pallet
+#import llia.gui.tk.pallet as pallet
 
 class TkSplashWindow(Toplevel):
 
@@ -22,9 +22,10 @@ class TkSplashWindow(Toplevel):
         image = Image.open("resources/logos/llia_logo_medium.png")
         photo = ImageTk.PhotoImage(image)
         lab_logo = Label(main, image=photo)
-        lab_logo.configure(background=factory.pallet["BG"])
+        #lab_logo.configure(background=factory.pallet["BG"])
         main.add(lab_logo)
-        south = Frame(main, background=factory.pallet["BG"])
+        #south = Frame(main, background=factory.pallet["BG"])
+        south = Frame(main)
         main.add(south)
         self._build_south_panel(south)
         root.wait_window(self)
@@ -66,7 +67,7 @@ class TkSplashWindow(Toplevel):
         e_client_port = factory.entry(south, self.var_client_port)
         padding = Frame(south)
         padding.grid(row=0, column=0, ipadx=8, ipady=8)
-        padding.configure(background=factory.pallet["BG"])
+        #padding.configure(background=factory.pallet["BG"])
         e_id.grid(row=1, column=1, columnspan=2)
         e_host.grid(row=2, column=1, columnspan=2)
         e_port.grid(row=2, column=5, columnspan=2)
@@ -83,7 +84,7 @@ class TkSplashWindow(Toplevel):
         lab_midi_output = factory.label(south, "MIDI Output")
         padding = Frame(south)
         padding.grid(row=4, column=3, ipadx=8, ipady=8)
-        padding.configure(background=factory.pallet["BG"])
+        #padding.configure(background=factory.pallet["BG"])
         lab_id.grid(row=1, column=0, columnspan=1, ipadx=8, ipady=8)
         lab_host.grid(row=2, column=0, columnspan=1)
         lab_host_port.grid(row=3, column=4, columnspan=1, ipadx=4)
@@ -99,7 +100,7 @@ class TkSplashWindow(Toplevel):
             rb.grid(row=n+6, column=5, sticky="W")
         padding = Frame(south)
         padding.grid(row=0, column=7, ipadx=36)
-        padding.configure(background=factory.pallet["BG"])
+        #padding.configure(background=factory.pallet["BG"])
         b_restore = factory.button(south, "Restore",
                                    command=restore_defaults,
                                    ttip="Restore default values")

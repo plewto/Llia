@@ -11,10 +11,10 @@ from PIL import Image, ImageTk
 
 from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
-from llia.gui.tk.pallet import Pallet
+# from llia.gui.tk.pallet import Pallet
 
 
-pallet = Pallet()
+# pallet = Pallet()
 
 # BIG_FONT = Font(family="Courier", size=30)
 # WARNING_FONT = Font(family="Courier", size=12)
@@ -37,8 +37,8 @@ def tooltip(widget, text):
 def label(master, text, var=None):
     w = Label(master, text=text)
     w.config(justify=LEFT)
-    w.configure(background=pallet["BG"])
-    w.configure(foreground=pallet["FG"])
+    # w.configure(background=pallet["BG"])
+    # w.configure(foreground=pallet["FG"])
     if var:
         w.config(textvariable=var)
     return w
@@ -55,7 +55,7 @@ def center_label(master, text):
 
 def warning_label(master, text="", var=None):
     w = label(master, text, var)
-    w.config(foreground=pallet["WARNING-FG"])
+    # w.config(foreground=pallet["WARNING-FG"])
     return w
 
 
@@ -73,8 +73,8 @@ def button(master, text, command=None, ttip=""):
     b = Button(master, text=text)
     if command:
         b.config(command=command)
-    b.configure(background=pallet["BUTTON-BG"])
-    b.configure(foreground=pallet["FG"])
+    # b.configure(background=pallet["BUTTON-BG"])
+    # b.configure(foreground=pallet["FG"])
     tooltip(b, ttip)
     return b
 
@@ -88,10 +88,10 @@ def help_button(master):
 
 def radio(master, text, var, value, ttip=""):
     rb = Radiobutton(master, text=text, variable=var, value=value)
-    rb.configure(background=pallet["BG"])
-    rb.configure(foreground=pallet["FG"])
-    rb.configure(highlightbackground=pallet["BG"])
-    rb.configure(selectcolor=pallet["RADIO-SELECT"])
+    # rb.configure(background=pallet["BG"])
+    # rb.configure(foreground=pallet["FG"])
+    # rb.configure(highlightbackground=pallet["BG"])
+    # rb.configure(selectcolor=pallet["RADIO-SELECT"])
     tooltip(rb, ttip)
     return rb
 
@@ -101,8 +101,8 @@ def radio(master, text, var, value, ttip=""):
 
 def listbox(master, command=None, ttip=""):
     lbx = Listbox(master)
-    lbx.config(background=pallet["BG"])
-    lbx.config(foreground=pallet["FG"])
+    # lbx.config(background=pallet["BG"])
+    # lbx.config(foreground=pallet["FG"])
     if command:
         lbx.bind("<<ListboxSelect>>", command)
     tooltip(lbx, ttip)
@@ -123,8 +123,8 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
         yclient.config(yscrollcommand=sb.set)
         sb.config(command = yclient.yview)
     #print("DEBUG scrollbar config keys -> ", sb.config().keys())
-    sb.config(background=pallet["BG"])
-    sb.config(highlightbackground="red")
+    #sb.config(background=pallet["BG"])
+    #sb.config(highlightbackground="red")
     return sb
 
 #  ---------------------------------------------------------------------- 
@@ -133,21 +133,21 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
 def entry(master, var, ttip=""):
     t = Entry(master)
     t.configure(textvariable=var)
-    t.configure(background=pallet["BG"])
-    t.configure(foreground=pallet["FG"])
+    # t.configure(background=pallet["BG"])
+    # t.configure(foreground=pallet["FG"])
     tooltip(t, ttip)
     return t
 
 def text_widget(master, ttip=""):
     t = Text(master)
-    t.config(background=pallet["BG"])
-    t.config(foreground=pallet["FG"])
+    # t.config(background=pallet["BG"])
+    # t.config(foreground=pallet["FG"])
     tooltip(t, ttip)
     return t
 
 def read_only_text(master, text):
     t = Text(master)
     t.insert(END, text)
-    t.config(background=pallet["BG"])
-    t.config(foreground=pallet["FG"])
+    # t.config(background=pallet["BG"])
+    # t.config(foreground=pallet["FG"])
     return t

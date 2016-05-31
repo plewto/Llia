@@ -10,12 +10,12 @@ from PIL import Image, ImageTk
 from llia.constants import *
 from llia.gui.tk.tk_layout import VFrame
 import llia.gui.tk.tk_factory as factory
-import llia.gui.tk.pallet as pallet
+#import llia.gui.tk.pallet as pallet
 
 class TkAboutDialog(Toplevel):
 
-    def __init__(self, root, app):
-        Toplevel.__init__(self, root)
+    def __init__(self, master, app):
+        Toplevel.__init__(self, master)
         config = app.config
         id_ = config["global-osc-id"]
         host, port = config['host'], config['port']
@@ -28,9 +28,10 @@ class TkAboutDialog(Toplevel):
         image = Image.open("resources/logos/llia_logo_medium.png")
         photo = ImageTk.PhotoImage(image)
         lab_logo = Label(main, image=photo)
-        lab_logo.configure(background=factory.pallet["BG"])
+        #lab_logo.configure(background=factory.pallet["BG"])
         main.add(lab_logo)
-        south = Frame(main, background=factory.pallet["BG"])
+        #south = Frame(main, background=factory.pallet["BG"])
+        south = Frame(main)
         main.add(south)
         acc = "Llia Version %s.%s.%s \n" % VERSION[0:3]
         acc += "(c) 2016 Steven Jones\n\n"
@@ -44,3 +45,4 @@ class TkAboutDialog(Toplevel):
         self.grab_set()
         self.mainloop()
         #root.wait_window(self)
+        

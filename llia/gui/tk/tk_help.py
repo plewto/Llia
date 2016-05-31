@@ -33,7 +33,7 @@ class TkHelpDialog(Toplevel):
 
         # Help Text Area
         east = Frame(main)
-        east.config(background=factory.pallet["BG"])
+        #east.config(background=factory.pallet["BG"])
         main.add(east)
         text_widget = factory.text_widget(east)
         self.text_widget = text_widget
