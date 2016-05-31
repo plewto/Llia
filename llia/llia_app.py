@@ -20,9 +20,10 @@ class LliaApp(object):
         self.config = config
         self.proxy = LliaProxy(config, self)
         self._main_window = create_application_window(self)
-        midi_in_trace = config.trace_midi_reception_enabled()
+        self.midi_in_trace = config.trace_midi_reception_enabled()
         midi_in_port = config["midi-receiver-name"]
-        self.midi_receiver = get_midi_receiver(midi_in_port,midi_in_trace)
+        self.midi_receiver = get_midi_receiver(midi_in_port,
+                                               self.midi_in_trace)
         self.keytables = KeyTableRegistry()
         self._repl_thread = None
         self.ls_parser = lliascript_parser(self)

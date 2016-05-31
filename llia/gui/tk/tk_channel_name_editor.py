@@ -33,7 +33,7 @@ class TkChannelNameEditor(Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.accept)
         self.grab_set()
         self.mainloop()
-            
+    
     def accept(self):
         for i in range(16):
             channel = i+1

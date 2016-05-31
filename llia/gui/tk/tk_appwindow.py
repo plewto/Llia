@@ -95,7 +95,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         mmenu.add_command(label = "Channel Names", command = self.show_channel_name_dialog)
         mmenu.add_command(label = "Controller Names", command = self.show_controller_name_dialog)
         mmenu.add_cascade(label = "MIDI Maps", menu = map_menu)
-        mmenu.add_command(label = "Toggle MIDI Trace", command = None)
+        mmenu.add_command(label = "Toggle MIDI Input Trace", command = self.toggle_midi_input_trace)
+        mmenu.add_command(label = "Toggle MIDI Output Trace", command = self.toggle_midi_output_trace)
         
     def _init_bus_menu(self, bmenu):
         abus_menu = self.menu(bmenu)
@@ -204,3 +205,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkControllerNameEditor(self.root, self.app)
         self.root.wait_window(dialog)
     
+    def toggle_midi_input_trace(self):
+        flag = not self.app.midi_in_trace
+        self.app.midi_in_trace = flag
+        self.app.midi_receiver.enable_trace(flag)
+        if flag:
+            self.status("MIDI input trace enabled")
+        else:
+            self.status("MIDI output trace disabled")
+
+    def toggle_midi_output_trace(self):
+        self.status("MIDI output not available") # FIX ME
