@@ -205,7 +205,14 @@ class ChannelAssignments(object):
         for i in range(1, 17):
             self._rvs_map[str(i)] = i
         
-
+    def _forget(self, chan0):
+        try:
+            old_name = self._channel_names[chan0]
+            self._channel_names[chan0] = ""
+            del self._rvs_map[old_name]
+        except (KeyError, IndexError):
+            pass
+            
     def __setitem__(self, channel, name):
         """
         Assign name to MIDI channel.
@@ -217,6 +224,7 @@ class ChannelAssignments(object):
         """
         try:
             chan0 = channel-1
+            self._forget(chan0)
             self._channel_names[chan0] = str(name)
             self._rvs_map[name] = channel
         except (TypeError, IndexError):

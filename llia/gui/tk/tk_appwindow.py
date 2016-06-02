@@ -33,14 +33,13 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._help_dialog = TkHelpDialog(self.root)
         self._help_dialog.withdraw()
         
-        
     def _init_status_panel(self):
         south = self._main.south
         south.configure(padx=4, pady=4)
         self._lab_status = factory.label(south, "")
         b_panic = factory.button(south, "PANIC")
         ttip = "Clear status line"
-        b_clear_status = factory.clear_button(south,self.clear_status,ttip)
+        b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
         b_panic.grid(row=0, column=0, sticky="w")
         b_clear_status.grid(row=0, column=1, sticky="w")
         self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8) 
@@ -99,16 +98,18 @@ class TkApplicationWindow(AbstractApplicationWindow):
         mmenu.add_command(label = "Toggle MIDI Output Trace", command = self.toggle_midi_output_trace)
         
     def _init_bus_menu(self, bmenu):
-        abus_menu = self.menu(bmenu)
-        cbus_menu = self.menu(bmenu)
-        bmenu.add_cascade(label="Audio", menu = abus_menu)
-        bmenu.add_cascade(label="Control", menu = cbus_menu)
-        abus_menu.add_command(label="View Audio Buses", command = None)
-        abus_menu.add_command(label="Add Audio Bus", command = None)
-        abus_menu.add_command(label="Remove Audio Bus", command = None)
-        cbus_menu.add_command(label="View Control Busses", command = None)
-        cbus_menu.add_command(label="Add Control Bus", command = None)
-        cbus_menu.add_command(label="Remove Control Bus", command = None)
+        # abus_menu = self.menu(bmenu)
+        # cbus_menu = self.menu(bmenu)
+        # bmenu.add_cascade(label="Audio", menu = abus_menu)
+        # bmenu.add_cascade(label="Control", menu = cbus_menu)
+        # abus_menu.add_command(label="View Audio Buses", command = None)
+        # abus_menu.add_command(label="Add Audio Bus", command = None)
+        # abus_menu.add_command(label="Remove Audio Bus", command = None)
+        # cbus_menu.add_command(label="View Control Busses", command = None)
+        # cbus_menu.add_command(label="Add Control Bus", command = None)
+        # cbus_menu.add_command(label="Remove Control Bus", command = None)
+        bmenu.add_command(label="Audio", command=self.show_audiobus_dialog)
+        bmenu.add_command(label="Control", command=self.show_controlbus_dialog)
         
     def _init_buffer_menu(self, bmenu):
         bmenu.add_command(label="View Buffers", command = None)
@@ -216,3 +217,12 @@ class TkApplicationWindow(AbstractApplicationWindow):
 
     def toggle_midi_output_trace(self):
         self.status("MIDI output not available") # FIX ME
+
+
+    def show_audiobus_dialog(self):
+        from llia.gui.tk.tk_audiobus_editor import TkAudiobusEditor
+        dialog = TkAudiobusEditor(self.root, self.app)
+        self.root.wait_window(dialog)
+
+    def show_controlbus_dialog(self):
+        pass

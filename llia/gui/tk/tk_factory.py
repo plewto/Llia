@@ -48,15 +48,25 @@ def center_label(master, text):
     w.config(justify=CENTER)
     return w
 
+def dialog_title_label(master, text):
+    w = label(master, text)
+    return w
+
+def warning_label(master, text=" ", var=None):
+    w = label(master, text, var)
+    # w.config(foreground=pallet["WARNING-FG"])
+    return w
+
+def padding_label(master, n=4):
+    w = Label(master, text = ' '*4)
+    return w
+
 # def big_label(master, text, var=None):
 #     w = label(master, text, var)
 #     w.config(font=BIG_FONT)
 #     return w
 
-def warning_label(master, text="", var=None):
-    w = label(master, text, var)
-    # w.config(foreground=pallet["WARNING-FG"])
-    return w
+
 
 
 # def image_label(master, filename):
@@ -78,12 +88,32 @@ def button(master, text, command=None, ttip=""):
     tooltip(b, ttip)
     return b
 
-def clear_button(master, command=None, ttip=""):
-    b = button(master, 'X', command, ttip)
+def clear_button(master, text = "X", command=None, ttip=""):
+    b = button(master, text, command, ttip)
     return b
 
-def help_button(master, command=None):
-    b = button(master, "?", command=command)
+def help_button(master, text="?", command=None):
+    b = button(master, text, command=command)
+    return b
+
+def accept_button(master, text="OK", command=None, ttip=""):
+    b = button(master, text, command, ttip)
+    return b
+
+def cancel_button(master, text="Cancel", command=None, ttip=""):
+    b = button(master, "Cancel", command, ttip)
+    return b
+
+def remove_button(master, text='[-]', command=None, ttip=""):
+    b = button(master, text, command, ttip)
+    return b
+
+def add_button(master, text = '[+]', command=None, ttip=""):
+    b = button(master, text, command, ttip)
+    return b
+
+def refresh_button(master, text="()", command=None, ttip="Refresh"):
+    b = button(master, text, command, ttip)
     return b
 
 def radio(master, text, var, value, ttip=""):
@@ -127,6 +157,16 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
     #sb.config(background=pallet["BG"])
     #sb.config(highlightbackground="red")
     return sb
+
+
+#  ---------------------------------------------------------------------- 
+#                                   Spinbox
+
+def int_spinbox(master, textvar, from_, to, ttip=""):
+    sb = Spinbox(master, from_=int(from_), to=int(to), textvariable=textvar)
+    tooltip(sb, ttip)
+    return sb
+
 
 #  ---------------------------------------------------------------------- 
 #                                    Text

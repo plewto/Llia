@@ -145,8 +145,8 @@
 no-repl : False
 
 [MIDI]
-input-port : Launchkey Mini 24:0
-output-port : Launchkey Mini 24:0
+input-port : Launchkey Mini 28:0
+output-port : Launchkey Mini 28:0
 backend : mido.backends.rtmidi
 enable-program-pp : False
 autogen-program-slot : 0  # <DEPRECIATED>

@@ -2,7 +2,7 @@
 # 2016.05.30
 
 from __future__ import print_function
-from Tkinter import Toplevel, Label, BOTH, Frame, StringVar, NS, N, END, W
+from Tkinter import Toplevel, Label, BOTH, Frame, StringVar, NS, N, END, W, EW, LEFT, RIGHT
 import ttk
 
 import llia.gui.tk.tk_factory as factory
@@ -16,41 +16,58 @@ class TkControllerNameEditor(Toplevel):
         self.app = app
         self.config = app.config
         self._current_controller=0
-        self.protocol("WM_DELETE_WINDOW", self.accept)
+        self._save_backup()
         main = Frame(self)
         main.pack(expand=True)
         main.pack_propagate(False)
         lab_title = factory.label(main, "MIDI Controller Names")
         self.lab_warning = factory.warning_label(main, "")
-        list_frame = Frame(main, width=248, height=320)
-        list_frame.pack_propagate(False)
-        self.listbox = factory.listbox(list_frame, command=self.select_controller)
+        frame_list = Frame(main, width=248, height=320)
+        frame_list.pack_propagate(False)
+        self.listbox = factory.listbox(frame_list, command=self.select_controller)
         self.listbox.pack(expand=True, fill=BOTH)
         sb = factory.scrollbar(main, yclient=self.listbox)
         self.sync_list()
         self.var_name = StringVar()
         entry_name = factory.entry(main, self.var_name)
-        b_help = factory.help_button(main, command = self.show_help)
-        b_accept = factory.button(main, "Accept",command=self.accept)
+        button_bar = Frame(main)
+        b_accept = factory.accept_button(button_bar, command=self.accept)
+        b_cancel = factory.cancel_button(button_bar, command=self.cancel)
+        b_help = factory.help_button(button_bar, command = self.show_help)
+
         lab_title.grid(row=0, column=0, columnspan=4, pady=8)
-        list_frame.grid(row=1, column=0, rowspan=6, columnspan=4, sticky=N)
+        frame_list.grid(row=1, column=0, rowspan=6, columnspan=4, sticky=N)
         sb.grid(row=1, column=4, rowspan=6, sticky=NS)
         entry_name.grid(row=7, column=0, columnspan=1, sticky=W, padx=4, pady=8)
         self.lab_warning.grid(row=8, column=0, columnspan=5, sticky=W)
-        b_accept.grid(row=9, column=0, columnspan=4, pady=8)
-        b_help.grid(row=9, column=2, padx=4)
-        
+        button_bar.grid(row=9, column=0, columnspan=5, sticky=EW)
+        b_accept.pack(side=LEFT)
+        b_cancel.pack(side=LEFT)
+        b_help.pack(side=RIGHT)
         entry_name.bind('<Return>', self.update_current)
         entry_name.bind('<Down>', self.increment_selection)
         entry_name.bind('<Up>', self.decrement_selection)
         self.listbox.bind('<Down>', self.increment_selection)
         self.listbox.bind('<Up>', self.decrement_selection)
+        self.protocol("WM_DELETE_WINDOW", None)
+        self.grab_set()
+        self.mainloop()
+
+    def _save_backup(self):
+        acc = []
+        for i in range(128):
+            name = self.config.controller_name(i)
+            acc.append(name)
+        self._backup = acc
+            
+        
+    def status(self, msg):
+        self.app.main_window().status(msg)
         
     def duplicate_name_warning(self, name):
         if name:
             msg = "DUPLICATE NAME WARNING: %s" % name
             self.lab_warning.config(text=msg)
-        
         
     def sync_list(self):
         names = {}
@@ -99,8 +116,14 @@ class TkControllerNameEditor(Toplevel):
         for i in range(128):
             name = self.listbox.get(i)[5:].strip()
             self.config.controller_name(i, name)
+        self.status("MIDI controller names updated.")
         self.destroy()
             
-
+    def cancel(self):
+        self.status("MIDI controller names restored.")
+        for i,name in enumerate(self._backup):
+            self.config.controller_name(i, name)
+        self.destroy()
+        
     def show_help(self):
         self.app.main_window().show_help_dialog("controller_name")

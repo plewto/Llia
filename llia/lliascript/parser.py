@@ -86,6 +86,7 @@ class Parser(object):
             ns["trace_osc"] = self.trace_osc
             ns["what_is"] = self.what_is_interactive
             ns["exit"] = self.exit_
+            ns["test"] = self.test
         
     def repl(self):
         print(BANNER)
@@ -191,7 +192,22 @@ class Parser(object):
             return 0 <= ctrl <= 127
         except ValueError:
             return self.config.controller_assignments.controller_defined(name)
-    
+
+    # Removes name from parser entities only.
+    # Does not actually remove underlying object.
+    #
+    def forget(self, name):
+        try:
+            del self.entities[name]
+        except KeyError:
+            pass
+
+    def test(self):
+        print("DEBUG parser entities")
+        for k in sorted(self.entities.keys()):
+            print("   '%s'" % k)
+        
+        
     def what_is(self, name):
         ent = self.entities.get(name, None)
         if ent:
@@ -246,16 +262,30 @@ class Parser(object):
         else:
             return lstype == "cbus"
 
-    def channel_name(self, n, name=None):
-        try:
-            name = self.config.channel_name(n, name)
-            print(name)
-            return name
-        except IndexError as err:
-            self._append_history(err.message)
-            print(err.message)
-            return False
-
+    def _set_channel_name(self, channel, new_name):
+        new_name.replace(' ','_')
+        stype = self.what_is(new_name)
+        if not stype:
+            self.config.channel_name(channel, new_name)
+        elif stype == "channel":
+            old_chan = self.config.channel_number(new_name)
+            if old_chan == channel:
+                pass
+            else:
+                msg = "Channel '%s' already in use" % new_name
+                raise ValueError(msg)
+        else:
+            msg = "Can not resuse %s '%s' as MIDI channel name"
+            msg = msg % (stype, new_name)
+            raise ValueError(msg)
+    
+    def channel_name(self, n, new_name=None, silent=False):
+        if new_name != None:
+            self._set_channel_name(n, new_name)
+        cname = self.config.channel_name(n)
+        if not silent: print(cname)
+        return cname
+    
     def controller_name(self, ctrl, name=None):
         try:
             name = self.config.controller_name(ctrl, name)
@@ -357,9 +387,11 @@ class Parser(object):
         lstype = self.what_is(name)
         if lstype == "abus":
             self.proxy.remove_audio_bus(name)
+            self.forget(name)
             print("Removed audio bus: '%s'" % name)
         elif lstype == "cbus":
             self.proxy.remove_control_bus(name)
+            self.forget(name)
             print("Removed control bus: '%s'" % name)
         else:
             raise NoSuchBusError(name)

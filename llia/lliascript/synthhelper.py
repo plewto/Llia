@@ -394,6 +394,7 @@ class SynthHelper(object):
         self.get_synth(sid)
         stype, id_ = self.parse_sid(sid)
         self.proxy.free_synth(stype, id_)
+        self.parser.forget(sid)
         self.status("Removed synth: '%s'" % sid)
         return True
         

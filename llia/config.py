@@ -248,6 +248,9 @@ class LliaConfig(dict):
             self.channel_assignments[channel] = name
         return self.channel_assignments[channel]
 
+    def channel_number(self, name):
+        return self.channel_assignments.get_channel(name)
+    
     def reset_channel_names(self):
         for c in range(1, 17):
             self.channel_name(c, "")

@@ -109,6 +109,7 @@ class BufferHelper(object):
     def remove_buffer(self, name):
         if self.what_is(name) == "buffer":
             self.proxy.remove_buffer(name)
+            self.parser.forget(name)
             self.status("Removed buffer: '%s'" % name)
             return True
         else:

@@ -104,9 +104,9 @@ class TkSplashWindow(Toplevel):
         b_restore = factory.button(south, "Restore",
                                    command=restore_defaults,
                                    ttip="Restore default values")
-        b_continue = factory.button(south, "Accept",
-                                    command = self.accept,
-                                    ttip="Accept values and move on")
+        b_continue = factory.accept_button(south, "Continue", 
+                                           command = self.accept,
+                                           ttip="Accept values and move on")
         row = port_count + 6
         b_restore.grid(row=row, column=1, sticky="EW", pady=16)
         b_continue.grid(row=row, column=5, sticky="EW", pady=16)

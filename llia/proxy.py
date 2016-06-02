@@ -353,9 +353,22 @@ class LliaProxy(object):
             self._send("free-buffer", [bname])
         else:
             raise NoSuchBufferError(bname)
-        
+
+    def audio_bus_keys(self):
+        return sorted(self._audio_buses.keys())
+
+    # Returns tuple (name, busnum, chancount)
+    def audio_bus_info(self, bname):
+        try:
+            bi = self._audio_buses[bname]
+            return bi
+        except KeyError:
+            msg = "Audio bus '%s' does not exists" % bname
+            self.warning(msg)
+            return ("", -1, 0)
+    
     def list_audio_buses(self):
-        keys = sorted(self._audio_buses.keys())
+        keys = self.audio_bus_keys()
         print("Audio buses:")
         for k in keys:
             print("    ", k)
