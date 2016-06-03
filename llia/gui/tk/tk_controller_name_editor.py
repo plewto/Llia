@@ -15,6 +15,7 @@ class TkControllerNameEditor(Toplevel):
         self.wm_title = "MIDI Controllers"
         self.app = app
         self.config = app.config
+        self.parser = app.ls_parser
         self._current_controller=0
         self._save_backup()
         main = Frame(self)
@@ -27,13 +28,14 @@ class TkControllerNameEditor(Toplevel):
         self.listbox = factory.listbox(frame_list, command=self.select_controller)
         self.listbox.pack(expand=True, fill=BOTH)
         sb = factory.scrollbar(main, yclient=self.listbox)
-        self.sync_list()
+        self.refresh()
         self.var_name = StringVar()
         entry_name = factory.entry(main, self.var_name)
         button_bar = Frame(main)
+        b_refresh = factory.refresh_button(button_bar, command=self.refresh)
+        b_help = factory.help_button(button_bar, command = self.show_help)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_cancel = factory.cancel_button(button_bar, command=self.cancel)
-        b_help = factory.help_button(button_bar, command = self.show_help)
 
         lab_title.grid(row=0, column=0, columnspan=4, pady=8)
         frame_list.grid(row=1, column=0, rowspan=6, columnspan=4, sticky=N)
@@ -41,10 +43,12 @@ class TkControllerNameEditor(Toplevel):
         entry_name.grid(row=7, column=0, columnspan=1, sticky=W, padx=4, pady=8)
         self.lab_warning.grid(row=8, column=0, columnspan=5, sticky=W)
         button_bar.grid(row=9, column=0, columnspan=5, sticky=EW)
-        b_accept.pack(side=LEFT)
-        b_cancel.pack(side=LEFT)
-        b_help.pack(side=RIGHT)
-        entry_name.bind('<Return>', self.update_current)
+        b_refresh.pack(side=LEFT)
+        b_help.pack(side=LEFT)
+        factory.padding_label(button_bar).pack(side=LEFT)
+        b_cancel.pack(side=RIGHT)
+        b_accept.pack(side=RIGHT)
+        entry_name.bind('<Return>', self.change_name)
         entry_name.bind('<Down>', self.increment_selection)
         entry_name.bind('<Up>', self.decrement_selection)
         self.listbox.bind('<Down>', self.increment_selection)
@@ -59,25 +63,20 @@ class TkControllerNameEditor(Toplevel):
             name = self.config.controller_name(i)
             acc.append(name)
         self._backup = acc
-            
         
     def status(self, msg):
         self.app.main_window().status(msg)
-        
-    def duplicate_name_warning(self, name):
-        if name:
-            msg = "DUPLICATE NAME WARNING: %s" % name
-            self.lab_warning.config(text=msg)
-        
-    def sync_list(self):
-        names = {}
+
+    def warning(self, msg):
+        self.app.main_window().warning(msg)
+        msg = "WARNING: %s" % msg
+        self.lab_warning.config(text=msg)
+
+    def refresh(self):
         self.listbox.delete(0, END)
         self.lab_warning.config(text="")
         for ctrl in range(128):
             name = self.config.controller_name(ctrl)
-            if names.has_key(name):
-                self.duplicate_name_warning(name)
-            names[name] = True
             if str(name) == str(ctrl):
                 name = ""
             self.listbox.insert(END, "[%3d]  %s" % (ctrl, name))
@@ -101,16 +100,16 @@ class TkControllerNameEditor(Toplevel):
         self.listbox.selection_clear(0, END)
         self.listbox.selection_set(n)
         self.select_controller()
-        
-    def update_current(self, *_):
+
+    def change_name(self, *_):
+        self.lab_warning.config(text="")
         try:
             ctrl = self._current_controller
-            name = self.var_name.get().replace(" ","_")
-            self.config.controller_name(ctrl, name)
-            self.sync_list()
-            self.increment_selection()
-        except IndexError:
-            pass                # Nothing selected
+            name = self.var_name.get().strip().replace(" ","_")
+            self.parser.controller_name(ctrl, name, silent=True)
+            self.refresh()
+        except (IndexError, ValueError) as err:
+            self.warning(err.message)
         
     def accept(self):
         for i in range(128):

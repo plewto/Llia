@@ -41,8 +41,8 @@ class TkChannelNameEditor(Toplevel):
         b_accept.pack(side=RIGHT)
         lab_title.grid(row=0, column=0, columnspan=5, pady=8)
         frame_list.grid(row=1, column=0, rowspan=5, columnspan=6, padx=4, pady=8)
-        self.lab_warning.grid(row=6, column=0, columnspan=6, sticky=W, padx=4, pady=8)
-        entry_name.grid(row=7, column=0, columnspan=5, sticky=W, padx=4, pady=0)
+        entry_name.grid(row=6, column=0, columnspan=5, sticky=W, padx=4, pady=0)
+        self.lab_warning.grid(row=7, column=0, columnspan=6, sticky=W, padx=4, pady=8)
         button_bar.grid(row=8, column=0, columnspan=5, sticky=W+E, padx=4, pady=8)
         self.refresh()
         self.protocol("WM_DELETE_WINDOW", None) # ISSUE: Not Working

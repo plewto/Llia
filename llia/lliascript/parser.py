@@ -31,7 +31,7 @@ class Parser(object):
         self.exit_repl = False
         self._prompt = "Llia> "
         self.entities = {}
-        # ISSUE: Number of hardcoded input and output buses is hard coded.
+        # ISSUE: Number of private input and output buses is hard coded.
         #
         for i in range(8):
             for n in ("out_", "in_"):
@@ -286,15 +286,35 @@ class Parser(object):
         if not silent: print(cname)
         return cname
     
-    def controller_name(self, ctrl, name=None):
-        try:
-            name = self.config.controller_name(ctrl, name)
-            print(name)
-            return name
-        except (IndexError,TypeError) as err:
-            self._append_history(err.message)
-            print(err.message)
-            return False
+    def _set_controller_name(self, ctrl, new_name):
+        stype = self.what_is(new_name)
+        if not stype:
+            self.config.controller_name(ctrl, new_name)
+        elif stype == "controller":
+            old_ctrl = self.config.controller_assignments.get_controller_number(new_name)
+            if old_ctrl == ctrl:
+                pass
+            else:
+                if new_name == '':
+                    self.config.controller_name(ctrl, '')
+                else:
+                    msg = "Controller name '%s' already in use" % new_name
+                    raise ValueError(msg)
+        else:
+            msg = "Can not reuse %s '%s' as MIDI controller name"
+            msg = msg % (stype, new_name)
+            raise ValueError(msg)
+    
+    def controller_name(self, ctrl, new_name=None, silent=False):
+        if 0 <= ctrl <= 127:
+            if new_name != None:
+                self._set_controller_name(ctrl, new_name)
+            cname = self.config.controller_name(ctrl)
+            if not silent: print(cname)
+            return cname
+        else:
+            msg = "Illegal MIDI controller number: %s" % ctrl
+            raise IndexError(msg)
 
     def clear_history(self):
         self._history = ""

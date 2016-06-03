@@ -52,16 +52,24 @@ class LsCommand(object):
             acc = []
             for i in range(16):
                 name = self.config.channel_assignments[i+1]
-                acc.append(name)
-            print(self.config.channel_assignments)
+                try:
+                    int(name)
+                    acc.append('')
+                except ValueError:
+                    acc.append(name)
+                    print("    [%2d] '%s'" % (i+1, name))
             return acc
         elif target == CTRL:
             acc = []
             print("MIDI Controllers:")
             for i in range(128):
                 name = self.config.controller_assignments[i]
-                acc.append(name)
-            print(self.config.controller_assignments)
+                try:
+                    int(name)
+                    acc.append('')
+                except ValueError:
+                    print("    [%3d] '%s'" % (i, name))
+                    acc.append(name)
             return acc
         elif target == STYPE:
             acc = [SYNTH_TYPES, EFFECT_TYPES]
