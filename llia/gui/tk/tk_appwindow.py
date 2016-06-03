@@ -102,18 +102,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         bmenu.add_command(label="Control", command=self.show_controlbus_dialog)
         
     def _init_buffer_menu(self, bmenu):
-        bmenu.add_command(label="View Buffers", command = None)
-        bmenu.add_command(label="Add Buffer", command = None)
-        bmenu.add_command(label="Remov Buffer", command = None)
-        bmenu.add_command(label="Load Sound File", command = None)
-        wt_menu = self.menu(bmenu)
-        bmenu.add_cascade(label = "Wavetables", menu = wt_menu)
-        wt_menu.add_command(label="Load Wavetable", command = None)
-        wt_menu.add_command(label="Create Wavetable", command = None)
-        wt_menu.add_command(label="Create Sine Table", command = None)
-        wt_menu.add_command(label="Create Triangle Table", command = None)
-        wt_menu.add_command(label="Create Sawtooth Table", command = None)
-        wt_menu.add_command(label="Create Pulse Table", command = None)
+        bmenu.add_command(label="View Buffers", command=self.show_bufferlist_dialog)
+        bmenu.add_command(label="Edit Buffers", command = None)
         
     def _init_synth_menu(self, smenu):
         smenu.add_command(label = "Show Synth", command = None)
@@ -208,7 +198,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def toggle_midi_output_trace(self):
         self.status("MIDI output not available") # FIX ME
 
-
     def show_audiobus_dialog(self):
         from llia.gui.tk.tk_audiobus_editor import TkAudiobusEditor
         dialog = TkAudiobusEditor(self.root, self.app)
@@ -219,3 +208,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkControlbusEditor(self.root, self.app)
         self.root.wait_window(dialog)
 
+    def show_bufferlist_dialog(self):
+        from llia.gui.tk.tk_buffer_info import TkBufferListDialog
+        dialog = TkBufferListDialog(self.root, self.app)
+        self.root.wait_window(dialog)
