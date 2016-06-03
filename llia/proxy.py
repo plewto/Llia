@@ -336,6 +336,15 @@ class LliaProxy(object):
         
     def buffer_exists(self, bname):
         return self._buffers.has_key(bname)
+
+    def buffer_info(self, bname):
+        return self._buffers[bname]
+
+    def buffer_keys(self):
+        return sorted(self._buffers.keys())
+
+    def buffer_count(self):
+        return len(self._buffers)
     
     def add_buffer(self, bname, frames=1024, channels=1):
         if self.buffer_exists(bname):

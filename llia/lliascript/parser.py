@@ -48,6 +48,9 @@ class Parser(object):
 
 
     def _init_namespace(self, ns):
+            ns["app"] = self.app
+            ns["config"] = self.config
+            ns["proxy"] = self.proxy
             ns["ABUS"] = ABUS
             ns["CBUS"] = CBUS
             ns["BUFFER"] = BUFFER

@@ -123,7 +123,7 @@ class ProgramBank(list):
         # DOES NOT SAVE UNDO STATE
         if is_bank(other):
             frmt1 = self.template.data_format
-            frmt2 = other.tempalte.data_format
+            frmt2 = other.template.data_format
             if frmt1 == frmt2:
                 self.name = other.name
                 self.remarks = other.remarks
@@ -132,7 +132,7 @@ class ProgramBank(list):
                     list.__setitem__(self, i, clone(p))
                 self.current_slot = other.current_slot
                 self.current_program = clone(other.current_program)
-                self.performance.copy_performance(other.performance)
+                #self.performance.copy_performance(other.performance)
             else:
                 msg = "Can not copy %s bank into %s bank"
                 msg = msg % (frmt2, frmt1)
@@ -143,7 +143,7 @@ class ProgramBank(list):
             raise TypeError(msg)
 
     def create_program(self):
-        df = self.template.data+_format
+        df = self.template.data_format
         ks = self.template.keyset
         prog = Program("Init", df, ks)
         return prog
@@ -253,8 +253,9 @@ class ProgramBank(list):
             self.undostack.pop_undo()
             msg = "Error while reading ProgramBank file '%s'" % filename
             raise IOError(msg)
+        
 
-    def dump(self, tab=0, verbosity=2):
+    def dump(self, tab=0, verbosity=1):
         pad = " "*4*tab
         pad2 = pad + " "*4
         pad3 = pad2 + " "*4

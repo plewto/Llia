@@ -137,10 +137,6 @@ class Composer(object):
                 code += 'assign("%s", "%s", %d, "%s")\n' % (param,bname,offset,sid)
         code += "\n"
         return code
-                    
-        
-                
-                    
-    
 
-                
+    def _build_channel_assignments(self):
+        

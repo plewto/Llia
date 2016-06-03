@@ -4,12 +4,11 @@
 #
 
 from __future__ import print_function
+import os.path
 
 from llia.generic import is_list
 from llia.llerrors import LliascriptError, NoSuchSynthError, NoSuchBufferError
 from llia.lliascript.ls_constants import *
-
-
 
 class SynthHelper(object):
 
@@ -33,6 +32,12 @@ class SynthHelper(object):
         ns["transpose"] = self.transpose
         ns["with_synth"] = self.with_synth
         ns["pmap"] = self.parameter_map
+        ns["program"] = self.use_program
+        ns["bank"] = self.get_bank
+        ns["synth_proxy"] = self.get_synth
+        ns["save_bank"] = self.save_bank
+        ns["init_bank"] = self.init_bank
+        ns["load_bank"] = self.load_bank
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -51,7 +56,7 @@ class SynthHelper(object):
         return self.proxy.synth_exists(None, None, sid)
 
     def get_synth(self, sid=None):
-        if sid == "*":
+        if not sid or sid == "*":
             sid = self.current_sid
         else:
             sid = sid or self.current_sid
@@ -304,7 +309,6 @@ class SynthHelper(object):
         return x
 
     def ping_synth(self, sid=None):
-        if sid == "*": sid = None
         sy = self.get_synth(sid)
         sy.x_ping()
         return True
@@ -374,7 +378,6 @@ class SynthHelper(object):
             raise LliascriptError(msg)
 
     def remove_parameter_map(self, source, param=ALL, sid=None):
-        if sid == "*" : sid = None
         sy = self.get_synth(sid)
         lstype = self.what_is(source)
         if "controller" in lstype:
@@ -399,9 +402,46 @@ class SynthHelper(object):
         return True
         
     def dump_synth(self, sid=None):
-        if sid == "*": sid = None # Force current sid
         sy = self.get_synth(sid)
         sy.x_dump()
         print(sy._bank.current_program.dump(1))
         stype, id_ = self.parse_sid(sid)
         self.proxy.free_synth(stype, id_)
+
+    def use_program(self, slot, sid=None):
+        sy=self.get_synth(sid)
+        sy.use_program(slot)
+        
+    def get_bank(self, sid=None, silent=False):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        if not silent:
+            print("%s bank:" % sy.sid)
+            columns = 4
+            rows = 128/columns
+            for r in range(rows):
+                acc = ""
+                for c in range(columns):
+                    slot = r + c * rows
+                    program = bnk[slot]
+                    name = program.name[:12]
+                    acc += '[%3d] %-12s ' % (slot, name)
+                print(acc)
+        return bnk
+
+    def init_bank(self, sid=None):
+        bnk = self.get_bank(sid, silent=True)
+        bnk.initialize()
+        return bnk
+        
+    def save_bank(self, filename, sid=None):
+        bnk = self.get_bank(sid, silent=True)
+        filename = os.path.expanduser(filename)
+        bnk.save(filename)
+        return filename
+        
+    def load_bank(self, filename, sid=None):
+        bnk = self.get_bank(sid, silent=True)
+        filename = os.path.expanduser(filename)
+        bnk.load(filename)
+        return filename

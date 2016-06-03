@@ -120,6 +120,9 @@ class SynthProxy(object):
             self._midi_chan0 = min(max(c, 0), 15)
         return self._midi_chan0+1
 
+    def bank(self):
+        return self._bank
+    
     def current_program(self):
         return self._bank[None]
 

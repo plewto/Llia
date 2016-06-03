@@ -165,7 +165,7 @@ client-port : 58000
 trace-osc-transmission : False
 
 [GUI]
-gui : Tk
+gui : None
 no-splash : True
 enable-tooltips : True
 warn-on-overwrite : True        ; Not recognized by Tk
