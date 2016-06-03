@@ -357,6 +357,9 @@ class LliaProxy(object):
     def audio_bus_keys(self):
         return sorted(self._audio_buses.keys())
 
+    def audio_bus_count(self):
+        return len(self._audio_buses)
+    
     # Returns tuple (name, busnum, chancount)
     def audio_bus_info(self, bname):
         try:
@@ -380,6 +383,21 @@ class LliaProxy(object):
         for k in keys:
             print("    ", k)
         return keys
+
+    def control_bus_keys(self):
+        return sorted(self._control_buses.keys())
+
+    def control_bus_count(self):
+        return len(self._control_buses)
+    
+    def control_bus_info(self, bname):
+        try:
+            bi = self._control_buses[bname]
+            return bi
+        except KeyError:
+            msg = "Control bus '%s' does not exists" % bname
+            self.warning(msg)
+            return ("", -1, 0)
             
     def list_buffers(self):
         keys = sorted(self._buffers.keys())

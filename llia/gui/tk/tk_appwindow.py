@@ -98,16 +98,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         mmenu.add_command(label = "Toggle MIDI Output Trace", command = self.toggle_midi_output_trace)
         
     def _init_bus_menu(self, bmenu):
-        # abus_menu = self.menu(bmenu)
-        # cbus_menu = self.menu(bmenu)
-        # bmenu.add_cascade(label="Audio", menu = abus_menu)
-        # bmenu.add_cascade(label="Control", menu = cbus_menu)
-        # abus_menu.add_command(label="View Audio Buses", command = None)
-        # abus_menu.add_command(label="Add Audio Bus", command = None)
-        # abus_menu.add_command(label="Remove Audio Bus", command = None)
-        # cbus_menu.add_command(label="View Control Busses", command = None)
-        # cbus_menu.add_command(label="Add Control Bus", command = None)
-        # cbus_menu.add_command(label="Remove Control Bus", command = None)
         bmenu.add_command(label="Audio", command=self.show_audiobus_dialog)
         bmenu.add_command(label="Control", command=self.show_controlbus_dialog)
         
@@ -225,4 +215,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.wait_window(dialog)
 
     def show_controlbus_dialog(self):
-        pass
+        from llia.gui.tk.tk_controlbus_editor import TkControlbusEditor
+        dialog = TkControlbusEditor(self.root, self.app)
+        self.root.wait_window(dialog)
+
