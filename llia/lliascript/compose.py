@@ -13,6 +13,8 @@ class Composer(object):
 
     def build(self):
         code = "from __future__ import print_function\n\n"
+        code += self._build_channel_assignments()
+        code += self._build_controller_assignments()
         code += self._build_audio_buses()
         code += self._build_control_buses()
         code += self._build_buffers()
@@ -100,9 +102,20 @@ class Composer(object):
                 code += '%d, ' % int(e.data["voice-count"])
                 outbus,param,offset = fill_outbus_args(e.data["outbus"])
                 code += '["%s", "%s", %d])\n' % (outbus,param,offset)
+            # Load bank
+            sy = self.parser.synthhelper.get_synth()
+            bnk = sy.bank()
+            fname = bnk.filename
+            if fname:
+                code += 'try:\n'
+                code += '    load_bank("%s")\n' % fname
+                code += 'except Error as err:\n'
+                code += '    print(\'ERROR: can not load bank file "%s"\' % fname)\n'
+                code += '    print(type(err))\n'
+                code += '    print(err.message)\n'
         code += "\n"
         return code
-
+    
     def _build_buffer_assignments(self):
         code = "# Buffer Assignments\n"
         for e in self.parser.entities.values():
@@ -139,4 +152,26 @@ class Composer(object):
         return code
 
     def _build_channel_assignments(self):
-        
+        code = "# MIDI Channel Assignments\n"
+        config = self.parser.config
+        for i in range(16):
+            c = i+1
+            name = config.channel_name(c)
+            try:
+                int(name)
+            except ValueError:
+                code += 'channel_name(%d, "%s")\n' % (c, name)
+        code += "\n"
+        return code
+                
+    def _build_controller_assignments(self):
+        code = "# MIDI Controller Assignments\n"
+        config = self.parser.config
+        for ctrl in range(128):
+            name = config.controller_name(ctrl)
+            try:
+                int(name)
+            except ValueError:
+                code += 'controller_name(%d, "%s")\n' % (ctrl, name)
+        code += "\n"
+        return code

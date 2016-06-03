@@ -440,3 +440,4 @@ class Parser(object):
         rb = Composer(self)
         code = rb.build()
         self._history = code
+        print(code)
