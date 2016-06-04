@@ -103,12 +103,12 @@ class TkApplicationWindow(AbstractApplicationWindow):
         
     def _init_buffer_menu(self, bmenu):
         bmenu.add_command(label="View Buffers", command=self.show_bufferlist_dialog)
-        bmenu.add_command(label="Edit Buffers", command = None)
+        #bmenu.add_command(label="Edit Buffers", command = None)
         
     def _init_synth_menu(self, smenu):
-        smenu.add_command(label = "Show Synth", command = None)
-        smenu.add_command(label = "Hide Synth", command = None)
-        smenu.add_separator()
+        # smenu.add_command(label = "Show Synth", command = None)
+        # smenu.add_command(label = "Hide Synth", command = None)
+        # smenu.add_separator()
         smenu.add_command(label = "Add Synth", command = None)
         smenu.add_command(label = "Add EFX Synth", command = None)
         smenu.add_command(label = "Remove Synth", command = None)

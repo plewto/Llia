@@ -38,6 +38,7 @@ class SynthHelper(object):
         ns["save_bank"] = self.save_bank
         ns["init_bank"] = self.init_bank
         ns["load_bank"] = self.load_bank
+        ns["random"] = self.random_program
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -445,3 +446,12 @@ class SynthHelper(object):
         filename = os.path.expanduser(filename)
         bnk.load(filename)
         return filename
+
+    def random_program(self, use=True, sid=None):
+        sy = self.get_synth(sid)
+        p = sy.random_program()
+        if p and use:
+            sy.bank()[127] = p
+            sy.use_program(127)
+            
+        

@@ -108,6 +108,9 @@ class SynthProxy(object):
             self._keyswitch_transpose = app.config.keyswitch_transpose()
             register_midi_handler("note_on", self._keyswitch_handler, "keyswitch.")
 
+    def status(self, msg):
+        self.app.main_window().status(msg)
+            
     # Free instrument
     # Return bool True if all goes well.
     #
@@ -293,13 +296,6 @@ class SynthProxy(object):
                 slot = min(max(slot, 0), 127)
                 self.use_program(slot)
                 
-    # def dump(self):
-    #     pad = " "*4
-    #     print("SynthProxy: sid = '%s'" % self.sid)
-    #     print("%sMIDI input channel : %2d" % (pad, self.midi_input_channel()))
-    #     print("%sKey table          : %s" % (pad, self._key_table_name))
-    #     self._bank.dump(1)
-
     def dump(self):
         pad = " "*4
         program = self._bank[None]
@@ -310,7 +306,19 @@ class SynthProxy(object):
         acc += program.dump(1)
         return acc
         
-
-              
+    def random_program(self, slot=127, *args):
+        genfn = self.specs["program-generator"]
+        if genfn:
+            args = [slot] + list(args)
+            prog = genfn(*args)
+            return prog
+        else:
+            msg = "No generator defined for %s" % self.specs["format"]
+            self.status(msg)
+            return None
+        
+            
+            
+    
         
             
