@@ -4,20 +4,30 @@
 from __future__ import print_function
 
 from Tkinter import *
-import ttk
+from ttk import *
 from tkFont import Font
 from PIL import Image, ImageTk
 
 
 from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
+
+
 # from llia.gui.tk.pallet import Pallet
-
-
 # pallet = Pallet()
-
 # BIG_FONT = Font(family="Courier", size=30)
 # WARNING_FONT = Font(family="Courier", size=12)
+
+__widget_class_prefix = ""
+
+def set_class_prefix(p):
+    __widget_class_prefix = p
+
+def __widget_class_name(base):
+    if __widget_class_prefix:
+        return "%s.%s" % (__widget_class_prefix, base)
+    else:
+        return base
 
 #  ---------------------------------------------------------------------- 
 #                                   ToolTip
@@ -35,10 +45,9 @@ def tooltip(widget, text):
 #                                   Labels
 
 def label(master, text, var=None):
-    w = Label(master, text=text)
+    cls = __widget_class_name("TLabel")
+    w = Label(master, text=text, class_=cls)
     w.config(justify=LEFT)
-    # w.configure(background=pallet["BG"])
-    # w.configure(foreground=pallet["FG"])
     if var:
         w.config(textvariable=var)
     return w
@@ -80,11 +89,10 @@ def padding_label(master, n=4):
 #                                   Buttons
 
 def button(master, text, command=None, ttip=""):
-    b = Button(master, text=text)
+    cls = __widget_class_name("TButton")
+    b = Button(master, text=text, class_ = cls)
     if command:
         b.config(command=command)
-    # b.configure(background=pallet["BUTTON-BG"])
-    # b.configure(foreground=pallet["FG"])
     tooltip(b, ttip)
     return b
 
@@ -117,23 +125,20 @@ def refresh_button(master, text="()", command=None, ttip="Refresh"):
     return b
 
 def radio(master, text, var, value, ttip=""):
-    rb = Radiobutton(master, text=text, variable=var, value=value)
-    # rb.configure(background=pallet["BG"])
-    # rb.configure(foreground=pallet["FG"])
-    # rb.configure(highlightbackground=pallet["BG"])
-    # rb.configure(selectcolor=pallet["RADIO-SELECT"])
+    cls = __widget_class_name("TRadiobutton")
+    rb = Radiobutton(master, text=text, variable=var, value=value, class_=cls)
     tooltip(rb, ttip)
     return rb
 
 
 #  ---------------------------------------------------------------------- 
 #                                   Listbox
-
+#
+# NOTE: Listbox is not a ttk widget
+#
 def listbox(master, command=None, ttip=""):
     lbx = Listbox(master)
     lbx.config(selectmode="SINGLE", exportselection=0)
-    # lbx.config(background=pallet["BG"])
-    # lbx.config(foreground=pallet["FG"])
     if command:
         lbx.bind("<<ListboxSelect>>", command)
     tooltip(lbx, ttip)
@@ -145,7 +150,11 @@ def listbox(master, command=None, ttip=""):
 #                                  Scrollbar
 
 def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
-    sb = Scrollbar(master)
+    if orientation == VERTICAL:
+        cls = __widget_class_name("Vertical.TScrollbar")
+    else:
+        cls = __widget_class_name("Horizontal.TScrollbar")
+    sb = Scrollbar(master, class_ = cls)
     sb.config(orient=orientation)
     if xclient:
         xclient.config(xscrollcommand=sb.set)
@@ -153,14 +162,13 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
     if yclient:
         yclient.config(yscrollcommand=sb.set)
         sb.config(command = yclient.yview)
-    #print("DEBUG scrollbar config keys -> ", sb.config().keys())
-    #sb.config(background=pallet["BG"])
-    #sb.config(highlightbackground="red")
     return sb
 
 
 #  ---------------------------------------------------------------------- 
 #                                   Spinbox
+#
+# NOTE: Spinbox is not a ttk widget
 
 def int_spinbox(master, textvar, from_, to, ttip=""):
     sb = Spinbox(master, from_=int(from_), to=int(to), textvariable=textvar)
@@ -170,8 +178,11 @@ def int_spinbox(master, textvar, from_, to, ttip=""):
 
 #  ---------------------------------------------------------------------- 
 #                                    Text
+#
+# NOTE: Text is not a ttk widget
 
 def entry(master, var, ttip=""):
+    cls = __widget_class_name("TEntry")
     t = Entry(master)
     t.configure(textvariable=var)
     # t.configure(background=pallet["BG"])
