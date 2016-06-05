@@ -22,8 +22,23 @@ class LliaApp(object):
         self._main_window = create_application_window(self)
         self.midi_in_trace = config.trace_midi_reception_enabled()
         midi_in_port = config["midi-receiver-name"]
-        self.midi_receiver = get_midi_receiver(midi_in_port,
-                                               self.midi_in_trace)
+        try:
+            self.midi_receiver = get_midi_receiver(midi_in_port,
+                                                   self.midi_in_trace)
+        except IOError:
+            msg = "Unknown MIDI port: '%s'\n" % midi_in_port
+            msg += "Use -p command line option to see list of available ports\n"
+            msg += "and then change input-port value in configuration file\n"
+            msg += "accordingly.\n\n"
+
+            msg += "Alternately set no-splash to False in configuration file to\n"
+            msg += "select MIDI port on startup.\n\n"
+            msg += "If on Linux, MIDI port names change with every reboot."
+            print("*"*60)
+            for line in msg.split('\n'):
+                print("** %s" % line)
+            print("*"*60)
+            sys.exit(-1)
         self.keytables = KeyTableRegistry()
         self._repl_thread = None
         self.ls_parser = lliascript_parser(self)

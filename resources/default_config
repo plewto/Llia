@@ -8,145 +8,14 @@
 ;;     Major sections:
 ;;         [GENERAL] [MIDI], [OSC], [GUI], [MIDI-CHANNELS] and [MIDI-CONTROLLERS]
 ;;
-;;    [GENERAL]
-;;
-;;    [MIDI]
-;;    input-port : <port-name>          ; Set MIDI input port.  To see a list
-;;                                      ; of available ports use the command
-;;                                      ; line option --midi_ports.  The
-;;                                      ; input port may also be set by the
-;;                                      ; command line options  -i or --midiin
-;;                                      ; or by environmental variable
-;;                                      ; LLIA_MIDI_IN.
-;;
-;;    output-port : <port-name>         ; Set MIDI output port.  The output 
-;;                                      ; port may also be specified by 
-;;                                      ; command line options -o or --midiout
-;;                                      ; or buy the environmental variable
-;;                                      ; LLIA_MIDI_OUT.  Currently Llia
-;;                                      ; does not use the MIDI output port.
-;;
-;;    backend : <value>                 ; Sets MIDI backend used by the mido
-;;                                      ; package.  <value> must be one of
-;;                                      ; 'mido.backends.rtmidi' or
-;;                                      ; 'mido.backends.portmidi' depending
-;;                                      ; on which is installed.
-;;
-;;    enable-program-pp  : <bool>       ; Enable "pretty-printer" to display
-;;                                      ; program data to the terminal on
-;;                                      ; reception of MIDI program-change
-;;                                      ; events.
-;;
-;;    autogen-program-slot : <n>        ; Sets the program slot number for     **DEPRECIATED**
-;;                                      ; for generating random programs.
-;;                                      ; If a slot number is provided -AND-
-;;                                      ; a patch generator is defined for
-;;                                      ; the specific instrument, a random 
-;;                                      ; program is generated on reception 
-;;                                      ; of a MIDI program change for that
-;;                                      ; slot.  <n> should be an integer
-;;                                      ; between 0 and 127 inclusive.
-;;
-;;    autogen-store-slot : <n>          ; Sets program slot where randomly    **DEPRECIATED**
-;;                                      ; generated programs are to be stored.
-;;
-;;    enable-keyswitch : <bool>         ; Enable keyswitch feature.
-;;                                      ; A keyswitch converts selected
-;;                                      ; note-on events to program change
-;;                                      ; evnets.
-;;
-;;    keyswitch-channel : <n>           ; Sets MIDI chanel for keyswitch
-;;                                      ; reception.
-;;
-;;    keyswitch-transpose : <n>         ; Sets key-number to program-number
-;;                                      ; transpose value.
-;;                                      ; program-number = key-number + n
-;;
-;;    trace-midi-reception : <bool>     ; Enable debug mode to trace MIDI input
-;;
-;;
-;;    [OSC]
-;;
-;;    global-id : <name>                : OSC id used for top-level comunication between
-;;                                      : Llia client and host.
-;;                                      :
-;;    host-address : <address>          : Sets the ip address for the
-;;                                      ; SuperCollider server.
-;;
-;;    host-port : <n>                   ; Sets host port number, default 57120
-;;
-;;    client-address : <address>        ; Sets the ip address for the Llia
-;;                                      ; client.  This is the address the 
-;;                                      ; server uses to communicate back to
-;;                                      ; the client.  Currently the
-;;                                      ; client-address is not used.
-;;
-;;    client-port : <n>                 ; port number of OSC messages
-;;                                      ; clients from the server to the
-;;                                      ; client.  Currently client is
-;;                                      ; not used.
-;;
-;;    trace-osc-transmission : <bool>   ; enable debug OSC output tracing
-;;
-;;
-;;
-;;    [GUI]
-;;    gui : <name>                      ; Selects the GUI system to use.
-;;                                      ; Currently the only valid options
-;;                                      ; are 'Tk' and 'None'
-;;
-;;    enable-tooltips :  <bool>         ; Enable mouse over tooltips.
-;;
-;;    warn-on-overwrite : <bool>        ; If true ask for confirmation before
-;;                                      ; overwriting a file.  TK ignores this
-;;                                      ; flag and will always display an
-;;                                      ; overwrite warning.
-;;
-;;    warn-on-initialize : <bool>       ; If true ask for confirmation before
-;;                                      ; initializing large structures (such
-;;                                      ; as a program bank).
-;;
-;;    warn-on-exit : <bool>             ; If true ask for confirmation before
-;;                                      ; exiting Llia.
-;;
-;;    enable-active-updates : <bool>    ; If true update GUI components in
-;;                                      ; response to MIDI controller changes.
-;;
-;;    enable-midi-edit: <bool>          ; If true -AND- enable-active-updates
-;;                                      ; is also true, MIDI controller events
-;;                                      ; modify the data of the current 
-;;                                      ; program.  All changes are preserved
-;;                                      ; if the current program is stored
-;;                                      ; into the program bank.
-;;
-;;    enable-controller-edit : <bool>   ; If true -AND- enable-active-updates    **DEPRECIATED**
-;;                                      ; is also true, MIDI controller events   ** use enable-midi-edit **
-;;                                      ; modify the data of the current 
-;;                                      ; program.  All changes are preserved
-;;                                      ; if the current program is stored
-;;                                      ; into the program bank.
-;;
-;;     [MIDI-CHANNELS]
-;;     C01 : <name>                     ; Assign names to MIDI channels.
-;;     c02 : <name>
-;;      ..........
-;;      ..........
-;;     C16 : <name>
-;;
-;;     [MIDI-CONTROLLERS]
-;;     ctrl000 : <name>                 ; Assign names to MIDI controllers
-;;     ctrl001 : <name>
-;;      ...........
-;;      ...........
-;;    ctrl127 : <name>
 
 
 [GENERAL]
-no-repl : True
+no-repl : False
 
 [MIDI]
-input-port : Launchkey Mini 28:0
-output-port : Launchkey Mini 28:0
+input-port : Launchkey Mini 24:2
+output-port : Launchkey Mini 24:0
 backend : mido.backends.rtmidi
 enable-program-pp : False
 autogen-program-slot : 0  # <DEPRECIATED>
