@@ -117,7 +117,7 @@ class Performance(object):
     def load(self, filename):   # ISSUE: Performance.load not implemented
         pass
 
-    def dump(self, tab=0, verbosity=0):
+    def dump(self, tab=0, verbosity=1):
         pad = ' '*4*tab
         pad1 = pad+' '*4
         pad2 = pad1+' '*4

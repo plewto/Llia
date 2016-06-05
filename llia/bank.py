@@ -63,6 +63,7 @@ class ProgramBank(list):
             return clone(list.__getitem__(self, slot))
 
     def __setitem__(self, slot, obj):
+        slot = slot or self.current_slot
         if is_program(obj):
             if obj.data_format == self.template.data_format:
                 self.push_undo("Store slot [%d] <-- '%s'" % (slot, obj.name))
@@ -253,8 +254,31 @@ class ProgramBank(list):
             self.undostack.pop_undo()
             msg = "Error while reading ProgramBank file '%s'" % filename
             raise IOError(msg)
-        
 
+    # Copy performance to clipboard.
+    def copy_performance(self, slot=None):
+        Bank.clipboard["Performance"] = self[slot].performance
+        
+    def paste_performance(self):
+        try:
+            self[None].performance = Bank.clipboard["Perfromance"]
+        except KeyError:
+            msg = "Bank clipboard does not contain Performance."
+            raise KeyError(msg)
+
+    # Copy clipboard performance to all program slots
+    # in range(start, end)
+    def fill_performance(self, start, end):
+        try:
+            p = Bank.clipboard["Performance"]
+            for i in range(start,end):
+                program = self[i]
+                program.performance = p
+                self[i] = program
+        except KeyError:
+            msg = "Bank clipboard does not contain Performance."
+            raise KeyError(msg)
+        
     def dump(self, tab=0, verbosity=1):
         pad = " "*4*tab
         pad2 = pad + " "*4
