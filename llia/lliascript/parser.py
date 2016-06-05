@@ -82,7 +82,7 @@ class Parser(object):
             ns["panic"] = self.panic
             ns["ping"] = self.ping
             ns["pp"] = self.pretty_printer
-            ns["load"] = self.load_python
+            ns["batch"] = self.load_python
             ns["rm"] = self.rm
             ns["sync"] = self.sync_all
             ns["trace_midi"] = self.trace_midi
@@ -206,9 +206,7 @@ class Parser(object):
             pass
 
     def test(self):
-        print("DEBUG parser entities")
-        for k in sorted(self.entities.keys()):
-            print("   '%s'" % k)
+        self.load_python("~/t/test.py")
         
         
     def what_is(self, name):

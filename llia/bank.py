@@ -257,11 +257,11 @@ class ProgramBank(list):
 
     # Copy performance to clipboard.
     def copy_performance(self, slot=None):
-        Bank.clipboard["Performance"] = self[slot].performance
+        ProgramBank.clipboard["Performance"] = self[slot].performance
         
     def paste_performance(self):
         try:
-            self[None].performance = Bank.clipboard["Perfromance"]
+            self[None].performance = ProgramBank.clipboard["Perfromance"]
         except KeyError:
             msg = "Bank clipboard does not contain Performance."
             raise KeyError(msg)
@@ -270,7 +270,7 @@ class ProgramBank(list):
     # in range(start, end)
     def fill_performance(self, start, end):
         try:
-            p = Bank.clipboard["Performance"]
+            p = ProgramBank.clipboard["Performance"]
             for i in range(start,end):
                 program = self[i]
                 program.performance = p

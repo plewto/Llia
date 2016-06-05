@@ -6,7 +6,7 @@
 from __future__ import print_function
 import os.path
 
-from llia.generic import is_list
+from llia.generic import is_list, clone
 from llia.llerrors import LliascriptError, NoSuchSynthError, NoSuchBufferError
 from llia.lliascript.ls_constants import *
 
@@ -39,6 +39,12 @@ class SynthHelper(object):
         ns["init_bank"] = self.init_bank
         ns["load_bank"] = self.load_bank
         ns["random"] = self.random_program
+        ns["copy"] = self.copy_program
+        ns["paste"] = self.paste_program
+        ns["store"] = self.store_program
+        ns["copy_performance"] = self.copy_performance
+        ns["paste_performance"] = self.paste_performance
+        ns["fill_performance"] = self.fill_performance
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -453,5 +459,63 @@ class SynthHelper(object):
         if p and use:
             sy.bank()[127] = p
             sy.use_program(127)
+
+    def copy_program(self, slot=None, sid=None):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        bnk.copy_to_clipboard(slot)
+
+    def paste_program(self, slot=None, sid=None):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        bnk.paste_clipboard(slot)
             
+    def store_program(self, slot=None, name=None, sid=None):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        prg = bnk.current_program
+        if name: prg.name = name
+        slot = slot or bnk.current_slot
+        bnk[slot] = prg
+        
+    def copy_performance(self, slot=None, sid=None):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        bnk.copy_performance(slot)
+
+    # def paste_performance(self, slot=None, sid=None):
+    #     sy = self.get_synth(sid)
+    #     bnk = sy.bank()
+    #     try:
+    #         performance = bnk.clipboard["Performance"]
+    #         program = bnk[slot]
+    #         program.performance = clone(performance)
+    #         bnk[slot] = program
+    #     except KeyError:
+    #         msg = "Clipboard does not contain Performance"
+    #         raise KeyError(msg)
+
+    # def fill_performance(self, start, end, sid=None):
+    #     sy = self.get_synth(sid)
+    #     bnk = sy.bank()
+    #     performance = bnk[None].performance
+    #     print(performance.dump())
+    #     for i in range(start, end):
+    #         prog = bnk[i]
+    #         prog.performance = clone(performance)
+    #         bnk[i]=prog
+
+    def paste_performance(self, sid=None):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        bnk.paste_performance()
+
+    def fill_performance(self, start, end, sid=None):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        bnk.fill_performance(start, end)
+            
+            
+        
+        
         
