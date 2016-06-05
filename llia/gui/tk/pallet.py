@@ -15,11 +15,19 @@ class Pallet(dict):
         self["RADIO-SELECT"] = "gray11"
         self["WARNING-FG"] = "yellow"
 
+    def __setitem__(self, key, value):
+        key = str(key).upper()
+        dict.__setitem__(self, key, value)
         
     def __getitem__(self, name):
         try:
+            name = str(name).upper()
             return dict.__getitem__(self, name)
         except KeyError:
             msg = "WARNING: invalid color: '%s'" % name
             print(msg)
             return "gray64"
+
+
+
+pallet = Pallet()

@@ -142,7 +142,7 @@
 
 
 [GENERAL]
-no-repl : False
+no-repl : True
 
 [MIDI]
 input-port : Launchkey Mini 28:0
@@ -166,7 +166,7 @@ trace-osc-transmission : False
 
 [GUI]
 gui : Tk
-no-splash : True
+no-splash : False
 enable-tooltips : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
