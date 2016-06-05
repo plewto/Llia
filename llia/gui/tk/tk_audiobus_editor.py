@@ -133,7 +133,7 @@ class TkAudiobusEditor(Toplevel):
         self.destroy()
 
     def help_(self):
-        self.app.main_window().show_help_dialog("abus")
+        self.app.main_window().display_help("abus")
     
     def increment_selection(self, *_):
         mx = self.proxy.audio_bus_count()-1

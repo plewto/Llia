@@ -37,7 +37,7 @@ class TkControlbusEditor(Toplevel):
         b_add = factory.add_button(button_bar, ttip="Add new control bus", command=self.add_bus)
         b_refresh = factory.refresh_button(button_bar, ttip="Refresh bus list", command=self.refresh)
         b_accept = factory.accept_button(button_bar, command=self.accept)
-        b_help = factory.help_button(button_bar, command=self.help_)
+        b_help = factory.help_button(button_bar, command=self.display_help)
         lab_title.grid(row=0, column=0, columnspan=6, pady=8)
         frame_list.grid(row=1, column=0, rowspan=5, columnspan=5, pady=4)
         sb.grid(row=1, column=4, rowspan=5, sticky=NS)
@@ -130,8 +130,8 @@ class TkControlbusEditor(Toplevel):
     def accept(self):
         self.destroy()
 
-    def help_(self):
-        self.app.main_window().show_help_dialog("cbus")
+    def display_help(self):
+        self.app.main_window().display_help("cbus")
     
     def increment_selection(self, *_):
         mx = self.proxy.control_bus_count()-1

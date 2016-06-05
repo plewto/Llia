@@ -6,7 +6,7 @@ from Tkinter import (Frame, Label, Menu, Tk, BOTH, Toplevel)
 import ttk
 import tkMessageBox
 from PIL import Image, ImageTk
-from llia.gui.tk.tk_help import TkHelpDialog
+import llia.gui.tk.tk_help as help
 from llia.gui.appwindow import AbstractApplicationWindow
 from llia.gui.tk.tk_splash import TkSplashWindow
 import llia.gui.tk.tk_factory as factory
@@ -30,8 +30,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._init_status_panel()
         self._init_menu()
         self.root.minsize(width=665, height=375)
-        self._help_dialog = TkHelpDialog(self.root)
-        self._help_dialog.withdraw()
+        #self._help_dialog = TkHelpDialog(self.root)
+        #self._help_dialog.withdraw()
         
     def _init_status_panel(self):
         south = self._main.south
@@ -118,8 +118,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
 
     def _init_help_menu(self, hmenu):
         hmenu.add_command(label = "About", command = self.show_about_dialog)
-        hmenu.add_command(label = "Help", command = self.show_help_dialog)
-    
+        hmenu.add_command(label = "Help", command = self.display_help)
         
     def exit_gui(self):
         try:
@@ -152,10 +151,13 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkAboutDialog(self.root, self.app)
         self.root.wait_window(dialog)
 
-    def show_help_dialog(self, topic=None):
-        if topic:
-            self._help_dialog.display_topic(topic)
-        self._help_dialog.deiconify()
+    # def show_help_dialog(self, topic=None):
+    #     if topic:
+    #         self._help_dialog.display_topic(topic)
+    #     self._help_dialog.deiconify()
+
+    def display_help(self, topic=None):
+        help.display_help(topic)
         
     def show_history_editor(self):
         from llia.gui.tk.tk_history import TkHistoryEditor

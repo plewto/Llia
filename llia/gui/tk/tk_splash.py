@@ -107,9 +107,11 @@ class TkSplashWindow(Toplevel):
         b_continue = factory.accept_button(south, "Continue", 
                                            command = self.accept,
                                            ttip="Accept values and move on")
+        b_help = factory.help_button(south, command=self.display_help)
         row = port_count + 6
         b_restore.grid(row=row, column=1, sticky="EW", pady=16)
         b_continue.grid(row=row, column=5, sticky="EW", pady=16)
+        b_help.grid(row=row, column=7, padx=8, sticky="W")
         
         self.lab_warning = factory.warning_label(south)
         self.lab_warning.grid(row=6, column=7, sticky="EW",columnspan=2, rowspan=4)
@@ -163,4 +165,7 @@ class TkSplashWindow(Toplevel):
             self.destroy()
         else:
             self.warning(errmsg)
-        
+
+    def display_help(self):
+        from llia.gui.tk.tk_help import display_help
+        display_help("splash")

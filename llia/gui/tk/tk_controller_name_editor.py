@@ -33,7 +33,7 @@ class TkControllerNameEditor(Toplevel):
         entry_name = factory.entry(main, self.var_name)
         button_bar = Frame(main)
         b_refresh = factory.refresh_button(button_bar, command=self.refresh)
-        b_help = factory.help_button(button_bar, command = self.show_help)
+        b_help = factory.help_button(button_bar, command = self.display_help)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_cancel = factory.cancel_button(button_bar, command=self.cancel)
 
@@ -124,5 +124,5 @@ class TkControllerNameEditor(Toplevel):
             self.config.controller_name(i, name)
         self.destroy()
         
-    def show_help(self):
-        self.app.main_window().show_help_dialog("controller_name")
+    def display_help(self):
+        self.app.main_window().display_help("controller_name")

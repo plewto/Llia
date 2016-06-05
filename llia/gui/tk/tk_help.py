@@ -9,8 +9,18 @@ import llia.gui.tk.tk_layout as layout
 from llia.gui.llhelp import help_topics, read_help_file
 
 
+__help_window = None
 
-class TkHelpDialog(Toplevel):
+def display_help(topic=None):
+    global __help_window
+    if not __help_window:
+        __help_window = __TkHelpDialog(None)
+    __help_window.deiconify()
+    if topic:
+        __help_window.display_topic(topic)
+
+
+class __TkHelpDialog(Toplevel):
 
     def __init__(self, master):
         Toplevel.__init__(self, master)

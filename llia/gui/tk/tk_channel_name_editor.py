@@ -31,7 +31,7 @@ class TkChannelNameEditor(Toplevel):
         entry_name = factory.entry(main, self.var_name)
         button_bar = Frame(main)
         b_refresh = factory.refresh_button(button_bar, command=self.refresh)
-        b_help = factory.help_button(button_bar, command=self.show_help)
+        b_help = factory.help_button(button_bar, command=self.display_help)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_cancel = factory.cancel_button(button_bar, command=self.cancel)
         b_refresh.pack(side=LEFT)
@@ -97,8 +97,8 @@ class TkChannelNameEditor(Toplevel):
         self.var_name.set(name)
         self._current_index = index
         
-    def show_help(self):
-        self.app.main_window().show_help_dialog("channel_name")
+    def display_help(self):
+        self.app.main_window().display_help("channel_name")
 
     def change_name(self, *_):
         self.lab_warning.config(text="")

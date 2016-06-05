@@ -105,6 +105,6 @@ class TkHistoryEditor(Toplevel):
         self.app.ls_parser.batch(code)
 
     def help_(self):
-        self.app.main_window().show_help_dialog("history")
+        self.app.main_window().display_help("history")
         
         
