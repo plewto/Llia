@@ -15,7 +15,7 @@ import llia.constants as constants
 from llia.config import LliaConfig
 from llia.llia_app import LliaApp
 import llia.synths.orgn.orgn_proxy
-import llia.synths.buffertest.bufftest_proxy
+import llia.synths.saw3.s3_proxy
 import llia.synths.echo1.echo1_proxy
 
 

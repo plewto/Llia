@@ -14,10 +14,10 @@
 no-repl : False
 
 [MIDI]
-input-port : Launchkey Mini 24:2
+input-port : Launchkey Mini 24:0
 output-port : Launchkey Mini 24:0
 backend : mido.backends.rtmidi
-enable-program-pp : False
+enable-program-pp : True
 autogen-program-slot : 0  # <DEPRECIATED>
 autogen-store-slot : 1    # <DEPRECIATED>
 enable-keyswitch : True
@@ -34,8 +34,8 @@ client-port : 58000
 trace-osc-transmission : False
 
 [GUI]
-gui : Tk
-no-splash : False
+gui : None
+no-splash : True
 enable-tooltips : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True

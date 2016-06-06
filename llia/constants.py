@@ -3,7 +3,7 @@
 
 VERSION = (0,0,1, "Alpha", "2016.05.18")
 
-BANNER ="""                           
+BANNER =""" 
 ,--.   ,--.,--.         
 |  |   |  |`--' ,--,--. 
 |  |   |  |,--.' ,-.  | 
@@ -18,7 +18,7 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
                ("TK", "Aviliable wherever Python is sold."))
 
 KEY_MODES = ("Poly1", "Mono1", "EFX")
-SYNTH_TYPES = ("Orgn", )
+SYNTH_TYPES = ("Orgn", "Saw3")
 EFFECT_TYPES = ("Echo1", )
 
 MAX_UNDO = 10
