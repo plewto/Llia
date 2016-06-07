@@ -61,6 +61,22 @@ def pp_saw3(program, slot=127):
     s = frmt % (pad, fval('noiseFreq'), fval('noiseBW'))
     acc += s
 
+    frmt = '%smix(osc1 = %+3d, osc1Env1=%5.3f,\n'
+    s = frmt % (pad, db('osc1Amp'), fval('osc1Amp_env1'))
+    acc += s
+
+    frmt = '%s    osc2 = %+3d, osc2Env1=%5.3f,\n'
+    s = frmt % (pad, db('osc2Amp'), fval('osc2Amp_env1'))
+    acc += s
+
+    frmt = '%s    osc3 = %+3d, osc3Env1=%5.3f,\n'
+    s = frmt % (pad, db('osc3Amp'), fval('osc3Amp_env1'))
+    acc += s
+
+    frmt = '%s    noise = %+3d, noiseEnv1=%5.3f),\n'
+    s = frmt % (pad, db('noiseAmp'), fval('noiseAmp_env1'))
+    acc += s
+    
     frmt = '%sfilter_(%d, keytrack=%d, env1=%d, lfo=%d, bpoffset=%5.3f, bplag=%5.3f),\n'
     s = frmt % (pad, ival('filterFreq'), ival('filterKeytrack'),
                 ival('filterFreq_env1'), ival('filterFreq_lfo'),
