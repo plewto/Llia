@@ -1,6 +1,5 @@
 /*
- * Echo1
- * A single delay line with dirty feedback path.
+ * DirtyBurger, delay line with dirty feedback.
  *
  * Parameters:
  *    inbus        - Input audio bus.
@@ -26,7 +25,7 @@
  *    volume       - General linear amplitude.
 */
 
-(SynthDef (\Echo1,
+(SynthDef (\DirtyBurger,
 	{|inbus = 128,
 		outbus = 0,
 		maxDelayTime = 1.5,

@@ -16,7 +16,7 @@ from llia.config import LliaConfig
 from llia.llia_app import LliaApp
 import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
-import llia.synths.echo1.echo1_proxy
+import llia.synths.dirtyburger.dirty_proxy
 
 
 HM_VERSION="display version and exit."
