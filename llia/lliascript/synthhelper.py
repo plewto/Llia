@@ -30,7 +30,7 @@ class SynthHelper(object):
         ns["keyrange"] = self.keyrange
         ns["synth"] = self.add_synth
         ns["transpose"] = self.transpose
-        ns["with_synth"] = self.with_synth
+        ns["use"] = self.use_synth
         ns["pmap"] = self.parameter_map
         ns["program"] = self.use_program
         ns["bank"] = self.get_bank
@@ -73,7 +73,7 @@ class SynthHelper(object):
         except KeyError:
           raise NoSuchSynthError(sid)
 
-    def with_synth(self, sid):
+    def use_synth(self, sid):
         self.get_synth(sid)
         self.current_sid = sid
         msg = "Using synth: %s" % sid
@@ -415,9 +415,18 @@ class SynthHelper(object):
         stype, id_ = self.parse_sid(sid)
         self.proxy.free_synth(stype, id_)
 
-    def use_program(self, slot, sid=None):
-        sy=self.get_synth(sid)
+    # def use_program(self, slot, sid=None):
+    #     sy=self.get_synth(sid)
+    #     sy.use_program(slot)
+
+    def _use_program(self, slot, sid):
+        sy = self.get_synth(sid)
         sy.use_program(slot)
+
+    def use_program(self, slot, sid=None, *more):
+        self._use_program(slot, sid)
+        for m in more:
+            self._use_program(slot, m)
         
     def get_bank(self, sid=None, silent=False):
         sy = self.get_synth(sid)

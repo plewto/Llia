@@ -6,6 +6,7 @@ from __future__ import print_function
 from llia.generic import clone
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.dirtyburger.dirty_data import program_bank
+from llia.synths.dirtyburger.dirty_pp import pp_dirty
 
 specs = SynthSpecs("DirtyBurger")
 
@@ -16,3 +17,6 @@ class DirtyProxy(SynthProxy):
         gui = app.config["gui"]
 
 specs["constructor"] = DirtyProxy
+specs["description"] = "Delay line with dirty feedback"
+specs["pretty-printer"] = pp_dirty
+specs["help"] = "dirtyburger"

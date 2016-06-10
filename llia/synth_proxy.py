@@ -167,6 +167,18 @@ class SynthProxy(object):
             self._key_table_name = tabname
         return self._key_table_name
     
+    # def use_program(self, slot):
+    #     cp = self._bank.use(slot)
+    #     self.x_program(cp)
+    #     # ISSUE: Fix me
+    #     ## call sync_ui on gui window
+    #     if self.app.config.program_pp_enabled():
+    #         try:
+    #             pp = self.specs["pretty-printer"]
+    #             print(pp(cp, slot))
+    #         except TypeError:         # ignore
+    #             pass
+
     def use_program(self, slot):
         cp = self._bank.use(slot)
         self.x_program(cp)
@@ -176,8 +188,9 @@ class SynthProxy(object):
             try:
                 pp = self.specs["pretty-printer"]
                 print(pp(cp, slot))
-            except TypeError:         # ignore
+            except KeyError:         # ignore
                 pass
+
 
     def store_program(self, slot=None):
         if slot == None:
