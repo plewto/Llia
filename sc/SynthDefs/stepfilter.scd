@@ -1,6 +1,29 @@
 /*
  * StepFilter effect.
  * 
+ * Bandpass filter with summed pulse control 
+ * 
+ * Parameters:
+ * inbus    - Audio input bus, 1 channel                
+ * outbus   - Audio output bus, 2, channels                   
+ * volume   - Overall linear gain                    
+ * pan      - Pan position (-1,+1)                 
+ * wet      - Wet signal mix (-1=Dry, +1=Wet)                 
+ * sub1     - Control signal component amp 1/2                    
+ * sub2     - Control signal component amp 3/4                   
+ * n1       - Control signal component amp 1                  
+ * n2       - Control signal component amp 2
+ * n3       - Control signal component amp 3                 
+ * n4       - Control signal component amp 4                 
+ * n5       - Control signal component amp 5                 
+ * n6       - Control signal component amp 6                 
+ * shFreq   - Sample and hold clock frequency                    
+ * sh       - Sample and hold component amp                
+ * clkFreq  - LFO frequency                     
+ * minFreq  - Minimum filter frequency in Hertz                     
+ * maxFreq  - Maximum filter frequency in Hertz                      
+ * rq       - Filter 1/q parameter, (0.1,...,1.0)                
+ * lag      - Filter control lag time (0,1)                 
 */
 
 (SynthDef (\StepFilter,
