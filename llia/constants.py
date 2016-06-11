@@ -19,7 +19,7 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
 
 KEY_MODES = ("Poly1", "Mono1", "EFX")
 SYNTH_TYPES = ("Orgn", "Saw3")
-EFFECT_TYPES = ("DirtyBurger", )
+EFFECT_TYPES = ("DirtyBurger", "StepFilter")
 
 MAX_UNDO = 10
 BANK_LENGTH = 128

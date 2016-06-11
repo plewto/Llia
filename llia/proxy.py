@@ -81,7 +81,6 @@ class LliaProxy(object):
             sleep(0.05)
             self.osc_receiver.handle_request()
             cbm = self._get_callback_message()
-            # print("DEBUG Proxy._expect cbm -> %s", cbm)
             msg = "/Llia/%s/%s" % (self.global_osc_id(), msg)
             rs = msg == cbm["path"]
         except KeyError:
@@ -455,22 +454,22 @@ class LliaProxy(object):
         return acc
 
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
-       sid = "%s_%d" % (stype, int(id_))
-       if self.synth_exists(stype, id_):
-           msg = "Synth %s already exists" % sid
-           self.warning(msg)
-           return False
-       else:
-           sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
-           if not sy:
-               msg = "Synth %s could not be created" % sid
-               self.warning(msg)
-               return False
-           else:
-               print("Creating synth: %s" % sid)
-               self._synths[sid] = sy
-               self._send("add-synth", [stype, id_, keymode, voice_count])
-               return True
+        sid = "%s_%d" % (stype, int(id_))
+        if self.synth_exists(stype, id_):
+            msg = "Synth %s already exists" % sid
+            self.warning(msg)
+            return False
+        else:
+            sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
+            if not sy:
+                msg = "Synth %s could not be created" % sid
+                self.warning(msg)
+                return False
+            else:
+                print("Creating synth: %s" % sid)
+                self._synths[sid] = sy
+                self._send("add-synth", [stype, id_, keymode, voice_count])
+                return True
 
     def add_efx(self, stype, id_):
         sid = "%s_%d" % (stype, id_)

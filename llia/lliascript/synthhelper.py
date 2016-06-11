@@ -233,7 +233,7 @@ class SynthHelper(object):
         
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
-            self.with_synth(sid)
+            self.use_synth(sid)
             return True
         else:
             self.assert_synth_type(stype)
@@ -258,7 +258,7 @@ class SynthHelper(object):
     def add_efx(self, stype, id_, outbus=["out_0", "outbus", 0]):
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
-            self.with_synth(sid)
+            self.use_synth(sid)
             return True
         else:
             self.assert_efx_type(stype)

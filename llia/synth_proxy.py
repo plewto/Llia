@@ -38,6 +38,7 @@ class SynthSpecs(dict):
     def create_synth_proxy(app, stype, id_):
         try:
             specs = SynthSpecs.global_synth_type_registry[stype]
+            
             # id_ = id_ or SynthSpecs.create_id(stype)
             cfn = specs["constructor"]
             syproxy = cfn(app, id_)
