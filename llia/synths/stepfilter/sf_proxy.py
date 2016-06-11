@@ -6,7 +6,7 @@ from __future__ import print_function
 from llia.generic import clone
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.stepfilter.sf_data import program_bank
-# from llia.synths.stepfilter.sf_pp import pp_dirty
+from llia.synths.stepfilter.sf_pp import pp_stepfilter
 
 specs = SynthSpecs("StepFilter")
 
@@ -17,6 +17,6 @@ class StepFilterProxy(SynthProxy):
         gui = app.config["gui"]
     
 specs["constructor"] = StepFilterProxy
-specs["description"] = "Filter with complex control signal."
-# specs["pretty-printer"] = pp_stepfilter
-# specs["help"] = "stepfilter"
+specs["description"] = "Filter effect with complex control signal."
+specs["pretty-printer"] = pp_stepfilter
+specs["help"] = "stepfilter"
