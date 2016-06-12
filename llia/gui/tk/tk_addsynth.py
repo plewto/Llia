@@ -7,7 +7,7 @@ from Tkinter import (BOTH, W, EW, E, Toplevel, StringVar)
 from ttk import (Frame,)
 import llia.constants as con
 import llia.gui.tk.tk_factory as factory
-
+from llia.synth_proxy import SynthSpecs
 
 class TkAddSynthDialog(Toplevel):
 
@@ -49,14 +49,16 @@ class TkAddSynthDialog(Toplevel):
         row = 1
         for s in sorted(con.SYNTH_TYPES):
             if row == 1: self.var_synth_type.set(s)
-            rb = factory.radio(frame, s, self.var_synth_type, s)
-            rb.grid(row=row, column=0, sticky=W, padx=4)
+            specs = SynthSpecs.global_synth_type_registry[s]
+            txt = "%s, %s" % (s, specs["description"])
+            rb = factory.radio(frame, txt, self.var_synth_type, s)
+            rb.grid(row=row, column=0, columnspan=2, sticky=W, padx=4)
             row += 1
             rb.config(command=self._autoset_id)
         w = factory.label(frame, "Synth ID")
-        w.grid(row=row, column=0, sticky = W, padx=4, pady=4)
+        w.grid(row=row, column=0, columnspan=1, sticky = W, padx=4, pady=4)
         sb = factory.int_spinbox(frame, self.var_synth_id, from_=1, to=100)
-        sb.grid(row=row, column = 1, padx=4, pady=8, sticky=E)
+        sb.grid(row=row, column = 1, padx=4, pady=8, sticky=EW)
         return frame
 
     def _init_keymode_selection_frame(self, master):
