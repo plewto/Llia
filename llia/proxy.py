@@ -377,9 +377,13 @@ class LliaProxy(object):
             msg = "Audio bus '%s' does not exists" % bname
             self.warning(msg)
             return ("", -1, 0)
-    
+
+    def audio_bus_names(self):
+        return sorted(self.audio_bus_keys())
+        
     def list_audio_buses(self):
-        keys = self.audio_bus_keys()
+        #keys = self.audio_bus_keys()
+        keys = self.audio_bus_names()
         print("Audio buses:")
         for k in keys:
             print("    ", k)

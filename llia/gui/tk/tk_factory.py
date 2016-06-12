@@ -177,6 +177,15 @@ def int_spinbox(master, textvar, from_, to, ttip=""):
 
 
 #  ---------------------------------------------------------------------- 
+#                                  Combobox
+#
+
+def combobox(master, values, ttip=""):
+    cb = Combobox(master, values = values)
+    tooltip(cb, ttip)
+    return cb
+
+#  ---------------------------------------------------------------------- 
 #                                    Text
 #
 # NOTE: Text is not a ttk widget
@@ -203,3 +212,11 @@ def read_only_text(master, text):
     # t.config(background=pallet["BG"])
     # t.config(foreground=pallet["FG"])
     return t
+
+
+#  ---------------------------------------------------------------------- 
+#                                   Frames
+
+def label_frame(master, text):
+    f = LabelFrame(master, text=text)
+    return f

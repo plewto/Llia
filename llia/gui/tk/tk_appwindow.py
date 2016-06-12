@@ -12,6 +12,7 @@ from llia.gui.tk.tk_splash import TkSplashWindow
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
 from  llia.proxy import LliaProxy
+import llia.constants as con
 
 class TkApplicationWindow(AbstractApplicationWindow):
 
@@ -109,7 +110,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         # smenu.add_command(label = "Show Synth", command = None)
         # smenu.add_command(label = "Hide Synth", command = None)
         # smenu.add_separator()
-        smenu.add_command(label = "Add Synth", command = None)
+        smenu.add_command(label = "Add Synth", command = self.show_add_synth_dialog)
         smenu.add_command(label = "Add EFX Synth", command = None)
         smenu.add_command(label = "Remove Synth", command = None)
 
@@ -214,3 +215,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         from llia.gui.tk.tk_buffer_info import TkBufferListDialog
         dialog = TkBufferListDialog(self.root, self.app)
         self.root.wait_window(dialog)
+
+    def show_add_synth_dialog(self):
+        from llia.gui.tk.tk_addsynth import TkAddSynthDialog
+        dialog = TkAddSynthDialog(self.root, self.app)
