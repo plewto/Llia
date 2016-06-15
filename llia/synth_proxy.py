@@ -55,6 +55,15 @@ class SynthSpecs(dict):
         super(SynthSpecs, self).__setitem__("pretty-printer", None)
         super(SynthSpecs, self).__setitem__("help", None)
         super(SynthSpecs, self).__setitem__("notes", None)
+        super(SynthSpecs, self).__setitem__("is-efx", False)
+        # buses [[param1, channels], [param2, channels] ...]
+        super(SynthSpecs, self).__setitem__("audio-output-buses", [])   
+        super(SynthSpecs, self).__setitem__("audio-input-buses", [])
+        super(SynthSpecs, self).__setitem__("control-output-buses", [])
+        super(SynthSpecs, self).__setitem__("control-input-buses", [])
+        super(SynthSpecs, self).__setitem__("buffers", [])
+        
+    
         SynthSpecs.global_synth_type_registry[format_] = self
         
     def __setitem__(self, key, item):

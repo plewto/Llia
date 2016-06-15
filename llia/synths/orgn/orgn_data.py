@@ -6,7 +6,7 @@ from __future__ import print_function
 from llia.program import Program
 from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
-from llia.performance_edit import performance, smap, ccmap
+from llia.performance_edit import performance
 
 prototype = {"amp" : 0.05,
              "vfreq" : 5.0,

@@ -13,6 +13,11 @@ import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
 from  llia.proxy import LliaProxy
 import llia.constants as con
+from llia.gui.tk.tk_addsynth import TkAddSynthDialog
+from llia.synth_proxy import SynthSpecs
+
+specs = SynthSpecs.global_synth_type_registry
+
 
 class TkApplicationWindow(AbstractApplicationWindow):
 
@@ -30,6 +35,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
         self._init_status_panel()
         self._init_menu()
+        self._init_westbar()
         self.root.minsize(width=665, height=375)
         #self._help_dialog = TkHelpDialog(self.root)
         #self._help_dialog.withdraw()
@@ -44,6 +50,27 @@ class TkApplicationWindow(AbstractApplicationWindow):
         b_panic.grid(row=0, column=0, sticky="w")
         b_clear_status.grid(row=0, column=1, sticky="w")
         self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8) 
+
+    def _init_westbar(self):
+        tbar = layout.VFrame(self._main.west)
+        tbar.pack(anchor="nw", expand=True, fill="y")
+        w = factory.label(tbar, "Synths:")
+        tbar.add(w, pady=8)
+        for st in sorted(con.SYNTH_TYPES):
+            d = specs[st]["description"]
+            tt = "Add %s, %s" % (st, d)
+            b = factory.button(tbar, st, ttip=tt)
+            b.bind("<Button-1>", self._show_add_synth_dialog)
+            tbar.add(b)
+        tbar.separator()
+        w = factory.label(tbar, "Effects:")
+        tbar.add(w, pady=8)
+        for st in sorted(con.EFFECT_TYPES):
+            d = specs[st]["description"]
+            tt = "Add %s, %s" % (st, d)
+            b = factory.button(tbar, st, ttip=tt)
+            b.bind("<Button-1>", self._show_add_efx_dialog)
+            tbar.add(b)
 
     @staticmethod
     def menu(master):
@@ -60,7 +87,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         midi_menu = self.menu(main_menu)
         bus_menu = self.menu(main_menu)
         buffer_menu = self.menu(main_menu)
-        synth_menu = self.menu(main_menu)
+        #synth_menu = self.menu(main_menu)
         tune_menu = self.menu(main_menu)
         help_menu = self.menu(main_menu)
         main_menu.add_cascade(label="File", menu=file_menu)
@@ -68,7 +95,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         main_menu.add_cascade(label="MIDI", menu=midi_menu)
         main_menu.add_cascade(label="Buses", menu=bus_menu)
         main_menu.add_cascade(label="Buffers", menu=buffer_menu)
-        main_menu.add_cascade(label="Synths", menu=synth_menu)
+        #main_menu.add_cascade(label="Synths", menu=synth_menu)
         main_menu.add_cascade(label="Tune", menu=tune_menu)
         main_menu.add_cascade(label="Help", menu=help_menu)
         self._init_file_menu(file_menu)
@@ -76,7 +103,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._init_midi_menu(midi_menu)
         self._init_bus_menu(bus_menu)
         self._init_buffer_menu(buffer_menu)
-        self._init_synth_menu(synth_menu)
+        #self._init_synth_menu(synth_menu)
         self._init_tune_menu(tune_menu)
         self._init_help_menu(help_menu)
 
@@ -106,13 +133,13 @@ class TkApplicationWindow(AbstractApplicationWindow):
         bmenu.add_command(label="View Buffers", command=self.show_bufferlist_dialog)
         #bmenu.add_command(label="Edit Buffers", command = None)
         
-    def _init_synth_menu(self, smenu):
-        # smenu.add_command(label = "Show Synth", command = None)
-        # smenu.add_command(label = "Hide Synth", command = None)
-        # smenu.add_separator()
-        smenu.add_command(label = "Add Synth", command = self.show_add_synth_dialog)
-        smenu.add_command(label = "Add EFX Synth", command = None)
-        smenu.add_command(label = "Remove Synth", command = None)
+    # def _init_synth_menu(self, smenu):
+    #     # smenu.add_command(label = "Show Synth", command = None)
+    #     # smenu.add_command(label = "Hide Synth", command = None)
+    #     # smenu.add_separator()
+    #     # smenu.add_command(label = "Add Synth", command = self.show_add_synth_dialog)
+    #     # smenu.add_command(label = "Add EFX Synth", command = self.show_add_efx_dialog)
+    #     smenu.add_command(label = "Remove Synth", command = None)
 
     def _init_tune_menu(self, tmenu):
         tmenu.add_command(label = "FIX ME: Nothing to see here")
@@ -216,6 +243,16 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkBufferListDialog(self.root, self.app)
         self.root.wait_window(dialog)
 
-    def show_add_synth_dialog(self):
-        from llia.gui.tk.tk_addsynth import TkAddSynthDialog
-        dialog = TkAddSynthDialog(self.root, self.app)
+    def _show_add_synth_dialog(self, event):
+        w = event.widget
+        st = w.config()["text"][-1]
+        dialog = TkAddSynthDialog(self.root, self.app, st, False)
+        self.root.wait_window(dialog)
+        
+    def _show_add_efx_dialog(self, event):
+        w = event.widget
+        st = w.config()["text"][-1]
+        dialog = TkAddSynthDialog(self.root, self.app, st, True)
+        self.root.wait_window(dialog)
+
+        

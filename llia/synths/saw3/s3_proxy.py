@@ -18,6 +18,7 @@ class Saw3Proxy(SynthProxy):
 
 specs["constructor"] = Saw3Proxy
 specs["description"] = "A 3 Oscillator Subtractive Synth"
+specs["audio-output-buses"] = (("outbus", 1),)
 specs["pretty-printer"] = pp_saw3  
 specs["program-generator"] = s3gen
 specs["help"] = "saw3"

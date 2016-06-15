@@ -230,7 +230,7 @@ class SynthHelper(object):
 
     # outbus as list [bus-name, param, offset]
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8, outbus=["out_0", "outbus", 0]):
-        
+
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
             self.use_synth(sid)

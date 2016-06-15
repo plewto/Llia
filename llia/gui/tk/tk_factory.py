@@ -185,6 +185,22 @@ def combobox(master, values, ttip=""):
     tooltip(cb, ttip)
     return cb
 
+def audio_bus_combobox(master, app):
+    values = app.proxy.audio_bus_names()
+    ttip = "Audio buses"
+    return combobox(master, values, ttip)
+
+def control_bus_combobox(master, app):
+    values = app.proxy.control_bus_names()
+    ttip = "Control buses"
+    return combobox(master, values, ttip)
+
+def buffer_combobox(master, app):
+    values = app.proxy.buffer_keys()
+    ttip = "Buffers"
+    return combobox(master, values, ttip)
+
+
 #  ---------------------------------------------------------------------- 
 #                                    Text
 #
@@ -220,3 +236,7 @@ def read_only_text(master, text):
 def label_frame(master, text):
     f = LabelFrame(master, text=text)
     return f
+
+def notebook(master):
+    nb = Notebook(master)
+    return nb

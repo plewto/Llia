@@ -388,7 +388,10 @@ class LliaProxy(object):
         for k in keys:
             print("    ", k)
         return keys
-            
+
+    def control_bus_names(self):
+        return sorted(self.control_bus_keys())
+    
     def list_control_buses(self):
         keys = sorted(self._control_buses.keys())
         print("Control Buses:")

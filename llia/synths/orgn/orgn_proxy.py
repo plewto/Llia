@@ -3,7 +3,6 @@
 
 from __future__ import print_function
 
-from llia.generic import clone
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.orgn.orgn_data import program_bank
 from llia.synths.orgn.orgn_pp import pp_orgn
@@ -19,6 +18,8 @@ class OrgnProxy(SynthProxy):
 
 specs["constructor"] = OrgnProxy
 specs["description"] = "FM Combo Organ"
+specs["audio-output-buses"] = (("outbus", 1),)
 specs["pretty-printer"] = pp_orgn    
 specs["program-generator"] = gen_orgn_program
 specs["help"] = "orgn"
+

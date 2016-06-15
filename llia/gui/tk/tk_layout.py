@@ -74,15 +74,15 @@ class VFrame(Frame):
         self.rows = []
         self.grid_columnconfigure(0, weight=1)
 
-    def add(self, payload, pady=0, span=1, weight=0, sticky="ew"):
+    def add(self, payload, pady=0, padx=0, span=1, weight=0, sticky="ew"):
         if is_string(payload):
             payload = factory.center_label(self, payload)
-        payload.grid(row=self._row_count, column=0, pady=pady, sticky=sticky)
+        payload.grid(row=self._row_count, column=0, pady=pady, padx=padx, sticky=sticky)
         self.grid_rowconfigure(self._row_count, weight=weight)
         self.rows.append(payload)
         self._row_count += span
 
-    def spearator(self):
+    def separator(self):
         self.add("")
 
 

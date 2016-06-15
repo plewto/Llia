@@ -17,6 +17,9 @@ class DirtyProxy(SynthProxy):
         gui = app.config["gui"]
 
 specs["constructor"] = DirtyProxy
-specs["description"] = "Delay line with dirty feedback"
+specs["description"] = "An unclean delay"
+specs["audio-output-buses"] = (("outbus", 2),)
+specs["audio-input-buses"] = (("inbus", 1),)
 specs["pretty-printer"] = pp_dirty
+specs["is-efx"] = True
 specs["help"] = "dirtyburger"

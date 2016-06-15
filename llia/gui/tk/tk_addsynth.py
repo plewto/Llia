@@ -1,147 +1,180 @@
-# llia.gui.tk.tk_addsynth
-# 2016.06.11
-
 from __future__ import print_function
 
-from Tkinter import (BOTH, W, EW, E, Toplevel, StringVar)
+from Tkinter import (BOTH, W, EW, E, X, LEFT, Toplevel, StringVar)
 from ttk import (Frame,)
 import llia.constants as con
 import llia.gui.tk.tk_factory as factory
 from llia.synth_proxy import SynthSpecs
 
+
+HELP_TOPIC = "add_synth_dialog"
+
+def select_synth_id(app, stype):
+    n = 1
+    while True:
+        if not app.proxy.synth_exists(stype, n):
+            return n
+        else:
+            n = n+1
+
+        
 class TkAddSynthDialog(Toplevel):
 
-
-    id_dict = {}
-
-    def __init__(self, master, app):
+    def __init__(self, master, app, synth_type, is_efx):
         Toplevel.__init__(self, master)
-        self.wm_title = "Add Synth"
         self.app = app
-        self.proxy = app.proxy
-        main = Frame(self)
-        main.pack(expand=True, fill=BOTH)
-        self.var_synth_type = StringVar()
-        self.var_synth_id = StringVar()
+        self.stype = synth_type
+        self.is_efx = is_efx
+        main = factory.notebook(self)
+        toolbar = Frame(self)
+        main.pack(anchor=W, expand=True, fill=BOTH)
+        toolbar.pack(anchor=W, expand=True, fill=X)
+        self.id_ = select_synth_id(self.app, synth_type)
+        self.sid = "%s_%d" % (synth_type, self.id_)
+        specs = SynthSpecs.global_synth_type_registry[synth_type]
+        self._params = {}
+        
+        title = "Add %s " % synth_type
+        if is_efx:
+            title += "Effect"
+        else:
+            title += "Synth"
+        title += "      sid = %s" % self.sid
+        w = factory.dialog_title_label(main, title)
+        w.grid(row = 0, column = 0, sticky="w", padx=4, pady=8)
+
+        # Audio Output Buses
+        frame_audio_out = factory.label_frame(main, "Audio Output Buses")
+        row = 0
+        for b in specs["audio-output-buses"]:
+            bname = b[0]
+            lab_name = factory.label(frame_audio_out, bname)
+            combo = factory.audio_bus_combobox(frame_audio_out, self.app)
+            combo.set("out_0")
+            lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+            combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
+            self._params[bname] = combo
+            row += 1
+        factory.padding_label(frame_audio_out).grid(row=row, column=0)
+        frame_audio_out.grid(row=1, column=0, padx=4, pady=4)
+        
+        # Audio Input Buses
+        if specs["audio-input-buses"]:
+            frame_audio_in = factory.label_frame(main, "Audio Input Buses")
+            row = 0
+            for b in specs["audio-input-buses"]:
+                bname = b[0]
+                lab_name = factory.label(frame_audio_in, bname)
+                combo = factory.audio_bus_combobox(frame_audio_in, self.app)
+                combo.set("in_0")
+                lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
+                self._params[bname] = combo
+                row += 1
+            factory.padding_label(frame_audio_in).grid(row=row, column=0)
+            frame_audio_in.grid(row=5, column=0, padx=4, pady=4)
+
+        # Control Output Buses
+        if specs["control-output-buses"]:
+            frame_control_out = factory.label_frame(main, "Control Output Buses")
+            row = 0
+            for b in specs["control-output-buses"]:
+                bname = b[0]
+                lab_name = factory.label(frame_control_out, bname)
+                combo = factory.control_bus_combobox(frame_control_out, self.app)
+                lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
+                self._params[bname] = combo
+                row += 1
+            factory.padding_label(frame_control_out).grid(row=row, column=0)
+            frame_control_out.grid(row=1, column=3, padx=4, pady=4)
+        
+        # Control Input Buses
+        if specs["control-input-buses"]:
+            frame_control_in = factory.label_frame(main, "Control Input Buses")
+            row = 0
+            for b in specs["control-input-buses"]:
+                bname = b[0]
+                lab_name = factory.label(frame_control_in, bname)
+                combo = factory.control_bus_combobox(frame_control_in, self.app)
+                lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
+                self._params[bname] = combo
+                row += 1
+            factory.padding_label(frame_control_in).grid(row=row, column=0)
+            frame_control_in.grid(row=5, column=3, padx=4, pady=4)
+
+        # Buffers
+        if specs["buffers"]:
+            frame_buffers = factory.label_frame(main, "Buffers")
+            row = 0
+            for bname in specs["buffers"]:
+                lab_name = factory.label(frame_buffers, bname)
+                combo = factory.buffer_combobox(frame_buffers, self.app)
+                lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
+                self._params[bname] = combo
+                row += 1
+            factory.padding_label(frame_buffers).grid(row=row, column=0)
+            frame_buffers.grid(row=9, column=3, padx=4, pady=4)
+
+        # Keymode
         self.var_keymode = StringVar()
         self.var_voice_count = StringVar()
-        self.var_outbus_param = StringVar()
-        self.combo_outbus_name = None
-        self.var_outbus_offset = StringVar()
-        self.var_outbus_offset.set("0")
-        self.lab_warning = factory.warning_label(main)
-        frame_synth = self._init_synth_selection_frame(main)
-        frame_keymode = self._init_keymode_selection_frame(main)
-        frame_bus = self._init_outbus_frame(main)
-        frame_tools = self._init_toolbar(main)
-        w = factory.dialog_title_label(main, "Add Synth")
-        w.grid(row=0, column=0, columnspan=2, pady=8)
-        frame_synth.grid(row=1, column = 0, columnspan=2, sticky=EW, padx=4, pady=4)
-        frame_keymode.grid(row=2, column=0, columnspan=2, sticky=EW, padx=4, pady=4)
-        frame_bus.grid(row=3, column=0, columnspan=2, sticky=EW, padx=4, pady=4)
-        frame_tools.grid(row=4, column=0, columnspan=2, sticky=EW, padx=4, pady=4)
-        self.lab_warning.grid(row=5, column=0, columnspan=2, sticky=W, padx=4, pady=4)
-        self.grab_set()
-        self.mainloop()
-        
-    def _init_synth_selection_frame(self, master):
-        frame = factory.label_frame(master, "Synths")
-        row = 1
-        for s in sorted(con.SYNTH_TYPES):
-            if row == 1: self.var_synth_type.set(s)
-            specs = SynthSpecs.global_synth_type_registry[s]
-            txt = "%s, %s" % (s, specs["description"])
-            rb = factory.radio(frame, txt, self.var_synth_type, s)
-            rb.grid(row=row, column=0, columnspan=2, sticky=W, padx=4)
-            row += 1
-            rb.config(command=self._autoset_id)
-        w = factory.label(frame, "Synth ID")
-        w.grid(row=row, column=0, columnspan=1, sticky = W, padx=4, pady=4)
-        sb = factory.int_spinbox(frame, self.var_synth_id, from_=1, to=100)
-        sb.grid(row=row, column = 1, padx=4, pady=8, sticky=EW)
-        return frame
-
-    def _init_keymode_selection_frame(self, master):
-        frame = factory.label_frame(master, "Key Mode")
-        row = 1
-        for km in sorted(con.KEY_MODES):
-            rb = factory.radio(frame, km, self.var_keymode, value=km)
-            rb.grid(row=row, column = 0, sticky=W, padx=4)
-            row += 1
-        self.var_keymode.set("Poly1")
-        w = factory.label(frame, "Voice Count")
-        w.grid(row=row, column = 0, padx=4)
-        sb = factory.int_spinbox(frame, self.var_voice_count, from_=1, to=64)
-        sb.grid(row=row, column = 1, padx=4, pady=8)
         self.var_voice_count.set(8)
-        return frame
-
-    def _init_outbus_frame(self, master):
-        frame = factory.label_frame(master, "Output Bus")
-        w = factory.label(frame, "Bus")
-        cb_buses = factory.combobox(frame, self.proxy.audio_bus_keys())
-        w.grid(row=0, column=0, sticky=W, padx=4)
-        cb_buses.grid(row=0, column=1, padx=4, pady=4, sticky=E)
-        w = factory.label(frame, "Param")
-        entry = factory.entry(frame, self.var_outbus_param)
-        self.var_outbus_param.set("outbus")
-        w.grid(row=1, column=0, sticky=W, padx=4, pady=4)
-        entry.grid(row=1, column=1, padx=4, pady=4, sticky=EW)
-        w = factory.label(frame, "Offset")
-        sp = factory.int_spinbox(frame, self.var_outbus_offset, from_=0, to=128)
-        w.grid(row=2, column=0, sticky=W, padx=4, pady=4)
-        sp.grid(row=2, column=1, padx=4, pady=4, sticky=E)
-        self.combo_outbus_name = cb_buses
-        cb_buses.set("out_0")
-        return frame
-
-    def _init_toolbar(self, master):
-        frame = Frame(master)
-        b_help = factory.help_button(frame, command=self.display_help)
-        b_ok = factory.accept_button(frame, command=self.accept)
-        b_cancel = factory.cancel_button(frame, command=self.cancel)
-        b_help.grid(row=0, column=0, sticky=W)
-        b_ok.grid(row=0, column=1, sticky=E)
-        b_cancel.grid(row=0, column=2, sticky=E)
-        return frame
-    
-    def _autoset_id(self):
-        st = self.var_synth_type.get()
-        n = self.id_dict[st]
-        self.var_synth_id.set(n)
-
-    def warning(self, msg=""):
-        if msg:
-            msg = "WARNING: %s" % msg
-            self.lab_warning.config(text=msg)
+        frame_keymode = factory.label_frame(main, "Key mode")
+        col = 0
+        for km in con.KEY_MODES:
+            rb = factory.radio(frame_keymode, km, self.var_keymode, km)
+            rb.grid(row=0, column=col, sticky="w", padx=4, pady=4)
+            if self.is_efx:
+                rb.config(state="disabled")
+            col += 1
+        if is_efx:
+            self.var_keymode.set("EFX")
         else:
-            self.lab_warning.config(text = "")
+            self.var_keymode.set("Poly1")
+        lab_vc = factory.label(frame_keymode, "Voice count")
+        spin_vc = factory.int_spinbox(frame_keymode, self.var_voice_count, from_=1, to=128)
+        # voice count spin_vc is place hoder for future.
+        lab_vc.config(state="disabled")
+        spin_vc.config(state="disabled")
         
+        lab_vc.grid(row=1, column=0, padx=4)
+        spin_vc.grid(row=1, column=1, columnspan=3, padx=4, pady=4)
+        frame_keymode.grid(row=9, column=0, padx=4, pady=4)
+        factory.padding_label(frame_keymode).grid(row=2, column=0)
+        
+        # South Toolbar
+        toolbar = Frame(main)
+        b_help = factory.help_button(toolbar, command=self.display_help)
+        b_accept = factory.accept_button(toolbar, command=self.accept)
+        b_cancel = factory.cancel_button(toolbar, command=self.cancel)
+        b_help.grid(row=0, column=0, sticky="w")
+        factory.padding_label(toolbar).grid(row=0, column=1)
+        b_accept.grid(row=0, column=2, sticky="e")
+        b_cancel.grid(row=0, column=3, sticky="e")
+        toolbar.grid(row=10, column=0, columnspan=5, sticky="ew", padx=4, pady=8)
+        # self.grab_set() # ISSUE: Throws TclError: grab failed: window not viewable?
+        self.mainloop()
+
     def display_help(self):
-        self.app.main_window().display_help("add_synth_dialog")
+        self.app.main_window().display_help(HELP_TOPIC)
 
     def cancel(self):
-        self.app.main_window().status("Add Synth Canceld")
         self.destroy()
+        self.app.main_window().status("Add Synth Canceld")
 
     def accept(self):
         shelper = self.app.ls_parser.synthhelper
-        st = self.var_synth_type.get()
-        id_ = int(self.var_synth_id.get())
-        km = self.var_keymode.get()
-        vcount = int(self.var_voice_count.get())
-        outbus = self.combo_outbus_name.get()
-        param = self.var_outbus_param.get()
-        offset = int(self.var_outbus_offset.get())
-        rs = shelper.add_synth(st, id_, km, vcount, [outbus, param, offset])
-        if rs:
-            self.id_dict[st] = self.id_dict[st]+1
-            sid = "%s_%s" % (st, id_)
-            self.app.main_window().status("Added synth %s" % sid)
-            self.destroy()
+        if self.is_efx:
+            shelper.add_efx(self.stype, self.id_, outbus=None) 
         else:
-            self.warning("Synth could not be added")
-        
-for s in con.SYNTH_TYPES:
-    TkAddSynthDialog.id_dict[s] = 1
-    
+            km = self.var_keymode.get()
+            vc = int(self.var_voice_count.get())
+            shelper.add_synth(self.stype, self.id_, km, vc, outbus=None)
+        for p,c in self._params.items():
+            bus_or_buffer = c.get()
+            shelper.assign_buffer_or_bus(p, bus_or_buffer)
+        self.app.main_window().status("Added %s" % self.sid)
+        self.destroy()

@@ -19,6 +19,8 @@ import llia.synths.saw3.s3_proxy
 import llia.synths.dirtyburger.dirty_proxy
 import llia.synths.stepfilter.sf_proxy
 
+import llia.synths.dummy.dummy_proxy
+
 
 HM_VERSION="display version and exit."
 HM_USAGE = "display detailed usage and exit."

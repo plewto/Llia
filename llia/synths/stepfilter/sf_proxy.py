@@ -18,5 +18,8 @@ class StepFilterProxy(SynthProxy):
     
 specs["constructor"] = StepFilterProxy
 specs["description"] = "Filter effect with complex control signal."
+specs["audio-output-buses"] = (("outbus", 2),)
+specs["audio-input-buses"] = (("inbus", 1),)
+specs["is-efx"] = True
 specs["pretty-printer"] = pp_stepfilter
 specs["help"] = "stepfilter"

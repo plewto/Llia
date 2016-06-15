@@ -14,3 +14,6 @@ a = LliaHandler.new();
 
 q = Synth(\ORGN);
 q.free;
+
+
+r = Stethoscope(s);
