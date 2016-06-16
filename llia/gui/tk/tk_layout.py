@@ -112,6 +112,35 @@ class HFrame(Frame):
         self.add("")
 
 
+
+#  ---------------------------------------------------------------------- 
+#                                  FlowGrid
+#
+# Arrange elements in columns from left to right.  Start new row whenever
+# column count is exceeded. 
+#
+# All grid cells have ientical size.
+
+class FlowGrid(Frame):
+
+    def __init__(self, master, column_count=8):
+        Frame.__init__(self, master)
+        self.column_count = column_count
+        self._col = 0
+        self._row = 0
+
+    def add(self, payload, padx=0, pady=0, sticky="w"):
+        payload.grid(row=self._row, column=self._col,
+                     padx=padx, pady=pady, sticky=sticky)
+        self._col += 1
+        if self._col >= self.column_count:
+            self._col = 0
+            self._row += 1
+        
+        
+    
+
+
 #  ---------------------------------------------------------------------- 
 #                                 BorderFrame
 #
