@@ -21,6 +21,8 @@ specs = SynthSpecs.global_synth_type_registry
 
 class TkApplicationWindow(AbstractApplicationWindow):
 
+    #CENTER_COLUMNS = 8
+    
     def __init__(self, app):
         self.root = Tk()
         self.root.title("Llia")
@@ -33,12 +35,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)
         self._main = layout.BorderFrame(self.root)
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
+        self._instrument_frame = layout.FlowGrid(self._main.center)
+        self._instrument_frame.pack(expand=True, fill=BOTH)
         self._init_status_panel()
         self._init_menu()
         self._init_westbar()
         self.root.minsize(width=665, height=375)
-        #self._help_dialog = TkHelpDialog(self.root)
-        #self._help_dialog.withdraw()
+        self._current_column = 0
+        self._current_row = 0
         
     def _init_status_panel(self):
         south = self._main.south
@@ -248,6 +252,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         st = w.config()["text"][-1]
         dialog = TkAddSynthDialog(self.root, self.app, st, False)
         self.root.wait_window(dialog)
+        # FPO
+        self.add_active_synth_button(None)
         
     def _show_add_efx_dialog(self, event):
         w = event.widget
@@ -255,4 +261,17 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkAddSynthDialog(self.root, self.app, st, True)
         self.root.wait_window(dialog)
 
+    # def add_active_synth_button(self, synth):
+    #     print("HERE")
+    #     c = self._current_column
+    #     r = self._current_row
+    #     b = factory.button(self.main.center, "FPO")
+    #     b.grid(row = r, column = c)
+    #     c += 1
+    #     if c > CENTER_COLUMNS:
+    #         c = 0
+    #         r += 1
+    #     self._current_column = c
+    #     self._current_row = r
+            
         

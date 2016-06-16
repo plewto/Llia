@@ -22,18 +22,15 @@ class TkAddSynthDialog(Toplevel):
 
     def __init__(self, master, app, synth_type, is_efx):
         Toplevel.__init__(self, master)
+        main = Frame(self)
+        main.pack(anchor=W, expand=True, fill=BOTH)
         self.app = app
         self.stype = synth_type
         self.is_efx = is_efx
-        main = factory.notebook(self)
-        toolbar = Frame(self)
-        main.pack(anchor=W, expand=True, fill=BOTH)
-        toolbar.pack(anchor=W, expand=True, fill=X)
         self.id_ = select_synth_id(self.app, synth_type)
         self.sid = "%s_%d" % (synth_type, self.id_)
         specs = SynthSpecs.global_synth_type_registry[synth_type]
         self._params = {}
-        
         title = "Add %s " % synth_type
         if is_efx:
             title += "Effect"
@@ -89,7 +86,7 @@ class TkAddSynthDialog(Toplevel):
             factory.padding_label(frame_control_out).grid(row=row, column=0)
             frame_control_out.grid(row=1, column=3, padx=4, pady=4)
         
-        # Control Input Buses
+        # # Control Input Buses
         if specs["control-input-buses"]:
             frame_control_in = factory.label_frame(main, "Control Input Buses")
             row = 0
@@ -104,7 +101,7 @@ class TkAddSynthDialog(Toplevel):
             factory.padding_label(frame_control_in).grid(row=row, column=0)
             frame_control_in.grid(row=5, column=3, padx=4, pady=4)
 
-        # Buffers
+        # # Buffers
         if specs["buffers"]:
             frame_buffers = factory.label_frame(main, "Buffers")
             row = 0
@@ -118,7 +115,7 @@ class TkAddSynthDialog(Toplevel):
             factory.padding_label(frame_buffers).grid(row=row, column=0)
             frame_buffers.grid(row=9, column=3, padx=4, pady=4)
 
-        # Keymode
+        # # Keymode
         self.var_keymode = StringVar()
         self.var_voice_count = StringVar()
         self.var_voice_count.set(8)
@@ -155,7 +152,8 @@ class TkAddSynthDialog(Toplevel):
         b_accept.grid(row=0, column=2, sticky="e")
         b_cancel.grid(row=0, column=3, sticky="e")
         toolbar.grid(row=10, column=0, columnspan=5, sticky="ew", padx=4, pady=8)
-        # self.grab_set() # ISSUE: Throws TclError: grab failed: window not viewable?
+        
+        #self.grab_set() # ISSUE: Throws TclError: grab failed: window not viewable?
         self.mainloop()
 
     def display_help(self):
