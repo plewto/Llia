@@ -12,6 +12,7 @@ class TkControllerNameEditor(Toplevel):
 
     def __init__(self, master, app):
         Toplevel.__init__(self, master)
+        self.config(background=factory.bg)
         self.wm_title = "MIDI Controllers"
         self.app = app
         self.config = app.config

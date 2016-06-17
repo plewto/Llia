@@ -17,7 +17,7 @@ class TkSynthWindow(AbstractApplicationWindow):
     def __init__(self, sproxy):
         app = sproxy.app
         super(TkSynthWindow, self).__init__(app, app.main_window().root)
-        self.synth = sproxy
+        self.config(background=factory.bg)        self.synth = sproxy
         self.sid = sproxy.sid
         self.toplevel = self.app.main_window().as_widget()
 

@@ -16,6 +16,7 @@ class TkAboutDialog(Toplevel):
 
     def __init__(self, master, app):
         Toplevel.__init__(self, master)
+        self.config(background=factory.bg)
         config = app.config
         id_ = config["global-osc-id"]
         host, port = config['host'], config['port']

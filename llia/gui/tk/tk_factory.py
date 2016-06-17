@@ -269,3 +269,12 @@ def label_frame(master, text):
 def notebook(master):
     nb = Notebook(master)
     return nb
+
+
+#  ---------------------------------------------------------------------- 
+#                                  Toplevel
+
+def toplevel(master=None):
+    t = Toplevel(master)
+    t.config(background=bg)
+    return t

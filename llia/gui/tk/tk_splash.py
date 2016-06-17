@@ -56,6 +56,7 @@ class TkSplashWindow(Toplevel):
 
     def __init__(self, root, app):
         Toplevel.__init__(self, root)
+        self.config(background=bg)
         self.title("Llia Setup")
         self.maxsize(660, 685)
         self.app = app

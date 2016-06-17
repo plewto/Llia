@@ -24,6 +24,7 @@ class __TkHelpDialog(Toplevel):
 
     def __init__(self, master):
         Toplevel.__init__(self, master)
+        self.config(background=factory.bg)
         self.title("Llia Help")
         main = PanedWindow(self, orient=HORIZONTAL)
         main.pack(anchor="nw", expand=True, fill=BOTH)

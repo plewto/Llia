@@ -16,6 +16,7 @@ class TkHistoryEditor(Toplevel):
 
     def __init__(self, master, app):
         Toplevel.__init__(self, master)
+        self.config(background=factory.bg)
         self.wm_title("Lliascript History")
         self.app = app
         self.filename = ""
