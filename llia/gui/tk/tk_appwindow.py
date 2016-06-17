@@ -15,18 +15,20 @@ from  llia.proxy import LliaProxy
 import llia.constants as con
 from llia.gui.tk.tk_addsynth import TkAddSynthDialog
 from llia.synth_proxy import SynthSpecs
+from llia.gui.tk.pallet import pallet
 
 specs = SynthSpecs.global_synth_type_registry
+
+bg, fg = pallet["BG"], pallet["FG"]
+
 
 
 class TkApplicationWindow(AbstractApplicationWindow):
 
-    #CENTER_COLUMNS = 8
-    
     def __init__(self, app):
         self.root = Tk()
         self.root.title("Llia")
-        #self.root.configure(background=factory.pallet["BG"])
+        self.root.config(background=bg)
         super(TkApplicationWindow, self).__init__(app, self.root)
         self.root.withdraw()
         if app.config["enable-splash"]:
@@ -34,15 +36,12 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.deiconify()
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)
         self._main = layout.BorderFrame(self.root)
+        self._main.config(background=bg)
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
-        self._instrument_frame = layout.FlowGrid(self._main.center)
-        self._instrument_frame.pack(expand=True, fill=BOTH)
         self._init_status_panel()
         self._init_menu()
-        self._init_westbar()
+        self._init_center_frame(self._main.center)
         self.root.minsize(width=665, height=375)
-        self._current_column = 0
-        self._current_row = 0
         
     def _init_status_panel(self):
         south = self._main.south
@@ -53,34 +52,37 @@ class TkApplicationWindow(AbstractApplicationWindow):
         b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
         b_panic.grid(row=0, column=0, sticky="w")
         b_clear_status.grid(row=0, column=1, sticky="w")
-        self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8) 
+        self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8)
+        south.config(background=bg)
 
-    def _init_westbar(self):
-        tbar = layout.VFrame(self._main.west)
-        tbar.pack(anchor="nw", expand=True, fill="y")
-        w = factory.label(tbar, "Synths:")
-        tbar.add(w, pady=8)
+    def _init_center_frame(self, master):
+        frame_north = layout.FlowGrid(master)
+        frame_south = layout.FlowGrid(master)
+        frame_north.pack(expand=True, fill=BOTH, pady=8)
+        frame_south.pack(expand=True, fill=BOTH)
+        w = factory.image_label(frame_north, "resources/logos/synth.png")
+        frame_north.add(w)
         for st in sorted(con.SYNTH_TYPES):
-            d = specs[st]["description"]
-            tt = "Add %s, %s" % (st, d)
-            b = factory.button(tbar, st, ttip=tt)
+            sp = specs[st]
+            ttp = "Add %s Synthesizer (%s)" % (st, sp["description"])
+            b = factory.logo_button(frame_north, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_synth_dialog)
-            tbar.add(b)
-        tbar.separator()
-        w = factory.label(tbar, "Effects:")
-        tbar.add(w, pady=8)
+            frame_north.add(b)
+        w = factory.image_label(frame_south, "resources/logos/efx.png")
+        frame_south.add(w)
         for st in sorted(con.EFFECT_TYPES):
-            d = specs[st]["description"]
-            tt = "Add %s, %s" % (st, d)
-            b = factory.button(tbar, st, ttip=tt)
+            sp = specs[st]
+            ttp = "Add %s Effect (%s)" % (st, sp["description"])
+            b = factory.logo_button(frame_south, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_efx_dialog)
-            tbar.add(b)
-
+            frame_south.add(b)
+        frame_north.config(background=bg)
+        frame_south.config(background=bg)
+        
     @staticmethod
     def menu(master):
         m = Menu(master, tearoff=0)
-        #m.configure(background=factory.pallet["BG"])
-        #m.configure(foreground=factory.pallet["FG"])
+        m.config(background=bg, foreground=fg)
         return m
     
     def _init_menu(self):
@@ -91,7 +93,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         midi_menu = self.menu(main_menu)
         bus_menu = self.menu(main_menu)
         buffer_menu = self.menu(main_menu)
-        #synth_menu = self.menu(main_menu)
         tune_menu = self.menu(main_menu)
         help_menu = self.menu(main_menu)
         main_menu.add_cascade(label="File", menu=file_menu)
@@ -99,7 +100,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         main_menu.add_cascade(label="MIDI", menu=midi_menu)
         main_menu.add_cascade(label="Buses", menu=bus_menu)
         main_menu.add_cascade(label="Buffers", menu=buffer_menu)
-        #main_menu.add_cascade(label="Synths", menu=synth_menu)
         main_menu.add_cascade(label="Tune", menu=tune_menu)
         main_menu.add_cascade(label="Help", menu=help_menu)
         self._init_file_menu(file_menu)
@@ -107,7 +107,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._init_midi_menu(midi_menu)
         self._init_bus_menu(bus_menu)
         self._init_buffer_menu(buffer_menu)
-        #self._init_synth_menu(synth_menu)
         self._init_tune_menu(tune_menu)
         self._init_help_menu(help_menu)
 
@@ -135,15 +134,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         
     def _init_buffer_menu(self, bmenu):
         bmenu.add_command(label="View Buffers", command=self.show_bufferlist_dialog)
-        #bmenu.add_command(label="Edit Buffers", command = None)
-        
-    # def _init_synth_menu(self, smenu):
-    #     # smenu.add_command(label = "Show Synth", command = None)
-    #     # smenu.add_command(label = "Hide Synth", command = None)
-    #     # smenu.add_separator()
-    #     # smenu.add_command(label = "Add Synth", command = self.show_add_synth_dialog)
-    #     # smenu.add_command(label = "Add EFX Synth", command = self.show_add_efx_dialog)
-    #     smenu.add_command(label = "Remove Synth", command = None)
 
     def _init_tune_menu(self, tmenu):
         tmenu.add_command(label = "FIX ME: Nothing to see here")
@@ -182,11 +172,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         from llia.gui.tk.tk_about_dialog import TkAboutDialog
         dialog = TkAboutDialog(self.root, self.app)
         self.root.wait_window(dialog)
-
-    # def show_help_dialog(self, topic=None):
-    #     if topic:
-    #         self._help_dialog.display_topic(topic)
-    #     self._help_dialog.deiconify()
 
     def display_help(self, topic=None):
         help.display_help(topic)
@@ -261,17 +246,3 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkAddSynthDialog(self.root, self.app, st, True)
         self.root.wait_window(dialog)
 
-    # def add_active_synth_button(self, synth):
-    #     print("HERE")
-    #     c = self._current_column
-    #     r = self._current_row
-    #     b = factory.button(self.main.center, "FPO")
-    #     b.grid(row = r, column = c)
-    #     c += 1
-    #     if c > CENTER_COLUMNS:
-    #         c = 0
-    #         r += 1
-    #     self._current_column = c
-    #     self._current_row = r
-            
-        

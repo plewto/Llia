@@ -3,8 +3,9 @@
 
 from __future__ import print_function
 
+import os.path
 from Tkinter import *
-from ttk import *
+from ttk import Combobox
 from tkFont import Font
 from PIL import Image, ImageTk
 
@@ -12,22 +13,40 @@ from PIL import Image, ImageTk
 from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
 
+from llia.gui.tk.pallet import pallet
+
+bg = pallet["bg"]
+fg = pallet["fg"]
+bbg = pallet["button-bg"]
+warning_fg = pallet["warning-fg"]
+
+_logo_cachet = []
 
 # from llia.gui.tk.pallet import Pallet
 # pallet = Pallet()
 # BIG_FONT = Font(family="Courier", size=30)
 # WARNING_FONT = Font(family="Courier", size=12)
 
-__widget_class_prefix = ""
+# __widget_class_prefix = ""
 
-def set_class_prefix(p):
-    __widget_class_prefix = p
+# def set_class_prefix(p):
+#     __widget_class_prefix = p
 
-def __widget_class_name(base):
-    if __widget_class_prefix:
-        return "%s.%s" % (__widget_class_prefix, base)
-    else:
-        return base
+# def __widget_class_name(base):
+#     if __widget_class_prefix:
+#         return "%s.%s" % (__widget_class_prefix, base)
+#     else:
+#         return base
+
+
+#  ---------------------------------------------------------------------- 
+#                                    Frame
+
+def frame(master):
+    f = Frame(master)
+    f.config(background = bg)
+    return f
+
 
 #  ---------------------------------------------------------------------- 
 #                                   ToolTip
@@ -45,11 +64,11 @@ def tooltip(widget, text):
 #                                   Labels
 
 def label(master, text, var=None):
-    cls = __widget_class_name("TLabel")
-    w = Label(master, text=text, class_=cls)
+    w = Label(master, text=text)
     w.config(justify=LEFT)
     if var:
         w.config(textvariable=var)
+    w.config(background=bg, foreground=fg)
     return w
 
 def center_label(master, text):
@@ -68,32 +87,32 @@ def warning_label(master, text=" ", var=None):
 
 def padding_label(master, n=4):
     w = Label(master, text = ' '*4)
+    w.config(background=bg)
     return w
 
-# def big_label(master, text, var=None):
-#     w = label(master, text, var)
-#     w.config(font=BIG_FONT)
-#     return w
+def image_label(master, fname, alt=None):
+    alt = alt or fname
+    w = label(master, "")
+    try:
+        img = Image.open(fname)
+        photo = ImageTk.PhotoImage(img)
+        _logo_cachet.append(photo)
+        w.config(image=photo)
+    except IOException:
+        w.config(text=alt)
+    w.config(background=bg, foreground=fg)
+    return w
 
-
-
-
-# def image_label(master, filename):
-#     img = Image.open(filename)
-#     photo = ImageTk.PhotoImage(img)
-#     w = Label(master, image=photo)
-#     w.configure(background="red")
-#     return w
 
 #  ---------------------------------------------------------------------- 
 #                                   Buttons
 
 def button(master, text, command=None, ttip=""):
-    cls = __widget_class_name("TButton")
-    b = Button(master, text=text, class_ = cls)
+    b = Button(master, text=text)
     if command:
         b.config(command=command)
     tooltip(b, ttip)
+    b.config(background=bbg, foreground=fg)
     return b
 
 def clear_button(master, text = "X", command=None, ttip=""):
@@ -125,10 +144,28 @@ def refresh_button(master, text="()", command=None, ttip="Refresh"):
     return b
 
 def radio(master, text, var, value, ttip=""):
-    cls = __widget_class_name("TRadiobutton")
-    rb = Radiobutton(master, text=text, variable=var, value=value, class_=cls)
+    # cls = __widget_class_name("TRadiobutton")
+    # rb = Radiobutton(master, text=text, variable=var, value=value, class_=cls)
+    rb = Radiobutton(master, text=text, variable=var, value=value)
     tooltip(rb, ttip)
     return rb
+
+def logo_button(master, name, fname=None, command=None, ttip=""):
+    if not fname:
+        fname = os.path.join("/home/sj/dev/Llia/resources", name, "logo.png")
+    try:
+        img = Image.open(fname)
+        photo = ImageTk.PhotoImage(img)
+        _logo_cachet.append(photo)
+        b = Button(master, text = name, image=photo)
+        b.config(compound="top")
+        tooltip(b, ttip)
+    except IOError:
+        b = button(master, name, ttip)
+    b.config(command=command)
+    b.config(background=bg, foreground=fg)
+    return b
+        
 
 
 #  ---------------------------------------------------------------------- 
@@ -144,17 +181,16 @@ def listbox(master, command=None, ttip=""):
     tooltip(lbx, ttip)
     return lbx
 
-
-
 #  ---------------------------------------------------------------------- 
 #                                  Scrollbar
 
 def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
-    if orientation == VERTICAL:
-        cls = __widget_class_name("Vertical.TScrollbar")
-    else:
-        cls = __widget_class_name("Horizontal.TScrollbar")
-    sb = Scrollbar(master, class_ = cls)
+    # if orientation == VERTICAL:
+    #     cls = __widget_class_name("Vertical.TScrollbar")
+    # else:
+    #     cls = __widget_class_name("Horizontal.TScrollbar")
+    # sb = Scrollbar(master, class_ = cls)
+    sb = Scrollbar(master)
     sb.config(orient=orientation)
     if xclient:
         xclient.config(xscrollcommand=sb.set)
@@ -207,26 +243,19 @@ def buffer_combobox(master, app):
 # NOTE: Text is not a ttk widget
 
 def entry(master, var, ttip=""):
-    cls = __widget_class_name("TEntry")
     t = Entry(master)
     t.configure(textvariable=var)
-    # t.configure(background=pallet["BG"])
-    # t.configure(foreground=pallet["FG"])
     tooltip(t, ttip)
     return t
 
 def text_widget(master, ttip=""):
     t = Text(master)
-    # t.config(background=pallet["BG"])
-    # t.config(foreground=pallet["FG"])
     tooltip(t, ttip)
     return t
 
 def read_only_text(master, text):
     t = Text(master)
     t.insert(END, text)
-    # t.config(background=pallet["BG"])
-    # t.config(foreground=pallet["FG"])
     return t
 
 

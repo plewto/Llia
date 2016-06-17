@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 from Tkinter import (BOTH, W, EW, E, X, LEFT, Toplevel, StringVar)
-from ttk import (Frame,)
+#from ttk import (Frame,)
 import llia.constants as con
 import llia.gui.tk.tk_factory as factory
 from llia.synth_proxy import SynthSpecs
@@ -22,7 +22,7 @@ class TkAddSynthDialog(Toplevel):
 
     def __init__(self, master, app, synth_type, is_efx):
         Toplevel.__init__(self, master)
-        main = Frame(self)
+        main = factory.frame(self)
         main.pack(anchor=W, expand=True, fill=BOTH)
         self.app = app
         self.stype = synth_type
@@ -143,7 +143,7 @@ class TkAddSynthDialog(Toplevel):
         factory.padding_label(frame_keymode).grid(row=2, column=0)
         
         # South Toolbar
-        toolbar = Frame(main)
+        toolbar = factory.frame(main)
         b_help = factory.help_button(toolbar, command=self.display_help)
         b_accept = factory.accept_button(toolbar, command=self.accept)
         b_cancel = factory.cancel_button(toolbar, command=self.cancel)

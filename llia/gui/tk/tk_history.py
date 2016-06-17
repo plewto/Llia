@@ -4,7 +4,7 @@
 # Defines basic lliascript text editor.
 
 from __future__ import print_function
-from Tkinter import (Toplevel, Frame, END, NW, SW, X, Y, BOTH, LEFT, RIGHT,
+from Tkinter import (Toplevel, END, NW, SW, X, Y, BOTH, LEFT, RIGHT,
                      TOP, Text, Scrollbar, VERTICAL, HORIZONTAL, NS, EW)
 
 import tkFileDialog
@@ -19,8 +19,8 @@ class TkHistoryEditor(Toplevel):
         self.wm_title("Lliascript History")
         self.app = app
         self.filename = ""
-        toolbar = Frame(self)
-        south = Frame(self)
+        toolbar = factory.frame(self)
+        south = factory.frame(self)
         toolbar.pack(side=TOP, anchor=NW, expand=True, fill=X)
         south.pack(anchor=SW, expand=True, fill=BOTH)
         b_open = factory.button(toolbar, "Open", ttip="Open lliascript file",

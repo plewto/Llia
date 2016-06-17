@@ -3,8 +3,8 @@
 #
 
 from __future__ import print_function
-from Tkinter import Toplevel, Label, BOTH, Frame, StringVar, NS, N, END, W, EW, LEFT, RIGHT
-import ttk
+from Tkinter import Toplevel, Label, BOTH, StringVar, NS, N, END, W, EW, LEFT, RIGHT
+# import ttk
 
 import llia.gui.tk.tk_factory as factory
 
@@ -17,10 +17,11 @@ class TkAudiobusEditor(Toplevel):
         self.app = app
         self.proxy = app.proxy
         self.parser = app.ls_parser
-        main = Frame(self)
+        main = factory.frame(self)
         main.pack(expand=True)
         lab_title = factory.label(main, "Audio Busses")
-        frame_list = Frame(main, width=248, height=320)
+        frame_list = factory.frame(main)
+        frame_list.config(width=248, height=320)
         frame_list.pack_propagate(False)
         self.listbox = factory.listbox(frame_list, command=self.select_bus)
         self.listbox.pack(expand=True, fill=BOTH)
@@ -32,7 +33,7 @@ class TkAudiobusEditor(Toplevel):
         self._var_chancount = StringVar()
         spin_chancount = factory.int_spinbox(main, self._var_chancount, 1, 64)
         self.lab_warning = factory.warning_label(main)
-        button_bar = Frame(main)
+        button_bar = factory.frame(main)
         b_remove = factory.remove_button(button_bar,ttip="Delete audio bus",command=self.remove_bus)
         b_add = factory.add_button(button_bar, ttip="Add new audio bus", command=self.add_bus)
         b_refresh = factory.refresh_button(button_bar, ttip="Refresh bus list", command=self.refresh)

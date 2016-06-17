@@ -3,7 +3,7 @@
 
 
 from __future__ import print_function
-from Tk import Toplevel, BOTH, Frame, Label
+from Tk import Toplevel, BOTH, Label
 import tkk
 
 
@@ -21,7 +21,7 @@ class TkSynthWindow(AbstractApplicationWindow):
         self.sid = sproxy.sid
         self.toplevel = self.app.main_window().as_widget()
 
-        main = Frame(self.toplevel)
+        main = factory.frame(self.toplevel)
         main.pack(expand=True, fill=BOTH)
 
         # DEBUG FPO

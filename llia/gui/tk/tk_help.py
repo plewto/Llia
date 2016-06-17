@@ -2,7 +2,7 @@
 # 2016.05.24
 
 from __future__ import print_function
-from Tkinter import (BOTH, END, FLAT, Frame, HORIZONTAL, LEFT, PanedWindow, RIGHT, StringVar, Toplevel)
+from Tkinter import (BOTH, END, FLAT, HORIZONTAL, LEFT, PanedWindow, RIGHT, StringVar, Toplevel)
 
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
@@ -42,7 +42,7 @@ class __TkHelpDialog(Toplevel):
         self.listbox_topics = listbox_topics
 
         # Help Text Area
-        east = Frame(main)
+        east = factory.frame(main)
         #east.config(background=factory.pallet["BG"])
         main.add(east)
         text_widget = factory.text_widget(east)

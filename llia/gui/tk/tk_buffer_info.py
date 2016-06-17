@@ -2,15 +2,19 @@
 # 2016.06.03
 
 from __future__ import print_function
-from Tkinter import Toplevel, Frame, END, BOTH, HORIZONTAL, NS, EW, NW, BOTTOM, W, X, LEFT, RIGHT
-import ttk
+from Tkinter import Toplevel, END, Frame, BOTH, HORIZONTAL, NS, EW, NW, BOTTOM, W, X, LEFT, RIGHT
+# import ttk
 
 import llia.gui.tk.tk_factory as factory
+from llia.gui.tk.pallet import pallet
+
+bg = pallet["bg"]
 
 class TkBufferList(Frame):
 
     def __init__(self, master, app):
         Frame.__init__(self, master)
+        self.config(background=bg)
         self.app = app
         self.proxy = app.proxy
         self.pack_propagate(False)
@@ -46,7 +50,7 @@ class TkBufferListDialog(Toplevel):
         self.wm_title("Llia Buffers")
         self.tbl = TkBufferList(self, app)
         self.tbl.pack(anchor=NW, expand=True, fill=BOTH)
-        button_bar = Frame(self)
+        button_bar = factory.frame(self)
         button_bar.pack(side=BOTTOM, anchor=W, expand=True, fill=X)
         b_refresh = factory.refresh_button(button_bar, command=self.tbl.refresh)
         b_accept = factory.accept_button(button_bar, command=self.destroy)

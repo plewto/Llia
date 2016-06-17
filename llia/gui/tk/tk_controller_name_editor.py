@@ -2,7 +2,7 @@
 # 2016.05.30
 
 from __future__ import print_function
-from Tkinter import Toplevel, Label, BOTH, Frame, StringVar, NS, N, END, W, EW, LEFT, RIGHT
+from Tkinter import Toplevel, Label, BOTH, StringVar, NS, N, END, W, EW, LEFT, RIGHT
 import ttk
 
 import llia.gui.tk.tk_factory as factory
@@ -18,12 +18,13 @@ class TkControllerNameEditor(Toplevel):
         self.parser = app.ls_parser
         self._current_controller=0
         self._save_backup()
-        main = Frame(self)
+        main = factory.frame(self)
         main.pack(expand=True)
         main.pack_propagate(False)
         lab_title = factory.label(main, "MIDI Controller Names")
         self.lab_warning = factory.warning_label(main, "")
-        frame_list = Frame(main, width=248, height=320)
+        frame_list = factory.frame(main)
+        frame_list.config(width=248, height=320)
         frame_list.pack_propagate(False)
         self.listbox = factory.listbox(frame_list, command=self.select_controller)
         self.listbox.pack(expand=True, fill=BOTH)
@@ -31,7 +32,7 @@ class TkControllerNameEditor(Toplevel):
         self.refresh()
         self.var_name = StringVar()
         entry_name = factory.entry(main, self.var_name)
-        button_bar = Frame(main)
+        button_bar = factory.frame(main)
         b_refresh = factory.refresh_button(button_bar, command=self.refresh)
         b_help = factory.help_button(button_bar, command = self.display_help)
         b_accept = factory.accept_button(button_bar, command=self.accept)

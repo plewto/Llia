@@ -31,7 +31,7 @@ class TkAboutDialog(Toplevel):
         #lab_logo.configure(background=factory.pallet["BG"])
         main.add(lab_logo)
         #south = Frame(main, background=factory.pallet["BG"])
-        south = Frame(main)
+        south = factory.frame(main)
         main.add(south)
         acc = "Llia Version %s.%s.%s \n" % VERSION[0:3]
         acc += "(c) 2016 Steven Jones\n\n"

@@ -4,7 +4,7 @@
 from __future__ import print_function
 
 from Tkinter import (BOTH, )
-from ttk import Frame
+
 
 import llia.gui.tk.tk_factory as factory
 
