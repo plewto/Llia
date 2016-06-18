@@ -30,7 +30,9 @@ class TkAddSynthDialog(Toplevel):
         self.id_ = select_synth_id(self.app, synth_type)
         self.sid = "%s_%d" % (synth_type, self.id_)
         specs = SynthSpecs.global_synth_type_registry[synth_type]
-        self._params = {}
+        self._busname_map = {}   # Maps synth parameters to bus name Comboboxes
+        self._busoffset_map = {} # Maps synth parameters to bus offset var
+        self._buffername_map = {}
         title = "Add %s " % synth_type
         if is_efx:
             title += "Effect"
@@ -40,6 +42,13 @@ class TkAddSynthDialog(Toplevel):
         w = factory.dialog_title_label(main, title)
         w.grid(row = 0, column = 0, sticky="w", padx=4, pady=8)
 
+        def spinbox(master, param):
+            var = StringVar()
+            var.set("0")
+            sp  = factory.int_spinbox(master, var, 0, 128, "Bus offset")
+            self._busoffset_map[param] = var
+            return sp
+        
         # Audio Output Buses
         frame_audio_out = factory.label_frame(main, "Audio Output Buses")
         row = 0
@@ -49,8 +58,10 @@ class TkAddSynthDialog(Toplevel):
             combo = factory.audio_bus_combobox(frame_audio_out, self.app)
             combo.set("out_0")
             lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+            self._busname_map[bname] = combo
+            spin = spinbox(frame_audio_out, bname)
             combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-            self._params[bname] = combo
+            spin.grid(row=row, column=2, sticky="e", padx=4, pady=4)
             row += 1
         factory.padding_label(frame_audio_out).grid(row=row, column=0)
         frame_audio_out.grid(row=1, column=0, padx=4, pady=4)
@@ -65,8 +76,10 @@ class TkAddSynthDialog(Toplevel):
                 combo = factory.audio_bus_combobox(frame_audio_in, self.app)
                 combo.set("in_0")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                self._busname_map[bname] = combo
+                spin = spinbox(frame_audio_in, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                self._params[bname] = combo
+                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
                 row += 1
             factory.padding_label(frame_audio_in).grid(row=row, column=0)
             frame_audio_in.grid(row=5, column=0, padx=4, pady=4)
@@ -80,8 +93,10 @@ class TkAddSynthDialog(Toplevel):
                 lab_name = factory.label(frame_control_out, bname)
                 combo = factory.control_bus_combobox(frame_control_out, self.app)
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                self._busname_map[bname] = combo
+                spin = spinbox(frame_control_out, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                self._params[bname] = combo
+                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
                 row += 1
             factory.padding_label(frame_control_out).grid(row=row, column=0)
             frame_control_out.grid(row=1, column=3, padx=4, pady=4)
@@ -95,8 +110,10 @@ class TkAddSynthDialog(Toplevel):
                 lab_name = factory.label(frame_control_in, bname)
                 combo = factory.control_bus_combobox(frame_control_in, self.app)
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                self._busname_map[bname] = combo
+                spin = spinbox(frame_control_in, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                self._params[bname] = combo
+                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
                 row += 1
             factory.padding_label(frame_control_in).grid(row=row, column=0)
             frame_control_in.grid(row=5, column=3, padx=4, pady=4)
@@ -110,7 +127,7 @@ class TkAddSynthDialog(Toplevel):
                 combo = factory.buffer_combobox(frame_buffers, self.app)
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                self._params[bname] = combo
+                self._buffername_map[bname] = combo
                 row += 1
             factory.padding_label(frame_buffers).grid(row=row, column=0)
             frame_buffers.grid(row=9, column=3, padx=4, pady=4)
@@ -166,8 +183,11 @@ class TkAddSynthDialog(Toplevel):
             km = self.var_keymode.get()
             vc = int(self.var_voice_count.get())
             shelper.add_synth(self.stype, self.id_, km, vc, outbus=None)
-        for p,c in self._params.items():
-            bus_or_buffer = c.get()
-            shelper.assign_buffer_or_bus(p, bus_or_buffer)
+        for p in self._busname_map.keys():
+            busname = self._busname_map[p].get()
+            offset = int(self._busoffset_map[p].get())
+            shelper.assign_buffer_or_bus(p, busname, offset)
+        for p,bname in self._buffername_map.items():
+            shelper.assign_buffer(p, bname)
         self.app.main_window().status("Added %s" % self.sid)
         self.destroy()
