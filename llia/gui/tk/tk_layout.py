@@ -9,10 +9,6 @@ import ttk
 
 from llia.generic import is_string
 import llia.gui.tk.tk_factory as factory
-# from llia.gui.tk.tk_factory import pallet
-
-# bg = pallet["BG"]
-    
 
 #  ---------------------------------------------------------------------- 
 #                                 FormLayout

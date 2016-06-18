@@ -15,12 +15,8 @@ from  llia.proxy import LliaProxy
 import llia.constants as con
 from llia.gui.tk.tk_addsynth import TkAddSynthDialog
 from llia.synth_proxy import SynthSpecs
-from llia.gui.tk.pallet import pallet
 
 specs = SynthSpecs.global_synth_type_registry
-
-bg, fg = pallet["BG"], pallet["FG"]
-
 
 
 class TkApplicationWindow(AbstractApplicationWindow):
@@ -28,7 +24,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def __init__(self, app):
         self.root = Tk()
         self.root.title("Llia")
-        self.root.config(background=bg)
+        self.root.config(background=factory.bg())
         super(TkApplicationWindow, self).__init__(app, self.root)
         self.root.withdraw()
         if app.config["enable-splash"]:
@@ -36,7 +32,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.deiconify()
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)
         self._main = layout.BorderFrame(self.root)
-        self._main.config(background=bg)
+        self._main.config(background=factory.bg())
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
         self._init_status_panel()
         self._init_menu()
@@ -53,7 +49,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         b_panic.grid(row=0, column=0, sticky="w")
         b_clear_status.grid(row=0, column=1, sticky="w")
         self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8)
-        south.config(background=bg)
+        south.config(background=factory.bg())
 
     def _init_center_frame(self, master):
         frame_north = layout.FlowGrid(master)
@@ -76,13 +72,13 @@ class TkApplicationWindow(AbstractApplicationWindow):
             b = factory.logo_button(frame_south, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_efx_dialog)
             frame_south.add(b)
-        frame_north.config(background=bg)
-        frame_south.config(background=bg)
+        frame_north.config(background=factory.bg())
+        frame_south.config(background=factory.bg())
         
     @staticmethod
     def menu(master):
         m = Menu(master, tearoff=0)
-        m.config(background=bg, foreground=fg)
+        m.config(background=factory.bg(), foreground=factory.fg())
         return m
     
     def _init_menu(self):

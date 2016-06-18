@@ -9,19 +9,18 @@ from ttk import Combobox
 from tkFont import Font
 from PIL import Image, ImageTk
 
-
 from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
-import llia.gui.tk.pallet 
+import llia.gui.pallet 
 
 
-_current_pallet = llia.gui.tk.pallet.pallet
+_current_pallet = None
 
 def set_pallet(p):
     global _current_pallet
     _current_pallet = p
 
-set_pallet(llia.gui.tk.pallet.pallet)
+set_pallet(llia.gui.pallet.pallet)
     
 def pallet(key):
     return _current_pallet[key]

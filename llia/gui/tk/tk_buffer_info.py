@@ -3,18 +3,15 @@
 
 from __future__ import print_function
 from Tkinter import Toplevel, END, Frame, BOTH, HORIZONTAL, NS, EW, NW, BOTTOM, W, X, LEFT, RIGHT
-# import ttk
 
 import llia.gui.tk.tk_factory as factory
-from llia.gui.tk.pallet import pallet
 
-bg = pallet["bg"]
 
 class TkBufferList(Frame):
 
     def __init__(self, master, app):
         Frame.__init__(self, master)
-        self.config(background=bg)
+        self.config(background=factory.bg())
         self.app = app
         self.proxy = app.proxy
         self.pack_propagate(False)

@@ -1,4 +1,4 @@
-# llia.gui.tk.pallet
+# llia.gui.pallet
 # 2016.05.21
 
 from __future__ import print_function
