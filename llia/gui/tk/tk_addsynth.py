@@ -134,8 +134,6 @@ class TkAddSynthDialog(Toplevel):
         lab_vc = factory.label(frame_keymode, "Voice count")
         spin_vc = factory.int_spinbox(frame_keymode, self.var_voice_count, from_=1, to=128)
         # voice count spin_vc is place hoder for future.
-        lab_vc.config(state="disabled")
-        spin_vc.config(state="disabled")
         lab_vc.grid(row=1, column=0, padx=4)
         spin_vc.grid(row=1, column=1, columnspan=3, padx=4, pady=4)
         frame_keymode.grid(row=9, column=0, padx=4, pady=4)

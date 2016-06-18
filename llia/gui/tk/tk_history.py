@@ -4,8 +4,8 @@
 # Defines basic lliascript text editor.
 
 from __future__ import print_function
-from Tkinter import (Toplevel, END, NW, SW, X, Y, BOTH, LEFT, RIGHT,
-                     TOP, Text, Scrollbar, VERTICAL, HORIZONTAL, NS, EW)
+from Tkinter import (Toplevel, END, NW, SW, X, Y, BOTH, LEFT, RIGHT, TOP, NS, EW)
+                     #Scrollbar, VERTICAL, HORIZONTAL, NS, EW)
 
 import tkFileDialog
 import ttk
@@ -40,11 +40,11 @@ class TkHistoryEditor(Toplevel):
         b_exec.pack(side=LEFT, expand=True, fill=X)
         b_compose.pack(side=LEFT, expand=True, fill=X)
         b_help.pack(side=LEFT, expand=True, fill=X)
-        self.text_widget = Text(south)
-        sb1 = Scrollbar(south, orient=VERTICAL, 
-                        command=self.text_widget.yview)
-        sb2 = Scrollbar(south, orient=HORIZONTAL, 
-                        command=self.text_widget.xview)
+        self.text_widget = factory.text_widget(south)
+        sb1 = factory.scrollbar(south)
+        sb2 = factory.scrollbar(south, orientation="horizontal")
+        sb1.config(command=self.text_widget.yview)
+        sb2.config(command=self.text_widget.xview)
         self.text_widget.config(yscrollcommand = sb1.set)
         self.text_widget.config(xscrollcommand = sb2.set)
         self.text_widget.grid(row=0, column=0, rowspan=5, columnspan=5)

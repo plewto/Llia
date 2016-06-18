@@ -32,12 +32,6 @@ def fg():
     return pallet("fg")
 
 
-# bg = pallet["bg"]
-# fg = pallet["fg"]
-# bbg = pallet["button-bg"]
-# warning_fg = pallet["warning-fg"]
-
-
 _logo_cachet = []
 
 
@@ -75,6 +69,7 @@ def dialog_title_label(master, text):
 
 def warning_label(master, text=" ", var=None):
     w = label(master, text, var)
+    w.config(foreground=pallet("warning-fg"))
     return w
 
 def padding_label(master, n=4):
@@ -105,6 +100,9 @@ def button(master, text, command=None, ttip=""):
         b.config(command=command)
     tooltip(b, ttip)
     b.config(background=pallet("button-bg"), foreground=fg())
+    b.config(activebackground=pallet("ACTIVE-BG"))
+    b.config(activeforeground=pallet("ACTIVE-FG"))
+    b.config(highlightbackground=bg())
     return b
 
 def clear_button(master, text = "X", command=None, ttip=""):
@@ -139,9 +137,11 @@ def radio(master, text, var, value, ttip=""):
     rb = Radiobutton(master, text=text, variable=var, value=value)
     tooltip(rb, ttip)
     rb.config(background=bg(), foreground=fg())
-    rb.config(activebackground="red")
     rb.config(highlightbackground=bg())
-    rb.config(selectcolor=bg())
+    rb.config(selectcolor=pallet("radio-select"))
+    rb.config(activebackground=pallet("active-bg"))
+    rb.config(activeforeground=pallet("active-fg"))
+    
     return rb
 
 def logo_button(master, name, fname=None, command=None, ttip=""):
@@ -193,8 +193,8 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
     if yclient:
         yclient.config(yscrollcommand=sb.set)
         sb.config(command = yclient.yview)
-    sb.config(background=pallet("button-bg"))
-    sb.config(troughcolor=bg())
+    sb.config(background=pallet("scrollbar-background"))
+    sb.config(troughcolor=pallet("scrollbar-trough"))
     return sb
 
 
@@ -215,10 +215,11 @@ def int_spinbox(master, textvar, from_, to, ttip=""):
 #                                  Combobox
 #
 
+# ISSUE: ttk.Combobox style not effected by pallet
+#
 def combobox(master, values, ttip=""):
     cb = Combobox(master, values = values)
     tooltip(cb, ttip)
-    cb.config(background=bg(), foreground=fg())
     return cb
 
 def audio_bus_combobox(master, app):
