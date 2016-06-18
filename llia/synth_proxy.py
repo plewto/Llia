@@ -62,6 +62,7 @@ class SynthSpecs(dict):
         super(SynthSpecs, self).__setitem__("control-output-buses", [])
         super(SynthSpecs, self).__setitem__("control-input-buses", [])
         super(SynthSpecs, self).__setitem__("buffers", [])
+        super(SynthSpecs, self).__setitem__("pallet", None)
         
     
         SynthSpecs.global_synth_type_registry[format_] = self

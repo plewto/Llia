@@ -5,6 +5,7 @@ from Tkinter import (BOTH, W, EW, E, X, LEFT, Toplevel, StringVar)
 import llia.constants as con
 import llia.gui.tk.tk_factory as factory
 from llia.synth_proxy import SynthSpecs
+from llia.gui.tk.tk_synthwindow import TkSynthWindow
 
 
 HELP_TOPIC = "add_synth_dialog"
@@ -178,11 +179,11 @@ class TkAddSynthDialog(Toplevel):
     def accept(self):
         shelper = self.app.ls_parser.synthhelper
         if self.is_efx:
-            shelper.add_efx(self.stype, self.id_, outbus=None) 
+            sy = shelper.add_efx(self.stype, self.id_, outbus=None) 
         else:
             km = self.var_keymode.get()
             vc = int(self.var_voice_count.get())
-            shelper.add_synth(self.stype, self.id_, km, vc, outbus=None)
+            sy = shelper.add_synth(self.stype, self.id_, km, vc, outbus=None)
         for p in self._busname_map.keys():
             busname = self._busname_map[p].get()
             offset = int(self._busoffset_map[p].get())
@@ -190,4 +191,6 @@ class TkAddSynthDialog(Toplevel):
         for p,bname in self._buffername_map.items():
             shelper.assign_buffer(p, bname)
         self.app.main_window().status("Added %s" % self.sid)
+        swin = TkSynthWindow(sy)
+        
         self.destroy()

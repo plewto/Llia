@@ -476,7 +476,7 @@ class LliaProxy(object):
                 print("Creating synth: %s" % sid)
                 self._synths[sid] = sy
                 self._send("add-synth", [stype, id_, keymode, voice_count])
-                return True
+                return sy
 
     def add_efx(self, stype, id_):
         sid = "%s_%d" % (stype, id_)
@@ -494,7 +494,7 @@ class LliaProxy(object):
                 sy.is_efx = True
                 self._synths[sid] = sy
                 self._send("add-efx", [stype, id_])
-                return True
+                return sy
 
     def free_synth(self, stype, id_):
         sid = "%s_%s" % (stype, id_)

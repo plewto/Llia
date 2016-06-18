@@ -6,7 +6,7 @@ from __future__ import print_function
 import os.path
 from Tkinter import *
 from ttk import Combobox
-from tkFont import Font
+import tkFont 
 from PIL import Image, ImageTk
 
 from llia.thirdparty.tk_tooltip import ToolTip
@@ -14,11 +14,14 @@ import llia.constants as constants
 import llia.gui.pallet 
 
 
+
+
 _current_pallet = None
 
 def set_pallet(p):
     global _current_pallet
-    _current_pallet = p
+    if p:
+        _current_pallet = p
 
 set_pallet(llia.gui.pallet.pallet)
     
@@ -85,11 +88,17 @@ def image_label(master, fname, alt=None):
         photo = ImageTk.PhotoImage(img)
         _logo_cachet.append(photo)
         w.config(image=photo)
-    except IOException:
+    except IOError as err:
         w.config(text=alt)
     w.config(background=bg(), foreground=fg())
     return w
 
+def big_label(master, text):
+    f = tkFont.Font(family="Courier", size=18)
+    w = Label(master, text=text)
+    w.config(font=f)
+    w.config(background=bg(), foreground=fg())
+    return w
 
 #  ---------------------------------------------------------------------- 
 #                                   Buttons
@@ -282,6 +291,11 @@ def notebook(master):
     nb = Notebook(master)
     nb.config(background=bg())
     return nb
+
+def paned_window(master, orient=HORIZONTAL):
+    pw = PanedWindow(master, orient=orient)
+    pw.config(background=bg())
+    return pw
 
 
 #  ---------------------------------------------------------------------- 

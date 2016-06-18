@@ -3,34 +3,31 @@
 
 
 from __future__ import print_function
-from Tk import Toplevel, BOTH, Label
-import tkk
+from Tkinter import Toplevel, BOTH, Label
+#import tkk
 
+import llia.gui.tk.tk_factory as factory
+import llia.gui.pallet
+from llia.gui.tk.tk_bankeditor import TkBankEditor
 
-from llia.gui.appwindow import AbstractApplicationWindow
-
-
-
-
-class TkSynthWindow(AbstractApplicationWindow):
+class TkSynthWindow(Toplevel):
 
     def __init__(self, sproxy):
-        app = sproxy.app
-        super(TkSynthWindow, self).__init__(app, app.main_window().root)
-        self.config(background=factory.bg)        self.synth = sproxy
+        Toplevel.__init__(self, None)
+        self.config(background=factory.bg())
+        self.synth = sproxy
+        self.app = sproxy.app
         self.sid = sproxy.sid
-        self.toplevel = self.app.main_window().as_widget()
-
-        main = factory.frame(self.toplevel)
+        factory.set_pallet(sproxy.specs["pallet"])
+        # main = factory.frame(self)
+        # main.pack(expand=True, fill=BOTH)
+        main = factory.paned_window(self)
         main.pack(expand=True, fill=BOTH)
 
-        # DEBUG FPO
-        wfpo = Label(main, text= "FPO sid = %s" % self.sid)
-        wfpo.pack()
-        # END FPO DEBUG
-        
-    def as_widget():
-        return self.toplevel
+        banked = TkBankEditor(main, sproxy)
+        main.add(banked)
 
-    
-        
+        # FPO Right Panel
+        right = factory.frame(main)
+        factory.label(right, "FPO Right").pack()
+        main.add(right)
