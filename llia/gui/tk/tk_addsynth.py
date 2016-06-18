@@ -64,7 +64,7 @@ class TkAddSynthDialog(Toplevel):
             spin.grid(row=row, column=2, sticky="e", padx=4, pady=4)
             row += 1
         factory.padding_label(frame_audio_out).grid(row=row, column=0)
-        frame_audio_out.grid(row=1, column=0, padx=4, pady=4)
+        frame_audio_out.grid(row=5, column=0, padx=4, pady=4)
         
         # Audio Input Buses
         if specs["audio-input-buses"]:
@@ -82,7 +82,7 @@ class TkAddSynthDialog(Toplevel):
                 spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
                 row += 1
             factory.padding_label(frame_audio_in).grid(row=row, column=0)
-            frame_audio_in.grid(row=5, column=0, padx=4, pady=4)
+            frame_audio_in.grid(row=1, column=0, padx=4, pady=4)
 
         # Control Output Buses
         if specs["control-output-buses"]:
@@ -99,7 +99,7 @@ class TkAddSynthDialog(Toplevel):
                 spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
                 row += 1
             factory.padding_label(frame_control_out).grid(row=row, column=0)
-            frame_control_out.grid(row=1, column=3, padx=4, pady=4)
+            frame_control_out.grid(row=5, column=3, padx=4, pady=4)
         
         # # Control Input Buses
         if specs["control-input-buses"]:
@@ -116,7 +116,7 @@ class TkAddSynthDialog(Toplevel):
                 spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
                 row += 1
             factory.padding_label(frame_control_in).grid(row=row, column=0)
-            frame_control_in.grid(row=5, column=3, padx=4, pady=4)
+            frame_control_in.grid(row=1, column=3, padx=4, pady=4)
 
         # # Buffers
         if specs["buffers"]:
