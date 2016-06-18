@@ -12,40 +12,34 @@ from PIL import Image, ImageTk
 
 from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
+import llia.gui.tk.pallet 
 
-from llia.gui.tk.pallet import pallet
 
-bg = pallet["bg"]
-fg = pallet["fg"]
-bbg = pallet["button-bg"]
-warning_fg = pallet["warning-fg"]
+_current_pallet = llia.gui.tk.pallet.pallet
+
+def set_pallet(p):
+    global _current_pallet
+    _current_pallet = p
+
+set_pallet(llia.gui.tk.pallet.pallet)
+    
+def pallet(key):
+    return _current_pallet[key]
+
+def bg():
+    return pallet("bg")
+
+def fg():
+    return pallet("fg")
+
+
+# bg = pallet["bg"]
+# fg = pallet["fg"]
+# bbg = pallet["button-bg"]
+# warning_fg = pallet["warning-fg"]
+
 
 _logo_cachet = []
-
-# from llia.gui.tk.pallet import Pallet
-# pallet = Pallet()
-# BIG_FONT = Font(family="Courier", size=30)
-# WARNING_FONT = Font(family="Courier", size=12)
-
-# __widget_class_prefix = ""
-
-# def set_class_prefix(p):
-#     __widget_class_prefix = p
-
-# def __widget_class_name(base):
-#     if __widget_class_prefix:
-#         return "%s.%s" % (__widget_class_prefix, base)
-#     else:
-#         return base
-
-
-#  ---------------------------------------------------------------------- 
-#                                    Frame
-
-def frame(master):
-    f = Frame(master)
-    f.config(background = bg)
-    return f
 
 
 #  ---------------------------------------------------------------------- 
@@ -68,7 +62,7 @@ def label(master, text, var=None):
     w.config(justify=LEFT)
     if var:
         w.config(textvariable=var)
-    w.config(background=bg, foreground=fg)
+    w.config(background=bg(), foreground=fg())
     return w
 
 def center_label(master, text):
@@ -82,12 +76,11 @@ def dialog_title_label(master, text):
 
 def warning_label(master, text=" ", var=None):
     w = label(master, text, var)
-    # w.config(foreground=pallet["WARNING-FG"])
     return w
 
 def padding_label(master, n=4):
     w = Label(master, text = ' '*4)
-    w.config(background=bg)
+    w.config(background=bg())
     return w
 
 def image_label(master, fname, alt=None):
@@ -100,7 +93,7 @@ def image_label(master, fname, alt=None):
         w.config(image=photo)
     except IOException:
         w.config(text=alt)
-    w.config(background=bg, foreground=fg)
+    w.config(background=bg(), foreground=fg())
     return w
 
 
@@ -112,7 +105,7 @@ def button(master, text, command=None, ttip=""):
     if command:
         b.config(command=command)
     tooltip(b, ttip)
-    b.config(background=bbg, foreground=fg)
+    b.config(background=pallet("button-bg"), foreground=fg())
     return b
 
 def clear_button(master, text = "X", command=None, ttip=""):
@@ -144,10 +137,12 @@ def refresh_button(master, text="()", command=None, ttip="Refresh"):
     return b
 
 def radio(master, text, var, value, ttip=""):
-    # cls = __widget_class_name("TRadiobutton")
-    # rb = Radiobutton(master, text=text, variable=var, value=value, class_=cls)
     rb = Radiobutton(master, text=text, variable=var, value=value)
     tooltip(rb, ttip)
+    rb.config(background=bg(), foreground=fg())
+    rb.config(activebackground="red")
+    rb.config(highlightbackground=bg())
+    rb.config(selectcolor=bg())
     return rb
 
 def logo_button(master, name, fname=None, command=None, ttip=""):
@@ -163,7 +158,7 @@ def logo_button(master, name, fname=None, command=None, ttip=""):
     except IOError:
         b = button(master, name, ttip)
     b.config(command=command)
-    b.config(background=bg, foreground=fg)
+    b.config(background=bg(), foreground=fg())
     return b
         
 
@@ -179,6 +174,7 @@ def listbox(master, command=None, ttip=""):
     if command:
         lbx.bind("<<ListboxSelect>>", command)
     tooltip(lbx, ttip)
+    lbx.config(background=bg(), foreground=fg())
     return lbx
 
 #  ---------------------------------------------------------------------- 
@@ -198,6 +194,8 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
     if yclient:
         yclient.config(yscrollcommand=sb.set)
         sb.config(command = yclient.yview)
+    sb.config(background=pallet("button-bg"))
+    sb.config(troughcolor=bg())
     return sb
 
 
@@ -209,6 +207,8 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
 def int_spinbox(master, textvar, from_, to, ttip=""):
     sb = Spinbox(master, from_=int(from_), to=int(to), textvariable=textvar)
     tooltip(sb, ttip)
+    sb.config(background=bg(), foreground=fg())
+    sb.config(buttonbackground=bg())
     return sb
 
 
@@ -219,6 +219,7 @@ def int_spinbox(master, textvar, from_, to, ttip=""):
 def combobox(master, values, ttip=""):
     cb = Combobox(master, values = values)
     tooltip(cb, ttip)
+    cb.config(background=bg(), foreground=fg())
     return cb
 
 def audio_bus_combobox(master, app):
@@ -246,28 +247,40 @@ def entry(master, var, ttip=""):
     t = Entry(master)
     t.configure(textvariable=var)
     tooltip(t, ttip)
+    t.config(background=bg(), foreground=fg())
     return t
 
 def text_widget(master, ttip=""):
     t = Text(master)
     tooltip(t, ttip)
+    t.config(background=bg(), foreground=fg())
     return t
 
 def read_only_text(master, text):
     t = Text(master)
     t.insert(END, text)
+    t.config(background=bg(), foreground=fg())
     return t
 
 
 #  ---------------------------------------------------------------------- 
 #                                   Frames
 
+def frame(master):
+    f = Frame(master)
+    f.config(background = bg())
+    f.config(highlightcolor="red")
+    f.config(highlightbackground="green")
+    return f
+
 def label_frame(master, text):
     f = LabelFrame(master, text=text)
+    f.config(background=bg(), fg=fg())
     return f
 
 def notebook(master):
     nb = Notebook(master)
+    nb.config(background=bg())
     return nb
 
 
@@ -276,5 +289,5 @@ def notebook(master):
 
 def toplevel(master=None):
     t = Toplevel(master)
-    t.config(background=bg)
+    t.config(background=bg())
     return t

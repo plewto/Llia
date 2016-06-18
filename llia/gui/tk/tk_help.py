@@ -24,11 +24,10 @@ class __TkHelpDialog(Toplevel):
 
     def __init__(self, master):
         Toplevel.__init__(self, master)
-        self.config(background=factory.bg)
+        self.config(background=factory.bg())
         self.title("Llia Help")
         main = PanedWindow(self, orient=HORIZONTAL)
         main.pack(anchor="nw", expand=True, fill=BOTH)
-
         # Help topics list in west pane
         west = layout.BorderFrame(main)
         lab_topics = factory.center_label(west.north, "Help Topics")
@@ -41,10 +40,8 @@ class __TkHelpDialog(Toplevel):
             listbox_topics.insert(END, topic)
         main.add(west)
         self.listbox_topics = listbox_topics
-
         # Help Text Area
         east = factory.frame(main)
-        #east.config(background=factory.pallet["BG"])
         main.add(east)
         text_widget = factory.text_widget(east)
         self.text_widget = text_widget
@@ -73,8 +70,3 @@ class __TkHelpDialog(Toplevel):
         index = self.listbox_topics.curselection()[0]
         topic = self.listbox_topics.get(index)
         self.display_topic(topic)
-        
-    # def hide(self):
-    #     print("HELP WINDOW CCLOSE")
-    #     self.withdraw()
-        

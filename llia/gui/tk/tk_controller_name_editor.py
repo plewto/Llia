@@ -12,7 +12,7 @@ class TkControllerNameEditor(Toplevel):
 
     def __init__(self, master, app):
         Toplevel.__init__(self, master)
-        self.config(background=factory.bg)
+        self.config(background=factory.bg())
         self.wm_title = "MIDI Controllers"
         self.app = app
         self.config = app.config
@@ -34,10 +34,12 @@ class TkControllerNameEditor(Toplevel):
         self.var_name = StringVar()
         entry_name = factory.entry(main, self.var_name)
         button_bar = factory.frame(main)
+        
         b_refresh = factory.refresh_button(button_bar, command=self.refresh)
         b_help = factory.help_button(button_bar, command = self.display_help)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_cancel = factory.cancel_button(button_bar, command=self.cancel)
+        
         lab_title.grid(row=0, column=0, columnspan=4, pady=8)
         frame_list.grid(row=1, column=0, rowspan=6, columnspan=4, sticky=N)
         sb.grid(row=1, column=4, rowspan=6, sticky=NS)
@@ -47,8 +49,8 @@ class TkControllerNameEditor(Toplevel):
         button_bar.grid(row=9, column=0, columnspan=5, sticky=EW, padx=4, pady=4)
         b_refresh.grid(row=0, column=0)
         b_help.grid(row=0, column=1)
-        b_accept.grid(row=1, column=0)
-        b_cancel.grid(row=1, column=1)
+        b_accept.grid(row=0, column=2)
+        b_cancel.grid(row=0, column=3)
         entry_name.bind('<Return>', self.change_name)
         entry_name.bind('<Down>', self.increment_selection)
         entry_name.bind('<Up>', self.decrement_selection)

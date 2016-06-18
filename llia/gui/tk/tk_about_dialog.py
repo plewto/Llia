@@ -6,32 +6,27 @@ from Tkinter import Toplevel, Label, BOTH, Frame
 import ttk
 from PIL import Image, ImageTk
 
-
 from llia.constants import *
 from llia.gui.tk.tk_layout import VFrame
 import llia.gui.tk.tk_factory as factory
-#import llia.gui.tk.pallet as pallet
 
 class TkAboutDialog(Toplevel):
 
     def __init__(self, master, app):
         Toplevel.__init__(self, master)
-        self.config(background=factory.bg)
+        self.config(background=factory.bg())
         config = app.config
         id_ = config["global-osc-id"]
         host, port = config['host'], config['port']
         client, cport = config['client'], config['client_port']
         midi_receiver = app.midi_receiver.port_name()
         midi_transmitter = "n/a" # FIX ME
-        
         main = VFrame(self)
         main.pack(anchor="nw", expand=True, fill=BOTH)
         image = Image.open("resources/logos/llia_logo_medium.png")
         photo = ImageTk.PhotoImage(image)
         lab_logo = Label(main, image=photo)
-        #lab_logo.configure(background=factory.pallet["BG"])
         main.add(lab_logo)
-        #south = Frame(main, background=factory.pallet["BG"])
         south = factory.frame(main)
         main.add(south)
         acc = "Llia Version %s.%s.%s \n" % VERSION[0:3]
@@ -45,5 +40,3 @@ class TkAboutDialog(Toplevel):
         tx.pack(pady=32)
         self.grab_set()
         self.mainloop()
-        #root.wait_window(self)
-        

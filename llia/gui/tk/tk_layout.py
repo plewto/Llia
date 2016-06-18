@@ -9,9 +9,9 @@ import ttk
 
 from llia.generic import is_string
 import llia.gui.tk.tk_factory as factory
-from llia.gui.tk.tk_factory import pallet
+# from llia.gui.tk.tk_factory import pallet
 
-bg = pallet["BG"]
+# bg = pallet["BG"]
     
 
 #  ---------------------------------------------------------------------- 
@@ -31,7 +31,7 @@ class FormLayout(Frame):
 
     def __init__(self, master, title=None):
         Frame.__init__(self, master)
-        self.configure(background=bg)
+        self.configure(background=factory.bg())
         self._row_count = 0
         self.rows = []
         self.grid_columnconfigure(0, weight=0)
@@ -67,7 +67,7 @@ class VFrame(Frame):
 
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.configure(background=bg)
+        self.configure(background=factory.bg())
         self._row_count = 0
         self.rows = []
         self.grid_columnconfigure(0, weight=1)
@@ -93,7 +93,7 @@ class HFrame(Frame):
 
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.configure(background=bg)
+        self.configure(background=factory.bg())
         self._column_count = 0
         self.columns = []
         self.grid_rowconfigure(0, weight=1)
@@ -123,7 +123,7 @@ class FlowGrid(Frame):
 
     def __init__(self, master, column_count=8):
         Frame.__init__(self, master)
-        self.config(background=bg)
+        self.config(background=factory.bg())
         self.column_count = column_count
         self._col = 0
         self._row = 0
@@ -147,12 +147,12 @@ class BorderFrame(Frame):
 
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.configure(background=bg)
-        north = Frame(self, background=bg)
-        south = Frame(self, background=bg)
-        east = Frame(self, background=bg)
-        west = Frame(self, background=bg)
-        center = Frame(self, background=bg)
+        self.configure(background=factory.bg())
+        north = Frame(self, background=factory.bg())
+        south = Frame(self, background=factory.bg())
+        east = Frame(self, background=factory.bg())
+        west = Frame(self, background=factory.bg())
+        center = Frame(self, background=factory.bg())
         span=1
         north.grid(row=0, column=0, rowspan=1, columnspan=span+2, sticky="ew")
         south.grid(row=span+1, column=0, rowspan=1, columnspan=span+2, sticky="ew")

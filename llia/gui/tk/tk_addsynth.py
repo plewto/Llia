@@ -136,12 +136,10 @@ class TkAddSynthDialog(Toplevel):
         # voice count spin_vc is place hoder for future.
         lab_vc.config(state="disabled")
         spin_vc.config(state="disabled")
-        
         lab_vc.grid(row=1, column=0, padx=4)
         spin_vc.grid(row=1, column=1, columnspan=3, padx=4, pady=4)
         frame_keymode.grid(row=9, column=0, padx=4, pady=4)
         factory.padding_label(frame_keymode).grid(row=2, column=0)
-        
         # South Toolbar
         toolbar = factory.frame(main)
         b_help = factory.help_button(toolbar, command=self.display_help)
@@ -152,7 +150,6 @@ class TkAddSynthDialog(Toplevel):
         b_accept.grid(row=0, column=2, sticky="e")
         b_cancel.grid(row=0, column=3, sticky="e")
         toolbar.grid(row=10, column=0, columnspan=5, sticky="ew", padx=4, pady=8)
-        
         #self.grab_set() # ISSUE: Throws TclError: grab failed: window not viewable?
         self.mainloop()
 
