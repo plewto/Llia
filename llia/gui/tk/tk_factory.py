@@ -149,7 +149,7 @@ def cancel_button(master, text="Cancel", command=None, ttip=""):
     b = button(master, "Cancel", command, ttip)
     return b
 
-def remove_button(master, text='[-]', command=None, ttip=""):
+def delete_button(master, text='[-]', command=None, ttip=""):
     b = button(master, text, command, ttip)
     return b
 

@@ -34,7 +34,7 @@ class TkAudiobusEditor(Toplevel):
         spin_chancount = factory.int_spinbox(main, self._var_chancount, 1, 64)
         self.lab_warning = factory.warning_label(main)
         button_bar = factory.frame(main)
-        b_remove = factory.remove_button(button_bar,ttip="Delete audio bus",command=self.remove_bus)
+        b_remove = factory.delete_button(button_bar,ttip="Delete audio bus",command=self.remove_bus)
         b_add = factory.add_button(button_bar, ttip="Add new audio bus", command=self.add_bus)
         b_refresh = factory.refresh_button(button_bar, ttip="Refresh bus list", command=self.refresh)
         b_accept = factory.accept_button(button_bar, command=self.accept)
