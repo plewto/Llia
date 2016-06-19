@@ -4,10 +4,12 @@
 from __future__ import print_function
 import os.path
 
-from Tkinter import (BOTH, Frame)
+from Tkinter import (Toplevel, Frame)
+import tkFileDialog
 
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
+from llia.gui.tk.tk_init_warning import init_warning
 
 HELP_TOPIC = "bank-editor"
 
@@ -17,6 +19,7 @@ class TkBankEditor(Frame):
         Frame.__init__(self, master)
         self.config(background=factory.bg())
         self.synth = synth
+        self.app = synth.app
         self.listbox = None
         north = self._init_north_toolbar()
         center = self._init_list_frame()
@@ -39,10 +42,14 @@ class TkBankEditor(Frame):
         logo_filename = os.path.join("resources", format_, "logo_small.png")
         lab_logo = factory.image_label(frame, logo_filename, format_)
         lab_sid = factory.label(frame, "ID = %s" % sid)
-        b_open = factory.button(toolbar, "Open", ttip="Read bank file", command=self._open_bank)
-        b_save = factory.button(toolbar, "Save", ttip="Save bank file", command=self._save_bank)
-        b_init = factory.button(toolbar, "Init", ttip="Initialize bank", command=self._init_bank)
-        b_rem = factory.button(toolbar, "Rem", ttip="Edit bank remarks", command=self._edit_remarks)
+        b_open = factory.button(toolbar, "Open", ttip="Read bank file", 
+                                command=self._open_bank)
+        b_save = factory.button(toolbar, "Save", ttip="Save bank file", 
+                                command=self._save_bank)
+        b_init = factory.button(toolbar, "Init", ttip="Initialize bank", 
+                                command=self._init_bank)
+        b_rem = factory.button(toolbar, "Rem", ttip="Edit bank remarks", 
+                               command=self._edit_remarks)
         b_help = factory.help_button(toolbar, command= self._help)
         b_open.grid(row=0, column=0, sticky="ew")
         b_save.grid(row=0, column=1, sticky="ew")
@@ -70,9 +77,15 @@ class TkBankEditor(Frame):
     
     def _init_performance_toolbar(self):
         frame = factory.label_frame(self, "Performance")
-        b_pcopy = factory.button(frame, "Copy", ttip="Copy current performance to clipboard")
-        b_ppaste = factory.button(frame, "Paste", ttip="Paste clipboard to current performance")
-        b_pfill = factory.button(frame, "Fill", ttip="Copy current performance to multiple bank slots")
+        b_pcopy = factory.button(frame, "Copy", 
+                                 ttip="Copy current performance to clipboard",
+                                 command = self._copy_performance)
+        b_ppaste = factory.button(frame, "Paste", 
+                                  ttip="Paste clipboard to current performance",
+                                  command = self._paste_performance)
+        b_pfill = factory.button(frame, "Fill", 
+                                 ttip="Copy performance to multiple bank slots",
+                                 command = self._fill_performance)
         b_pcopy.grid(row=0, column=0, sticky="ew")
         b_ppaste.grid(row=0, column=1, sticky="ew")
         b_pfill.grid(row=0, column=2, sticky="ew")
@@ -80,18 +93,29 @@ class TkBankEditor(Frame):
         
     def _init_south_toolbar(self):
         frame = factory.label_frame(self, "Program")
-        b_store = factory.button(frame, "Store")
-        b_random = factory.button(frame, "RND")
-        b_init = factory.button(frame, "Init")
-        b_copy = factory.button(frame, "Copy", ttip="Copy current prgoram to clipbaord")
-        b_paste = factory.button(frame, "Paste", ttip="Paste clipboard to current program")
+        b_store = factory.button(frame, "Store", command=self._store_program,
+                                 ttip = "Store current program")
+        b_random = factory.button(frame, "RND", command=self._random_program,
+                                  ttip = "Generate random program (if defined)")
+        b_init = factory.button(frame, "Init", command=self._init_program,
+                                ttip = "Initialize program")
+        b_copy = factory.button(frame, "Copy", command=self._copy_program,
+                                ttip="Copy current prgoram to clipbaord")
+        b_paste = factory.button(frame, "Paste", command=self._paste_program,
+                                 ttip="Paste clipboard to current program")
         b_store.grid(row=0, column=0, sticky="ew")
         b_random.grid(row=0, column=1, sticky="ew")
         b_init.grid(row=0, column=2, sticky="ew")
         b_copy.grid(row=1, column=0, sticky="ew")
         b_paste.grid(row=1, column=1, sticky="ew")
         return frame
-        
+
+    def status(self, msg):
+        print(msg)
+
+    def warning(self, msg):
+        print("WARNING: ", msg)
+    
     def sync(self):
         bnk = self.synth.bank()
         count = len(bnk)
@@ -126,16 +150,147 @@ class TkBankEditor(Frame):
         self.sync() # ISSUE: Remove after testing
 
     def _open_bank(self):
-        print("DEBUG open")
-
+        bnk = self.synth.bank()
+        specs = self.synth.specs
+        ext = ".%s" % specs["format"].lower()
+        ftypes = (("%s bank" % specs["format"], "*%s" % ext),
+                  ("All files", "*"))
+        ifile = bnk.filename
+        title ="Open %s Bank" % specs["format"]
+        flag = init_warning("Read Bank File (can not be undone) ?", self.app)
+        if flag:
+            rs = tkFileDialog.askopenfilename(parent=self,
+                                              defaultextension = ext,
+                                              filetypes = ftypes,
+                                              initialfile = ifile,
+                                              title = title)
+            if rs:
+                try:
+                    bnk.load(rs)
+                    self.sync()
+                    self.status("Loaded bankfuile '%s'" % rs)
+                except (ValueError, TypeError, IOError) as err:
+                    msg = "Error while reading bank file '%s'" % rs
+                    self.warning(msg)
+                    print(err.message)
+        else:
+            msg = "Read bank canceled"
+            self.status(msg)
+        
     def _save_bank(self):
-        print("DEBUG save")
+        bnk = self.synth.bank()
+        specs = self.synth.specs
+        ext = ".%s" % specs["format"].lower()
+        ftypes = (("%s bank" % specs["format"], "*%s" % ext),
+                  ("All files", "*"))
+        ifile = bnk.filename
+        title = "Save %s Bank" % specs["format"]
+        rs = tkFileDialog.asksaveasfilename(parent=self,
+                                                defaultextension = ext,
+                                                filetypes = ftypes,
+                                                initialfile = ifile,
+                                                title = title)
+        if rs:
+            try:
+                bnk.save(rs)
+                self.status("Bank saved to '%s'" % rs)
+            except IOError as err:
+                self.warning("Error while saving '%s'" % rs)
+                print(err.message)
+        else:
+            self.status("Bank save canceld")
 
     def _init_bank(self):
-        print("DEBUG init")
-
+        msg = "Initialize Bank ?"
+        flag = init_warning(msg, self.app)
+        if flag:
+            self.synth.bank().initialize()
+            self.sync()
+            self.status("Bank initialized")
+        else:
+            self.status("Bank initialize canceled")
+        
     def _edit_remarks(self):
-        print("DEBUG edit")
+        bnk = self.synth.bank()
+        name = bnk.name
+        filename = bnk.filename
+        remarks = bnk.remarks
+        dialog = Toplevel(self)
+        frame = factory.frame(dialog)
+        frame.pack(expand=True, fill="both")
+        lab_title = factory.center_label(frame, "Bank Info")
+        lab_name = factory.label(frame, "Bank name :  '%s'" % name)
+        lab_filename = factory.label(frame, "Filename :  '%s'" % filename)
+        frame_text = factory.label_frame(frame, "Remarks")
+
+        lab_title.grid(row=0, column=0, columnspan=3,pady=12)
+        lab_name.grid(row=1, column=0, sticky="w", padx=4)
+        lab_filename.grid(row=2, column=0, sticky="w", padx=4)
+
+        frame_text.grid(row=3, column=0, columnspan=3, padx=4, pady=8)
+
+        text_widget = factory.text_widget(frame_text, "Bank remarks")
+        text_widget.insert('end', remarks)
+        text_widget.config(width=80, height=20)
+        vsb = factory.scrollbar(frame_text, orientation="vertical")
+        hsb = factory.scrollbar(frame_text, orientation="horizontal")
+        text_widget.grid(row=0, column=0, rowspan=8, columnspan=8, ipadx=4, ipady=4)
+        vsb.grid(row=0, column=8, rowspan=8, columnspan=1, sticky="ns")
+        hsb.grid(row=8, column=0, rowspan=1, columnspan=8, sticky="ew")
+
+        vsb.config(command=text_widget.yview)
+        hsb.config(command=text_widget.xview)
+        text_widget.config(yscrollcommand=vsb.set)
+        text_widget.config(xscrollcommand=hsb.set)
+
+        frame_toolbar = factory.frame(frame)
+        frame_toolbar.grid(row=4, column=0, padx=4, pady=8)
+
+        def clear():
+            text_widget.delete(1.0, 'end')
+
+        def accept():
+            rem = text_widget.get(1.0, 'end')
+            bnk.remarks = rem
+            self.status("Bank remarks updated")
+            dialog.destroy()
+
+        def cancel():
+            self.status("Change bank remarks canceld")
+            dialog.destroy()
+            
+        b_clear = factory.clear_button(frame_toolbar, command=clear, ttip="Clear remarks")
+        b_accept = factory.accept_button(frame_toolbar, command=accept)
+        b_cancel = factory.cancel_button(frame_toolbar, command=cancel)
+        b_clear.grid(row=0, column=0, padx=4, pady=8)
+        b_accept.grid(row=0, column=1)
+        b_cancel.grid(row=0, column=2)
+        dialog.grab_set()
+        dialog.mainloop()
     
     def _help(self):
-        print("DEBUG help")
+        self.app.main_window().display_help(HELP_TOPIC)
+
+    def _copy_performance(self):
+        print("copy p")
+
+    def _paste_performance(self):
+        print("paste p")
+
+    def _fill_performance(self):
+        print("fill p")
+
+    def _store_program(self):
+        print("store")
+
+    def _random_program(self):
+        print("random")
+
+    def _init_program(self):
+        print("init prog")
+
+    def _copy_program(self):
+        print("copy prog")
+
+    def _paste_program(self):
+        print("paste prog")
