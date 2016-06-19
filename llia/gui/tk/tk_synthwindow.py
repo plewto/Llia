@@ -16,14 +16,15 @@ class TkSynthWindow(Toplevel):
         Toplevel.__init__(self, None)
         self.config(background=factory.bg())
         self.synth = sproxy
+        self.synth.synth_editor = self
         self.app = sproxy.app
         self.sid = sproxy.sid
         factory.set_pallet(sproxy.specs["pallet"])
         main = factory.paned_window(self)
         main.pack(expand=True, fill=BOTH)
-        banked = TkBankEditor(main, sproxy)
+        self.bank_editor = TkBankEditor(main, self, sproxy)
         notebook = factory.notebook(main)
-        main.add(banked)
+        main.add(self.bank_editor)
         main.add(notebook)
 
         self.list_channel = None
@@ -32,10 +33,36 @@ class TkSynthWindow(Toplevel):
         self.var_keyrange_low = StringVar()
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
-        
+
+        self._init_info_tab(notebook)
         self._init_performance_tab(notebook)
         self.sync()
 
+    def _init_info_tab(self, master):
+        frame = factory.frame(master)
+        master.add(frame, text = "Info")
+        text_widget = factory.text_widget(frame)
+        vsb = factory.scrollbar(frame, orientation="vertical")
+        hsb = factory.scrollbar(frame, orientation="horizontal")
+        text_widget.config(width=80, height=40)
+        text_widget.grid(row=0, column=0, rowspan=8, columnspan=8)
+        vsb.grid(row=0, column=8, rowspan=8, sticky="ns")
+        hsb.grid(row=8, column=0, columnspan=8, sticky="ew")
+        self._info_text_widget = text_widget
+
+    def sync_info_tab(self):
+        bnk = self.synth.bank()
+        prog = bnk[None]
+        slot = bnk.current_slot
+        pp = self.synth.specs["pretty-printer"]
+        if pp:
+            txt = pp(prog, slot)
+        else:
+            txt = ""
+        self._info_text_widget.delete(1.0, "end")
+        self._info_text_widget.insert("end", txt)
+            
+        
     def _init_performance_tab(self, master):
         frame = factory.frame(master)
         master.add(frame, text = "Performance")
@@ -72,6 +99,7 @@ class TkSynthWindow(Toplevel):
         lab_bend.grid(row=9, column=0, sticky="w", padx=4, pady=4)
         spin_bendrange.grid(row=9, column=1, padx=4)
 
+   
         def channel_callback(_):
             i = self.list_channel.curselection()[0]
             c = i+1
@@ -121,14 +149,7 @@ class TkSynthWindow(Toplevel):
         spin_bendrange.config(command=bend_callback)
         spin_bendrange.bind("<Return>", bend_callback)
 
-    def status(self, msg):
-        print("STATUS: ", msg)
-
-    def warning(self, msg):
-        print("WARNING: ", msg)
-
-        
-    def sync(self, ignore=None):
+    def sync_performance_tab(self):
         self.list_channel.delete(0, "end")
         for c in self.app.config.channel_assignments.formatted_list():
             self.list_channel.insert("end", c)
@@ -145,4 +166,17 @@ class TkSynthWindow(Toplevel):
         self.var_keyrange_low.set(lo)
         self.var_keyrange_high.set(hi)
         self.var_bendrange.set(self.synth.bend_range())
-            
+        
+        
+    def status(self, msg):
+        print("STATUS: ", msg)
+
+    def warning(self, msg):
+        print("WARNING: ", msg)
+        
+    def sync(self, *ignore):
+        self.sync_info_tab()    
+        self.sync_performance_tab()
+        if "bank" not in ignore:
+            self.bank_editor.sync_no_propegate()
+        

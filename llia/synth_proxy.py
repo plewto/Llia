@@ -95,6 +95,7 @@ class SynthProxy(object):
         self.specs = specs
         self.synth_format = specs["format"]
         self.sid = "%s_%d" % (self.synth_format, self.id_)
+        self.synth_editor = None
         global_oscid = app.proxy.global_osc_id()
         self.oscID = "%s/%s/%s" % (global_oscid,self.synth_format, id_)
         self._bank = bank.clone()
@@ -193,8 +194,8 @@ class SynthProxy(object):
     def use_program(self, slot):
         cp = self._bank.use(slot)
         self.x_program(cp)
-        # ISSUE: Fix me
-        ## call sync_ui on gui window
+        if self.synth_editor:
+            self.synth_editor.sync()
         if self.app.config.program_pp_enabled():
             try:
                 pp = self.specs["pretty-printer"]

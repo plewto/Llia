@@ -192,5 +192,4 @@ class TkAddSynthDialog(Toplevel):
             shelper.assign_buffer(p, bname)
         self.app.main_window().status("Added %s" % self.sid)
         swin = TkSynthWindow(sy)
-        
         self.destroy()

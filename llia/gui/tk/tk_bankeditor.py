@@ -15,9 +15,10 @@ HELP_TOPIC = "bank-editor"
 
 class TkBankEditor(Frame):
 
-    def __init__(self, master, synth):
+    def __init__(self, master, parent_editor, synth):
         Frame.__init__(self, master)
         self.config(background=factory.bg())
+        self.parent_editor = parent_editor
         self.synth = synth
         self.app = synth.app
         self.listbox = None
@@ -31,7 +32,7 @@ class TkBankEditor(Frame):
         south.pack(padx=4, pady=4)
         self.big_label = factory.big_label(self, "000 ABCDEFGH")
         self.big_label.pack()
-        self.sync()
+        self.sync_no_propegate()
         
     def _init_north_toolbar(self):
         frame = factory.frame(self)
@@ -116,7 +117,7 @@ class TkBankEditor(Frame):
     def warning(self, msg):
         print("WARNING: ", msg)
     
-    def sync(self):
+    def sync_no_propegate(self):
         bnk = self.synth.bank()
         count = len(bnk)
         self.listbox.delete(0, count)
@@ -130,6 +131,10 @@ class TkBankEditor(Frame):
         self.listbox.see(slot)
         txt = "%03d %-8s" % (slot, program.name[:8])
         self.big_label.config(text = txt)
+
+    def sync(self):
+        self.sync_no_propegate()
+        self.parent_editor.sync("bank")
         
     def _select_slot(self, _):
         slot = self.listbox.curselection()[0]
@@ -369,6 +374,7 @@ class TkBankEditor(Frame):
         def accept():
             try:
                 a,b = int(var_start.get()), int(var_end.get())
+                if b <= a: b = a+1
                 name = var_name.get()
                 remarks = text_remarks.get(1.0, "end")
                 program.name = name
