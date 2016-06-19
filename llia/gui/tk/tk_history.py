@@ -40,7 +40,7 @@ class TkHistoryEditor(Toplevel):
         b_exec.pack(side=LEFT, expand=True, fill=X)
         b_compose.pack(side=LEFT, expand=True, fill=X)
         b_help.pack(side=LEFT, expand=True, fill=X)
-        self.text_widget = factory.text_widget(south)
+        self.text_widget = factory.text_widget(south, modal=True)
         sb1 = factory.scrollbar(south)
         sb2 = factory.scrollbar(south, orientation="horizontal")
         sb1.config(command=self.text_widget.yview)

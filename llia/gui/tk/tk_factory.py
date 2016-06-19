@@ -13,9 +13,6 @@ from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
 import llia.gui.pallet 
 
-
-
-
 _current_pallet = None
 _style = None
 
@@ -71,12 +68,16 @@ def tooltip(widget, text):
 #  ---------------------------------------------------------------------- 
 #                                   Labels
 
-def label(master, text, var=None):
+def label(master, text, var=None, modal=False):
     w = Label(master, text=text)
     w.config(justify=LEFT)
     if var:
         w.config(textvariable=var)
-    w.config(background=bg(), foreground=fg())
+    if modal:
+        a, b = pallet("DIALOG-BG"), pallet("DIALOG-FG")
+    else:
+        a, b = bg(), fg()
+    w.config(background=a, foreground=b)
     return w
 
 def center_label(master, text):
@@ -84,18 +85,18 @@ def center_label(master, text):
     w.config(justify=CENTER)
     return w
 
-def dialog_title_label(master, text):
-    w = label(master, text)
+def dialog_title_label(master, text, modal=True):
+    w = label(master, text, modal=modal)
     return w
 
-def warning_label(master, text=" ", var=None):
-    w = label(master, text, var)
+def warning_label(master, text=" ", var=None, modal=True):
+    w = label(master, text, var, modal)
     w.config(foreground=pallet("warning-fg"))
     return w
 
-def padding_label(master, n=4):
-    w = Label(master, text = ' '*4)
-    w.config(background=bg())
+def padding_label(master, n=4, modal=True):
+    #w = Label(master, text = ' '*4, modal=modal)
+    w = label(master, "", modal=modal)
     return w
 
 def image_label(master, fname, alt=None):
@@ -285,10 +286,14 @@ def entry(master, var, ttip=""):
     t.config(background=bg(), foreground=fg())
     return t
 
-def text_widget(master, ttip=""):
+def text_widget(master, ttip="", modal=False):
     t = Text(master)
     tooltip(t, ttip)
-    t.config(background=bg(), foreground=fg())
+    if modal:
+        a,b = pallet("DIALOG-BG"), pallet("DIALOG-FG")
+    else:
+        a,b = bg(), fg()
+    t.config(background=a, foreground=b)
     return t
 
 def read_only_text(master, text):
@@ -301,17 +306,31 @@ def read_only_text(master, text):
 #  ---------------------------------------------------------------------- 
 #                                   Frames
 
-def frame(master):
+def frame(master, modal=False):
     f = Frame(master)
-    f.config(background = bg())
-    f.config(highlightcolor="red")
-    f.config(highlightbackground="green")
+    if modal:
+        f.config(background=pallet("DIALOG-BG"))
+    else:
+        f.config(background = bg())
+    # f.config(highlightcolor="red")
+    # f.config(highlightbackground="green")
     return f
 
-def label_frame(master, text):
+# def dialog_frame(master):
+#     f = Frame(master)
+#     
+#     return f
+
+def label_frame(master, text, modal=False):
     f = LabelFrame(master, text=text)
-    f.config(background=bg(), fg=fg())
+    if modal:
+        f.config(background=pallet("DIALOG-BG"))
+        f.config(foreground=fg())
+    else:
+        f.config(background=bg(), fg=fg())
     return f
+
+
 
 def notebook(master):
     _init_theme()

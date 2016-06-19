@@ -21,6 +21,9 @@ class Pallet(dict):
         self["TAB-FG"] = self["BUTTON-FG"]
         self["TAB-SELECTED-BG"] = "gray5"
         self["TAB-SELECTED-FG"] = "yellow"
+
+        self["DIALOG-BG"] = "#191919"    # Backgroud color for modal dialogs
+        self["DIALOG-FG"] = self["FG"]
         
         self["RADIO-SELECT"] = self["BG"]
         self["SCROLLBAR-BACKGROUND"] = "#344d66"

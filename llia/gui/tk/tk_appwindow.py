@@ -42,13 +42,13 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def _init_status_panel(self):
         south = self._main.south
         south.configure(padx=4, pady=4)
-        self._lab_status = factory.label(south, "")
+        self._lab_status = factory.label(south, "", modal=False)
         b_panic = factory.button(south, "PANIC")
         ttip = "Clear status line"
         b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
         b_panic.grid(row=0, column=0, sticky="w")
         b_clear_status.grid(row=0, column=1, sticky="w")
-        self._lab_status.grid(row=0,column=2, sticky="w", ipadx=8)
+        self._lab_status.grid(row=0,column=2, sticky="w", padx=8)
         south.config(background=factory.bg())
 
     def _init_center_frame(self, master):

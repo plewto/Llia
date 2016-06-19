@@ -12,19 +12,19 @@ class TkControllerNameEditor(Toplevel):
 
     def __init__(self, master, app):
         Toplevel.__init__(self, master)
-        self.config(background=factory.bg())
+        self.config(background=factory.pallet("DIALOG-BG"))
         self.wm_title = "MIDI Controllers"
         self.app = app
         self.config = app.config
         self.parser = app.ls_parser
         self._current_controller=0
         self._save_backup()
-        main = factory.frame(self)
+        main = factory.frame(self, modal=True)
         main.pack(expand=True)
         main.pack_propagate(False)
-        lab_title = factory.label(main, "MIDI Controller Names")
-        self.lab_warning = factory.warning_label(main, "")
-        frame_list = factory.frame(main)
+        lab_title = factory.label(main, "MIDI Controller Names", modal=True)
+        self.lab_warning = factory.warning_label(main, "", modal=True)
+        frame_list = factory.frame(main, modal=True)
         frame_list.config(width=248, height=320)
         frame_list.pack_propagate(False)
         self.listbox = factory.listbox(frame_list, command=self.select_controller)
@@ -33,17 +33,15 @@ class TkControllerNameEditor(Toplevel):
         self.refresh()
         self.var_name = StringVar()
         entry_name = factory.entry(main, self.var_name)
-        button_bar = factory.frame(main)
-        
+        button_bar = factory.frame(main, modal=True)
         b_refresh = factory.refresh_button(button_bar, command=self.refresh)
         b_help = factory.help_button(button_bar, command = self.display_help)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_cancel = factory.cancel_button(button_bar, command=self.cancel)
-        
         lab_title.grid(row=0, column=0, columnspan=4, pady=8)
         frame_list.grid(row=1, column=0, rowspan=6, columnspan=4, sticky=N)
-        sb.grid(row=1, column=4, rowspan=6, sticky=NS)
-        factory.label(main, "Name").grid(row=7, column=0)
+        sb.grid(row=1, column=4, rowspan=6, sticky=NS, padx=4)
+        factory.label(main, "Name", modal=True).grid(row=7, column=0, padx=4, sticky="w")
         entry_name.grid(row=7, column=1, columnspan=1, sticky=W, padx=4, pady=8)
         self.lab_warning.grid(row=8, column=0, columnspan=5, sticky=W)
         button_bar.grid(row=9, column=0, columnspan=5, sticky=EW, padx=4, pady=4)
