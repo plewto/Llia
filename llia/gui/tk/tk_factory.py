@@ -5,7 +5,7 @@ from __future__ import print_function
 
 import os.path
 from Tkinter import *
-from ttk import Combobox
+from ttk import Combobox, Notebook, Style
 import tkFont 
 from PIL import Image, ImageTk
 
@@ -17,11 +17,13 @@ import llia.gui.pallet
 
 
 _current_pallet = None
+_style = None
 
 def set_pallet(p):
-    global _current_pallet
+    global _current_pallet, _style
     if p:
         _current_pallet = p
+        _style = None
 
 set_pallet(llia.gui.pallet.pallet)
     
@@ -36,6 +38,22 @@ def fg():
 
 
 _logo_cachet = []
+
+
+def _init_theme():
+    global _style
+    if not _style:
+        _style = Style()
+        _style.theme_create("Llia", parent="alt", settings = {
+            "TNotebook" : {"configure" : {"tabmargins" : [2,5,2,0]}},
+
+            "TNotebook.Tab" : {"configure" : {"padding" : [5,1],
+                                              "background" : pallet("TAB-BG"),
+                                              "foreground" : pallet("TAB-FG")},
+                               "map" : {"background" : [("selected", pallet("TAB-SELECTED-BG"))],
+                                        "foreground" : [("selected", pallet("TAB-SELECTED-FG"))],
+                                        "expand" : [("selected", [1,1,1,0])] }}})
+        _style.theme_use("Llia")
 
 
 #  ---------------------------------------------------------------------- 
@@ -108,7 +126,7 @@ def button(master, text, command=None, ttip=""):
     if command:
         b.config(command=command)
     tooltip(b, ttip)
-    b.config(background=pallet("button-bg"), foreground=fg())
+    b.config(background=pallet("button-bg"), foreground=pallet("button-fg"))
     b.config(activebackground=pallet("ACTIVE-BG"))
     b.config(activeforeground=pallet("ACTIVE-FG"))
     b.config(highlightbackground=bg())
@@ -150,7 +168,6 @@ def radio(master, text, var, value, ttip=""):
     rb.config(selectcolor=pallet("radio-select"))
     rb.config(activebackground=pallet("active-bg"))
     rb.config(activeforeground=pallet("active-fg"))
-    
     return rb
 
 def logo_button(master, name, fname=None, command=None, ttip=""):
@@ -168,7 +185,7 @@ def logo_button(master, name, fname=None, command=None, ttip=""):
     b.config(command=command)
     b.config(background=bg(), foreground=fg())
     return b
-        
+
 
 
 #  ---------------------------------------------------------------------- 
@@ -246,6 +263,15 @@ def buffer_combobox(master, app):
     ttip = "Buffers"
     return combobox(master, values, ttip)
 
+# def channel_combobox(master, app):
+#     values = app.config.channel_assignments.formatted_list()
+#     ttip = "MIDI Channels"
+#     return combobox(master, values, ttip)
+
+# def keytable_combobox(master, app):
+#     keytabs = sorted(app.keytables.keys())
+#     ttip = "Key tables"
+#     return combobox(master, keytabs, ttip)
 
 #  ---------------------------------------------------------------------- 
 #                                    Text
@@ -288,8 +314,8 @@ def label_frame(master, text):
     return f
 
 def notebook(master):
+    _init_theme()
     nb = Notebook(master)
-    nb.config(background=bg())
     return nb
 
 def paned_window(master, orient=HORIZONTAL):

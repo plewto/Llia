@@ -32,7 +32,6 @@ class TkChannelNameEditor(Toplevel):
         entry_name = factory.entry(main, self.var_name)
         button_bar = factory.frame(main)
         b_refresh = factory.refresh_button(button_bar, command=self.refresh)
-
         b_help = factory.help_button(button_bar, command=self.display_help)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_cancel = factory.cancel_button(button_bar, command=self.cancel)
@@ -40,7 +39,6 @@ class TkChannelNameEditor(Toplevel):
         b_help.grid(row=0, column=1)
         b_accept.grid(row=0, column=2)
         b_cancel.grid(row=0, column=3)
-        
         lab_title.grid(row=0, column=0, columnspan=5, pady=8)
         frame_list.grid(row=1, column=0, rowspan=5, columnspan=6, padx=4, pady=8)
         factory.label(main, text="Name").grid(row=6, column=0)

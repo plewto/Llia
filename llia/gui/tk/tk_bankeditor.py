@@ -9,6 +9,7 @@ from Tkinter import (BOTH, Frame)
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
 
+HELP_TOPIC = "bank-editor"
 
 class TkBankEditor(Frame):
 
@@ -38,11 +39,11 @@ class TkBankEditor(Frame):
         logo_filename = os.path.join("resources", format_, "logo_small.png")
         lab_logo = factory.image_label(frame, logo_filename, format_)
         lab_sid = factory.label(frame, "ID = %s" % sid)
-        b_open = factory.button(toolbar, "Open", ttip="Read bank file")
-        b_save = factory.button(toolbar, "Save", ttip="Save bank file")
-        b_init = factory.button(toolbar, "Init", ttip="Initialize bank")
-        b_rem = factory.button(toolbar, "Rem", ttip="Edit bank remarks")
-        b_help = factory.help_button(toolbar)
+        b_open = factory.button(toolbar, "Open", ttip="Read bank file", command=self._open_bank)
+        b_save = factory.button(toolbar, "Save", ttip="Save bank file", command=self._save_bank)
+        b_init = factory.button(toolbar, "Init", ttip="Initialize bank", command=self._init_bank)
+        b_rem = factory.button(toolbar, "Rem", ttip="Edit bank remarks", command=self._edit_remarks)
+        b_help = factory.help_button(toolbar, command= self._help)
         b_open.grid(row=0, column=0, sticky="ew")
         b_save.grid(row=0, column=1, sticky="ew")
         b_init.grid(row=0, column=2, sticky="ew")
@@ -109,17 +110,32 @@ class TkBankEditor(Frame):
     def _select_slot(self, _):
         slot = self.listbox.curselection()[0]
         self.synth.use_program(slot)
-        #self.sync()
+        self.sync() # ISSUE: Remove after testing
 
     def _decrement_selection(self, _):
         slot = self.listbox.curselection()[0]
         slot = max(slot-1, 0)
         self.synth.use_program(slot)
-        #self.sync()
+        self.sync() # ISSUE: Remove after testing
 
     def _increment_selection(self, _):
         count = len(self.synth.bank())
         slot = self.listbox.curselection()[0]
         slot = min(slot+1, count-1)
         self.synth.use_program(slot)
-        #self.sync()
+        self.sync() # ISSUE: Remove after testing
+
+    def _open_bank(self):
+        print("DEBUG open")
+
+    def _save_bank(self):
+        print("DEBUG save")
+
+    def _init_bank(self):
+        print("DEBUG init")
+
+    def _edit_remarks(self):
+        print("DEBUG edit")
+    
+    def _help(self):
+        print("DEBUG help")

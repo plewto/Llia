@@ -13,7 +13,15 @@ class Pallet(dict):
         self["FG"] = "#b5b5b5"
         self["ACTIVE-BG"] = "gray15"
         self["ACTIVE-FG"] = "yellow"
+        
         self["BUTTON-BG"] = "#192633"
+        self["BUTTON-FG"] = self["FG"]
+        
+        self["TAB-BG"] = self["BG"]
+        self["TAB-FG"] = self["BUTTON-FG"]
+        self["TAB-SELECTED-BG"] = "gray5"
+        self["TAB-SELECTED-FG"] = "yellow"
+        
         self["RADIO-SELECT"] = self["BG"]
         self["SCROLLBAR-BACKGROUND"] = "#344d66"
         self["SCROLLBAR-TROUGH"] = "#333333"
