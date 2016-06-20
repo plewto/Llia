@@ -37,6 +37,7 @@ class TkSynthWindow(Toplevel):
         self.var_bendrange = StringVar()
 
         self._init_info_tab(notebook)
+        self._init_bus_and_buffer_tab(notebook)
         self._init_performance_tab(notebook)
         self._init_map1_tab(notebook) # MIDI controllers and pitchwheel
         self._init_map2_tab(notebook) # velocity, aftertouch, keynumber
@@ -65,6 +66,16 @@ class TkSynthWindow(Toplevel):
             txt = ""
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
+
+    def _init_bus_and_buffer_tab(self, master):
+        frame = factory.frame(master)
+        master.add(frame, text = "Buses/Buffers")
+        lab = factory.label(frame, "Place holder for future")
+        lab.pack()
+
+    def sync_bus_and_buffer_tab(self):
+        pass
+
         
     def _init_performance_tab(self, master):
         frame = factory.frame(master)
@@ -367,7 +378,8 @@ class TkSynthWindow(Toplevel):
         print("WARNING: ", msg)
         
     def sync(self, *ignore):
-        self.sync_info_tab()    
+        self.sync_info_tab()
+        self.sync_bus_and_buffer_tab()
         self.sync_performance_tab()
         self.sync_map1_tab()
         self.sync_map2_tab()
