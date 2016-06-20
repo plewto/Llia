@@ -9,7 +9,7 @@ from llia.generic import is_list
 import llia.gui.tk.tk_factory as factory
 import llia.gui.pallet
 from llia.gui.tk.tk_bankeditor import TkBankEditor
-from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, remove_map_dialog
+from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, delete_map_dialog
 
 
 class TkSynthWindow(Toplevel):
@@ -227,13 +227,13 @@ class TkSynthWindow(Toplevel):
             dialog = add_map_dialog(self.synth, "cc", self.app)
 
         def delete_cc_callback():
-            pass
+            dialog = delete_map_dialog(self, self.synth, "cc", self.app)
 
         def add_pw_callback():
             dialog = add_map_dialog(self.synth, "PitchWheel", self.app)
 
         def delete_pw_callback():
-            pass
+            dialog = delete_map_dialog(self, self.synth, "PitchWheel", self.app)
 
         b_add_cc.config(command=add_cc_callback)
         b_delete_cc.config(command=delete_cc_callback)
@@ -326,12 +326,24 @@ class TkSynthWindow(Toplevel):
                 msg = "Invald widget - Should never see this"
                 raise ValueError(msg)
 
-        def delete_map_callback(evnt):
-            pass
+        def delete_map_callback(event):
+            widget = event.widget
+            if widget is b_delete_vel:
+                dialog = delete_map_dialog(self, self.synth, "velocity", self.app)
+            elif widget is b_delete_atouch:
+                dialog = delete_map_dialog(self, self.synth, "aftertouch", self.app)
+            elif widget is b_delete_keynum:
+                dialog = delete_map_dialog(self, self.synth, "keynumber", self.app)
+            else:
+                msg = "Invald widget - Should never see this"
+                raise ValueError(msg)
 
         b_add_vel.bind("<Button-1>", add_map_callback)
         b_add_atouch.bind("<Button-1>", add_map_callback)
         b_add_keynum.bind("<Button-1>", add_map_callback)
+        b_delete_vel.bind("<Button-1>", delete_map_callback)
+        b_delete_atouch.bind("<Button-1>", delete_map_callback)
+        b_delete_keynum.bind("<Button-1>", delete_map_callback)
         
     def sync_map2_tab(self):
         perf = self.synth.bank()[None].performance

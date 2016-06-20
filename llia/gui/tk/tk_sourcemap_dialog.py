@@ -1,7 +1,7 @@
 # llia.gui.tk.tk_sourcemap_dialog
 # 2016.06.19
 
-from Tkinter import Toplevel, StringVar
+from Tkinter import Toplevel, StringVar, TclError
 from llia.generic import is_string
 import llia.gui.tk.tk_factory as factory
 
@@ -55,7 +55,7 @@ class TkAddSourceMapDialog(Toplevel):
         self.var_limit_high.set("1.0")
         frame = factory.frame(self, modal=True)
         frame.pack(expand=True, fill="both")
-        lab_title = factory.label(frame, "Add Source Map", modal=True)
+        lab_title = factory.label(frame, "Add MIDI Source Map", modal=True)
         lab_title.grid(row=0, column=0, columnspan=4, padx=4, pady=8)
         if src == "cc":
             lab_src1 = factory.label(frame, "Controller", modal=True)
@@ -219,10 +219,95 @@ class TkAddSourceMapDialog(Toplevel):
         except ValueError as err:
             self.warning(err.message)
             
-        
-        
+
 def add_map_dialog(synth, src, app):
     dialog = TkAddSourceMapDialog(None, synth, src, app)
 
-def remove_map_dialog():
-    pass  # FPO
+
+
+class TkDeleteSourceMapDialog(Toplevel):
+
+    def __init__(self, master, synth, src, app):
+        Toplevel.__init__(self, master)
+        self.src = src
+        self.synth = synth
+        self.app = app
+        self.var_all = StringVar()
+        self.var_all.set(0)
+        frame = factory.frame(self, modal=True)
+        frame.pack(expand=True, fill="both")
+        lab_title = factory.label(frame, "Remove MIDI Source Map", modal=True)
+        lab_title.grid(row=0, column=0, columnspan=3, padx=4, pady=8)
+        if src == "cc":
+            lab_src = factory.label(frame, "Controller", modal=True)
+            self.combo_source = factory.controller_combobox(frame, app)
+            lab_src.grid(row=1, column=0, padx=4, sticky='w')
+            self.combo_source.grid(row=1, column=1, columnspan=2, sticky="ew")
+        else:
+            lab_src = factory.label(frame, "Source: %s" % src, modal=True)
+            self.combo_source = factory.combobox(None, [src])
+            lab_src.grid(row=1, column=0, columnspan=3, padx=4, sticky='w')
+        lab_param = factory.label(frame, "Param", modal=True)
+        self.cb_all = factory.checkbutton(frame, "All", var = self.var_all, modal=True)
+        params = sorted(synth.bank().template.keys())
+        self.combo_params = factory.combobox(frame, params, 
+                                             "Synth Parameters")
+        lab_param.grid(row=2, column=0, padx=4, pady=4, sticky='w')
+        self.cb_all.grid(row=2, column=1, padx=4)
+        self.combo_params.grid(row=2, column=2)
+
+        def disable_param_callback():
+            val = int(self.var_all.get())
+            if val == 0:
+                self.combo_params.config(state="normal")
+            else:
+                self.combo_params.config(state="disabled")
+        
+        def accept_callback():
+            shelper = self.app.ls_parser.synthhelper
+            if self.src == "cc":
+                src = self.combo_source.get()[1:4]
+            else:
+                src = self.src
+            src = src.lower()
+            if int(self.var_all.get()) == 0:
+                param = self.combo_params.get()
+            else:
+                param = "ALL"
+            shelper.remove_parameter_map(src, param, self.synth.sid)
+            msg = "Removed MIDI source map"
+            self.status(msg)
+            self.destroy()
+            self.synth.synth_editor.sync()
+
+        def cancel_callback():
+            msg = "Delete source map canceld"
+            self.status(msg)
+            self.destroy()
+
+        toolbar = factory.frame(frame, modal=True)
+        b_accept = factory.accept_button(toolbar, command=accept_callback)
+        b_cancel = factory.cancel_button(toolbar, command=cancel_callback)
+        toolbar.grid(row=3, column=0, columnspan=3, padx=4, pady=8, sticky="ew")
+        b_accept.grid(row=0, column=0, sticky="ew")
+        b_cancel.grid(row=0, column=1, sticky="ew")
+        self.cb_all.config(command=disable_param_callback)
+        try:                    # ISSUE BUG 0004
+            self.grab_set()
+        except TclError as err:
+            print("-" * 60)
+            print("BUG 0004 trapped. TkDeleteSourceMapDialog.__init__")
+            print(err.message)
+            print("Unable to open dialog as modal")
+            
+        self.mainloop()
+        
+    def status(self, msg):
+        self.synth.synth_editor.status(msg)
+
+    def warning(self, msg):
+        self.synth.synth_editor.warning(msg)
+                                  
+
+def delete_map_dialog(master, synth, src, app):
+    dialog = TkDeleteSourceMapDialog(None, synth, src, app)

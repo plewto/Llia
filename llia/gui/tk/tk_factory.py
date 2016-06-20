@@ -161,20 +161,6 @@ def refresh_button(master, text="()", command=None, ttip="Refresh"):
     b = button(master, text, command, ttip)
     return b
 
-def radio(master, text, var, value, ttip="", modal=False):
-    rb = Radiobutton(master, text=text, variable=var, value=value)
-    tooltip(rb, ttip)
-    if modal:
-        rb.config(background=pallet("DIALOG-BG"))
-        rb.config(foreground=pallet("DIALOG-FG"))
-    else:
-        rb.config(background=bg(), foreground=fg())
-    rb.config(highlightbackground=bg())
-    rb.config(selectcolor=pallet("radio-select"))
-    rb.config(activebackground=pallet("active-bg"))
-    rb.config(activeforeground=pallet("active-fg"))
-    return rb
-
 def logo_button(master, name, fname=None, command=None, ttip=""):
     if not fname:
         fname = os.path.join("/home/sj/dev/Llia/resources", name, "logo.png")
@@ -190,6 +176,34 @@ def logo_button(master, name, fname=None, command=None, ttip=""):
     b.config(command=command)
     b.config(background=bg(), foreground=fg())
     return b
+
+def radio(master, text, var, value, ttip="", modal=False):
+    rb = Radiobutton(master, text=text, variable=var, value=value)
+    tooltip(rb, ttip)
+    if modal:
+        rb.config(background=pallet("DIALOG-BG"))
+        rb.config(foreground=pallet("DIALOG-FG"))
+    else:
+        rb.config(background=bg(), foreground=fg())
+    rb.config(highlightbackground=bg())
+    rb.config(selectcolor=pallet("radio-select"))
+    rb.config(activebackground=pallet("active-bg"))
+    rb.config(activeforeground=pallet("active-fg"))
+    return rb
+
+def checkbutton(master, text, var=None, ttip="", modal=False):
+    cb = Checkbutton(master, text=text, variable=var)
+    if modal:
+        cb.config(background=pallet("DIALOG-BG"))
+        cb.config(foreground=pallet("DIALOG-FG"))
+    else:
+        cb.config(background=bg(), foreground=fg())
+    cb.config(highlightbackground=bg())
+    cb.config(selectcolor=pallet("radio-select"))
+    cb.config(activebackground=pallet("active-bg"))
+    cb.config(activeforeground=pallet("active-fg"))
+    return cb
+
 
 
 
