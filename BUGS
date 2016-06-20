@@ -49,3 +49,9 @@ Event.
 
 
 
+---------------------------------------------------------------------- OPEN
+BUG 0004 2016.06.20
+At times Toplevel.grab_set() raises TclError.
+This prevents dialogs from being modal.
+
+Temporary fix: Catch error and print BUG message.
