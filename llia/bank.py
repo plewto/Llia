@@ -133,7 +133,7 @@ class ProgramBank(list):
                     list.__setitem__(self, i, clone(p))
                 self.current_slot = other.current_slot
                 self.current_program = clone(other.current_program)
-                #self.performance.copy_performance(other.performance)
+                #self.performance.copy_erformance(other.performance)
             else:
                 msg = "Can not copy %s bank into %s bank"
                 msg = msg % (frmt2, frmt1)

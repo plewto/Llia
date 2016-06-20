@@ -3,12 +3,14 @@
 
 
 from __future__ import print_function
-from Tkinter import Toplevel, BOTH, StringVar
-# from llia.gui.tk.tk_tabbed_window import TabbedWindow
+from Tkinter import Toplevel, StringVar
 
+from llia.generic import is_list
 import llia.gui.tk.tk_factory as factory
 import llia.gui.pallet
 from llia.gui.tk.tk_bankeditor import TkBankEditor
+from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, remove_map_dialog
+
 
 class TkSynthWindow(Toplevel):
 
@@ -21,7 +23,7 @@ class TkSynthWindow(Toplevel):
         self.sid = sproxy.sid
         factory.set_pallet(sproxy.specs["pallet"])
         main = factory.paned_window(self)
-        main.pack(expand=True, fill=BOTH)
+        main.pack(expand=True, fill="both")
         self.bank_editor = TkBankEditor(main, self, sproxy)
         notebook = factory.notebook(main)
         main.add(self.bank_editor)
@@ -36,6 +38,8 @@ class TkSynthWindow(Toplevel):
 
         self._init_info_tab(notebook)
         self._init_performance_tab(notebook)
+        self._init_map1_tab(notebook) # MIDI controllers and pitchwheel
+        self._init_map2_tab(notebook) # velocity, aftertouch, keynumber
         self.sync()
 
     def _init_info_tab(self, master):
@@ -61,7 +65,6 @@ class TkSynthWindow(Toplevel):
             txt = ""
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
-            
         
     def _init_performance_tab(self, master):
         frame = factory.frame(master)
@@ -79,17 +82,23 @@ class TkSynthWindow(Toplevel):
         sb_keytab = factory.scrollbar(frame_keytab)
         sb_keytab.config(command=self.list_keytab.yview)
         self.list_keytab.config(yscrollcommand=sb_keytab.set)
-        spin_transpose = factory.int_spinbox(frame, self.var_transpose, -36, 36)
-        spin_keylow = factory.int_spinbox(frame, self.var_keyrange_low, 0, 127)
-        spin_keyhigh = factory.int_spinbox(frame, self.var_keyrange_high, 0, 127)
-        spin_bendrange = factory.int_spinbox(frame, self.var_bendrange, 0, 2400)
+        spin_transpose = factory.int_spinbox(frame, 
+                                             self.var_transpose, -36, 36)
+        spin_keylow = factory.int_spinbox(frame, 
+                                          self.var_keyrange_low, 0, 127)
+        spin_keyhigh = factory.int_spinbox(frame, 
+                                           self.var_keyrange_high, 0, 127)
+        spin_bendrange = factory.int_spinbox(frame, 
+                                             self.var_bendrange, 0, 2400)
         factory.padding_label(frame).grid(row=0)
         frame_channel.grid(row=1, column=0, rowspan=4, columnspan=2)
         self.list_channel.pack(side="left", expand=True, fill="both")
-        sb_channel.pack(after=self.list_channel, side="right", expand=True, fill="y")
+        sb_channel.pack(after=self.list_channel, side="right", 
+                        expand=True, fill="y")
         frame_keytab.grid(row=1, column=2, rowspan=4, columnspan=2)
         self.list_keytab.pack(side="left", expand=True, fill="both")
-        sb_keytab.pack(after=self.list_keytab, side="right", expand=True, fill="y")
+        sb_keytab.pack(after=self.list_keytab, side="right", 
+                       expand=True, fill="y")
         factory.padding_label(frame).grid(row=6)
         lab_transpose.grid(row=7, column=0, sticky="w", padx=4, pady=4)
         spin_transpose.grid(row=7, column=1, padx=4)
@@ -98,7 +107,6 @@ class TkSynthWindow(Toplevel):
         spin_keyhigh.grid(row=8, column=2, padx=4)
         lab_bend.grid(row=9, column=0, sticky="w", padx=4, pady=4)
         spin_bendrange.grid(row=9, column=1, padx=4)
-
    
         def channel_callback(_):
             i = self.list_channel.curselection()[0]
@@ -166,7 +174,179 @@ class TkSynthWindow(Toplevel):
         self.var_keyrange_low.set(lo)
         self.var_keyrange_high.set(hi)
         self.var_bendrange.set(self.synth.bend_range())
+
+    # map1_tab -> MIDI controller, pitch wheel
+    def _init_map1_tab(self, master):
+        HELP_TOPIC = "parameter-maps"
+        frame = factory.frame(master)
+        master.add(frame, text="Map1")
+        north = factory.label_frame(frame, "MIDI Controller Maps")
+        south = factory.label_frame(frame, "Pitch Wheel Maps")
+        north.grid(row=0, column=0, sticky="ew", padx=8, pady=8)
+        south.grid(row=1, column=0, sticky="ew", padx=8, pady=8)
+
+        def help_callback():
+            self.app.main_window().display_help(HELP_TOPIC)
+       
+        list_cc_maps = factory.listbox(north, 
+                                       ttip="Active MIDI controller maps")
+        list_cc_maps.config(width=80, height=16)
+        self.list_cc_maps = list_cc_maps
+        sb = factory.scrollbar(north, orientation="vertical")
+        sb.config(command=list_cc_maps.yview)
+        list_cc_maps.config(yscrollcommand=sb.set)
+        b_add_cc = factory.add_button(north, ttip="Add new controller map")
+        b_delete_cc = factory.delete_button(north, 
+                                            ttip="Delete controller map")
+        list_cc_maps.grid(row=0, column=0, rowspan=4, 
+                          columnspan=8, sticky="ew")
+        sb.grid(row=0, column=8, rowspan=4, sticky="ns")
+        b_add_cc.grid(row=4, column=0, sticky="ew")
+        b_delete_cc.grid(row=4, column=1, sticky="ew")
+
+        list_pwheel_maps = factory.listbox(south, 
+                                           ttip="Active pitch wheel maps")
+        list_pwheel_maps.config(width=80, height=8)
+        self.list_pwheel_maps = list_pwheel_maps
+        sb = factory.scrollbar(south, orientation="vertical")
+
+        sb.config(command=list_pwheel_maps.yview)
+        list_pwheel_maps.config(yscrollcommand=sb.set)
+        b_add_pw = factory.add_button(south, ttip="Add pitchwheel map")
+        b_delete_pw = factory.delete_button(south, 
+                                            ttip="Delete pitchwheel map")
+        b_help = factory.help_button(south, command=help_callback)
+        list_pwheel_maps.grid(row=0, column=0, rowspan=4,
+                              columnspan=8, sticky="ew")
+        sb.grid(row=0, column=8, rowspan=4, sticky="ns")
+        b_add_pw.grid(row=4, column=0, sticky="ew")
+        b_delete_pw.grid(row=4, column=1, sticky="ew")
+        b_help.grid(row=4, column=7, sticky="ew")
+
+        def add_cc_callback():
+            dialog = add_map_dialog(self.synth, "cc", self.app)
+
+        def delete_cc_callback():
+            pass
+
+        def add_pw_callback():
+            dialog = add_map_dialog(self.synth, "PitchWheel", self.app)
+
+        def delete_pw_callback():
+            pass
+
+        b_add_cc.config(command=add_cc_callback)
+        b_delete_cc.config(command=delete_cc_callback)
+        b_add_pw.config(command=add_pw_callback)
+        b_delete_pw.config(command=delete_pw_callback)
         
+    def sync_map1_tab(self):
+        perf = self.synth.bank()[None].performance
+        cmaps = perf.controller_maps
+        pwmaps = perf.pitchwheel_maps
+        self.list_cc_maps.delete(0, "end")
+        for ctrl, mapper in cmaps.items():
+            s = str(mapper)
+            for q in s.split('\n'):
+                self.list_cc_maps.insert("end", q)
+        self.list_pwheel_maps.delete(0, "end")
+        for q in str(pwmaps).split('\n'):
+            self.list_pwheel_maps.insert("end", q)
+
+    def _init_map2_tab(self, master):
+        HELP_TOPIC = "parameter-maps"
+        HEIGHT = 8
+        frame = factory.frame(master)
+        master.add(frame, text="Map2")
+        north = factory.label_frame(frame, "Velocity Maps")
+        center = factory.label_frame(frame, "Aftertouch Maps")
+        south = factory.label_frame(frame, "Keynumber Maps")
+        north.grid(row=0, column=0, sticky="ew", padx=8, pady=8)
+        center.grid(row=1, column=0, sticky="ew", padx=8)
+        south.grid(row=2, column=0, sticky="ew", padx=8, pady=8)
+
+        def help_callback():
+            self.app.main_window().display_help(HELP_TOPIC)
+
+        list_vel_maps = factory.listbox(north, ttip="Active velocity maps")
+        list_vel_maps.config(width=80, height=HEIGHT)
+        self.list_vel_maps = list_vel_maps
+        sb = factory.scrollbar(north, orientation="vertical")
+        sb.config(command=list_vel_maps.yview)
+        list_vel_maps.config(yscrollcommand=sb.set)
+        b_add_vel = factory.add_button(north, ttip="Add velocity map")
+        b_delete_vel = factory.delete_button(north, 
+                                             ttip="Delete velocity map")
+        list_vel_maps.grid(row=0, column=0, columnspan=8, sticky="ew")
+        sb.grid(row=0, column=8, sticky="ns")
+        b_add_vel.grid(row=1, column=0, sticky="ew")
+        b_delete_vel.grid(row=1, column=1, sticky="ew")
+
+        list_atouch_maps = factory.listbox(center, 
+                                           ttip="Active after touch maps")
+        list_atouch_maps.config(width=80, height=HEIGHT)
+        self.list_atouch_maps = list_atouch_maps
+        sb = factory.scrollbar(center, orientation="vertical")
+        sb.config(command=list_atouch_maps.yview)
+        list_atouch_maps.config(yscrollcommand=sb.set)
+        b_add_atouch = factory.add_button(center, ttip="Add after touch map")
+        b_delete_atouch = factory.delete_button(center, 
+                                                ttip="Delete after touch map")
+        list_atouch_maps.grid(row=0, column=0, columnspan=8, sticky="ew")
+        sb.grid(row=0, column=8, sticky="ns")
+        b_add_atouch.grid(row=1, column=0, sticky="ew")
+        b_delete_atouch.grid(row=1, column=1, sticky="ew")
+
+        list_keynum_maps = factory.listbox(south, 
+                                           ttip="Active key number maps")
+        list_keynum_maps.config(width=80, height=HEIGHT)
+        self.list_keynum_maps = list_keynum_maps
+        sb = factory.scrollbar(south, orientation="vertical")
+        sb.config(command=list_keynum_maps.yview)
+        list_keynum_maps.config(yscrollcommand=sb.set)
+        b_add_keynum = factory.add_button(south, ttip="Add key number map")
+        b_delete_keynum = factory.delete_button(south, 
+                                                ttip="Delete key number map")
+	b_help = factory.help_button(south, command=help_callback)
+        list_keynum_maps.grid(row=0, column=0, columnspan=8, sticky="ew")
+        sb.grid(row=0, column=8, sticky="ns")
+        b_add_keynum.grid(row=1, column=0, sticky="ew")
+        b_delete_keynum.grid(row=1, column=1, sticky="ew")
+        b_help.grid(row=1, column=7, sticky="ew")
+
+        def add_map_callback(event):
+            widget = event.widget
+            if widget is b_add_vel:
+                dialog = add_map_dialog(self.synth, "velocity", self.app)
+            elif widget is b_add_atouch:
+                dialog = add_map_dialog(self.synth, "aftertouch", self.app)
+            elif widget is b_add_keynum:
+                dialog = add_map_dialog(self.synth, "keynumber", self.app)
+            else:
+                msg = "Invald widget - Should never see this"
+                raise ValueError(msg)
+
+        def delete_map_callback(evnt):
+            pass
+
+        b_add_vel.bind("<Button-1>", add_map_callback)
+        b_add_atouch.bind("<Button-1>", add_map_callback)
+        b_add_keynum.bind("<Button-1>", add_map_callback)
+        
+    def sync_map2_tab(self):
+        perf = self.synth.bank()[None].performance
+        vmaps = perf.velocity_maps
+        atmaps = perf.aftertouch_maps
+        knmaps = perf.keynumber_maps
+        self.list_vel_maps.delete(0, 'end')
+        self.list_atouch_maps.delete(0, 'end')
+        self.list_keynum_maps.delete(0, 'end')
+        for q in str(vmaps).split('\n'):
+            self.list_vel_maps.insert('end', q)
+        for q in str(atmaps).split('\n'):
+            self.list_atouch_maps.insert('end', q)
+        for q in str(knmaps).split('\n'):
+            self.list_keynum_maps.insert('end', q)            
         
     def status(self, msg):
         print("STATUS: ", msg)
@@ -177,6 +357,8 @@ class TkSynthWindow(Toplevel):
     def sync(self, *ignore):
         self.sync_info_tab()    
         self.sync_performance_tab()
+        self.sync_map1_tab()
+        self.sync_map2_tab()
         if "bank" not in ignore:
             self.bank_editor.sync_no_propegate()
-        
+

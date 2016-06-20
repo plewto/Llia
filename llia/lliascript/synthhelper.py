@@ -372,17 +372,19 @@ class SynthHelper(object):
         lstype = self.what_is(source)
         if "controller" in lstype:
             self.map_cc(source, param, curve, mod, range_, limits, sid)
-        elif source == velocity:
-            self.map_velocity(param, curve, mod, range_, limits, sid)
-        elif source == aftertouch:
-            self.map_aftertouch(param, curve, mod, range_, limits, sid)
-        elif source == pitchwheel:
-            self.map_pitchwheel(param, curve, mod, range_, limits, sid)
-        elif source == keynumber:
-            self.map_keynumber(param, curve, mod, range_, limits, sid)
         else:
-            msg = "Do not understand parameter map source: '%s'" % source
-            raise LliascriptError(msg)
+            source = str(source).lower()
+            if source == velocity:
+                self.map_velocity(param, curve, mod, range_, limits, sid)
+            elif source == aftertouch:
+                self.map_aftertouch(param, curve, mod, range_, limits, sid)
+            elif source == pitchwheel:
+                self.map_pitchwheel(param, curve, mod, range_, limits, sid)
+            elif source == keynumber:
+                self.map_keynumber(param, curve, mod, range_, limits, sid)
+            else:
+                msg = "Do not understand parameter map source: '%s'" % source
+                raise LliascriptError(msg)
 
     def remove_parameter_map(self, source, param=ALL, sid=None):
         sy = self.get_synth(sid)

@@ -161,10 +161,14 @@ def refresh_button(master, text="()", command=None, ttip="Refresh"):
     b = button(master, text, command, ttip)
     return b
 
-def radio(master, text, var, value, ttip=""):
+def radio(master, text, var, value, ttip="", modal=False):
     rb = Radiobutton(master, text=text, variable=var, value=value)
     tooltip(rb, ttip)
-    rb.config(background=bg(), foreground=fg())
+    if modal:
+        rb.config(background=pallet("DIALOG-BG"))
+        rb.config(foreground=pallet("DIALOG-FG"))
+    else:
+        rb.config(background=bg(), foreground=fg())
     rb.config(highlightbackground=bg())
     rb.config(selectcolor=pallet("radio-select"))
     rb.config(activebackground=pallet("active-bg"))
@@ -237,6 +241,12 @@ def int_spinbox(master, textvar, from_, to, ttip=""):
     sb.config(buttonbackground=bg())
     return sb
 
+def float_spinbox(master, textvar, from_, to, ttip=""):
+    sb = Spinbox(master, from_=float(from_), to=float(to), textvariable=textvar)
+    tooltip(sb, ttip)
+    sb.config(background=bg(), foreground=fg())
+    sb.config(buttonbackground=bg())
+    return sb
 
 #  ---------------------------------------------------------------------- 
 #                                  Combobox
@@ -263,6 +273,12 @@ def buffer_combobox(master, app):
     values = app.proxy.buffer_keys()
     ttip = "Buffers"
     return combobox(master, values, ttip)
+
+def controller_combobox(master, app):
+    values = app.config.formatted_controller_names()
+    ttip = "MIDI controllers"
+    return combobox(master, values, ttip)
+
 
 # def channel_combobox(master, app):
 #     values = app.config.channel_assignments.formatted_list()
