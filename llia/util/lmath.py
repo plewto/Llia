@@ -6,8 +6,9 @@ from math import *
 
 import random
 
-def clamp(n, mn, mx):
-    return min(max(n, mn), mx)
+# DEPRECIATED Use clip instead
+# def clamp(n, mn, mx):
+#     return min(max(n, mn), mx)
 
 def logn(x, n):
     return log10(x)/log10(n)
