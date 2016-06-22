@@ -5,7 +5,6 @@
 from __future__ import print_function
 import abc, sys
 
-from llia.gui.widget import DUMMY_WIDGET
 from llia.gui.splash import TextSplashScreen
 
 class AbstractApplicationWindow(object):
@@ -26,10 +25,6 @@ class AbstractApplicationWindow(object):
         print("WARNING : /Llia/%s : %s" % (oscid, msg))
 
     @abc.abstractmethod
-    def as_widget(self):
-        return None
-
-    @abc.abstractmethod
     def start_gui_loop(self):
         return None
     
@@ -42,9 +37,6 @@ class DummyApplicationWindow(AbstractApplicationWindow):
 
     def __init__(self, app, *_):
         super(DummyApplicationWindow, self).__init__(app, None)
-
-    def as_widget(self):
-        return DUMMY_WIDGET
 
 def create_application_window(app):
     config = app.config
