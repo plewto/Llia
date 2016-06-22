@@ -71,13 +71,15 @@ def is_bank(obj):
 def is_instrument(obj):
     return False
 
-@generic
-def is_pigwindow(obj):
-    return False
+# @generic
+# def is_pigwindow(obj):
+#     return False
 
 @generic
-def is_subeditor(obj):
+def is_editor(obj):
     return False
+
+
 
 @generic
 def is_controller_name_map(obj):
