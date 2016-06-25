@@ -314,7 +314,8 @@ class LliaConfig(dict):
     
     def active_updates_enabled(self):
         flg = str(self.__get_value("GUI", "enable-active-update", False)).upper()
-        return flg == "TRUE"
+        rs = flg == "TRUE"
+        return rs
         
     def enable_controller_edit(self):
         msg = "**DEPRECIATED** config.enable_controller_edit\n"

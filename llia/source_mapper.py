@@ -31,8 +31,8 @@ class SourceMapper(object):
                    For pitchwheel domain defaults to (-8192, 8191).
         """
         self.source = str(source).lower()
-        self._transient = self.source in ("keynumber","aftertouch",
-                                          "velocity","pitchwheel")
+        # self._transient = self.source in ("keynumber","aftertouch",
+        #                                   "velocity","pitchwheel")
         if domain:
             self.domain = domain
         else:
@@ -143,22 +143,20 @@ class SourceMapper(object):
     def update_synths(self, x, instrument):
         """
         Update all mapped parameters for new source value.
-        
+       
         ARGS:
           x - int, The source value
           instrument - An instance of Instrument
         """
         active_update = instrument.app.config.active_updates_enabled()
-        #cc_edit = instrument.app.controller_edit_enabled()
-        cc_edit = instrument.app.config.midi_edit_enabled()
         for pm in self._maps.values():
             value = pm.map_value(x)
             param = pm.parameter
             instrument.x_param_change(param, value)
-            if active_update and not self._transient:
-                instrument.iwindow.set_aspect(param, value)
-                if cc_edit:
-                    instrument.program_bank[None][param] = value
+            if active_update: # and not self._transient:
+                sed = instrument.synth_editor
+                if sed:
+                    sed.set_aspect(param, value)
     
     def dump(self, tab=0):
         pad = ' '*4*tab

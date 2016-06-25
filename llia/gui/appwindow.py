@@ -13,8 +13,8 @@ class AbstractApplicationWindow(object):
         self.app = app
         self.root = root
         self.config = app.config
-        self._synth_editors = {}  # Active synth editors usig SID as key
-
+        self._synth_editors = {}  # Active synth editors. synth SID used as key
+        
     def __setitem__(self, sid, sed):
         self._synth_editors[sid] = sed
 

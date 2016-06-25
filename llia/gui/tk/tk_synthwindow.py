@@ -37,7 +37,6 @@ class TkSynthWindow(Toplevel):
         b_clear_status.grid(row=0, column=1, sticky='w')
         self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
         south.config(background=factory.bg())
-
         main.add(self.bank_editor)
         main.add(east)
         self.list_channel = None
@@ -410,7 +409,11 @@ class TkSynthWindow(Toplevel):
     def set_value(self, param, value):
         for ed in self._child_editors.items():
             ed.set_value(param, value)
-        
+
+    def set_aspect(self, param, value):
+        for ed in self._child_editors.values():
+            ed.set_value(param, value)
+    
     def sync(self, *ignore):
         self.sync_info_tab()
         self.sync_bus_and_buffer_tab()

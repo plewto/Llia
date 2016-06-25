@@ -18,8 +18,6 @@ input-port : Launchkey Mini 16:0
 output-port : Launchkey Mini 16:0
 backend : mido.backends.rtmidi
 enable-program-pp : True
-autogen-program-slot : 0  # <DEPRECIATED>
-autogen-store-slot : 1    # <DEPRECIATED>
 enable-keyswitch : True
 keyswitch-channel : 10
 keyswitch-transpose : -40
@@ -40,18 +38,7 @@ enable-tooltips : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
 warn-on-exit : False
-enable-active-update : True     ; Enable MIDI controller changes to
-                                ; update GUI
-
-enable-midi-edit : False        ; Enable MIDI controller changes to
-                                ; alter current program parameters.
-				; enable-active-updates must also
-				; be true.
-
-;; *DEPRECIATED*  use enable-midi-edit				
-enable-controller-edit : False  ; Enable MIDI controller changes to
-                                ; alter "current" program parameters.
-
+enable-active-update : True     ; Enable MIDI controller changes to update GUI
 
 [MIDI-CHANNELS]
 C01 : Alpha
