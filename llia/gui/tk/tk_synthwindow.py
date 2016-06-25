@@ -25,9 +25,21 @@ class TkSynthWindow(Toplevel):
         main = factory.paned_window(self)
         main.pack(expand=True, fill="both")
         self.bank_editor = TkBankEditor(main, self, sproxy)
-        self.notebook = factory.notebook(main)
+        east = factory.frame(main)
+        self.notebook = factory.notebook(east)
+        self.notebook.pack(anchor="nw", expand=True, fill="both")
+        south = factory.frame(east)
+        south.pack(after=self.notebook, anchor="w", expand=True, fill="x")
+        b_panic = factory.panic_button(south, command=self.panic, ttip="All notes off")
+        b_clear_status = factory.clear_button(south, command=self.clear_status, ttip="Clear stutus line")
+        self._lab_status = factory.label(south, "<status>")
+        b_panic.grid(row=0, column=0, sticky='w')
+        b_clear_status.grid(row=0, column=1, sticky='w')
+        self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
+        south.config(background=factory.bg())
+
         main.add(self.bank_editor)
-        main.add(self.notebook)
+        main.add(east)
         self.list_channel = None
         self.list_keytab = None
         self.var_transpose = StringVar()
@@ -41,6 +53,13 @@ class TkSynthWindow(Toplevel):
         self._init_map2_tab(self.notebook) # velocity, aftertouch, keynumber
         self._child_editors = {}
         self.sync()
+
+    def panic(self):
+        self.synth.osc_transmitter.x_all_notes_off()
+        self.status("All notes off")
+        
+    def clear_status(self):
+        self._lab_status.config(text="")
         
     def add_child_editor(self, child_name, child):
         # Adds child editor to list of editors without adding a notebook tab.
@@ -382,10 +401,11 @@ class TkSynthWindow(Toplevel):
             self.list_keynum_maps.insert('end', q)            
         
     def status(self, msg):
-        print("STATUS: ", msg)
+        self._lab_status.config(text = msg)
 
     def warning(self, msg):
-        print("WARNING: ", msg)
+        msg = "WARNING: %s" % msg
+        self._lab_status.config(text = msg)
 
     def set_value(self, param, value):
         for ed in self._child_editors.items():

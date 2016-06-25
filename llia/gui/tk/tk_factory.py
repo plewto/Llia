@@ -165,6 +165,10 @@ def refresh_button(master, text="()", command=None, ttip="Refresh"):
     b = button(master, text, command, ttip)
     return b
 
+def panic_button(master, text="PANIC", command=None, ttip="Panic"):
+    b = button(master, text, command, ttip)
+    return b
+
 def logo_button(master, name, fname=None, command=None, ttip=""):
     if not fname:
         fname = os.path.join("/home/sj/dev/Llia/resources", name, "logo.png")

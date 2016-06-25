@@ -43,7 +43,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         south = self._main.south
         south.configure(padx=4, pady=4)
         self._lab_status = factory.label(south, "", modal=False)
-        b_panic = factory.button(south, "PANIC")
+        b_panic = factory.panic_button(south)
         ttip = "Clear status line"
         b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
         b_panic.grid(row=0, column=0, sticky="w")

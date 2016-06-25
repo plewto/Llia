@@ -35,7 +35,7 @@ class ControlSlider(absctrl.AbstractControl):
         self._current_value = value
         self.synth.x_param_change(self.param, value)
         msg = "[%s] -> %s" % (self.param, value)
-        #self.editor.status(msg)
+        self.editor.status(msg)
         bnk = self.synth.bank()
         program = bnk[None]
         program[self.param] = value
@@ -117,7 +117,7 @@ class OscFrequencyControl(absctrl.AbstractControl):
         msg = "%5.4f" % freq
         self.lab_freq.config(text=msg)
         msg = "[%s] -> " % self.param + msg
-        #self.editor.status(msg)
+        self.editor.status(msg)
         bnk = self.synth.bank()
         program = bnk[None]
         program[self.param] = freq
