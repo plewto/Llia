@@ -190,6 +190,7 @@ class TkAddSynthDialog(Toplevel):
             shelper.assign_buffer_or_bus(p, busname, offset)
         for p,bname in self._buffername_map.items():
             shelper.assign_buffer(p, bname)
+        factory.set_pallet(sy.specs["pallet"])
         swin = TkSynthWindow(sy)
         self.app.main_window()[self.sid] = swin
 

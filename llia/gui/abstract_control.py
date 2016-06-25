@@ -5,7 +5,8 @@
 
 from __future__ import print_function
 import abc, numpy
-    
+
+from llia.generic import is_synth_control
 from llia.util.lmath import clip, db_to_amp, amp_to_db, logn
 from llia.curves import identity
 
@@ -77,7 +78,10 @@ class AbstractControl(object):
             self.update_aspect()
         return self._current_value
         
-
+@is_synth_control.when_type(AbstractControl)
+def _is_synth_control(obj):
+    return True
+    
 
 #  ********************************************************************** 
 #                         Standardized Control Curves
@@ -233,7 +237,7 @@ FINE_FREQUENCY_CODOMAIN = (1.0, 2.0)
 
 aspect_to_fine_frequency = linfn(FINE_FREQUENCY_DOMAIN,
                                  FINE_FREQUENCY_CODOMAIN)
-fine_frequncy_to_aspect = linfn(FINE_FREQUENCY_CODOMAIN,
+fine_frequency_to_aspect = linfn(FINE_FREQUENCY_CODOMAIN,
                                 FINE_FREQUENCY_DOMAIN)
                                  
 

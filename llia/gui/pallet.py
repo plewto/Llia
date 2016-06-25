@@ -45,4 +45,4 @@ class Pallet(dict):
                 print(msg)
                 return "gray64"
     
-pallet = Pallet()
+default_pallet = Pallet()

@@ -80,6 +80,10 @@ def is_subeditor(obj):
     return False
 
 @generic
+def is_synth_control(obj):
+    return False
+
+@generic
 def is_controller_name_map(obj):
     return False
 

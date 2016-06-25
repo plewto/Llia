@@ -22,20 +22,20 @@ class ControlSlider(absctrl.AbstractControl):
                                       command = self.callback, ttip=ttip)
         super(ControlSlider, self).__init__(param, editor, self._tkscale)
         self._primary_widget = self._tkscale
-        self.value_to_aspect = curves[0] or absctrl.norm_to_aspect
-        self.aspect_to_value = curves[1] or absctrl.aspect_to_norm
+        self.value_to_aspect_transform = curves[0] or absctrl.norm_to_aspect
+        self.aspect_to_value_transform = curves[1] or absctrl.aspect_to_norm
 
     def update_aspect(self):
         self._tkscale.set(self._current_aspect)
 
     def callback(self, *_):
         aspect = int(self._tkscale.get())
-        value = self.aspect_to_value(aspect)
+        value = self.aspect_to_value_transform(aspect)
         self._current_aspect = aspect
         self._current_value = value
         self.synth.x_param_change(self.param, value)
         msg = "[%s] -> %s" % (self.param, value)
-        self.editor.status(msg)
+        #self.editor.status(msg)
         bnk = self.synth.bank()
         program = bnk[None]
         program[self.param] = value
@@ -117,7 +117,7 @@ class OscFrequencyControl(absctrl.AbstractControl):
         msg = "%5.4f" % freq
         self.lab_freq.config(text=msg)
         msg = "[%s] -> " % self.param + msg
-        self.editor.status(msg)
+        #self.editor.status(msg)
         bnk = self.synth.bank()
         program = bnk[None]
         program[self.param] = freq
@@ -128,7 +128,7 @@ class OscFrequencyControl(absctrl.AbstractControl):
         if freq:
             octave = int(log2(freq))
             ff = freq/(2.0**octave)
-            ff_aspect = absctrl.fine_freq_to_aspect(ff)
+            ff_aspect = absctrl.fine_frequency_to_aspect(ff)
             self.var_octave.set(octave)
             self.scale_fine.set(ff_aspect)
         else:

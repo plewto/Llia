@@ -22,7 +22,7 @@ def set_pallet(p):
         _current_pallet = p
         _style = None
 
-set_pallet(llia.gui.pallet.pallet)
+set_pallet(llia.gui.pallet.default_pallet)
     
 def pallet(key):
     return _current_pallet[key]

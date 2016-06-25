@@ -3,10 +3,12 @@
 
 from __future__ import print_function
 
+from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.orgn.orgn_data import program_bank
 from llia.synths.orgn.orgn_pp import pp_orgn
 from llia.synths.orgn.orgn_gen import gen_orgn_program
+
 
 specs = SynthSpecs("Orgn")
 
@@ -24,11 +26,7 @@ class OrgnProxy(SynthProxy):
             parent_editor = appwin[self.sid]
             create_tk_orgn_editor(parent_editor)
             
-        
-        
-        
-            
-        
+orgn_pallet = Pallet(default_pallet)        
 
 specs["constructor"] = OrgnProxy
 specs["description"] = "FM Combo Organ"
@@ -36,4 +34,6 @@ specs["audio-output-buses"] = (("outbus", 1),)
 specs["pretty-printer"] = pp_orgn    
 specs["program-generator"] = gen_orgn_program
 specs["help"] = "orgn"
+specs["pallet"] = orgn_pallet
+
 
