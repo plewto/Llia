@@ -45,7 +45,7 @@ class TkSynthWindow(Toplevel):
         self.var_keyrange_low = StringVar()
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
-        self._init_info_tab(self.notebook)
+        self._init_program_tab(self.notebook)
         self._init_bus_and_buffer_tab(self.notebook)
         self._init_performance_tab(self.notebook)
         self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
@@ -71,9 +71,9 @@ class TkSynthWindow(Toplevel):
         self.notebook.add(f, text=name)
         return f
         
-    def _init_info_tab(self, master):
+    def _init_program_tab(self, master):
         frame = factory.frame(master)
-        master.add(frame, text = "Info")
+        master.add(frame, text = "Program")
         text_widget = factory.text_widget(frame)
         vsb = factory.scrollbar(frame, orientation="vertical")
         hsb = factory.scrollbar(frame, orientation="horizontal")
@@ -82,8 +82,10 @@ class TkSynthWindow(Toplevel):
         vsb.grid(row=0, column=8, rowspan=8, sticky="ns")
         hsb.grid(row=8, column=0, columnspan=8, sticky="ew")
         self._info_text_widget = text_widget
+        b_update = factory.button(frame, "Update", command=self.sync_program_tab)
+        b_update.grid(row=9, column=0, padx=4, pady=8)
 
-    def sync_info_tab(self):
+    def sync_program_tab(self):
         bnk = self.synth.bank()
         prog = bnk[None]
         slot = bnk.current_slot
@@ -94,6 +96,7 @@ class TkSynthWindow(Toplevel):
             txt = ""
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
+
 
     def _init_bus_and_buffer_tab(self, master):
         frame = factory.frame(master)
@@ -415,7 +418,7 @@ class TkSynthWindow(Toplevel):
             ed.set_value(param, value)
     
     def sync(self, *ignore):
-        self.sync_info_tab()
+        self.sync_program_tab()
         self.sync_bus_and_buffer_tab()
         self.sync_performance_tab()
         self.sync_map1_tab()
@@ -425,5 +428,5 @@ class TkSynthWindow(Toplevel):
         for key, ed in self._child_editors.items():
             if key not in ignore:
                 ed.sync(*ignore)
-        
+       
 
