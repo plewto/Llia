@@ -81,11 +81,12 @@
 		var f2m = f0*m2;
 		var f3c = (f0*c3)+chorusBias;
 		var f3m = f0*m3;
-		var modsig1 = f1c * SinOsc.ar(f1m) * (linlin(mod1, 0,1,0,4) * brightness);
+		var brightScale = brightness.linlin(0, 1, 0, 4);
+		var modsig1 = f1c * SinOsc.ar(f1m) * (linlin(mod1, 0,1,0,4) * brightScale);
 		var carsig1 = SinOsc.ar(f1c+modsig1);
-		var modsig2 = f2c * SinOsc.ar(f2m) * (linlin(mod2, 0,1,0,4) * brightness);
+		var modsig2 = f2c * SinOsc.ar(f2m) * (linlin(mod2, 0,1,0,4) * brightScale);
 		var carsig2 = SinOsc.ar(f2c+modsig2);
-		var modsig3 = f3c * SinOsc.ar(f3m) * (linlin(mod3, 0,1,0,4) * brightness);
+		var modsig3 = f3c * SinOsc.ar(f3m) * (linlin(mod3, 0,1,0,4) * brightScale);
 		var carsig3 = SinOsc.ar(f3c+modsig3);
 		var outsig = (carsig1*amp1*gate) + (carsig2*amp2*gate) + (carsig3*amp3*env3);
 		Out.ar(outbus, outsig*amp);
