@@ -25,24 +25,34 @@ class TkSynthWindow(Toplevel):
         main = factory.paned_window(self)
         main.pack(expand=True, fill="both")
         self.bank_editor = TkBankEditor(main, self, sproxy)
-        notebook = factory.notebook(main)
+        self.notebook = factory.notebook(main)
         main.add(self.bank_editor)
-        main.add(notebook)
-
+        main.add(self.notebook)
         self.list_channel = None
         self.list_keytab = None
         self.var_transpose = StringVar()
         self.var_keyrange_low = StringVar()
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
-
-        self._init_info_tab(notebook)
-        self._init_bus_and_buffer_tab(notebook)
-        self._init_performance_tab(notebook)
-        self._init_map1_tab(notebook) # MIDI controllers and pitchwheel
-        self._init_map2_tab(notebook) # velocity, aftertouch, keynumber
+        self._init_info_tab(self.notebook)
+        self._init_bus_and_buffer_tab(self.notebook)
+        self._init_performance_tab(self.notebook)
+        self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
+        self._init_map2_tab(self.notebook) # velocity, aftertouch, keynumber
+        self._child_editors = {}
         self.sync()
+        
+    def add_child_editor(self, child_name, child):
+        # Adds child editor to list of editors without adding a notebook tab.
+        self._child_editors[child_name] = child
 
+    def create_tab(self, name):
+        # Creates notebook tab for child editors.
+        # Returns Frame
+        f = factory.frame(self.notebook)
+        self.notebook.add(f, text=name)
+        return f
+        
     def _init_info_tab(self, master):
         frame = factory.frame(master)
         master.add(frame, text = "Info")
@@ -376,6 +386,10 @@ class TkSynthWindow(Toplevel):
 
     def warning(self, msg):
         print("WARNING: ", msg)
+
+    def set_value(self, param, value):
+        for ed in self._child_editors.items():
+            ed.set_value(param, value)
         
     def sync(self, *ignore):
         self.sync_info_tab()
@@ -385,4 +399,8 @@ class TkSynthWindow(Toplevel):
         self.sync_map2_tab()
         if "bank" not in ignore:
             self.bank_editor.sync_no_propegate()
+        for key, ed in self._child_editors.items():
+            if key not in ignore:
+                ed.sync(*ignore)
+        
 

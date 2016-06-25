@@ -14,7 +14,21 @@ class OrgnProxy(SynthProxy):
 
     def __init__(self, app, id_):
         super(OrgnProxy, self).__init__(app, specs, id_, program_bank)
-        gui = app.config["gui"]
+        self._editor = None
+
+    def create_subeditors(self):
+        gui = self.app.config["gui"].upper()
+        if gui == "TK":
+            from llia.synths.orgn.tk.orgn_ed import create_tk_orgn_editor
+            appwin = self.app.main_window()
+            parent_editor = appwin[self.sid]
+            create_tk_orgn_editor(parent_editor)
+            
+        
+        
+        
+            
+        
 
 specs["constructor"] = OrgnProxy
 specs["description"] = "FM Combo Organ"

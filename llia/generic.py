@@ -76,10 +76,8 @@ def is_instrument(obj):
 #     return False
 
 @generic
-def is_editor(obj):
+def is_subeditor(obj):
     return False
-
-
 
 @generic
 def is_controller_name_map(obj):

@@ -2,6 +2,7 @@
 # 2016.04.23
 
 from __future__ import print_function
+import abc
 
 import llia.constants as con
 import llia.curves as curves
@@ -122,7 +123,11 @@ class SynthProxy(object):
 
     def status(self, msg):
         self.app.main_window().status(msg)
-            
+
+    @abc.abstractmethod
+    def create_subeditors(self):
+        pass
+    
     # Free instrument
     # Return bool True if all goes well.
     #

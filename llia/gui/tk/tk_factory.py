@@ -41,6 +41,11 @@ def _init_theme():
     global _style
     if not _style:
         _style = Style()
+        try:
+            _style.theme_use("alt")
+        except TclError:
+            _style.theme_use("default")
+            
         _style.theme_create("Llia", parent="alt", settings = {
             "TNotebook" : {"configure" : {"tabmargins" : [2,5,2,0]}},
 
@@ -95,7 +100,6 @@ def warning_label(master, text=" ", var=None, modal=True):
     return w
 
 def padding_label(master, n=4, modal=True):
-    #w = Label(master, text = ' '*4, modal=modal)
     w = label(master, "", modal=modal)
     return w
 
@@ -177,7 +181,7 @@ def logo_button(master, name, fname=None, command=None, ttip=""):
     b.config(background=bg(), foreground=fg())
     return b
 
-def radio(master, text, var, value, ttip="", modal=False):
+def radio(master, text, var, value, ttip="", modal=False, command=None):
     rb = Radiobutton(master, text=text, variable=var, value=value)
     tooltip(rb, ttip)
     if modal:
@@ -189,6 +193,7 @@ def radio(master, text, var, value, ttip="", modal=False):
     rb.config(selectcolor=pallet("radio-select"))
     rb.config(activebackground=pallet("active-bg"))
     rb.config(activeforeground=pallet("active-fg"))
+    rb.config(command=command)
     return rb
 
 def checkbutton(master, text, var=None, ttip="", modal=False):
@@ -203,9 +208,6 @@ def checkbutton(master, text, var=None, ttip="", modal=False):
     cb.config(activebackground=pallet("active-bg"))
     cb.config(activeforeground=pallet("active-fg"))
     return cb
-
-
-
 
 #  ---------------------------------------------------------------------- 
 #                                   Listbox
@@ -241,6 +243,28 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
     sb.config(background=pallet("scrollbar-background"))
     sb.config(troughcolor=pallet("scrollbar-trough"))
     return sb
+
+#  ---------------------------------------------------------------------- 
+#                                    Scale
+
+def scale(master, from_=200, to=0, command=None,
+          orientation=VERTICAL, ttip=""):
+    s = Scale(master, from_=from_, to=to, orient=orientation)
+    s.config(command=command)
+    s.config(showvalue=False)
+    s.config(width = 12)
+    s.config(length = 150)
+    s.config(sliderrelief="raised")
+    s.config(sliderlength=20)
+    s.config(borderwidth=0)
+    s.config(troughcolor=pallet("slider-trough"))
+    s.config(highlightthickness=1)  # 0 to hide trough
+    s.config(highlightbackground=pallet("slider-outline"))
+    tooltip(s, ttip)
+    return s
+             
+    
+
 
 
 #  ---------------------------------------------------------------------- 
@@ -293,17 +317,6 @@ def controller_combobox(master, app):
     ttip = "MIDI controllers"
     return combobox(master, values, ttip)
 
-
-# def channel_combobox(master, app):
-#     values = app.config.channel_assignments.formatted_list()
-#     ttip = "MIDI Channels"
-#     return combobox(master, values, ttip)
-
-# def keytable_combobox(master, app):
-#     keytabs = sorted(app.keytables.keys())
-#     ttip = "Key tables"
-#     return combobox(master, keytabs, ttip)
-
 #  ---------------------------------------------------------------------- 
 #                                    Text
 #
@@ -342,14 +355,7 @@ def frame(master, modal=False):
         f.config(background=pallet("DIALOG-BG"))
     else:
         f.config(background = bg())
-    # f.config(highlightcolor="red")
-    # f.config(highlightbackground="green")
     return f
-
-# def dialog_frame(master):
-#     f = Frame(master)
-#     
-#     return f
 
 def label_frame(master, text, modal=False):
     f = LabelFrame(master, text=text)
@@ -359,8 +365,6 @@ def label_frame(master, text, modal=False):
     else:
         f.config(background=bg(), fg=fg())
     return f
-
-
 
 def notebook(master):
     _init_theme()
@@ -373,10 +377,11 @@ def paned_window(master, orient=HORIZONTAL):
     return pw
 
 
-#  ---------------------------------------------------------------------- 
-#                                  Toplevel
+# #  ---------------------------------------------------------------------- 
+# #                                  Toplevel
 
-def toplevel(master=None):
-    t = Toplevel(master)
-    t.config(background=bg())
-    return t
+# def toplevel(master=None):
+#     t = Toplevel(master)
+#     t.config(background=bg())
+#     return t
+

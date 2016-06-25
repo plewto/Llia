@@ -13,6 +13,16 @@ class AbstractApplicationWindow(object):
         self.app = app
         self.root = root
         self.config = app.config
+        self._synth_editors = {}  # Active synth editors usig SID as key
+
+    def __setitem__(self, sid, sed):
+        self._synth_editors[sid] = sed
+
+    def __getitem__(self, sid):
+        return self._synth_editors[sid]
+
+    def keys(self):
+        return self._synth_editors.keys()
 
     @abc.abstractmethod
     def status(self, msg):

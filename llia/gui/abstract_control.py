@@ -32,17 +32,22 @@ from llia.curves import linear_function as linfn
 #
 class AbstractControl(object):
 
-    def __init__(self, param, editor, **widget):
+    def __init__(self, param, editor, primary_widget, **widgets):
         self.param = param
         self.editor = editor
+        self.synth = editor.synth
         self._widgets = widgets
+        self._widgets["primary"] = primary_widget
         self.aspect_to_value_transform = identity
         self.value_to_aspect_transform = identity
         self._current_aspect = None
         self._current_value = None
 
-    def widget(self, key):
-        return self._widgets[key]
+    def widget(self, key=None):
+        if not key:
+            return self._widgets["primary"]
+        else:
+            return self._widgets[key]
 
     def widget_keys(self):
         return self._widgets.keys()
@@ -51,7 +56,7 @@ class AbstractControl(object):
         return self._widgets.has_key(key)
         
     @abc.abstractmethod
-    def update_widget_aspect(self):
+    def update_aspect(self):
         pass
 
     @abc.abstractmethod
@@ -62,14 +67,14 @@ class AbstractControl(object):
         if new_aspect is not None:
             self._current_aspect = new_aspect
             self._current_value = self.aspect_to_value_transform(new_aspect)
-            self.update_widget_aspect()
+            self.update_aspect()
         return self._current_aspect
 
     def value(self, new_value=None):
         if new_value is not None:
             self._current_aspect = self.value_to_aspect_transform(new_value)
             self._current_value = new_value
-            self.update_widget_aspect()
+            self.update_aspect()
         return self._current_value
         
 
@@ -86,17 +91,17 @@ class AbstractControl(object):
 # int aspect range of [0,99]
 #
 
-NORM_ASPECT_DOMAIN = (0, 99)
+NORM_ASPECT_DOMAIN = (0, 199)
 NORM_CODOMAIN = (0.0, 1.0)
 
-_norm_to_aspect = linfn((0.0, 1.0),(0, 99))
-_aspect_to_norm = linfn((0,99),(0.0,1.0))
+_norm_to_aspect = linfn((0.0, 1.0),(0, 199))
+_aspect_to_norm = linfn((0,199),(0.0,1.0))
 
 def norm_to_aspect(n):
-    return int(clip(_norm_to_aspect(n), 0, 99))
+    return int(clip(_norm_to_aspect(n), 0, 199))
 
-def aspect_to_norm(n):
-    return float(clip(_aspect_to_norm), 0.0, 1.0)
+def aspect_to_norm(a):
+    return float(clip(_aspect_to_norm(a), 0.0, 1.0))
 
 #  ---------------------------------------------------------------------- 
 #                          BiPolar Normalized values
@@ -131,14 +136,15 @@ def aspect_to_polar(n):
 # vol( 0) -> amp(0.000)   -infinity
 
 
-VOLUME_ASPECT_DOMAIN = (0, 99)
+VOLUME_ASPECT_DOMAIN = (0, 199)
 VOLUME_CODOMAIN = (0.0, 1.0)
 
 def volume_aspect_to_amp(va):
     if va < 1:
         amp = 0.0
     else:
-        db = 0.48*va-47.52
+        #db = 0.48*va-47.52
+        db = 0.2424*va-48
         amp = db_to_amp(db)
     return float(clip(amp, 0, 1))
 
@@ -147,7 +153,8 @@ def amp_to_volume_aspect(amp):
     if db <= -48:
         aspect = 0
     else:
-        aspect = 2.042*db + 99
+        #aspect = 2.042*db + 99
+        aspect = 4.125*db+199
     return int(aspect)
 
 #  ---------------------------------------------------------------------- 
@@ -159,37 +166,23 @@ def amp_to_volume_aspect(amp):
 #
 # Times are divided into 4 regions with lowe aspects having higher
 # resolutions.
-#    a[  0] -->  0.000
-#    a[  1] -->  0.004  delta = 0.004 seconds
 #
-#    a[ 25] -->  0.100
-#    a[ 26] -->  0.1375 delta = 0.0375
-#
-#    a[ 50] -->  1.0375
-#    a[ 51] -->  1.1605 delta = 0.1230
-#
-#    a[ 75] -->   4.1125 gemoetric growth above a[75]
-#    a[ 76] -->   4.7294 ratio = 1.15
-#    a[ 80] -->   8.2717
-#    a[ 90] -->  33.4637 
-#    a[ 99] --> 117.721
-
 
 __ENV_TIMES = []
 __time, __delta = 0.0, 0.004
-for i in range(0, 25):
+for i in range(0, 50):
     __ENV_TIMES.append(__time)
     __time += __delta
 __delta = 0.0375
-for i in range(25, 50):
+for i in range(25,100):
     __ENV_TIMES.append(__time)
     __time += __delta
 __delta = 0.123
-for i in range(50, 75):
+for i in range(50,150):
     __ENV_TIMES.append(__time)
     __time += __delta
 __ratio = 1.15
-for i in range(75, 100):
+for i in range(75, 199):
     __ENV_TIMES.append(__time)
     __time *= __ratio
 __ENV_TIMES = numpy.array(__ENV_TIMES)
@@ -230,6 +223,18 @@ def simple_lfo_to_aspect(f):
     return a
             
         
-    
+#  ---------------------------------------------------------------------- 
+#                           Fine Frequency Control
+# aspect range [0, 1990
+# freq scale [1.0,2.0]
+
+FINE_FREQUENCY_DOMAIN = (0,199)
+FINE_FREQUENCY_CODOMAIN = (1.0, 2.0)
+
+aspect_to_fine_frequency = linfn(FINE_FREQUENCY_DOMAIN,
+                                 FINE_FREQUENCY_CODOMAIN)
+fine_frequncy_to_aspect = linfn(FINE_FREQUENCY_CODOMAIN,
+                                FINE_FREQUENCY_DOMAIN)
+                                 
 
 

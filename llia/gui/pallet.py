@@ -29,7 +29,10 @@ class Pallet(dict):
         self["SCROLLBAR-BACKGROUND"] = "#344d66"
         self["SCROLLBAR-TROUGH"] = "#333333"
         self["WARNING-FG"] = "yellow"
-    
+
+        self["SLIDER-TROUGH"] = self["BG"]
+        self["SLIDER-OUTLINE"] = self["BUTTON-BG"]
+        
 
     def __setitem__(self, key, value):
         key = str(key).upper()

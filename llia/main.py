@@ -19,7 +19,7 @@ import llia.synths.saw3.s3_proxy
 import llia.synths.dirtyburger.dirty_proxy
 import llia.synths.stepfilter.sf_proxy
 
-import llia.synths.dummy.dummy_proxy
+
 
 
 HM_VERSION="display version and exit."
@@ -211,5 +211,7 @@ if args.listgui:
     sys.exit(0)
 
 
-config = LliaConfig.create_instance(args)
+config = LliaConfig.create_instance(args)  # UNCOMMENT AFTER TEST
 app = LliaApp(config, args.skip_mainloop)
+
+
