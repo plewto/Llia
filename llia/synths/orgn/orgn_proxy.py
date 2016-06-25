@@ -9,7 +9,6 @@ from llia.synths.orgn.orgn_data import program_bank
 from llia.synths.orgn.orgn_pp import pp_orgn
 from llia.synths.orgn.orgn_gen import gen_orgn_program
 
-
 specs = SynthSpecs("Orgn")
 
 class OrgnProxy(SynthProxy):

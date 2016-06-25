@@ -2,6 +2,7 @@
 # 2016.06.23
 
 from __future__ import print_function
+from Tkinter import Frame
 
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
@@ -9,6 +10,7 @@ import llia.gui.tk.control_factory as cfactory
 
 def create_tk_orgn_editor(parent):
     tone_panel = TkOrgnPanel1(parent)
+    info_panel = TkOrgnInfoPanel(parent)
 
 
 class TkOrgnPanel1(TkSubEditor):
@@ -20,7 +22,6 @@ class TkOrgnPanel1(TkSubEditor):
         TkSubEditor.__init__(self, frame, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
         self.pack(expand=True, fill="both")
-
         # Tone 1
         ta_frame = factory.label_frame(self, " Tone 1")
         car_a = cfactory.OscFrequencyControl(ta_frame, "c1", editor)
@@ -35,8 +36,7 @@ class TkOrgnPanel1(TkSubEditor):
         factory.label(ta_frame, "modulator").grid(row=1, column=1, pady=1)
         factory.label(ta_frame, "depth").grid(row=1, column=2, pady=1)
         factory.label(ta_frame, "mix").grid(row=1, column=3, pady=1)
-        ta_frame.grid(row=1, column=0, padx=16, pady=16)
-
+        ta_frame.grid(row=1, column=0, columnspan=2 ,padx=8, pady=16)
         # Tone B
         tb_frame = factory.label_frame(self, " Tone 2")
         car_b = cfactory.OscFrequencyControl(tb_frame, "c2", editor)
@@ -51,8 +51,7 @@ class TkOrgnPanel1(TkSubEditor):
         factory.label(tb_frame, "modulator").grid(row=1, column=1, pady=1)
         factory.label(tb_frame, "depth").grid(row=1, column=2, pady=1)
         factory.label(tb_frame, "mix").grid(row=1, column=3, pady=1)
-        tb_frame.grid(row=1, column=1, padx=16, pady=16)
-
+        tb_frame.grid(row=1, column=2, columnspan=2,padx=0, pady=16)
         # Tone C
         tc_frame = factory.label_frame(self, "Tone 3")
         car_c = cfactory.OscFrequencyControl(tc_frame, "c3", editor)
@@ -80,8 +79,7 @@ class TkOrgnPanel1(TkSubEditor):
         factory.label(tc_frame, "D").grid(row=1, column=6)
         factory.label(tc_frame, "S").grid(row=1, column=7)
         factory.label(tc_frame, "R").grid(row=1, column=8)
-        tc_frame.grid(row=1, column=2, padx=16, pady=16)
-
+        tc_frame.grid(row=1, column=4, columnspan=3, padx=8, pady=16)
         # Vibrato
         v_frame = factory.label_frame(self, "Vibrato")
         s_vfreq = cfactory.simple_lfo_freq_slider(v_frame, "vfreq", editor, "Vibrato Frequency")
@@ -93,8 +91,7 @@ class TkOrgnPanel1(TkSubEditor):
         factory.label(v_frame, "freq").grid(row=2, column=0)
         factory.label(v_frame, "sens").grid(row=2, column=1)
         factory.label(v_frame, "depth").grid(row=2, column=2)
-        v_frame.grid(row=2, column=0, padx=16, pady=16)
-
+        v_frame.grid(row=2, column=0, padx=8, pady=16)
         # Chorus
         c_frame = factory.label_frame(self, "Chorus")
         s_chorus = cfactory.normalized_slider(c_frame, "chorus", editor, "Chorus depth")
@@ -103,8 +100,7 @@ class TkOrgnPanel1(TkSubEditor):
         s_chorus_delay.widget().grid(row=1, column=1)
         factory.label(c_frame, "detune").grid(row=2, column=0)
         factory.label(c_frame, "delay").grid(row=2, column=1)
-        c_frame.grid(row=2, column=1, padx=16, pady=16)
-        
+        c_frame.grid(row=2, column=1, padx=0, pady=16)
         # Main
         misc_frame = factory.label_frame(self, "Main")
         s_amp = cfactory.volume_slider(misc_frame, "amp", editor, "Overall Volumne")
@@ -113,8 +109,7 @@ class TkOrgnPanel1(TkSubEditor):
         s_amp.widget().grid(row=0, column=1)
         factory.label(misc_frame, "Brightness").grid(row=1, column=0)
         factory.label(misc_frame, "Amp").grid(row=1, column=1)
-        misc_frame.grid(row=2, column=2, padx=16)
-    
+        misc_frame.grid(row=2, column=2, padx=8)
         self.add_control("c1", car_a)
         self.add_control("m1", mod_a)
         self.add_control("mod1", s_moda)
@@ -138,3 +133,15 @@ class TkOrgnPanel1(TkSubEditor):
         self.add_control("chorusDelay", s_chorus_delay)
         self.add_control("amp", s_amp)
         self.add_control("brightness", s_brightness)
+
+     
+
+class TkOrgnInfoPanel(Frame):
+
+    def __init__(self, editor):
+        Frame.__init__(self, editor.notebook)
+        self.config(background=factory.bg())
+        ifname = "resources/Orgn/info.png"
+        w = factory.image_label(self, ifname)
+        w.pack(expand=True, fill="both")
+        editor.notebook.add(self, text="Info")
