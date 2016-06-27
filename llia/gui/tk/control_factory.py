@@ -7,18 +7,20 @@ import Tkinter as tk
 
 import llia.gui.abstract_control as absctrl
 import llia.gui.tk.tk_factory as factory
-from llia.util.lmath import log2
-        
+from llia.util.lmath import log2, clip
+from llia.curves import linear_function as linfn
+
+
 class ControlSlider(absctrl.AbstractControl):
 
     DEFAULT_WIDTH = 12
     DEFAULT_LENGTH = 150
 
-    # curves[0] -> aspect_to_value map
-    # curves[1] -> value_to_aspect map
+    # curves[0] -> value_to_aspect map
+    # curves[1] -> aspect_to_value map
     def __init__(self, master, param, editor, curves=(None, None),
-                 range_=(200,0), orientation="vertical", ttip=""):
-        self._tkscale = factory.scale(master, from_=range_[0], to=range_[1],
+                 domain=(200,0), orientation="vertical", ttip=""):
+        self._tkscale = factory.scale(master, from_=domain[0], to=domain[1],
                                       command = self.callback, ttip=ttip)
         super(ControlSlider, self).__init__(param, editor, self._tkscale)
         self._primary_widget = self._tkscale
@@ -45,6 +47,14 @@ def normalized_slider(master, param, editor, ttip=""):
     s = ControlSlider(master, param, editor, ttip=ttip)
     return s
 
+def bipolar_slider(master, param, editor, ttip=""):
+    a_to_v = absctrl.aspect_to_polar
+    v_to_a = absctrl.polar_to_aspect
+    s = ControlSlider(master, param, editor,
+                      (v_to_a, a_to_v),
+                      ttip =ttip)
+    return s
+
 def simple_lfo_freq_slider(master, param, editor, ttip="LFO Frequency"):
     dom = list(absctrl.SIMPLE_LFO_ASPECT_DOMAIN)
     dom.reverse()
@@ -61,7 +71,27 @@ def volume_slider(master, param, editor, ttip=""):
                       ttip=ttip)
     return s
 
+def linear_slider(master, param, editor, domain=(0, 200), range_=(0.0, 1.0), ttip=""):
+    a_to_v = linfn(domain, range_)
+    v_to_a = linfn(range_, domain)
+    s = ControlSlider(master, param, editor,
+                      curves=(v_to_a, a_to_v),
+                      ttip=ttip)
+    return s
 
+def third_octave_slider(master, param, editor, ttip=""):
+    a_to_v = absctrl.aspect_to_third_octave
+    v_to_a = absctrl.third_octave_to_aspect
+    domain = (0, 32)
+    s = ControlSlider(master, param, editor,
+                      domain=(31, 0),
+                      curves = (v_to_a, a_to_v),
+                      ttip=ttip)
+    return s
+                      
+
+
+    
 #  ---------------------------------------------------------------------- 
 #                         Oscillator Frequency Control
 #

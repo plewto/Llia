@@ -39,23 +39,26 @@ _logo_cachet = []
 
 def _init_theme():
     global _style
-    if not _style:
-        _style = Style()
-        try:
-            _style.theme_use("alt")
-        except TclError:
-            _style.theme_use("default")
-            
-        _style.theme_create("Llia", parent="alt", settings = {
-            "TNotebook" : {"configure" : {"tabmargins" : [2,5,2,0]}},
+    try:
+        if not _style:
+            _style = Style()
+            try:
+                _style.theme_use("alt")
+            except TclError:
+                _style.theme_use("default")
+            _style.theme_create("Llia", parent="alt", settings = {
+                "TNotebook" : {"configure" : {"tabmargins" : [2,5,2,0]}},
 
-            "TNotebook.Tab" : {"configure" : {"padding" : [5,1],
-                                              "background" : pallet("TAB-BG"),
-                                              "foreground" : pallet("TAB-FG")},
-                               "map" : {"background" : [("selected", pallet("TAB-SELECTED-BG"))],
-                                        "foreground" : [("selected", pallet("TAB-SELECTED-FG"))],
-                                        "expand" : [("selected", [1,1,1,0])] }}})
-        _style.theme_use("Llia")
+                "TNotebook.Tab" : {"configure" : {"padding" : [5,1],
+                                                  "background" : pallet("TAB-BG"),
+                                                  "foreground" : pallet("TAB-FG")},
+                                   "map" : {"background" : [("selected", pallet("TAB-SELECTED-BG"))],
+                                            "foreground" : [("selected", pallet("TAB-SELECTED-FG"))],
+                                            "expand" : [("selected", [1,1,1,0])] }}})
+            _style.theme_use("Llia")
+    except TclError:
+        # Raised if Llia theme already exists
+        pass  
 
 
 #  ---------------------------------------------------------------------- 

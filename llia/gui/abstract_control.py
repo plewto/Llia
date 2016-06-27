@@ -114,11 +114,11 @@ def aspect_to_norm(a):
 # aspect range of [0,99]
 #
 
-POLAR_ASPECT_DOMAIN = (0, 99)
+POLAR_ASPECT_DOMAIN = (0, 199)
 POLAR_CODOMAIN = (-1.0, 1.0)
 
-_polar_to_aspect = linfn((-1.0, 1.0),(0,99))
-_aspect_to_polar = linfn((0,99),(-1.0, 1.0))
+_polar_to_aspect = linfn((-1.0, 1.0),(0,199))
+_aspect_to_polar = linfn((0,199),(-1.0, 1.0))
 
 def polar_to_aspect(n):
     return int(clip(_polar_to_aspect(n), 0, 99))
@@ -240,5 +240,22 @@ aspect_to_fine_frequency = linfn(FINE_FREQUENCY_DOMAIN,
 fine_frequency_to_aspect = linfn(FINE_FREQUENCY_CODOMAIN,
                                 FINE_FREQUENCY_DOMAIN)
                                  
+#  ---------------------------------------------------------------------- 
+#                             Third Octave Tables
+
+__THIRD_OCTAVE = [20, 25, 32, 40, 50, 63, 80,
+                  100, 125, 160, 200, 250, 315, 400, 500, 630, 800,
+                  1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000,
+                  6300, 8000, 10000, 12500, 16000, 20000]
+__THIRD_OCTAVE = numpy.array(__THIRD_OCTAVE)
 
 
+def aspect_to_third_octave(a):
+    a = int(min(max(a, 0), 30))
+    f = __THIRD_OCTAVE[a]
+    return f
+
+def third_octave_to_aspect(f):
+    a = (numpy.abs(__THIRD_OCTAVE-f)).argmin()
+    return int(a)
+    

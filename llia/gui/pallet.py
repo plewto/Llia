@@ -13,13 +13,13 @@ class Pallet(dict):
         self["BG"] = "gray5"
         self["FG"] = "#b5b5b5"
         self["ACTIVE-BG"] = "gray15"
-        self["ACTIVE-FG"] = "yellow"
+        self["ACTIVE-FG"] = "#ffffdf"  # "yellow"
         self["BUTTON-BG"] = "#192633"
         self["BUTTON-FG"] = self["FG"]
         self["TAB-BG"] = self["BG"]
         self["TAB-FG"] = self["BUTTON-FG"]
         self["TAB-SELECTED-BG"] = "gray5"
-        self["TAB-SELECTED-FG"] = "yellow"
+        self["TAB-SELECTED-FG"] = self["ACTIVE-FG"]
         self["DIALOG-BG"] = "#191919"    # Backgroud color for modal dialogs
         self["DIALOG-FG"] = self["FG"]
         self["RADIO-SELECT"] = self["BG"]

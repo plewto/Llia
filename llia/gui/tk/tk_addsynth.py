@@ -193,7 +193,6 @@ class TkAddSynthDialog(Toplevel):
         factory.set_pallet(sy.specs["pallet"])
         swin = TkSynthWindow(sy)
         self.app.main_window()[self.sid] = swin
-
         sy.create_subeditors()
         self.app.main_window().status("Added %s" % self.sid)
         self.destroy()
