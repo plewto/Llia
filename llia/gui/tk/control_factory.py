@@ -16,6 +16,12 @@ class ControlSlider(absctrl.AbstractControl):
     DEFAULT_WIDTH = 12
     DEFAULT_LENGTH = 150
 
+    @staticmethod
+    def default_client_callback(*args):
+        # args --> [self, aspect, value]
+        pass
+    
+    
     # curves[0] -> value_to_aspect map
     # curves[1] -> aspect_to_value map
     def __init__(self, master, param, editor, curves=(None, None),
@@ -26,6 +32,7 @@ class ControlSlider(absctrl.AbstractControl):
         self._primary_widget = self._tkscale
         self.value_to_aspect_transform = curves[0] or absctrl.norm_to_aspect
         self.aspect_to_value_transform = curves[1] or absctrl.aspect_to_norm
+        self.client_callback = ControlSlider.default_client_callback
 
     def update_aspect(self):
         self._tkscale.set(self._current_aspect)
@@ -41,7 +48,8 @@ class ControlSlider(absctrl.AbstractControl):
         bnk = self.synth.bank()
         program = bnk[None]
         program[self.param] = value
-        
+        self.client_callback(self, aspect, value)
+
                  
 def normalized_slider(master, param, editor, ttip=""):
     s = ControlSlider(master, param, editor, ttip=ttip)
@@ -89,6 +97,39 @@ def third_octave_slider(master, param, editor, ttip=""):
                       ttip=ttip)
     return s
                       
+def discrete_slider(master, param, editor, values=range(8), ttip=""):
+    count = len(values)
+    rvs_tab = {}
+    for i,v in enumerate(values):
+        rvs_tab[float(v)] = i
+
+    def a_to_v(a):
+        try:
+            return values[a]
+        except IndexError:
+            if a < 0:
+                return values[0]
+            else:
+                return values[-1]
+
+    def v_to_a(v):
+        try:
+            return rvs_tab[float(v)]
+        except KeyError:
+            if v <= values[0]:
+                return 0
+            else:
+                return count
+                
+    
+    s = ControlSlider(master, param, editor,
+                      domain=(count+1, 0),
+                      curves=(v_to_a, a_to_v),
+                      ttip = ttip)
+    return s
+
+   
+
 
 
     

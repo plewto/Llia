@@ -17,22 +17,40 @@ def pp_stepfilter(program, slot=127):
 
     pad = ' '*7
     acc = 'sfilter(%3d, "%s",\n' % (slot, program.name)
+    acc += '%sclockFreq = %5.4f,\n' % (pad, fval("clockFreq"))
+    r = '%sr = [' % pad
+    a = '%sa = [' % pad
+    b = '%sb = [' % pad
+    for i in range(8):
+        j = i+ 1
+        rk = 'r%d' % j
+        ak = 'a%d' % j
+        bk = 'b%d' % j
+        r += '%5.3f, ' % fval(rk)
+        a += '%5.3f, ' % fval(ak)
+        b += '%5.3f, ' % fval(bk)
+    acc += '%s],\n' % r[:-2]
+    acc += '%s],\n' % a[:-2]
+    acc += '%s],\n' % b[:-2]
+    frmt = '%salag = %5.3f, arange = [%4d, %4d], ares = %5.3f,\n'
+    acc += frmt % (pad, fval("aLag"), ival("aMin"), ival("aMax"), fval("aRes"))
+    frmt = '%sblag = %5.3f, brange = [%4d, %4d], bres = %5.3f,\n'
+    acc += frmt % (pad, fval("bLag"), ival("bMin"), ival("bMax"), fval("bRes"))
+    acc += '%slfofreq = %5.3f,\n' % (pad, fval("panLfoFreq"))
+    frmt = '%sapan = [%+5.3f, %5.3f],\n'
+    acc += frmt % (pad, fval("aPan"), fval("panLfoA"))
+    frmt = '%sbpan = [%+5.3f, %5.3f, %5.3f],\n'
+    acc += frmt % (pad, fval("bPan"), fval("panLfoB"), fval("panLfoBRatio"))
 
-    pcc = "%spulse = [" % pad
-    for k in ("sub1", "sub2", "n1", "n2", "n3", "n4", "n5", "n6"):
-        v = fval(k)
-        pcc += "%5.3f, " % v
-    pcc = pcc[:-2] + "],\n"
-    acc += pcc
-
-    acc += "%ssh = %5.3f, shclock = %5.3f,\n" % (pad, fval("sh"), fval("shFreq"))
-    acc += "%sclock = %5.3f,\n" % (pad, fval("clkFreq"))
-    acc += "%sfrange[%d, %d], \n" % (pad, ival("minFreq"), ival("maxFreq"))
-    acc += "%srq = %5.3f,\n" % (pad, fval("rq"))
-    acc += "%slag = %5.3f,\n" % (pad, fval("lag"))
-    acc += "%swet = %+6.3f,\n" % (pad, fval("wet"))
-    acc += "%span = %+6.3f)\n" % (pad, fval("pan"))
+    frmt = '%sdrypan = [%+5.3f, %5.3f],\n'
+    acc += frmt % (pad, fval("dryPan"), fval("panLfoDry"))
+    frmt = '%smix = [%5.3f, %5.3f, %5.3f],\n'
+    acc += frmt % (pad, fval("dryAmp"), fval("aAmp"), fval("bAmp"))
+    frmt = "%samp = %5.3f)\n"
+    acc += frmt % (pad, fval("amp"))
     return acc
+    
+    
     
     
     

@@ -1,69 +1,91 @@
 /*
  * StepFilter effect.
- * 
- * Bandpass filter with summed pulse control 
- * 
- * Parameters:
- * inbus    - Audio input bus, 1 channel                
- * outbus   - Audio output bus, 2, channels                   
- * volume   - Overall linear gain                    
- * pan      - Pan position (-1,+1)                 
- * wet      - Wet signal mix (-1=Dry, +1=Wet)                 
- * sub1     - Control signal component amp 1/2                    
- * sub2     - Control signal component amp 3/4                   
- * n1       - Control signal component amp 1                  
- * n2       - Control signal component amp 2
- * n3       - Control signal component amp 3                 
- * n4       - Control signal component amp 4                 
- * n5       - Control signal component amp 5                 
- * n6       - Control signal component amp 6                 
- * shFreq   - Sample and hold clock frequency                    
- * sh       - Sample and hold component amp                
- * clkFreq  - LFO frequency                     
- * minFreq  - Minimum filter frequency in Hertz                     
- * maxFreq  - Maximum filter frequency in Hertz                      
- * rq       - Filter 1/q parameter, (0.1,...,1.0)                
- * lag      - Filter control lag time (0,1)                 
+ *
+ * Two indenpendent band-bass filters with complex control sources.
 */
 
 (SynthDef (\StepFilter,
 	{|inbus = 128,
 		outbus = 0,
-		volume = 1,
-		pan = 0.0,
-		wet = 0.0,
-		sub1 = 0.000,   // 0.50
-		sub2 = 0.000,   // 0.75
-		n1 = 1.000,
-		n2 = 0.000,
-		n3 = 0.000,
-		n4 = 0.000,
-		n5 = 0.000,
-		n6 = 0.000,
-		shFreq = 1.000,    // Sample and Hold
-		sh = 1.000,
-		clkFreq = 1.000,
-		minFreq = 100,
-		maxFreq = 2000,
-		rq = 1.0,
-		lag = 0.1|
-		var shsig;
-		var fary, pary, aary, pamp, pls, ffreq;
-		var insig, outsig;
-		pamp = sub1+sub2+n1+n2+n3+n4+n5+n6+sh;
-		fary = [0.50, 0.75, 1,2,3,4,5,6]*clkFreq;
-		pary = [0];
-		aary = [sub1, sub2, n1,n2,n3,n4,n5,n6];
-		shsig = (Latch.kr(BrownNoise.kr(), LFPulse.kr(shFreq))*sh).abs;
-		pls = Mix.kr(LFPulse.kr(fary,pary,0.5,aary)) + shsig;
-		pls = Lag2.kr(pls.linlin(0, pamp, 0 ,1), lag);
-		ffreq = pls.linexp(0, 1, minFreq, maxFreq).clip(10, 12000);
-		insig = In.ar(inbus, 1);
-		rq = rq.clip(0.1, 1.0);
-		outsig = BPF.ar(BPF.ar(insig, ffreq, rq), ffreq, rq);
-		outsig = XFade2.ar(insig, outsig, wet);
-		outsig = Pan2.ar(outsig*volume, pan);
+		dryAmp = 0.0,
+		dryPan = 0.0,
+		amp = 1.0,
+		// pulse generators
+		clockFreq = 1,
+		r1 = 0.5,
+		r2 = 0.75,
+		r3 = 1.00,
+		r4 = 2.00,
+		r5 = 3.00,
+		r6 = 4.00,
+		r7 = 5.00,
+		r8 = 6.00,
+		// Filter A
+		a1 = 0.00,
+		a2 = 0.00,
+		a3 = 1.00,
+		a4 = 0.00,
+		a5 = 0.00,
+		a6 = 0.00,
+		a7 = 0.00,
+		a8 = 0.00,
+		aLag = 0.00,   // 0...1
+		aMin = 100,
+		aMax = 2000,
+		aRes = 0.0,
+		aPan = -0.75,
+		aAmp = 1.0,
+		// Filter B
+		b1 = 0.00,
+		b2 = 0.00,
+		b3 = 0.00,
+		b4 = 1.00,
+		b5 = 0.00,
+		b6 = 0.00,
+		b7 = 0.00,
+		b8 = 0.00,
+		bLag = 0.00,   // 0...1
+		bMin = 100,
+		bMax = 2000,
+		bRes = 0.0,
+		bPan = -0.75,
+		bAmp = 1.0,
+		// Panner
+		panLfoFreq = 1.00,
+		panLfoDry = 0.00,
+		panLfoA = 0.00,
+		panLfoB = 0.00,
+		panLfoBRatio = 1.00|
+		var drysig = In.ar(inbus, 1);
+		var rary = [r1,r2,r3,r4,r5,r6,r7,r8] * clockFreq;
+		var pulsesig = LFPulse.kr(rary, 0, 0.5, 0.5, 0.5);
+		var aary = [a1,a2,a3,a4,a5,a6,a7,a8];
+		var asig = Lag2.kr(Mix.kr(pulsesig*aary)/(aary.sum),aLag.linlin(0,1,0,0.2));
+		var bary = [b1, b2, b3, b4, b5, b6, b7, b8];
+		var bsig = Lag2.kr(Mix.kr(pulsesig*bary)/(bary.sum), bLag.linlin(0,1,0,0.2));
+		// Filter A
+		var afreq = asig.linexp(0, 1, aMin, aMax).clip(100, 16000);
+		var arq = aRes.linlin(0, 1, 1, 0.05);
+		var awet = BPF.ar(BPF.ar(drysig, afreq, arq), afreq, arq);
+		// Filter B
+		var bfreq = bsig.linexp(0, 1, bMin, bMax).clip(100, 16000);
+		var brq = bRes.linlin(0, 1, 1, 0.05);
+		var bwet = BPF.ar(BPF.ar(drysig, bfreq, brq), bfreq, brq);
+		// Panner
+		var lfo1 = LFTri.kr(panLfoFreq);
+		var lfo2 = LFTri.kr(panLfoFreq*panLfoBRatio);
+		var drypan = (dryPan+(panLfoDry*lfo1)).clip(-1, 1);
+		var apan  = (aPan+(panLfoA*lfo1)).clip(-1, 1);
+		var bpan = (bPan+(panLfoB*lfo2)).clip(-1, 1);
+		var outsig;
+		outsig = dryAmp * Pan2.ar(drysig, drypan);
+		outsig = outsig + (aAmp * Pan2.ar(awet, apan));
+		outsig = outsig + (bAmp * Pan2.ar(bwet, bpan));
+		outsig = amp*outsig;
 		Out.ar(outbus, outsig);
-}).load;
-)
+}).load)
+
+
+
+
 
