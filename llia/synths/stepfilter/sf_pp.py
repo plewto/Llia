@@ -6,7 +6,6 @@ from __future__ import print_function
 import llia.util.lmath as math
 from llia.performance_edit import performance_pp
 
-
 def pp_stepfilter(program, slot=127):
 
     def fval(key):
@@ -41,7 +40,6 @@ def pp_stepfilter(program, slot=127):
     acc += frmt % (pad, fval("aPan"), fval("panLfoA"))
     frmt = '%sbpan = [%+5.3f, %5.3f, %5.3f],\n'
     acc += frmt % (pad, fval("bPan"), fval("panLfoB"), fval("panLfoBRatio"))
-
     frmt = '%sdrypan = [%+5.3f, %5.3f],\n'
     acc += frmt % (pad, fval("dryPan"), fval("panLfoDry"))
     frmt = '%smix = [%5.3f, %5.3f, %5.3f],\n'
