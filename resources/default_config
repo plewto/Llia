@@ -14,8 +14,8 @@
 no-repl : False
 
 [MIDI]
-input-port : Launchkey Mini 28:0
-output-port : Launchkey Mini 28:0
+input-port : Launchkey Mini 16:0
+output-port : Launchkey Mini 16:0
 backend : mido.backends.rtmidi
 enable-program-pp : True
 enable-keyswitch : True

@@ -14,11 +14,12 @@ from argparse import ArgumentParser
 import llia.constants as constants
 from llia.config import LliaConfig
 from llia.llia_app import LliaApp
+
 import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
 import llia.synths.dirtyburger.dirty_proxy
 import llia.synths.stepfilter.sf_proxy
-
+import llia.synths.xover.xover_proxy
 
 
 
