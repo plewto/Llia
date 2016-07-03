@@ -12,7 +12,8 @@ import llia.synths.stepfilter.sf_constants as sfcon
 
 def create_stepfilter_editor(parent):
     pan1 = TkStepFilterPanel1(parent)
-
+    info_panel = TkStepFilterInfoPanel(parent)
+    
 class TkStepFilterPanel1(TkSubEditor):
 
     NAME = "StepFilter"
@@ -168,3 +169,13 @@ class TkStepFilterPanel1(TkSubEditor):
         s_blfo.widget().place(x=x3, y=ydry)
         
         
+
+class TkStepFilterInfoPanel(Frame):
+
+    def __init__(self, editor):
+        Frame.__init__(self, editor.notebook)
+        self.config(background=factory.bg())
+        ifname = "resources/StepFilter/info.png"
+        w = factory.image_label(self, ifname)
+        w.pack(expand=True, fill="both")
+        editor.notebook.add(self, text="Info")
