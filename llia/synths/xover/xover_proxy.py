@@ -18,7 +18,12 @@ class XOverProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        pass
+        gui = self.app.config["gui"].upper()
+        if gui == "TK":
+            from llia.synths.xover.tk.xover_ed import create_editor
+            appwin = self.app.main_window()
+            parent_editor = appwin[self.sid]
+            create_editor(parent_editor)
 
 xover_pallet = Pallet(default_pallet)
 
