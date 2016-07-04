@@ -112,10 +112,10 @@ class TkBankEditor(Frame):
         return frame
 
     def status(self, msg):
-        print(msg)
+        self.parent_editor.status(msg)
 
     def warning(self, msg):
-        print("WARNING: ", msg)
+        self.parent_editor.warning(msg)
     
     def sync_no_propegate(self):
         bnk = self.synth.bank()
@@ -316,6 +316,9 @@ class TkBankEditor(Frame):
             except ValueError:
                 msg = "Invalid slot number"
                 self.warning(msg)
+            except KeyError as err:
+                self.warning(err.message)
+                
 
         def cancel():
             msg = "Performance fill canceld"
