@@ -1,13 +1,16 @@
 # llia.gui.tk.control_factory
-# 2016.06.22
+# 
+# "Controls" are widgets specifically for synth editors.
+
 
 from __future__ import print_function
 import Tkinter as tk
+from fractions import Fraction
 
-
+import llia.constants as con
 import llia.gui.abstract_control as absctrl
 import llia.gui.tk.tk_factory as factory
-from llia.util.lmath import log2, clip
+from llia.util.lmath import log2, logn, clip
 from llia.curves import linear_function as linfn
 
 
@@ -20,7 +23,6 @@ class ControlSlider(absctrl.AbstractControl):
     def default_client_callback(*args):
         # args --> [self, aspect, value]
         pass
-    
     
     # curves[0] -> value_to_aspect map
     # curves[1] -> aspect_to_value map
@@ -128,13 +130,9 @@ def discrete_slider(master, param, editor, values=range(8), ttip=""):
                       ttip = ttip)
     return s
 
-   
-
-
-
     
 #  ---------------------------------------------------------------------- 
-#                         Oscillator Frequency Control
+#                         Oscillator Frequency Control (1)
 #
 # Coarse Radio buttons: (0) 1/8 1/4 1/2 1 2 4 8
 # Fine slider domain 0...199  codomain 1.0...2.00 (resolution 0.005)
@@ -143,8 +141,6 @@ def discrete_slider(master, param, editor, values=range(8), ttip=""):
 ZERO_FREQ = -1000
 
 class OscFrequencyControl(absctrl.AbstractControl):
-
-    
     
     def __init__(self, master, param, editor, include_off=False, ttip=""):
         octaves =  [(3, "+3"),
@@ -172,7 +168,6 @@ class OscFrequencyControl(absctrl.AbstractControl):
         self.scale_fine.grid(row=1, column=1, rowspan=row)
         self.lab_freq = factory.label(frame, "X.XXXX")
         self.lab_freq.grid(row=row+1, column=0, columnspan=2)
-        
       
     def callback(self, *_):
         ov8 = float(self.var_octave.get())
@@ -192,7 +187,6 @@ class OscFrequencyControl(absctrl.AbstractControl):
         bnk = self.synth.bank()
         program = bnk[None]
         program[self.param] = freq
-
             
     def update_aspect(self):
         freq = abs(self._current_value)
@@ -205,6 +199,156 @@ class OscFrequencyControl(absctrl.AbstractControl):
         else:
             pass
             
-            
-        
+#  ---------------------------------------------------------------------- 
+#                      Oscillator Frequency Control (2)
+#
+# Compound  control:
+#    octaves   -> radio buttons
+#    semi-tone -> scale  0, 11
+#    detune    -> scale  cents 0, 99
+#
+
+class OscFrequencyControl2(absctrl.AbstractControl):
     
+    def __init__(self, master, param, editor, include_zero=True):
+        frame = factory.frame(master)
+        frame.config(width=187, height=201)
+        super(OscFrequencyControl2, self).__init__(param, editor, frame)
+        self.specs = self.synth.specs
+        octaves =  [(3, "+3"),
+                    (2, "+2"),
+                    (1, "+1"),
+                    (0, " 0"),
+                    (-1, "-1"),
+                    (-2, "-2"),
+                    (-3, "-3")]
+        self.var_octave = tk.StringVar()
+        self.var_transpose = tk.IntVar()
+        self.var_detune = tk.IntVar()
+        self.var_zero = tk.IntVar()
+        self.var_octave.set(0)
+        self.var_transpose.set(0)
+        self.var_detune.set(0)
+        self.var_zero.set(0)
+        self._live_widgets = []
+        row = 1
+        for value, text in octaves:
+            rb = factory.radio(frame, text, self.var_octave, value,
+                               ttip = "%s octave" % param,
+                               command = self.callback)
+            widget_key = "radio-octave-%d" % value
+            self._widgets[widget_key] = rb
+            self._live_widgets.append(rb)
+            rb.grid(row=row, column=0, sticky='w', padx=4)
+            row += 1
+        s_step = factory.scale(frame,
+                               from_=11, to=0,
+                               command=self.callback,
+                               ttip = "%s transpose (steps)" % param)
+        s_step.configure(variable = self.var_transpose)
+        s_detune = factory.scale(frame,
+                                 from_=99, to=0,
+                                 command=self.callback,
+                                 ttip = "%s detune (cents)" % param)
+        s_detune.configure(variable = self.var_detune)
+        b_reset = factory.clear_button(frame, command=self.reset_values,
+                                       ttip = "Reset %s to 1.0" % param)
+        cb_zero = factory.checkbutton(frame, "Off")
+        cb_zero.config(command=self.zero_callback, var = self.var_zero)
+        self.lab_value = factory.label(frame, "1.0000")
+        self.lab_transpose = factory.label(frame, " 0")
+        self.lab_detune = factory.label(frame, "  0")
+        s_step.grid(row=1, column=1, rowspan=7)
+        s_detune.grid(row=1, column=2, rowspan=7)
+        factory.label(frame, "Octave").grid(row=8, column=0)
+        factory.label(frame, "Step").grid(row=8, column=1)
+        factory.label(frame, "Detune").grid(row=8, column=2)
+        self.lab_value.grid(row=9, column=0)
+        self.lab_transpose.grid(row=9, column=1)
+        self.lab_detune.grid(row=9, column=2)
+        b_reset.grid(row=1, column=3, rowspan=2, padx=4, pady=4)
+        if include_zero:
+            cb_zero.grid(row=3, column=3)
+        self._widgets["scale-step"] = s_step
+        self._widgets["scale-detune"] = s_detune
+        self._widgets["button-reset"] = b_reset
+        self._widgets["checkbutton-zero"] = cb_zero
+        self._widgets["label-value"] = self.lab_value
+        self._widgets["label-transpose"] = self.lab_transpose
+        self._widgets["label-detune"] = self.lab_detune
+        self._live_widgets.append(s_step)
+        self._live_widgets.append(s_detune)
+        
+    def zero_callback(self):
+        self.callback()
+        zero = self.var_zero.get()
+        self._enable_widgets(not zero)
+        
+    def callback(self, *_):
+        octave = int(self.var_octave.get())
+        step = self.var_transpose.get()
+        detune = self.var_detune.get()
+        cxpose = 1200*octave + 100*step + detune
+        ratio = con.RCENT**cxpose
+        zero = not self.var_zero.get()
+        ratio *= zero
+        self.lab_transpose.config(text = "%2d" % step)
+        self.lab_detune.config(text = "%3d" % detune)
+        self.lab_value.config(text = "%7.4f" % ratio)
+        bnk = self.synth.bank()
+        program = bnk[None]
+        program[self.param] = ratio
+        self.synth.x_param_change(self.param, ratio)
+        msg = "[%s] -> %6.4f" % (self.param, ratio)
+        self.editor.status(msg)
+        
+    def reset_values(self, *_):
+        self.var_octave.set(0)
+        self.var_transpose.set(0)
+        self.var_detune.set(0)
+        self.var_zero.set(0)
+        bnk = self.synth.bank()
+        program = bnk[None]
+        program[self.param] = 1.0
+        self.synth.x_param_change(self.param, 1.0)
+        msg = "[%s] -> 1.0" % self.param
+        self.editor.status(msg)
+        self._enable_widgets(True)
+        self.lab_transpose.config(text = " 0")
+        self.lab_detune.config(text = "  0")
+        self.lab_value.configure(text = "1.0000")
+
+    def _enable_widgets(self, flag):
+        if flag:
+            for w in self._live_widgets:
+                w.config(state="normal")
+        else:
+            for w in self._live_widgets:
+                w.config(state="disabled")
+            self.lab_transpose.config(text = "XX")
+            self.lab_detune.config(text = "XXX")
+        
+    def update_aspect(self):
+        try:
+            ratio = abs(self._current_value)
+        except TypeError:
+            ratio = 1
+        if ratio:
+            cents = int(logn(ratio, con.RCENT))
+            octave = cents/1200
+            step = (cents-1200*octave)/100
+            detune = cents - 1200*octave - 100*step
+            self.var_octave.set(octave)
+            self.var_transpose.set(step)
+            self.var_detune.set(detune)
+            self.lab_value.config(text = "%6.4f" % ratio)
+            self._enable_widgets(True)
+            self.var_zero.set(False)
+        else:
+            self.var_zero.set(True)
+        self._enable_widgets(False)
+
+            
+    
+  
+                          

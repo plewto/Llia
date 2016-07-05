@@ -22,14 +22,13 @@ from llia.curves import linear_function as linfn
 # directly corresponds to a SC synth parameter.  A control's aspect
 # indicates it's appearance.
 #
-# A very common simple case is a slider used for envelope time.  The slider
+# A common simple case is an envelope time slider.  The slider
 # will have a fixed number of discrete steps, for instance between 0 and
 # 99, which indicate the slider's aspect.  Each of these positions will map
 # to some real value for envelope time.
 #
 # A control may also be "compound" and encompass more then one widget.  A
-# typical example would be a group of radio buttons.  Another compound
-# example might be coarse and fine oscillator frequency controls. 
+# typical example would be a group of radio buttons.
 #
 class AbstractControl(object):
 
