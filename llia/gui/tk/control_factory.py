@@ -10,7 +10,7 @@ from fractions import Fraction
 import llia.constants as con
 import llia.gui.abstract_control as absctrl
 import llia.gui.tk.tk_factory as factory
-from llia.util.lmath import log2, logn, clip
+from llia.util.lmath import log2, logn, log10, clip
 from llia.curves import linear_function as linfn
 
 
@@ -210,7 +210,7 @@ class OscFrequencyControl(absctrl.AbstractControl):
 
 class OscFrequencyControl2(absctrl.AbstractControl):
     
-    def __init__(self, master, param, editor, include_zero=True):
+    def __init__(self, master, param, editor, include_zero=False):
         frame = factory.frame(master)
         frame.config(width=187, height=201)
         super(OscFrequencyControl2, self).__init__(param, editor, frame)
@@ -229,7 +229,7 @@ class OscFrequencyControl2(absctrl.AbstractControl):
         self.var_octave.set(0)
         self.var_transpose.set(0)
         self.var_detune.set(0)
-        self.var_zero.set(0)
+        self.var_zero.set(1)
         self._live_widgets = []
         row = 1
         for value, text in octaves:
@@ -338,17 +338,104 @@ class OscFrequencyControl2(absctrl.AbstractControl):
             octave = cents/1200
             step = (cents-1200*octave)/100
             detune = cents - 1200*octave - 100*step
+            self._enable_widgets(True)
             self.var_octave.set(octave)
             self.var_transpose.set(step)
             self.var_detune.set(detune)
             self.lab_value.config(text = "%6.4f" % ratio)
-            self._enable_widgets(True)
             self.var_zero.set(False)
         else:
             self.var_zero.set(True)
-        self._enable_widgets(False)
+            self._enable_widgets(False)
 
             
     
-  
-                          
+#  ---------------------------------------------------------------------- 
+#                               Decade Control
+#
+# Value expressed in terms of decade and scale.
+# decade  -> radio buttons 1/1000, 1/100, ..., 1, ..., 100, 1000
+# scale   -> slider 1.0 ... 10.0
+#
+
+class DecadeControl(absctrl.AbstractControl):
+
+    # range_ parameter (min, max) decade values
+    #     min and max MUST be power of 10.
+    #
+    def __init__(self, master, param, editor,
+                 range_ = (0.001, 1000)):
+        frame = factory.frame(master)
+        super(DecadeControl, self).__init__(param, editor, frame)
+        start, end = range_
+        start, end = min(start, end), max(start, end)
+        decades = []
+        value = start
+        while value <= end:
+            power = log10(value)
+            if power == 0:
+                txt = "1"
+            elif power < 1:
+                txt = "1/%d" % int(10**abs(power))
+            else:
+                txt = str(int(10**power))
+            decades.append((value, txt))
+            value *= 10
+        decades.reverse()
+        self.var_decade = tk.StringVar()
+        self.var_scale = tk.IntVar()
+        self.var_zero = tk.IntVar()
+        self.var_decade.set(start)
+        self.var_scale.set(1)
+        row = 1
+        for value, text in decades:
+            print(value) # DEBUG
+            rb = factory.radio(frame, text, self.var_decade, value,
+                               command=self.callback,
+                               ttip = "%s range" % param)
+            widget_key = "radio-range-%d" % value
+            self._widgets[widget_key] = rb
+            rb.grid(row=row, column=0, sticky='w')
+            row += 1
+        s_scale = factory.scale(frame,
+                                from_=90, to=0,
+                                command = self.callback,
+                                ttip = "%s scale" % param)
+        s_scale.configure(variable = self.var_scale)
+        s_scale.grid(row=0, column=1, rowspan=row+1, padx=4, pady=4)
+        factory.label(frame, "Range").grid(row=row+2, column=0)
+        factory.label(frame, "Scale").grid(row=row+2, column=1)
+        self.lab_value = factory.label(frame, "X.XXXX")
+        self.lab_value.grid(row=row+3, column=0, columnspan=2)
+
+    def callback(self, *_):
+        d = float(self.var_decade.get())
+        delta = d/10.0
+        s = float(self.var_scale.get())
+        value = d + s*delta
+        bnk = self.synth.bank()
+        program = bnk[None]
+        program[self.param] = value
+        self.synth.x_param_change(self.param, value)
+        if d <= 1:
+            frmt = "%6.4f"
+        else:
+            frmt = "%6.0f"
+        self.lab_value.config(text = frmt % value)
+        msg = "[%s] -> " + frmt
+        msg = msg % (self.param, value)
+        self.editor.status(msg)
+        
+    def update_aspect(self, *_):
+        try:
+            value = self._current_value
+            decade = float(10**int(log10(value)))
+            ratio = decade/value
+            pos = 100-int(100 * ratio)
+            self.var_decade.set(decade)
+            self.var_scale.set(pos)
+            self.lab_value.config(text = "%6.4f" % value)
+        except (ValueError, ZeroDivisionError):
+            self.lab_value.config(text="Error")
+
+        
