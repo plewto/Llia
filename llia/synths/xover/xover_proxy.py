@@ -5,9 +5,8 @@ from __future__ import print_function
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
-from llia.synths.xover.xover_data import program_bank
-# from llia.synths.orgn.orgn_pp import pp_orgn
-# from llia.synths.orgn.orgn_gen import gen_orgn_program
+from llia.synths.xover.xover_data import program_bank, pp_xover
+from llia.synths.xover.xover_gen import gen_xover_program
 
 specs = SynthSpecs("XOver");
 
@@ -31,7 +30,7 @@ specs["constructor"] = XOverProxy
 specs["description"] = "Crossover Filter Effect"
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["audio-input-buses"] = (("inbus", 1),)
-# specs["program-generator"] = gen_stepfilter_program
+specs["program-generator"] = gen_xover_program
 specs["is-efx"] = True
-# specs["pretty-printer"] = pp_stepfilter
+specs["pretty-printer"] = pp_xover
 specs["help"] = "xover"
