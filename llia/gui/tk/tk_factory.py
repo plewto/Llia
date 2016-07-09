@@ -255,7 +255,7 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
 #                                    Scale
 
 def scale(master, from_=200, to=0, command=None,
-          orientation=VERTICAL, ttip=""):
+          orientation=VERTICAL, var=None, ttip=""):
     s = Scale(master, from_=from_, to=to, orient=orientation)
     s.config(command=command)
     s.config(showvalue=False)
@@ -268,6 +268,8 @@ def scale(master, from_=200, to=0, command=None,
     s.config(highlightthickness=1)  # 0 to hide trough
     s.config(highlightbackground=pallet("slider-outline"))
     tooltip(s, ttip)
+    if var:
+        s.configure(variable=var)
     return s
              
     
