@@ -10,31 +10,6 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 from llia.gui.tk.decade_control import DecadeControl
 from llia.gui.tk.discreate_control import DiscreateControl
 
-
-
-# LFO_RATIOS = [(0.125, "1/8"),
-#               (0.25, "1/4"), 
-#               (0.5, "1/2"),
-#               (0.75, "3/4"),
-#               (1.0, "1"),
-#               (1.333, "1 1/3"),
-#               (1.5, "1 1/2"),
-#               (1.667, "1 2/3"),
-#               (2, "2"),
-#               (3, "3"),
-#               (4, "4"),
-#               (5, "5"),
-#               (6, "6"),
-#               (8, "8")]
-
-# CROSSOVER_FREQUENCIES = (100, 150,
-#                          200, 300,
-#                          400, 600,
-#                          800, 1200,
-#                          1600, 2400,
-#                          3200, 4800,
-#                          6400, 9600)
-
 def create_editor(parent):
     tone_panel = TkXOverPanel(parent)
 
