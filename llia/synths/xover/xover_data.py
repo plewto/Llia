@@ -117,125 +117,94 @@ def pp_xover(program, slot=127):
     acc += frmt % (pad, db('amp'))
     return acc
 
+
 xover(  0, "Init",
-        lfoFreq = 1.0,
-        crossover = 800, lfoCrossover = 0.00, 
-        lfoCrossoverRatio = 1.00, res=0.5,
-        lpMode = 1.00, lpMod = 1.00, lpAmp = 0,
-        hpMode = 1.00, hpMod = 1.00, hpAmp = 0,
-        spread = 0.75, lfoPanMod = 0.00, lfoPanRatio = 1.00,
-        dryAmp = -99, dryPan= 0.0, 
-        amp = 0)
-
-# xover(  1, "Alpha",
-#         lfoFreq = 2.0,
-#         crossover = 800, lfoCrossover = 0.00, 
-#         lfoCrossoverRatio = 1.00, res=0.5,
-#         lpMode = 1.00, lpMod = 1.00, lpAmp = 0,
-#         hpMode = 1.00, hpMod = 1.00, hpAmp = 0,
-#         spread = 0.75, lfoPanMod = 0.00, lfoPanRatio = 1.00,
-#         dryAmp = -99, dryPan= 0.0, 
-#         amp = 0)
-
-# xover(  2, "Beta",
-#         lfoFreq = 4.0,
-#         crossover = 800, lfoCrossover = 0.00, 
-#         lfoCrossoverRatio = 1.00, res=0.5,
-#         lpMode = 1.00, lpMod = 1.00, lpAmp = 0,
-#         hpMode = 1.00, hpMod = 1.00, hpAmp = 0,
-#         spread = 0.75, lfoPanMod = 0.00, lfoPanRatio = 1.00,
-#         dryAmp = -99, dryPan= 0.0, 
-#         amp = 0)
-
-# xover(  3, "Gamma",
-#      lfoFreq = 6.0000,
-#      crossover =  800, lfoCrossover = 0.000,
-#      lfoCrossoverRatio = 1.000, res = 0.500,
-#      lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
-#      hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-#      spread = 0.750, lfoPanMod = 0.000, lfoPanRatio = 1.000,
-#      dryAmp = -99, dryPan = 0.000,
-#      amp = 0)
-
-
-
-xover(  1, "One",
-     lfoFreq = 0.8068,
-     crossover =  800, lfoCrossover = 0.000,
-     lfoCrossoverRatio = 1.500, res = 0.500,
-     lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
-     hpMode = 1.000, hpMod = 0.703, hpAmp =  0,
-     spread = 0.000, lfoPanMod = 0.000, lfoPanRatio = 4.000,
-     dryAmp = -18, dryPan = 0.000,
-     amp = 0)
-
-xover(  2, "Two",
-     lfoFreq = 2.0543,
-     crossover = 1600, lfoCrossover = 0.000,
+     lfoFreq = 1.0000,
+     crossover =  500, lfoCrossover = 0.000,
      lfoCrossoverRatio = 1.000, res = 0.500,
      lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
      hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = 1.000, lfoPanMod = 0.000, lfoPanRatio = 1.000,
+     spread = 0.000, lfoPanMod = 0.000, lfoPanRatio = 1.000,
+     dryAmp = 0, dryPan = 0.000,
+     amp = 0)
+
+xover(  1, "One",
+     lfoFreq = 1.4000,
+     crossover = 1600, lfoCrossover = 0.141,
+     lfoCrossoverRatio = 1.000, res = 0.387,
+     lpMode = 0.000, lpMod = 1.000, lpAmp =  0,
+     hpMode = 0.000, hpMod = 1.000, hpAmp =  0,
+     spread = 0.638, lfoPanMod = 0.000, lfoPanRatio = 1.000,
+     dryAmp = -4, dryPan = 0.000,
+     amp = 0)
+
+xover(  2, "Slow Fade",
+     lfoFreq = 0.1500,
+     crossover =  800, lfoCrossover = 0.000,
+     lfoCrossoverRatio = 1.000, res = 0.663,
+     lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
+     hpMode = 0.372, hpMod = 1.000, hpAmp =  0,
+     spread = -1.000, lfoPanMod = 0.583, lfoPanRatio = 1.000,
      dryAmp = -99, dryPan = 0.000,
      amp = 0)
 
 xover(  3, "Three",
-     lfoFreq = 6.1588,
-     crossover =  200, lfoCrossover = 0.000,
-     lfoCrossoverRatio = 1.500, res = 0.500,
+     lfoFreq = 2.5000,
+     crossover =  600, lfoCrossover = 0.915,
+     lfoCrossoverRatio = 0.125, res = 0.432,
+     lpMode = 1.000, lpMod = 1.000, lpAmp = -16,
+     hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
+     spread = -0.055, lfoPanMod = 0.859, lfoPanRatio = 1.000,
+     dryAmp = 0, dryPan = 0.000,
+     amp = 0)
+
+xover(  4, "Slow & Deep",
+     lfoFreq = 0.3300,
+     crossover =  400, lfoCrossover = 0.246,
+     lfoCrossoverRatio = 1.500, res = 0.518,
      lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
+     hpMode = 0.583, hpMod = 1.000, hpAmp =  0,
+     spread = -0.005, lfoPanMod = 0.558, lfoPanRatio = 0.250,
+     dryAmp = -99, dryPan = 0.000,
+     amp = 0)
+
+xover(  5, "Fast & Shallow",
+     lfoFreq = 6.6000,
+     crossover =  600, lfoCrossover = 0.286,
+     lfoCrossoverRatio = 0.500, res = 0.497,
+     lpMode = 0.000, lpMod = 1.000, lpAmp =  0,
+     hpMode = 1.000, hpMod = 1.000, hpAmp = -3,
+     spread = 0.000, lfoPanMod = 0.528, lfoPanRatio = 0.750,
+     dryAmp = 0, dryPan = 0.000,
+     amp = 0)
+
+xover(  6, "Bandpass 1k",
+     lfoFreq = 0.9200,
+     crossover = 1200, lfoCrossover = 0.111,
+     lfoCrossoverRatio = 1.000, res = 0.814,
+     lpMode = 0.111, lpMod = 0.563, lpAmp =  0,
+     hpMode = 0.000, hpMod = 1.000, hpAmp =  0,
+     spread = 1.000, lfoPanMod = 0.286, lfoPanRatio = 0.250,
+     dryAmp = -3, dryPan = 0.000,
+     amp = 0)
+
+xover(  7, "Slow Res",
+     lfoFreq = 0.2372,
+     crossover =  100, lfoCrossover = 0.950,
+     lfoCrossoverRatio = 0.125, res = 0.915,
+     lpMode = 1.000, lpMod = 0.980, lpAmp = -5,
      hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = 0.000, lfoPanMod = 0.241, lfoPanRatio = 1.000,
+     spread = -1.000, lfoPanMod = 0.352, lfoPanRatio = 1.000,
      dryAmp = -99, dryPan = 0.000,
      amp = 0)
 
-xover( 4, "Four",
-     lfoFreq = 0.3165,
-     crossover = 1600, lfoCrossover = 0.000,
-     lfoCrossoverRatio = 0.750, res = 0.500,
-     lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
-     hpMode = 0.676, hpMod = 0.567, hpAmp =  0,
-     spread = 1.000, lfoPanMod = 0.136, lfoPanRatio = 2.000,
-     dryAmp = -6, dryPan = 0.000,
-     amp = 0)
-
-
-xover(  5, "Five",
-     lfoFreq = 0.6288,
-     crossover =  100, lfoCrossover = 0.499,
-     lfoCrossoverRatio = 1.000, res = 0.256,
-     lpMode = 0.092, lpMod = 1.000, lpAmp =  0,
+xover(  8, "Tenth Second",
+     lfoFreq = 0.1000,
+     crossover =  600, lfoCrossover = 0.271,
+     lfoCrossoverRatio = 1.000, res = 0.477,
+     lpMode = 0.583, lpMod = 1.000, lpAmp =  0,
      hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = 0.000, lfoPanMod = 0.772, lfoPanRatio = 1.000,
-     dryAmp = -99, dryPan = 0.000,
+     spread = -0.538, lfoPanMod = 0.975, lfoPanRatio = 1.000,
+     dryAmp = -9, dryPan = 0.000,
      amp = 0)
 
-xover(  6, "Six",
-     lfoFreq = 120,
-     crossover =  200, lfoCrossover = 0.997,
-     lfoCrossoverRatio = 1.000, res = 0.841,
-     lpMode = 1.000, lpMod = 0.621, lpAmp =  0,
-     hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = 0.000, lfoPanMod = 0.000, lfoPanRatio = 4.000,
-     dryAmp = -99, dryPan = 0.000,
-     amp = 0)
-
-xover(  7, "Seven",
-     lfoFreq = 5.0,
-     crossover = 8000, lfoCrossover = 0.100,
-     lfoCrossoverRatio = 2.000, res = 0.722,
-     lpMode = 1.000, lpMod = 0.636, lpAmp =  0,
-     hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = 0.000, lfoPanMod = 0.75, lfoPanRatio = 0.125,
-     dryAmp = -99, dryPan = 0.000,
-     amp = 0)
-
-xover(  8, "Eight",
-     lfoFreq = 0.03,
-     crossover =  400, lfoCrossover = 0.500,
-     lfoCrossoverRatio = 2.500, res = 0.8,
-     lpMode = 0.500, lpMod = 1.000, lpAmp =  0,
-     hpMode = 0.500, hpMod = 1.000, hpAmp =  0,
-     spread = 0.000, lfoPanMod = 1.000, lfoPanRatio = 0.75,
-     dryAmp = -99, dryPan = 0.000,
-     amp = 0)

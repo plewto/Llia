@@ -8,6 +8,8 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cfactory
 
+
+
 def create_tk_orgn_editor(parent):
     tone_panel = TkOrgnPanel1(parent)
     info_panel = TkOrgnInfoPanel(parent)
@@ -133,7 +135,6 @@ class TkOrgnPanel1(TkSubEditor):
         self.add_control("chorusDelay", s_chorus_delay)
         self.add_control("amp", s_amp)
         self.add_control("brightness", s_brightness)
-
      
 
 class TkOrgnInfoPanel(Frame):

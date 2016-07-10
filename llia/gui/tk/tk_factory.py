@@ -271,28 +271,26 @@ def scale(master, from_=200, to=0, command=None,
     if var:
         s.configure(variable=var)
     return s
-             
-    
-
-
 
 #  ---------------------------------------------------------------------- 
 #                                   Spinbox
 #
 # NOTE: Spinbox is not a ttk widget
 
-def int_spinbox(master, textvar, from_, to, ttip=""):
+def int_spinbox(master, textvar, from_, to, command=None, ttip=""):
     sb = Spinbox(master, from_=int(from_), to=int(to), textvariable=textvar)
     tooltip(sb, ttip)
     sb.config(background=bg(), foreground=fg())
     sb.config(buttonbackground=bg())
+    sb.config(command = command)
     return sb
 
-def float_spinbox(master, textvar, from_, to, ttip=""):
+def float_spinbox(master, textvar, from_, to, command=None, ttip=""):
     sb = Spinbox(master, from_=float(from_), to=float(to), textvariable=textvar)
     tooltip(sb, ttip)
     sb.config(background=bg(), foreground=fg())
     sb.config(buttonbackground=bg())
+    sb.config(command=command)
     return sb
 
 #  ---------------------------------------------------------------------- 

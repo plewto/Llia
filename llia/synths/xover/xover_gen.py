@@ -3,6 +3,7 @@
 from __future__ import print_function
 from random import randrange
 from llia.synths.xover.xover_data import xover
+import llia.synths.xover.xover_constants as xcon
 from llia.util.lmath import *
 
 def pick_lfo_frequency():
@@ -16,13 +17,17 @@ def pick_lfo_frequency():
         return coin(0.75, rnd(30), rnd(400))
 
 def pick_crossover():
-    return pick([100, 200, 400, 800, 1600, 4000, 8000, 12500])
+    return pick(xcon.CROSSOVER_FREQUENCIES)
 
 def pick_lfo_crossover():
     return coin(0.50, 0, rnd())
 
+# def pick_lfo_crossover_ratio():
+#     return coin(0.50, 1, pick([0.25, 0.5, 0.75, 1.333, 1.5, 2, 3, 4, 5]))
+
 def pick_lfo_crossover_ratio():
-    return coin(0.50, 1, pick([0.25, 0.5, 0.75, 1.333, 1.5, 2, 3, 4, 5]))
+    vlst =map(lambda x: x[0], xcon.LFO_RATIOS)
+    return float(coin(0.50, 1, pick(vlst)))
 
 def pick_res():
     return rnd()

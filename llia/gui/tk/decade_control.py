@@ -19,7 +19,7 @@ class DecadeControl(AbstractControl):
     Fine control provided by slider (Scale in Tk parlance).
     
     Widgets are not automatically placed on the parent to allow for
-    custom layouts.  The place method may be used to place widgets in
+    custom layouts.  The layout method may be used to place widgets in
    the most common layout.
     """
                              
@@ -98,55 +98,45 @@ class DecadeControl(AbstractControl):
             value = self._current_value
             decade = float(10**int(log10(value)))
             ratio = decade/value
-            pos = 100-int(100 * ratio)
+            #pos = 100-int(100 * ratio)
+            pos = int(100 * ratio)
+            #print("DEBUG ratio = %s,  pos = %s" % (ratio, pos))
             self.var_decade.set(decade)
             self.var_scale.set(pos)
             if decade <= 1:
                 frmt = "%6.4f"
             else:
                 frmt = "%6.0f"
-            #self.lab_value.config(text = frmt % value)
             self.widget("label-value").config(text = frmt % value)
         except (ValueError, ZeroDivisionError):
             self.lab_value.config(text="ERR")
-
-    # def place(self, x0=0, y0=0,
-    #           row_height = 20,
-    #           column_width = 80,
-    #           include_value_label=True,
-    #           labx=0, laby=0):
-    #     """
-    #     Places constituent widgets on Tk master widget using predefined
-    #     layout.
-    #
-    #     ARGS:
-    #       x0 - int, horizontal reference point.
-    #       y0 - int, vertical reference point.
-    #       row_height - int, distance in pixels between radio-button rows.
-    #       column_width - int, distance in pixels between radio-buttons and
-    #                      and slider.
-    #       include_value_label - Boolean, if True include optional 'value' label
-    #       labx - int, x offset for optional value label.
-    #       laby - int, y offset for optional value label.
-    #     """
-    #     rows = len(self._radio_buttons)
-    #     x = x0
-    #     for row in range(rows):
-    #         y = y0 + row * row_height
-    #         rb = self._radio_buttons[row]
-    #         rb.place(x=x, y=y)
-    #     x = x0 + column_width
-    #     y = y0
-    #     self._widgets["scale"].place(x=x, y=y)
-    #     if include_value_label:
-    #         x, y = x0+labx, y0+rows*row_height+laby
-    #         self._widgets["label-value"].place(x=x, y=y)
               
             
     def layout(self, offset=(0, 0),
                button_offset = (0, 0, 20),   # x y row_height
                slider_offset = (80, 0, 14, 150),  # x y width height
                label_offset = (0, 150)):
+        """
+        Arrange widgets on Tk master container.
+        ARGS:
+          offset        - Tuple (x0,y0), upper left reference point, the 
+                          location to place widgets.
+          button_offset - Tuple (x, y, delta),  location of 'decade' radio
+                          buttons.
+                          x - horizontal offset from x0
+                          y - vertical offset from y0
+                          delta - vertical spacing of buttons. 
+                          If None, do not include radio buttons.
+          slider_offset - Tuple (x, y, w, h),  location of slider relative to 
+                          (x0,y0).
+                          x - horizontal offset from x0
+                          y - vertical offset from y0
+                          w - slider width
+                          h - slider height
+                          If None, do not include slider.
+          label_offset  - Tuple (xw,yw), location of current value label.
+                          If None, do not include label.
+        """
         x0, y0 = offset
         if button_offset:
             xb, yb, ydelta = button_offset
@@ -164,11 +154,3 @@ class DecadeControl(AbstractControl):
             xw, yw = label_offset
             w = self.widget("label-value")
             w.place(x=x0+xw, y=y0+yw)
-            
-            
-    
-        
-        
-
-        
-                 

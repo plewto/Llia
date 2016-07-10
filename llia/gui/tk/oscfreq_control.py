@@ -92,30 +92,30 @@ class OscFrequencyControl(AbstractControl):
     def update_aspect(self):
         try:
             ratio = abs(self._current_value)
+            if ratio:
+                ratio = abs(ratio)
+                cents = int(logn(ratio, con.RCENT))
+                octave = cents/1200
+                step = (cents-1200*octave)/100
+                detune = cents -1200*octave - 100*step
+                self.var_octave.set(octave)
+                self.var_transpose.set(step)
+                self.var_detune.set(detune)
+                self.var_zero.set(0)
+                self.widget("label-value").config(text = "%6.4f" % ratio)
+                self.widget("label-transpose").config(text = "%2d" % step)
+                self.widget("label-detune").config(text = "%3d" % detune)
+            else:
+                self.var_octave.set(-100)
+                self.var_transpose.set(-1)
+                self.var_detune.set(-1)
+                self.var_zero.set(1)
+                self.widget("label-value").config(text = "Off")
+                self.widget("label-transpose").config(text = "--")
+                self.widget("label-detune").config(text = "---")
         except TypeError:
-            ratio = 1.0
-        if ratio:
-            ratio = abs(ratio)
-            cents = int(logn(ratio, con.RCENT))
-            octave = cents/1200
-            step = (cents-1200*octave)/100
-            detune = cents -1200*octave - 100*step
-            self.var_octave.set(octave)
-            self.var_transpose.set(step)
-            self.var_detune.set(detune)
-            self.var_zero.set(0)
-            self.widget("label-value").config(text = "%6.4f" % ratio)
-            self.widget("label-transpose").config(text = "%2d" % step)
-            self.widget("label-detune").config(text = "%3d" % detune)
-        else:
-            self.var_octave.set(-100)
-            self.var_transpose.set(-1)
-            self.var_detune.set(-1)
-            self.var_zero.set(1)
-            self.widget("label-value").config(text = "Off")
-            self.widget("label-transpose").config(text = "--")
-            self.widget("label-detune").config(text = "---")
-
+            pass
+    
     def layout(self, offset=(0, 0),
                octave_offset = (0, 0, 20), 
                transpose_offset = (70, 0, 14, 150), 

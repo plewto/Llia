@@ -35,6 +35,11 @@ def db_to_amp(db):
 def clip(n, lower, upper):
     return max(min(n, upper), lower)
 
+def frequency_to_bpm(f):
+    return 60.0*f
+
+def bpm_to_frequency(t):
+    return t/60.0
 
 def rnd(mult=1):
     return mult*random.random()

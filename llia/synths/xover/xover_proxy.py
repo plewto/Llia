@@ -25,6 +25,8 @@ class XOverProxy(SynthProxy):
             create_editor(parent_editor)
 
 xover_pallet = Pallet(default_pallet)
+xover_pallet["BG"] = "#131313"
+xover_pallet["SLIDER-TROUGH"] = "#1f2f40"
 
 specs["constructor"] = XOverProxy
 specs["description"] = "Crossover Filter Effect"
@@ -33,4 +35,5 @@ specs["audio-input-buses"] = (("inbus", 1),)
 specs["program-generator"] = gen_xover_program
 specs["is-efx"] = True
 specs["pretty-printer"] = pp_xover
+specs["pallet"] = xover_pallet
 specs["help"] = "xover"

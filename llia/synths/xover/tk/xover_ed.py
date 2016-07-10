@@ -2,88 +2,125 @@
 #
 
 from __future__ import print_function
-from Tkinter import Frame
-
-from llia.gui.tk.tk_subeditor import TkSubEditor
+#from Tkinter import Frame
+from llia.synths.xover.xover_constants import *
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cfactory
+from llia.gui.tk.tk_subeditor import TkSubEditor
+from llia.gui.tk.decade_control import DecadeControl
+from llia.gui.tk.discreate_control import DiscreateControl
+
+
+
+# LFO_RATIOS = [(0.125, "1/8"),
+#               (0.25, "1/4"), 
+#               (0.5, "1/2"),
+#               (0.75, "3/4"),
+#               (1.0, "1"),
+#               (1.333, "1 1/3"),
+#               (1.5, "1 1/2"),
+#               (1.667, "1 2/3"),
+#               (2, "2"),
+#               (3, "3"),
+#               (4, "4"),
+#               (5, "5"),
+#               (6, "6"),
+#               (8, "8")]
+
+# CROSSOVER_FREQUENCIES = (100, 150,
+#                          200, 300,
+#                          400, 600,
+#                          800, 1200,
+#                          1600, 2400,
+#                          3200, 4800,
+#                          6400, 9600)
 
 def create_editor(parent):
-    pass
-    #tone_panel = TkXOverPanel(parent)
-    #info_panel = TkXOverInfoPanel(parent)
+    tone_panel = TkXOverPanel(parent)
 
-# class TkXOverPanel(TkSubEditor):
+class TkXOverPanel(TkSubEditor):
 
-#     NAME = "XOver"
-#     IMAGE_FILE = "resources/XOver/editor.png"
+    NAME = "XOver"
+    IMAGE_FILE = "resources/XOver/editor.png"
 
-#     def __init__(self, editor):
-#         frame = editor.create_tab(self.NAME)
-#         TkSubEditor.__init__(self, frame, editor, self.NAME)
-#         editor.add_child_editor(self.NAME, self)
-#         self.pack(expand=True, fill="both")
-#         lab_panel = factory.image_label(self, self.IMAGE_FILE)
-#         lab_panel.pack(anchor="nw", expand=False)
+    def __init__(self, editor):
+        frame = editor.create_tab(self.NAME)
+        TkSubEditor.__init__(self, frame, editor, self.NAME)
+        editor.add_child_editor(self.NAME, self)
+        self.pack(expand=True, fill="both")
+        lab_panel = factory.image_label(self, self.IMAGE_FILE)
+        lab_panel.pack(anchor="nw", expand=False)
+        dc_lfo = DecadeControl(frame, "lfoFreq", self, (0.01, 10))
+        dc_crossover_ratio = DiscreateControl(frame, "lfoCrossoverRatio",
+                                              self, LFO_RATIOS)
+        dc_pan_ratio = DiscreateControl(frame, "lfoPanRatio",
+                                        self, LFO_RATIOS)
+        s_res = cfactory.normalized_slider(frame, "res", self, "Resonace")
+        s_crossover = cfactory.discrete_slider(frame, "crossover", self,
+                                               CROSSOVER_FREQUENCIES,
+                                               "Filter crossover frequency")
+        s_crossover_lfo = cfactory.normalized_slider(frame, "lfoCrossover", self,
+                                                     "LFO -> crossover modulation depth")
+        s_filter1_mode = cfactory.normalized_slider(frame, "lpMode", self,
+                                                    "Filter 1 mode")
+        s_filter1_mod = cfactory.normalized_slider(frame, "lpMod", self,
+                                                   "Filter 1 LFO modulation")
+        s_filter2_mode = cfactory.normalized_slider(frame, "hpMode", self,
+                                                    "Filter 2 mode")
+        s_filter2_mod = cfactory.normalized_slider(frame, "hpMod", self,
+                                                   "Filter 2 LFO modulation")
+        s_spread = cfactory.bipolar_slider(frame, "spread", self,
+                                           "Pan spread")
+        s_spread_lfo = cfactory.normalized_slider(frame, "lfoPanMod", self,
+                                                  "LFO -> spread")
+        s_dry_pan = cfactory.bipolar_slider(frame, "dryPan", self,
+                                             "Dry signal pan")
+        s_dry_amp = cfactory.volume_slider(frame, "dryAmp", self,
+                                           "Dry signal amplitude")
+        s_filter1_amp = cfactory.volume_slider(frame, "lpAmp", self,
+                                               "Filter 1 amplitude")
+        s_filter2_amp = cfactory.volume_slider(frame, "hpAmp", self,
+                                               "Filter 2 amplitude")
+        s_amp = cfactory.volume_slider(frame, "amp", self,
+                                       "Main amplitude")
+        self.add_control("lfoFreq", dc_lfo)
+        self.add_control("lfoCrossoverRatio", dc_crossover_ratio)
+        self.add_control("lfoPanRatio", dc_pan_ratio)
+        self.add_control("res", s_res)
+        self.add_control("crossover", s_crossover)
+        self.add_control("lfoCrossover", s_crossover_lfo)
+        self.add_control("lpMode", s_filter1_mode)
+        self.add_control("lpMod", s_filter1_mod)
+        self.add_control("hpMode", s_filter2_mode)
+        self.add_control("hpMod", s_filter2_mod)
+        self.add_control("spread", s_spread)
+        self.add_control("lfoPanMod", s_spread_lfo)
+        self.add_control("dryPan", s_dry_pan)
+        self.add_control("dryAmp", s_dry_amp)
+        self.add_control("lpAmp", s_filter1_amp)
+        self.add_control("hpAmp", s_filter2_amp)
+        self.add_control("amp", s_amp)
+        dc_lfo.layout(offset=(50, 50), label_offset=(20, 100))
+        dc_pan_ratio.layout(170, 50, rows=6, xdelta=65)
+        dc_crossover_ratio.layout(300, 50, rows=6, xdelta=65)
+        y = 50
+        xres, xcrossover, xlfo = 500, 560, 620
+        xf1, xf2 = 700, 760
+        s_res.widget().place(x=xres, y=y)
+        s_crossover.widget().place(x=xcrossover, y=y)
+        s_crossover_lfo.widget().place(x=xlfo, y=y)
+        s_filter1_mode.widget().place(x=xf1, y=y, width=10, height=60)
+        s_filter1_mod.widget().place(x=xf1, y=y+90, width=10, height=60)
+        s_filter2_mode.widget().place(x=xf2, y=y, width=10, height=60)
+        s_filter2_mod.widget().place(x=xf2, y=y+90, width=10, height=60)
+        y = 300
+        xspread, xlfo, xdry = 50, 110, 170
+        s_spread.widget().place(x=xspread, y=y)
+        s_spread_lfo.widget().place(x=xlfo, y=y)
+        s_dry_pan.widget().place(x=xdry, y=y)
+        xdry, xf1, xf2, xamp = 260, 320, 380, 460
+        s_dry_amp.widget().place(x=xdry, y=y)
+        s_filter1_amp.widget().place(x=xf1, y=y)
+        s_filter2_amp.widget().place(x=xf2, y=y)
+        s_amp.widget().place(x=xamp, y=y)
         
-#         # Filter
-#         s_xover = cfactory.third_octave_slider(self, "crossover", editor, "Crossover frequency")
-#         s_res = cfactory.normalized_slider(self, "res", editor, "Filter resonace")
-#         s_ringmod = cfactory.normalized_slider(self, "ringmod", editor, "Ringmod/Lowpass mix")
-#         s_reverb = cfactory.normalized_slider(self, "rev", editor, "Reverb/Highpass mix")
-#         s_room = cfactory.normalized_slider(self, "room", editor, "Reverb room size")
-
-#         # LFO
-#         s_lfo = cfactory.simple_lfo_freq_slider(self, "lfoFreq", editor, "LFO Frequency")
-#         s_phase = cfactory.normalized_slider(self, "lfoPhase", editor, "LFO Phase")
-
-#         # Pan
-#         s_drypan = cfactory.bipolar_slider(self, "dryPan", editor, "Dry pan position")
-#         s_lppan = cfactory.bipolar_slider(self, "lpPan", editor, "Lowpass/ringmod pan position")
-#         s_hppan = cfactory.bipolar_slider(self, "hpPan", editor, "Highpass/reverb pan position")
-#         s_lfopan = cfactory.normalized_slider(self, "lfoPan", editor, "LFO -> pan depth")
-
-#         # Mix
-#         s_dryamp = cfactory.volume_slider(self, "dryAmp", editor, "Dry amplitude")
-#         s_wetamp = cfactory.volume_slider(self, "wetAmp", editor, "Wet amplitude")
-#         s_amp = cfactory.volume_slider(self, "amp", editor, "Overall amplitude")
-#         self.add_control("crossover", s_xover)
-#         self.add_control("res", s_res)
-#         self.add_control("ringmod", s_ringmod)
-#         self.add_control("rev", s_reverb)
-#         self.add_control("room", s_room)
-        
-#         self.add_control("lfoFreq", s_lfo)
-#         self.add_control("lfoPhase", s_phase)
-#         self.add_control("dryPan", s_drypan)
-#         self.add_control("lpPan", s_lppan)
-#         self.add_control("hpPan", s_hppan)
-#         self.add_control("lfoPan", s_lfopan)
-#         self.add_control("dryAmp", s_dryamp)
-#         self.add_control("wetAmp", s_wetamp)
-#         self.add_control("amp", s_amp)
-
-#         y0 = 50
-#         x1,x2,x3,x4,x5 = 50, 110, 170, 230, 290
-
-#         s_xover.widget().place(x=x1, y=y0)
-#         s_res.widget().place(x=x2, y=y0)
-#         s_ringmod.widget().place(x=x3, y=y0)
-#         s_reverb.widget().place(x=x4, y=y0)
-#         s_room.widget().place(x=x5, y=y0)
-
-#         x6,x7 = 410, 470
-#         s_lfo.widget().place(x=x6, y=y0)
-#         s_phase.widget().place(x=x7, y=y0)
-
-#         y1 = 260
-#         x8,x9,x10,x11 = 50, 110, 170, 230
-#         s_drypan.widget().place(x=x8, y=y1)
-#         s_lppan.widget().place(x=x9, y=y1)
-#         s_hppan.widget().place(x=x10, y=y1)
-#         s_lfopan.widget().place(x=x11, y=y1)
-
-#         x12,x13,x14 = 350, 410, 470
-#         s_dryamp.widget().place(x=x12, y=y1)
-#         s_wetamp.widget().place(x=x13, y=y1)
-#         s_amp.widget().place(x=x14, y=y1)
