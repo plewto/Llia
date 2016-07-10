@@ -135,8 +135,8 @@ def discrete_slider(master, param, editor, values=range(8), ttip=""):
 #
 # Coarse Radio buttons: (0) 1/8 1/4 1/2 1 2 4 8
 # Fine slider domain 0...199  codomain 1.0...2.00 (resolution 0.005)
-# **DEPRECIATE** Use OscFrequencyControl instead.
-
+# **DEPRECIATE**
+ 
 ZERO_FREQ = -1000
 
 class OscFrequencyControl(absctrl.AbstractControl):

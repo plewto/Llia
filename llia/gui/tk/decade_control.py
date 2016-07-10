@@ -98,9 +98,7 @@ class DecadeControl(AbstractControl):
             value = self._current_value
             decade = float(10**int(log10(value)))
             ratio = decade/value
-            #pos = 100-int(100 * ratio)
             pos = int(100 * ratio)
-            #print("DEBUG ratio = %s,  pos = %s" % (ratio, pos))
             self.var_decade.set(decade)
             self.var_scale.set(pos)
             if decade <= 1:
@@ -109,7 +107,7 @@ class DecadeControl(AbstractControl):
                 frmt = "%6.0f"
             self.widget("label-value").config(text = frmt % value)
         except (ValueError, ZeroDivisionError):
-            self.lab_value.config(text="ERR")
+            self.widget("label-value").config(text="ERR")
               
             
     def layout(self, offset=(0, 0),

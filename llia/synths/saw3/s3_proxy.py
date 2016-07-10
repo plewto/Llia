@@ -14,7 +14,15 @@ class Saw3Proxy(SynthProxy):
 
     def __init__(self, app, id_):
         super(Saw3Proxy, self).__init__(app, specs, id_, program_bank)
-        gui = app.config["gui"]
+        self._editor = None
+
+    def create_subeditors(self):
+        gui = self.app.config["gui"].upper()
+        if gui == "TK":
+            from llia.synths.saw3.tk.s3ed import create_editor
+            appwin = self.app.main_window()
+            parent_editor = appwin[self.sid]
+            create_editor(parent_editor)
 
 specs["constructor"] = Saw3Proxy
 specs["description"] = "A 3 Oscillator Subtractive Synth"
