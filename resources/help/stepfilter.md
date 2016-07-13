@@ -1,5 +1,7 @@
 ### Efx StepFilter
 
+*** ISSUE: Fix me, this version is out of date.
+
 StepFilter is a bandpass filter with "stair-step" control signal.
 
 The filter frequency control signal is a combinationn of 8 pulse waves and
