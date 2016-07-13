@@ -8,11 +8,15 @@ import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cfactory
 from llia.gui.tk.oscfreq_control import OscFrequencyControl
 from llia.gui.tk.decade_control import DecadeControl
+from llia.synths.saw3.tk.s3filter import TkSaw3FilterPanel
+from llia.synths.saw3.tk.s3ctrl import TkSaw3ControlPanel
 
 
 def create_editor(parent):
     panel1 = TkSaw3Panel1(parent)
-
+    panel2 = TkSaw3FilterPanel(parent)
+    panel3 = TkSaw3ControlPanel(parent)
+    
 class TkSaw3Panel1(TkSubEditor):
 
     NAME = "Saw3"
@@ -80,7 +84,6 @@ class TkSaw3Panel1(TkSubEditor):
                                                     editor, "ENV1 -> OSC 3 Amp")
         s_wave3_lag = cfactory.normalized_slider(frame, "osc3WaveLag", editor, 
                                                  "OSC 3 Wave lag")
-        
         ofc_3.layout(offset = (650, y0))
         dc_bias3.layout(offset = (650, y1),
                         label_offset = (10, 130))
@@ -94,10 +97,9 @@ class TkSaw3Panel1(TkSubEditor):
         s_wave3_lfo.widget().place(x=840, y=y1)
         s_osc3_amp_env.widget().place(x=900, y=y1)
         # Noise
-        s_nse_freq = cfactory.discrete_slider(frame, "noiseFreq", editor,
-                                               (0.5, 1, 1.25, 1.5, 2, 3, 4,
-                                                5, 6, 8, 9, 12),
-                                               "Noise frequency")
+        s_nse_freq = cfactory.linear_slider(frame, "noiseFreq", editor,
+                                            range_=(0.5, 8.0),
+                                            ttip="Noise frequency")
         s_nse_bw = cfactory.normalized_slider(frame, "noiseBW", editor, 
                                               "Noise Bandwidth")
         s_nse_amp = cfactory.volume_slider(frame, "noiseAmp", editor, 
