@@ -19,8 +19,8 @@ class DecadeControl(AbstractControl):
     Fine control provided by slider (Scale in Tk parlance).
     
     Widgets are not automatically placed on the parent to allow for
-    custom layouts.  The layout method may be used to place widgets in
-   the most common layout.
+    custom layouts. Use the layout method to arrange widgets on the 
+    parent container.
     """
                              
     

@@ -203,7 +203,9 @@ def radio(master, text, var, value, ttip="", modal=False, command=None):
     rb.config(command=command)
     return rb
 
-def checkbutton(master, text, var=None, ttip="", modal=False):
+def checkbutton(master, text, var=None,
+                command = None,
+                ttip="", modal=False):
     cb = Checkbutton(master, text=text, variable=var)
     if modal:
         cb.config(background=pallet("DIALOG-BG"))
@@ -214,6 +216,7 @@ def checkbutton(master, text, var=None, ttip="", modal=False):
     cb.config(selectcolor=pallet("radio-select"))
     cb.config(activebackground=pallet("active-bg"))
     cb.config(activeforeground=pallet("active-fg"))
+    cb.config(command = command)
     return cb
 
 #  ---------------------------------------------------------------------- 
@@ -255,8 +258,10 @@ def scrollbar(master, xclient=None, yclient=None, orientation=VERTICAL):
 #                                    Scale
 
 def scale(master, from_=200, to=0, command=None,
-          orientation=VERTICAL, var=None, ttip=""):
-    s = Scale(master, from_=from_, to=to, orient=orientation)
+          orientation=VERTICAL, var=None,
+          resolution = 1, ttip=""):
+    s = Scale(master, from_=from_, to=to, orient=orientation,
+              resolution = resolution)
     s.config(command=command)
     s.config(showvalue=False)
     s.config(width = 12)

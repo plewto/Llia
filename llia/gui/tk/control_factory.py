@@ -10,7 +10,7 @@ import llia.constants as con
 import llia.gui.abstract_control as absctrl
 import llia.gui.tk.tk_factory as factory
 from llia.util.lmath import log2, logn, log10, clip
-from llia.curves import linear_function as linfn
+from llia.curves import linear_function as linfn, normal_exp_curve
 
 
 class ControlSlider(absctrl.AbstractControl):
@@ -50,7 +50,6 @@ class ControlSlider(absctrl.AbstractControl):
         program = bnk[None]
         program[self.param] = value
         self.client_callback(self, aspect, value)
-
                  
 def normalized_slider(master, param, editor, ttip=""):
     s = ControlSlider(master, param, editor, ttip=ttip)
@@ -87,6 +86,53 @@ def linear_slider(master, param, editor, domain=(0, 200), range_=(0.0, 1.0), tti
                       curves=(v_to_a, a_to_v),
                       ttip=ttip)
     return s
+
+
+        
+
+
+# def positive_exponentail_slider(master, param, editor,
+#                                 range_ = (0, 1),
+#                                 degree = 2,
+#                                 ttip = ""):
+#     slider_positions = 200
+#     q, r = range_
+#     q,r = min(q,r), max(q,r)
+#     bias = q
+#     scale = r-q
+
+#     def v_to_a(v):
+#         try:
+#             w = logn(v, degree)
+#         except ValueError:
+#             w = 0
+#         w = max(0, w)
+#         pos = w*scale
+#         return pos
+    
+#     def a_to_v(a):
+#         pos = a/float(slider_positions)
+#         v = bias + scale * pos**degree
+#         # START DEBUG
+#         a2 = v_to_a(v)
+#         print("DEBUG a = %3d   v = %5.4f   a2 = %f" % (a,v,a2))
+#         # END DEBUG
+#         return v
+    
+
+   
+
+    s = ControlSlider(master, param, editor,
+                      domain = (0, slider_positions),
+                      curves=(v_to_a, a_to_v),
+                      ttip = ttip)
+    return s
+    
+                                
+                                 
+        
+    
+
 
 def third_octave_slider(master, param, editor, ttip=""):
     a_to_v = absctrl.aspect_to_third_octave
