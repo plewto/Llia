@@ -1,0 +1,103 @@
+Llia instillation.
+
+Llia is divided into two major components; host and client.  The host
+software is coded in sclang and is found in the Llia/sc directory.  The
+client code is Python 2.7 with sources located in the Llia/llia directory.
+
+          ******************************************************
+                               Host Software
+          ******************************************************
+
+Overview:
+
+The host code is located in the two directories: Llia/sc/Extensions/Classes
+and Llia/sc/SynthDefs.  For the most part these files need only be executed
+once to be made a permanent part of SuperCollider.  The one exception is
+Llia/sc/SynthDefs/llia.scd.  This file, or something like it, must be run
+each time Llia is used. 
+
+Details:                       
+
+1) Install SuperCollider.
+
+2) Copy the contents of Llia/sc/Extensions/Classes to a location where
+   SuperCollider expects to find extensions.
+
+  Linux:
+  (System-wide)    /usr/local/share/SuperCollider/Extensions/
+  (User-specific)  ~/.local/share/SuperCollider/Extensions/
+
+  OSX:
+  (System-wide)    /Library/Application Support/SuperCollider/Extensions/
+  (User-specific) ~/Library/Application Support/SuperCollider/Extensions/
+
+  Windows:
+   ?
+
+  The next time SuperCollider starts the new Llia classes will be compiled
+  as permanent extensions.  NOTE: If for some reason there is an error
+  while compiling the library, SuperCollider will display an error message
+  and stop.  In such a case SuperCollider will not be usable until either
+  the error is addressed or the offending file removed.
+
+3) Load each .scd file in the directory Llia/sc/SynthDefs/ one by one into
+   the SuperCollider IDE and execute them.  This step need only be carried
+   out once and makes the various Llia synthesizers and effects a permanent
+   part of the SuperCollider instillation.  It is not necessary to include
+   llia.scd or testtones.scd at this time.
+
+   As new instruments are added in the future corresponding .scd file
+   will need to be executed in this way.
+
+
+          ******************************************************
+                              Client Software
+          ******************************************************
+
+FIXME: client instillation is still being worked out.  Llia was developed on
+       an Ubuntu "studio" system 15.04, and all seems well there.  However
+       there are early indications of problems on OSX, these are being
+       actively investigated.  At this time Windows is not being considered.
+       Once stable instructions for Linux and OSX are established, Windows
+       will be addressed.
+
+Llia is coded in Python 2.7 and where possible external dependencies have
+been included in the source.  There are however some dependencies which 
+must be resolved.
+
+1) Install mido for MIDI support.
+   http://mido.readthedocs.io/en/latest/installing.html
+
+   mido itself requires either portmidi or rtmidi as a "backend".  At least
+   one of these packages must be installed.
+
+2) If not already installed you need the Python Image Library PIL or
+   possibly Pillow.
+
+3) There appears to be issues with Tk on OSX.   It is possible the default
+   Tk provided by OSX should be replaced with "ActiveTcl"
+   https://www.python.org/download/mac/tcltk/
+
+4) Llia requires a configuration file on startup.   The file
+   Llia/resources/config is provided as a prototype.
+  
+
+   Linux: Copy the file /Llia/resources/config to ~/.config/Llia/ or simply
+   make a symbolic link:  ~/.config/Llia/config -> Llia/resources.config
+
+
+   OSX:
+   A reasonable location for the config file has not been established under
+   OSX. Use the command line option --config to explicitly set the
+   configuration file.
+
+   Windows:
+   ?
+
+
+   Under the [MIDI] section of configuration file locate the line which
+   reads 'backend : mido.backends.rtmidi'  If you are using portmidi instead
+   change this line to
+
+        backend : mido.backends.portmidi
+ 
