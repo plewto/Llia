@@ -11,12 +11,13 @@
 
 
 [GENERAL]
-no-repl : False
+no-repl : True
 
 [MIDI]
 input-port : Launchkey Mini 16:0
 output-port : Launchkey Mini 16:0
 backend : mido.backends.rtmidi
+; backend : midi.backends.portmidi
 enable-program-pp : True
 enable-keyswitch : True
 keyswitch-channel : 10
@@ -33,7 +34,7 @@ trace-osc-transmission : False
 
 [GUI]
 gui : Tk
-no-splash : True
+no-splash : False
 enable-tooltips : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
@@ -41,8 +42,8 @@ warn-on-exit : False
 enable-active-update : True     ; Enable MIDI controller changes to update GUI
 
 [MIDI-CHANNELS]
-C01 : Alpha
-C02 : Beta
+C01 : 
+C02 : 
 C03 : 
 C04 : 
 C05 : 
