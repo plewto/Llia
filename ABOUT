@@ -15,7 +15,7 @@ synthesizers, "Orgn" and "Saw3", and three effects, "DirtyBurger",
 2) Support for all MIDI channel-messages with exception of polyphonic
 aftertouch.  MIDI events are handled on the client side and are processed
 through various mapping functions before being forwarded to SuperCollider.
-This allows MIDI data to be converted to synth parameters.  Two very common
+Most MIDI values may be mapped to synth parameters.  Two very common
 examples is the mapping of MIDI controller 1 (modulation wheel) to synth
 vibrato and velocity to volume.  A single MIDI value may be mapped to any
 number of parameters.  Velocity for instance may simultaneously control
@@ -31,8 +31,7 @@ FIXME:  BUG 0005 Chaining two or more effects is not currently working.
 interactively at a command line prompt or loaded from external script
 files.
 
-5) GUI support is optional.  Llia may be operated with or without GUI
-support.  If no GUI is enabled Llia operates as terminal based program with
-an interactive REPL prompt.  The default GUI system is Tk.  Support for
-alternate GUI systems *may* be provided later.  If so either QT or GTK are
-prime candidates. 
+5) GUI support is optional. If the GUI is disabled Llia operates as
+terminal based program with an interactive REPL prompt.  The default GUI
+system is Tk.  Support for alternate GUI systems *may* be provided later.
+If so either QT or GTK are prime candidates.

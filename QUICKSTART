@@ -1,9 +1,9 @@
          ******************************************************
-			     Quick Start Guide
+			  Llia Quick Start Guide
           ******************************************************        
 
 1) Start the host application.
-   a) Star SuperCollider ide
+   a) Star SuperCollider ide, from a terminal 'scide'
    b) Load and execute the file Llia/sc/SynthDefs/llia.scd
 
 2) Start client application.
@@ -12,7 +12,7 @@
    c) You should first see a splash screen where you select various IO
       parameters.  The default OSC ID, host and client addresses and ports
       should agree between the client and host applications. If they do not
-      match communication will be broken between th host and client.
+      match communication will be broken between the host and client.
 
       There should also be a list of MIDI input and output ports.  Select
       the port you wish to use and click "Continue".  Once selected these
@@ -28,7 +28,7 @@
    e) To test OSC communication click the "Ping" option under the OSC
       menu.  If all is well two things should happen.  First there should
       be an indication in the SuperCollider post window that a ping signal
-      was received; something like '/Llia/llia/ping'.  Next the host
+      has been received; something like '/Llia/llia/ping'.  Next the host
       should transmit a 'ping-response' back to the client.  If so the
       words "Ping OK" will appear in the status line located at the bottom
       of the Llia window.
@@ -57,16 +57,16 @@ its input bus to match the synth output.  ORDER IS IMPORTANT.
    2) Create synth
    3) Create effect
 
-1) You create an audio bus by clicking "Audio" under the Bus menu.  This
+1) To create an audio bus click "Audio" under the Bus menu.  This
    displays a small dialog with the currently defined buses in alphabetical
    order.   Note several buses are automatically created with names "in_n"
    and "out_n" where n is a small integer.  These buses correspond to the
    first n hardware input and output channels.  out_0 is the default output
    bus and corresponds to the first output of the first sound card.
 
-   Create a bus by entering it's name in the name field and clicking the
-   add [+] button, and then the "OK" button.   There are restrictions on
-   valid bus names and in invalid name will produce a warning message.
+   Create a bus by entering it's name and clicking the add [+] button.
+   There are restrictions on valid bus names and in invalid name will
+   produce a warning message.
 
 2) Select a synth as above but this time set it's output bus to match the
    bus just created above.   A new synth window should appear.  The synth
@@ -82,7 +82,7 @@ A) FIXME: Remember BUG 0006 above, neither the synth not the effect will
 
 B) At this point it is not not possible to alter the connections between
    synths and effects, or for that matter to remove an active
-   synth. Hopefully this feature will be added later.
+   synth. Hopefully these features will be added later.
 
 C) FIXME: There is very little difference between a "synth" and an
    "effect".  It should be possible to patch one effect into another. The
@@ -90,11 +90,15 @@ C) FIXME: There is very little difference between a "synth" and an
    created before downstream ones.  At the moment this patching of one
    effect into another is not working.  (BUG 0005)
 
-There are many options available by editing the configuration file. You can
-set default MIDI ports and skip the initial splash screen.  To display a
+There are many options available by editing the configuration file. You may
+set a default MIDI ports and skip the initial splash screen.  To display a
 list of ports use the -p command line option
 
     python llia/main.py -p
+
+Linux has the annoying habit of renaming MIDI hardware on reboot. If the
+system has been rebooted you may need to change the MIDI port names in the
+config file. 
 
 Copy the desired port name exactly to the input-port line
 

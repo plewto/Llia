@@ -46,8 +46,8 @@ Details:
    part of the SuperCollider instillation.  It is not necessary to include
    llia.scd or testtones.scd at this time.
 
-   As new instruments are added in the future corresponding .scd file
-   will need to be executed in this way.
+   As new instruments are released, corresponding .scd file will need to be
+   executed in this way.
 
 
           ******************************************************
@@ -95,8 +95,8 @@ must be resolved.
    ?
 
 
-   Under the [MIDI] section of configuration file locate the line which
-   reads 'backend : mido.backends.rtmidi'  If you are using portmidi instead
+5) Under the [MIDI] section of configuration file locate the line which
+   reads 'backend : mido.backends.rtmidi'  If you are using portmidi 
    change this line to
 
         backend : mido.backends.portmidi
