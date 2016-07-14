@@ -47,11 +47,17 @@ Possible fix:
 Switch from using an array to some sort of Dictionary, most likely an sclang
 Event. 
 
-
-
 ---------------------------------------------------------------------- OPEN
 BUG 0004 2016.06.20
 At times Toplevel.grab_set() raises TclError.
 This prevents dialogs from being modal.
 
 Temporary fix: Catch error and print BUG message.
+
+
+---------------------------------------------------------------------- OPEN
+BUG 0005 2016.07.13
+
+There is no output when processing one effect through another effect.  This
+may be realted to the "addAction" when creating the effect Synths in
+Suppercollider.
