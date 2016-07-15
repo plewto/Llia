@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 
+from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.saw3.s3_data import program_bank
 from llia.synths.saw3.s3_pp import pp_saw3
@@ -24,11 +25,16 @@ class Saw3Proxy(SynthProxy):
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
 
+s3_pallet = Pallet(default_pallet)
+s3_pallet["BG"] = "#131313"
+s3_pallet["SLIDER-TROUGH"] = "#1f2f40"
+            
 specs["constructor"] = Saw3Proxy
 specs["description"] = "A 3 Oscillator Subtractive Synth"
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["pretty-printer"] = pp_saw3  
 specs["program-generator"] = s3gen
+specs["pallet"] = s3_pallet
 specs["help"] = "saw3"
 
 

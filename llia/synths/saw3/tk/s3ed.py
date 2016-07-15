@@ -16,6 +16,7 @@ def create_editor(parent):
     panel1 = TkSaw3Panel1(parent)
     panel2 = TkSaw3FilterPanel(parent)
     panel3 = TkSaw3ControlPanel(parent)
+    panel4 = TkSaw3InfoPanel(parent)
     
 class TkSaw3Panel1(TkSubEditor):
 
@@ -141,4 +142,14 @@ class TkSaw3Panel1(TkSubEditor):
         self.add_control("port", s_port)
 
 
-      
+class TkSaw3InfoPanel(object):
+
+    NAME = "Info"
+    IMAGE_FILE = "resources/Saw3/info.png"
+
+    def __init__(self, editor):
+        frame = editor.create_tab(self.NAME)
+        lab_panel = factory.image_label(frame, self.IMAGE_FILE)
+        lab_panel.pack(anchor="nw", expand=False)
+        
+    
