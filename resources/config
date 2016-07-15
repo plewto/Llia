@@ -11,11 +11,11 @@
 
 
 [GENERAL]
-no-repl : True
+no-repl : False
 
 [MIDI]
-input-port : Launchkey Mini 16:0
-output-port : Launchkey Mini 16:0
+input-port : Launchkey Mini 28:0
+output-port : Launchkey Mini 28:0
 backend : mido.backends.rtmidi
 ; backend : midi.backends.portmidi
 enable-program-pp : True
@@ -34,7 +34,7 @@ trace-osc-transmission : False
 
 [GUI]
 gui : Tk
-no-splash : False
+no-splash : True
 enable-tooltips : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
