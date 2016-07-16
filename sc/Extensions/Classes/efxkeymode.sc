@@ -16,8 +16,11 @@ EfxKeymode : Keymode {
 
 	init {|lliaApp, synthType, id, globalID, inbus, outbus|
 		super.init(lliaApp, synthType, id, globalID);
-		activeVoice = Synth(synthType, [\gate, 0, \doneAction, 0, 
-			\inbus, inbus, \outbus, outbus]);
+		activeVoice = Synth(synthType,
+			[\gate, 0, \doneAction, 0, 
+				\inbus, inbus, \outbus, outbus],
+			nil,
+			\addToHead);
 		keyDownCounter = 0;
 	}
 

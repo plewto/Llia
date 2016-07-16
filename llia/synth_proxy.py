@@ -62,6 +62,7 @@ class SynthSpecs(dict):
         super(SynthSpecs, self).__setitem__("audio-input-buses", [])
         super(SynthSpecs, self).__setitem__("control-output-buses", [])
         super(SynthSpecs, self).__setitem__("control-input-buses", [])
+        # buffers [param1, param2, ...]
         super(SynthSpecs, self).__setitem__("buffers", [])
         super(SynthSpecs, self).__setitem__("pallet", None)
         
@@ -102,6 +103,19 @@ class SynthProxy(object):
         self._bank = bank.clone()
         self._midi_chan0 = 0
         self._key_table_name = "EQ12"
+        self.audio_buses = {}
+        self.control_buses = {}
+        self.buffers = {}
+        for b in specs["audio-input-buses"]:
+            self.audio_buses[b[0]] = None
+        for b in specs["audio-output-buses"]:
+            self.audio_buses[b[0]] = None
+        for b in specs["control-input-buses"]:
+            self.control_buses[b[0]] = None
+        for b in specs["control-output-buses"]:
+            self.control_buses[b[0]] = None
+        for b in specs["buffers"]:
+            self.buffers[b] = None
         host_and_port = app.config.host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
         trace_osc = app.config.osc_transmission_trace_enabled()

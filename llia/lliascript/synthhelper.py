@@ -111,7 +111,7 @@ class SynthHelper(object):
         
     def assign_abus(self, param, busname, offset=0, sid=None):
         sid = sid or self.current_sid
-        self.get_synth(sid)
+        sy = self.get_synth(sid)
         lstype = self.what_is(busname)
         if lstype == '':
               msg = "Audio bus '%s' does not exists." % busname

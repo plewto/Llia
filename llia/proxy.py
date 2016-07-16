@@ -507,14 +507,23 @@ class LliaProxy(object):
     def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-audio-bus", payload)
+        sid = "%s_%s" % (stype, id_)
+        sy = self.get_synth(sid)
+        sy.audio_buses[param] = bus_name
 
     def assign_synth_control_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-control-bus", payload)
+        sid = "%s_%s" % (stype, id_)
+        sy = self.get_synth(sid)
+        sy.control_buses[param] = bus_name
 
     def assign_synth_buffer(self, stype, id_, param, buffer_name):
         payload = [stype, id_, param, buffer_name]
         rs = self._send("assign-synth-buffer", payload)
+        sid = "%s_%s" % (stype, id_)
+        sy = self.get_synth(sid)
+        sy.buffers[params] = buffer_name
 
     def plot_buffer(self, buffer_name):
         payload = [buffer_name]

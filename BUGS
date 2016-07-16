@@ -11,7 +11,7 @@ all control buses.
 2016.05.18
 Control buses are detected if, and only if, there are more then one control
 bus defined.  If two control buses are created, the client and host agree
-thet ther are two buses.  If one of these buses is then removed, the
+that there are two buses.  If one of these buses is then removed, the
 client no longer "sees" the remaining bus.
 
 
@@ -55,12 +55,29 @@ This prevents dialogs from being modal.
 Temporary fix: Catch error and print BUG message.
 
 
----------------------------------------------------------------------- OPEN
+---------------------------------------------------------------------- CLOSED
 BUG 0005 2016.07.13
 
 There is no output when processing one effect through another effect.  This
-may be realted to the "addAction" when creating the effect Synths in
+may be related to the "addAction" when creating the effect Synths in
 Supercollider.
+
+Solution 2016.07.15
+The problem was a mistake in the order in which effect synths were created.
+The correct order is:
+
+   1) Create buses
+   2) Create source instrument
+   3) Create effects synths in *reverse* order.
+
+So for instrument Foo feeding effect Bar which then feeds effect Baz.
+
+   [Foo]--->[Bar]--->[Baz]--> out
+
+   1) Create two audio buses "A" and "B"
+   2) Create synth Foo,  output -> A
+   3) Create efx Baz,    input <- B, output -> out_0   (sound card)
+   4) Create efx Bar,    input <- A, output -> B
 
 ---------------------------------------------------------------------- OPEN
 BUG 0006 2016.07.14

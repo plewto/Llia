@@ -9,6 +9,7 @@ from llia.generic import is_list
 import llia.gui.tk.tk_factory as factory
 import llia.gui.pallet
 from llia.gui.tk.tk_bankeditor import TkBankEditor
+from llia.gui.tk.tk_bus_and_buffer import TkBusAndBufferEditor
 from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, delete_map_dialog
 
 
@@ -25,6 +26,7 @@ class TkSynthWindow(Toplevel):
         main = factory.paned_window(self)
         main.pack(expand=True, fill="both")
         self.bank_editor = TkBankEditor(main, self, sproxy)
+        self.bus_and_buffer_editor = None
         east = factory.frame(main)
         self.notebook = factory.notebook(east)
         self.notebook.pack(anchor="nw", expand=True, fill="both")
@@ -98,14 +100,19 @@ class TkSynthWindow(Toplevel):
         self._info_text_widget.insert("end", txt)
 
 
+    # def _init_bus_and_buffer_tab(self, master):
+    #     frame = factory.frame(master)
+    #     master.add(frame, text = "Buses/Buffers")
+    #     lab = factory.label(frame, "Place holder for future")
+    #     lab.pack()
+
     def _init_bus_and_buffer_tab(self, master):
-        frame = factory.frame(master)
-        master.add(frame, text = "Buses/Buffers")
-        lab = factory.label(frame, "Place holder for future")
-        lab.pack()
+        bbe = TkBusAndBufferEditor(master, self, self.synth)
+        master.add(bbe, text = "Busses & Buffers")
+        self.bus_and_buffer_editor = bbe
 
     def sync_bus_and_buffer_tab(self):
-        pass
+        self.bus_and_buffer_editor.sync()
 
         
     def _init_performance_tab(self, master):

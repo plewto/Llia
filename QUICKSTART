@@ -3,7 +3,7 @@
           ******************************************************        
 
 1) Start the host application.
-   a) Star SuperCollider ide, from a terminal 'scide'
+   a) Start SuperCollider ide, from a terminal 'scide'
    b) Load and execute the file Llia/sc/SynthDefs/llia.scd
 
 2) Start client application.
@@ -12,14 +12,14 @@
    c) You should first see a splash screen where you select various IO
       parameters.  The default OSC ID, host and client addresses and ports
       should agree between the client and host applications. If they do not
-      match communication will be broken between the host and client.
+      match communication between host and client will be broken.
 
-      There should also be a list of MIDI input and output ports.  Select
-      the port you wish to use and click "Continue".  Once selected these
-      values can not be altered throughout the application run.
+      A list of available MIDI ports appears in the lower section.  Select
+      the desired port and click "Continue"   Once selected these values
+      can not be altered throughout th application run.
 
       (FIXME: MIDI output ports are included for possible future extensions
-      and are currently used.)
+      and are not currently used.)
 
    d) The splash "continue" button takes you to the main application
       window.  This window is dominated by large central buttons for the
@@ -45,13 +45,14 @@
       program is selected.  I consider this a bug.  Simply click one of the
       available programs in the list on the left.)
 
-
-Effects:
+         ******************************************************
+				  Effects
+	 ******************************************************	
 
 Using effects is slightly more complicated.  First you must create an audio
 bus to patch the synth output to the effect input.  Next you create a
 synth with output sent to the bus.  Finally you create the effect, setting
-its input bus to match the synth output.  ORDER IS IMPORTANT.
+it's input bus to match the synth output.  ORDER IS IMPORTANT.
 
    1) Create audio bus(es)
    2) Create synth
@@ -75,7 +76,32 @@ its input bus to match the synth output.  ORDER IS IMPORTANT.
 3) Select an effect.  In the dialog set the input bus to match the output
    bus of the synth.
 
-Caveats:
+         ******************************************************
+			  Using Multiple Effects
+         ******************************************************			  
+
+There is very little difference between a "synth" and an "effect" which
+allows a chain of effects to be patched together.  Order is even more
+important when using multiple effects. In general effects must be created
+in *reverse* order to how they are patched.
+
+   Assume synth Foo sent through effects Bar and then effects Baz
+
+    [Foo] --> [Bar] --> [Baz] --> 
+
+    buses  A         B        out_0
+
+
+   1) Create audio buses A and B, bus out_0 is default sound card output
+   2) Create synth Foo   with output -> A
+   3) Create effect Baz  with input <- B, output -> out_0
+   4) Create effect Bar  with input <- A, output -> B
+
+
+
+         ******************************************************
+				 Caveats:
+         ******************************************************				 
 
 A) FIXME: Remember BUG 0006 above, neither the synth not the effect will
    produce output until a program has been selected for each.
@@ -83,12 +109,6 @@ A) FIXME: Remember BUG 0006 above, neither the synth not the effect will
 B) At this point it is not not possible to alter the connections between
    synths and effects, or for that matter to remove an active
    synth. Hopefully these features will be added later.
-
-C) FIXME: There is very little difference between a "synth" and an
-   "effect".  It should be possible to patch one effect into another. The
-   same restrictions on order still applies with upstream synths/effects
-   created before downstream ones.  At the moment this patching of one
-   effect into another is not working.  (BUG 0005)
 
 There are many options available by editing the configuration file. You may
 set a default MIDI ports and skip the initial splash screen.  To display a
