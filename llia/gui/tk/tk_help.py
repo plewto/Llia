@@ -1,5 +1,6 @@
 # llia.gui.tk.tk_help
 # 2016.05.24
+# DEPRECIATED
 
 from __future__ import print_function
 from Tkinter import (BOTH, END, FLAT, HORIZONTAL, LEFT, PanedWindow, RIGHT, StringVar, Toplevel)
@@ -7,7 +8,7 @@ from Tkinter import (BOTH, END, FLAT, HORIZONTAL, LEFT, PanedWindow, RIGHT, Stri
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
 from llia.gui.llhelp import help_topics, read_help_file
-
+print("DEPRECIATED: llia.gui.tk.tk_help")
 
 __help_window = None
 

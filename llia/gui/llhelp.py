@@ -2,11 +2,14 @@
 # 2016.05.22
 #
 # Generic terminal based help system.
+# DEPRCIATED
 
 from __future__ import print_function
 
 import os
 import os.path as path
+
+print("llia.gui.llhelp is DEPRECIATED")
 
 from llia.constants import HELP_PATH, HELP_EXT
 
