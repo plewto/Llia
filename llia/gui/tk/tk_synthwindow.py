@@ -108,7 +108,7 @@ class TkSynthWindow(Toplevel):
 
     def _init_bus_and_buffer_tab(self, master):
         bbe = TkBusAndBufferEditor(master, self, self.synth)
-        master.add(bbe, text = "Busses & Buffers")
+        master.add(bbe, text = "Buses & Buffers")
         self.bus_and_buffer_editor = bbe
 
     def sync_bus_and_buffer_tab(self):

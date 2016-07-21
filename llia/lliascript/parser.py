@@ -10,7 +10,8 @@ from llia.llerrors import (LliaPingError, LliascriptParseError, LliascriptError,
 from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
 from llia.lliascript.bufferhelper import BufferHelper
-from llia.gui.llhelp import help_topics, print_topic
+#from llia.gui.llhelp import help_topics, print_topic
+from llia.util.help import help_topics, open_help
 
 from llia.lliascript.compose import Composer
 
@@ -69,6 +70,7 @@ class Parser(object):
             ns["exp"] = exp
             ns["scurve"] = scurve
             ns["step"] = step
+            ns["apropos"] = self.apropos
             ns["help"] = self.help_
             ns["abus"] = self.abus
             ns["compose"] = self.compose
@@ -150,22 +152,32 @@ class Parser(object):
         for line in str(msg).split("\n"):
             print(line)
             self._append_history(line)
-        
-    def help_(self, topic=None):
-        if not topic:
-            print("Help topics: ", end=" ")
-            counter = 13
-            for t in help_topics():
-                print("%s" % t, end = " ")
-                counter += len(t)+1
-                if counter > 70:
-                    print()
-                    counter = 0
-            print()
-        else:
-            print("*" * 70)
-            print_topic(str(topic))
 
+    def help_(self, topic=None):
+        if topic:
+            print("# Opening help topic: %s" % topic)
+            open_help(topic)
+        else:
+            topics = help_topics()
+            acc = "# "
+            counter = 4
+            for t in topics:
+                acc += "%-18s " % t
+                counter -= 1
+                if not counter:
+                    counter = 4
+                    acc += '\n# '
+            acc += "\n\n"
+            acc += "# Topics starting with 'ls_' are related to lliascript,\n"
+            acc += "# they may be entered without the leading 'ls_'.\n"
+            print(acc)
+            
+
+    def apropos(self, target):
+        topics = help_topics(target)
+        for t in topics:
+            print("# %s" % t)
+            
     def is_abus(self, name):
         ent = self.entities.get(name, None)
         return ent and ent.lstype == "abus"

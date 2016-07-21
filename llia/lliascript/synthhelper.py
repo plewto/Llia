@@ -45,6 +45,8 @@ class SynthHelper(object):
         ns["copy_performance"] = self.copy_performance
         ns["paste_performance"] = self.paste_performance
         ns["fill_performance"] = self.fill_performance
+        ns["qbuses"] = self.q_buses
+        ns["qbuffers"] = self.q_buffers
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -526,7 +528,43 @@ class SynthHelper(object):
         bnk = sy.bank()
         bnk.fill_performance(start, end)
             
-            
+    def q_buses(self, sid=None, silent=False):
+        specs = self.get_synth(sid).specs
+        aibus = specs["audio-input-buses"]
+        aobus = specs["audio-output-buses"]
+        cibus = specs["control-input-buses"]
+        cobus = specs["control-output-buses"]
+        if not silent:
+            if aibus:
+                print("# Audio input buses:")
+                for b in aibus:
+                    print("#    ",  b)
+            if aobus:
+                print("# Audio output buses:")
+                for b in aobus:
+                    print("#    ",  b)
+            if cibus:
+                print("# Control input buses:")
+                for b in cibus:
+                    print("#   ", b)
+            if cobus:
+                print("# Control output buses:")
+                for b in cobus:
+                    print("#  ", b)
+        rs = {"audio-inputs" : aibus,
+              "audio-outputs" : aobus,
+              "control-inputs" : cibus,
+              "control-outputs" : cobus}
+        return rs
+
+    def q_buffers(self, sid=None, silent=False):
+        specs = self.get_synth(sid).specs
+        buffers = specs["buffers"]
+        if not silent:
+            print("# Buffers:")
+            for b in buffers:
+                print("#    ", b)
+        return buffers
         
         
         
