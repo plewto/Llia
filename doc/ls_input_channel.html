@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript input_channel</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+    <hr>
+    <p class=command>
+      input_channel
+    </p>
+    <p class=mono>
+      Function, set/get/print synth MIDI input channel.
+      <br><br>
+      input_channel(chan=None, sid=None)
+      <br><br>
+      ARGS:
+    </p>
+    <pre class=args>
+      chan - String or int or None, 
+             If int  1 &lt;= chan &lt;= 16, change MIDI channel.
+             If String, chan must be name of defined channel
+             If None, do not alter current value.
+      sid  - String or None, The synth ID, defaults to current synth.
+    </pre>
+    <p class=command>
+      RETURNS: int
+    </p>
+  </div>
+  </body>
+  </html>
+    

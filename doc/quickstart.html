@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Llia Quickstart</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Llia Quick Start</h1>
+    </header>
+    <p>
+      Llia consist of two complementary programs; a server application and a
+      client applications.
+    </p>
+    <p></p>
+    <hr>
+    <h5>Server Application</h5>
+    <p>
+      The server application is a SuperCollider class coded in
+      <a href="http://supercollider.github.io/">sclang</a>.
+      <br>
+      It is primarily responsible for allocating SC resources in response
+      to OSC messages.
+    </p>
+    <ol>
+      <li class=sequence>Start the SuperCollider ide. <br>.</li>
+      <li class=sequence>Boot an SC server.
+	<pre>
+	  s = Server.local.boot;
+	</pre>
+      </li>
+      <li class=sequence>Create a LliaHandler.
+	<pre>
+	  (
+	      a.free;
+	      a = LliaHandler.new();
+	  )
+	</pre>
+	</li>
+      </ol>
+    <hr>
+    <h5>Client Application</h5>
+    <p>
+      The client application is coded in Python 2.7 and provides the 
+      primary user interface.
+    </p>
+    <ol>
+      <li class=sequence>Start the client application.
+	<p class=small>
+	  Navigate to the top Llia directory and enter
+	  <pre>
+	    python llia/main.py
+	  </pre>
+
+	<p class="aside">
+	  Depending on how Llia is configured the client
+	  application may or may not provide a graphics interface.
+	  <br>
+	  It may
+	  also skip the initial "splash" screen.  The splash screen
+	  is easily recognized by it's large lizard logo.
+	  <br>
+	  If the client does not
+	  open in graphics mode or skips the splash screen try editing
+	  the <a href="config.html">configuration file.</a>
+	  </p>
+      </li>
+
+    <li class=sequence>Select OSC and MIDI parameters.
+      <p class=small>
+	The splash screen contains fields for key OSC and MIDI
+	parameters.
+	<br>
+	The OSC parameters must match between the client and server
+	applications.
+	<br>
+	If there is a mismatch OSC communication will be
+	broken.
+	<br>
+	Fortunately the default values should work in most cases.
+	<br>
+	Below the OSC parameters are options to select the MIDI input and
+	output ports.
+      </p>
+      <p class=aside>M
+	MIDI output is included for possible future expansion,
+	currently the output port is not used.
+      </p>
+      <p class=small>
+	These OSC and MIDI values can not be changed once the main
+	application has started.
+	<br>
+	Select a MIDI input port and click
+	"Continue".
+      </p>
+    </li>
+    <li class=sequence>
+      Select an instrument to play.
+      <p class=small>
+	The splash screen is replaced by the main application window where the
+	most obvious features are
+	<br>
+	large center buttons representing the
+	available instruments and effects.
+	<br>
+	Select one of "Synths" buttons.
+      </p>
+    </li>
+      <li class=sequence>
+	Set instrument parameters.
+	<p class=small>
+	  After selecting an instrument a
+	  <a href="add_synth_dialog.html">pop up dialog</a> appears where you
+	  may set various instrument parameters.
+	  <br>
+	  For now accept the defaults by clicking "OK".
+	  <br><br>
+	  The dialog is replaced by a large instrument
+	  <a href="synth_editor.html">editor window</a> and
+	  the instrument should be live.
+	  <br>
+	  You may need to click one of
+	  programs in the list to the left first.
+	</p>
+	<p class=aside>
+	  If the instrument does not respond to incoming MIDI events try
+	  checking OSC and MIDI continuity.  
+	</p>
+	<ul>
+	  <li>
+	    <p class=aside>
+	      <b>Check OSC connection</b> by clicking the "ping" option under the
+	      OSC menu to initiate an OSC continuity test.
+	      <br>
+	      The first thing to look for is that the server has received the ping
+	      message.
+	      <br>
+	      If it has the SuperCollider post window will contain a
+	      line similar to "Llia/lia/ping".
+	      <br>
+	      After it receives a ping the
+	      server transmits a "ping-response" message back to the
+	      client.
+	      <br>
+	      This is indicated on status line at the bottom of the
+	      main client application window.
+	      <br>
+	      If a ping response has been
+	      received the status line should say "Ping OK".
+	      <br>
+	      If a response was
+	      not received there will be a warning message.
+	      <br>
+	      It will take a few
+	      seconds for the warning message to appear.
+	    </p>
+	  </li>
+	  <li>
+	    <p class=aside>
+	      <b>Check MIDI input reception </b>by clicking "Toggle MIDI Input
+	      Trace" in the MIDI menu.
+	      <br>
+	      With trace enabled incoming MIDI
+	      events are displayed in the terminal used to launch the
+	      client application.
+	    </p>
+	  </li>
+	  <li>
+	    <p class=aside>
+	      If OSC and MIDI are working and your still not getting
+	      sound, make sure your MIDI source is transmitting on the
+	      <br>
+	      same channel as the instrument.  By default this should be channel
+	      1.
+	      <br>
+	      Note that channel number in the MIDI trace are one less
+	      then the actual MIDI channel.
+	    </p>
+	    </li>
+	</ul>
+      </li>
+    </ol> 
+
+    <hr>
+    <h5>Effects</h5>
+   
+    <p>
+      Internally there is very little difference between an "effect" and a
+      "synth", in fact an effect is just a special case of synth.
+      <br>
+      this allows for complex configuration of synths and effects.   Effects may
+      also process external signals.
+      <br>
+      In order to use effects audio buses
+      must first be created to patch one synth/effect into another.
+    </P>
+    <h5>Simple case of single synth and effect:</h5>
+    <pre>
+      [Foo]---&gt;[Efx]---&gt; out
+    </pre>
+    
+    <p>
+      To patch a synth to a single effect follow these steps:
+    </p>
+    <ol> 
+      <li class=sequence>
+    	Create an audio bus.
+	<p class=small>
+	  Create audio buses from the Audio option under the Bus menu.
+	<br>
+	Several buses with names out_0, out_1, out_2, ..., in_0, in_1, 
+    	in_2, ...  are automatically created.
+	<br>
+	These correspond to the outputs and inputs of the sound card.
+	<br>
+	Bus out_0 is the first output of the first sound card and is the
+	default output bus.
+      </li> 
+      <li class=sequence> 
+    	Create a synth.
+	
+	<p class=small>
+	  this time use the drop down list on 
+    	  the <a href="add_synth_dialog.html"> add synth dialog </a>
+	<br>
+	  to set the output bus to the bus created in step 1.
+	</p>
+      </li> 
+      <li class=sequence>
+    	Creating the effect.
+	<p class=small>
+	This is almost identical to creating a synth.
+	<br>
+	The main difference is that effects have an input bus option.
+	<br>
+	Set the input bus of the effect to match the output bus of the synth. 
+      </li> 
+    </ol> 
+    <p>Two or more synths may feed the same effect.</p>
+    <pre>
+      [Foo]---+
+              |
+              +---&gt;[Efx]
+              | 
+      [Bar]---+
+    </pre>
+    <p>Effects may be used in parallel.</p>
+    <pre>
+              +---&gt;[Efx 1]
+              |
+      [Foo]---+
+              |
+	      +---&gt;[Efx 2]
+    </pre>
+
+    <h5>Multiple Effects in series:</h5>
+    <p>
+      Things get more complicated when you wish to process two or more
+      effects in series.
+      <pre>
+	    [Foo]---&gt;[Bar]---&gt;[Baz]---&gt; out_0
+        bus       A        B	   
+      </pre>
+    <p>
+      The effects <b><i>must</i></b> be created in reverse order.  That is the
+      final effect must be created first.
+    </p>
+    <ol>
+      <li class=sequence>Create buses A and B.</li>
+      <li class=sequence>Create synth Foo with output to bus A.</li>
+      <li class=sequence>Create effect Baz with input bus B and default output bus
+	out_0.</li>
+      <li>Create effect Bar with input bus A and output bus B.</li>
+    </ol>	      
+  </div>
+  </body>
+  </html>
+    

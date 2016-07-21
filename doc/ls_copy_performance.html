@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript copy_performance</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+
+  
+    <hr>
+    <p class=command>
+      copy_performance
+    </p>
+    <p class=mono>
+      Function, copy synth performance to clipboard.
+      <br><br>
+      copy_performance(slot=None, sid=None)
+      <br><br>
+      ARGS:
+    </p>
+    <pre class=args>
+      slot - int or None, The program number to copy, 0 &lt;= slot &lt; = 127.
+             If None, copy the current performance.
+      sid  - String or None, the synth id, Defaults to current synth.
+    </pre>
+
+    <p class=mono>
+      Each program contains 'performance' data which may be copied/pasted
+      separately to the clipboard.  This data includes:
+      <ul>
+	<li>transpose</li>
+	<li>key range</li>
+	<li>bend range and parameter</li>
+	<li>velocity maps</li>
+	<li>aftertouch maps</li>
+	<li>pitchwheel maps</li>
+	<li>keynumber maps</li>
+	<li>controller maps</li>
+      </ul>
+    <P class=command>
+      See <a href="ls_paste_performance.html">paste_performance</a>
+      <br>See <a href="ls_copy.html">copy</a>
+      <br>See <a href="ls_paste.html">paste</a>
+    </p>   
+      
+  </div>
+  </body>
+  </html>
+    

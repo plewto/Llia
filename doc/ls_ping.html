@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript ping</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+    <hr>
+    <p class=command>
+      ping
+    </p>
+    <p class=mono>
+      Diagnostic ping to test OSC connection.
+      <br><br>
+      ping(sid=None)
+      <br>
+      <br>There are two types of ping: global and synth.
+      <br>A global ping test basic OSC connection between the client and
+      server.  
+      <br>A synth ping test connection between client and server side
+      representation of a specific synth object.
+      <br><br>
+      ARGS:
+    </p>
+    <pre class=args>
+      sid  - String or None
+             If None, send a 'global' ping message to the server.
+             If String, sid must be an existing synth id, send a synth
+             level ping between client and server.
+    </pre>
+    <p class=command>
+      RETURNS: Boolean True if ping message was successful.
+    </p>
+   
+  </div>
+  </body>
+  </html>
+    

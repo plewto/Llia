@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Llia Configuration</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Llia Configuration</h1>
+    </header>
+ 
+   <p>
+      The Llia client app requires several configuration values.
+      Some of these are fixed at startup and can not be changed,
+      <br>
+      while others may be changed on the fly.  
+    </p>
+    <p>
+      There are several sources for configuration values:
+      <ul>
+	<li>Config file</li>
+	<li>Command line options</li>
+	<li>Environmental variables</li>
+      </ul>
+    <p>
+      Command line options have priority over the config file which has
+      priority over environmental variables.
+      <br>
+      Environmental variables have the lowest priority.
+    </p>
+    <p>
+      A default configuration file is included in the resources
+      directory.
+      <br>
+      This file should be copied to a platform dependent
+      location with any local changes made to the copy.
+    </p>
+    <h5>Configuration file location</h5>
+    <ul>
+      <li>
+	Linux
+	<p class=small>~/.config/Llia/config</p>
+      </li>
+      <li>OSX
+	<p class=small>As yet to be determined.</p>
+      </li>
+      <li>Windows
+	<p  class=small>As yet to be determined.</p>
+      </li>
+    </ul>
+    <p>
+      The command line option <em class=highlight>&minus;&minus;config </em>
+      may be used to
+      explicitly select a configuration file.
+      </p>
+    
+    <hr>
+    <h4>Structure of the config file</h4>
+    <p>
+      The config file has a simple structure.  Major sections begin with a
+      section name between square brackets  [Name].
+      <br>
+      The major sections are:
+      <ul>
+	<li>[General]</li>
+	<li>[MIDI]</li>
+	<li>[OSC]</li>
+	<li>[GUI]</li>
+	<li>[MIDI-CHANNELS]</li>
+	<li>[MIDI-CONTROLLERS]</li>
+      </ul>
+    <p>
+      <br>
+      Values within a section have the form:
+      <br><br>parameter : value
+      <br><br>Comments begin with a semi-colon ;
+    </p>
+
+    <Hr>
+    <h5>[General]</h5>
+
+    <ul>
+      <li class=config>
+	no-repl : False
+	<p class=small>
+	  If True disables the command line REPL prompt.  The command line prompt
+	  allows Llia to be controlled by simple Python commands.
+	  <br>
+	  If the GUI is disabled then no-repl must be False, otherwise there
+	  would be no possible input.
+	  See <a href="lliascript.html">lliascript</a> 
+	</p>
+      </li>
+    </ul>
+
+    <hr>
+    <h5>[MIDI]</h5>
+    <ul>
+      <li class=config>
+	input-port : port name
+	<p class=small>
+	  Sets the MIDI input port.  This is option is useful for skipping
+	  the startup splash screen.
+	  <br>
+	  Use the command line option <em class=highlight>&minus;p</em> to 
+	  display a list of available MIDI ports.
+	</p>
+	<p class=aside>
+	  Linux has the annoying habit of changing MIDI port names on system
+	  reboot.
+	  <br>
+	  If the system has been rebooted it may be necessary to
+	  change the midi port names.
+	</p>
+      </li>
+      <li class=config>
+	output-port : port name
+	<p class=small>
+	  Sets MIDI output port.
+	</p>
+	<p class=aside>
+	  FIXME: MIDI output is not currently supported.
+	</p>
+      </li>
+      <li class=config>
+	backend : midi.backends.rtmidi
+	<p class=small>
+	  Sets the MIDI backend used by the Python mido package.  This
+	  value is dependent on what is installed on the system.
+	  <br>
+	  There are two possibilities:
+	</p>
+	<ul>
+	  <li class=small>midi.backends.rtmidi</li>
+	  <li class=small>midi.backends.portmidi<p></p></li>
+	</ul>
+      </li>
+      <li class=config>
+	enable-program-pp : True
+	<p class=small>
+	  Enables pretty printing on program change.
+	  <br>
+	  The pretty printer
+	  displays the current program as a bit of Python code which may be
+	  used to recreate it.
+	</p>
+      </li>
+      <li class=config>
+	enable-keyswitch : True
+	<p class=small>
+	  Key switch is a feature which allows incoming MIDI notes to be
+	  interpreted as MIDI program changes.
+	</p>
+	<p class=aside>
+	  FIXME The current keyswitch implementation is functional but just
+	  barely.
+	  <br>
+	  It was included to allow the drum pads on my Launchkey
+	  Mini to function as program changes while developing Llia.
+	  <br>
+	  It will probably stay around in some form but with improvements.
+	</p>
+      <li class=config>
+	keyswitch-channel : 10
+	<p class=small> The MIDI channel for key switch events.</p>
+      </li>
+      <li class=config>
+	keyswitch-transpose : -40
+	<p class=small>
+	  A transposition in MIDI key numbers added to incoming
+	  Note on events on the keyswitch channel.
+	  <br>
+	  The derived program number becomes key-number + transpose.
+	</p>
+      </li>
+      <li class=config>
+	trace-midi-reception : False
+	<p class=small>
+	  Flag to enable tracing of MIDI input events.  Traced events are
+	  displayed in the terminal used to launch the client application.
+	</p>
+      </ul>
+    <hr>
+    <h5>[OSC]</h5>
+    <ul>   
+      <li class=config>
+	global-id : llia
+	<p class=small>
+	  A string used to identify OSC messages between the Llia server and
+	  client.
+	  <br>
+	  Both server and client <em>must</em> have exactly the
+	  same ID.
+	  <br>
+	  Multiple instances of Llia server/clients may run
+	  simultaneously so long as they have unique ID's.
+	</p>
+      </li>
+      <li class=config>
+	host-address : 127.0.0.1
+	<p class=small>
+	  The IP address where the the server software is running.
+	</p>
+      </li>
+      <li class=config>
+	host-port : 57120
+	<p class=small>
+	  The port number on the host the server is monitoring.
+	</p>
+      </li>
+      <li>
+	client-address : 127.0.0.1
+	<p class=small>
+	  The IP address for the machine the client is running on.
+	</p>
+      </li>
+      <li class=config>
+	client-port : 58000
+	<p class=small>
+	  The port number on the client machine the client is monitoring.
+	</p>
+      </li>
+      <li class=config>
+	trace-osc-transmission : False
+	<p class=small>
+	  Enables tracing of out going OSC messages on the client.
+	</p>
+      </li>
+    </ul>
+    <hr>
+    <h5>[GUI]</h5>
+    <ul>
+      <li class=config>
+	gui : Tk
+	<p class=small>
+	  Selects GUI system.  Currently there are two possible values:
+	  <ul>
+	    <li class=small>None</li>
+	    <li class=small>Tk</li>
+	  </ul>
+	<p></p>
+	<p class=aside>
+	  Alternate GUI systems may be included in the future.
+	</p>
+      </li>
+      <li class=config>
+	no-splash : False
+	<p class=small>
+	  Disables the startup splash screen.  This is useful when initial
+	  OSC and MIDI values are already established
+	  <br> by the configuration file.  The splash screen is not limited
+	  to the case where a GUI has been enabled.
+	  <br>
+	  When running Llia as a terminal only
+	  program there is a ersatz "splash screen" which has the same
+	  functionality as the GUI version.
+	</p>
+      </li>
+      <li class=config>
+	enable-tooltips : True
+	<p></p>
+      </li>
+      <li class=config>
+	warn-on-overwrite : True
+	<p class=small>
+	  Ask confirmation if Llia is about to overwrite a file.
+	</p>
+	<p class=aside>
+	  Tk automatically presents an overwrite warning,
+	  warn-on-overwrite is ignored under Tk.>
+	</p>
+      <li class=config>
+	warn-on-initialize : True
+	<p class=small>
+	  Ask for confirmation before initializing some big data structure
+	  such as a program bank.
+	</p>
+      </li>
+      <li class=config>
+	warn-on-exit : False
+	<p class=small>
+	  Ask for confirmation before exiting Llia.
+	</p>
+      </li>
+    </ul>
+    <hr>
+    <h5>[MIDI-CHANNELS]</h5>
+    <p class=small>
+      Allows setting alias for MIDI channels.   There are restrictions
+      imposed by <a href="lliascript.html">lliascript</a> for valid
+      channel names.
+    </p>
+    <hr>
+    <h5>[MIDI-CONTROLLERS]</h5>
+    <p class=small>Set aliases for MIDI
+      controllers. <a href="lliascript.html">lliascript</a>
+      imposes limits on valid controller names.
+    </p>
+  </div>
+  </body>
+  </html>
+    

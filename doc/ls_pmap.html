@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript pmap</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+    <hr>
+    <p class=command>
+      pmap
+    </p>
+    <p class=mono>
+      Function, set parameter map.
+      <br><br>
+      param(source, param, curve=linear, mod=None, range_=None, limits=None, sid=None)
+      <br><br>
+      ARGS:
+    </p>
+    <pre class=args>
+      source - String or int, the source signal, may be one of the constants:
+               aftertouch, keynumber, pitchwheel or velocity.
+               Source may also be a MIDI controller name or controller number.
+      param  - String, the synth parameter to send source values to.
+      curve  - String, selects the transfer function, may be one of the constants:
+               linear, exp, step, or scurve.
+      mod    - float or None, a coefficient used to modify curve.
+               linear - ignore
+               exp    - Sets exponential degree, Negative values change curve concavity. 
+               scurve - Sets transition steepness.
+               step   - Sets number of steps, Negative values change step distribution.
+               If None, use a default appropriate for specified curve.
+      range_ - Tuple or None, (low,high), sets range of mapped values.
+               If None map to a "normalized" range of (0.0, 1.0).
+               If high &lt; low, invert curve.
+      limits - Tuple or None, (min, max), clip mapped values to given limits
+               If None default to (0.0, 1.0)
+      sid    - String or None, the synth id to add map to, defaults to
+               current synth
+    </pre>
+    <p class=command>
+      
+    </p>
+   
+  </div>
+  </body>
+  </html>
+    

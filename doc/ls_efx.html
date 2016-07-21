@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript efx</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+
+  
+    <hr>
+    <p class=command>
+      efx
+    </p>
+    <p class=mono>
+      Function, Create a new effects synth. or mark an existing one as 'current'
+      <br><br>
+      efx(stype, id_, outbus=["out_0", "outbus", 0])
+      <br><br>
+      ARGS:
+    </p>
+    <pre class=args>
+      stype  - String, class of Synth
+      id_    - int, a unique identification.
+      outbus - Tuple [bus-name, synth-parameter, offset]
+    </pre>
+
+
+    
+    <pre class=args>
+      An effects synth is just a special case of a regular "instrument:
+      synth.  The primary difference is that effect synths will have
+      parameters for audio input, and they are typically restricted to the
+      Efx key-mode.
+
+      stype <em>must</em> be a recognized effects synth type. Use the
+      command  ls(STYPE) to display a list of valid synth types.
+
+      id_ should be an integer which uniquely identifies this effect.  The
+      "synth-id" or "sid" for the effect is stype_n where n is the value of
+      id_.   If an effect with the same sid exists, replace it with the new
+      one.
+
+      outbus sets the audio bus used for output.
+         bus-name - must be an existing audio bus name
+      
+         synth-parameter - the parameter used for output, typically 'outbus'
+      
+         offset - an integer offset added to the bus number, useful for
+                  multi-channel buses.
+      
+    </pre>
+    <p class=command>
+      See
+      <br><a href="ls_synth.html">synth</a>
+      <br><a href="ls_assign.html">assign</a>
+    </p>
+  </div>
+  </body>
+  </html>
+    

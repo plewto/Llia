@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript buffer</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+
+    <hr>
+
+    <p class=command>
+      buffer
+    </p>
+
+    <p class=mono>
+      Function, Create or switch to buffer.
+      <br><br>
+      buffer(name, frame=1024, channels=1)
+      <br><br>
+      ARGS:
+    </p>
+
+    <pre class=mono>
+      name     - String, the buffer name.
+      frames   - int, number of frames.  For wavetable frames must be power of 2.
+      channels - int, number of channels
+
+      If no buffer named name exists, create a new buffer.
+      If a buffer named name already exists, make is the 'current' buffer.
+      If a non-buffer object named name exists, produce warning.
+    </pre>
+    
+    <p class=mono>
+      RETURNS: Boolean
+    </p>
+    
+  </div>
+  </body>
+  </html>
+    

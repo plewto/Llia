@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript pulsetab</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+
+    <hr>
+    <hr>
+    <p class=command>
+      pulsetab
+    </p>
+    <p class=mono>
+      Function, creater buffer filled with pulse waveform
+      (special case of <a href="ls_wavetab.html">wavetab</a>)
+      <br><br>
+      pulsetab(name, harmonics=512, skip=2, frames=1024)
+      <br><br>
+      ARGS:
+    </p>
+    <pre class=args>
+      name      - String, buffer's name.
+                 If a buffer with the same name already exists, do nothing.
+                 If name is the name of a non-buffer object, produce warning.
+      harmonics - int, number of harmonics.
+      skip      - int, number of harmonics to skip.
+      frames    - int, number of buffer frames, mujst be a power of 2.
+    </pre>
+
+    <p class=command>
+      See
+      <br><a href="ls_sawtab.html">sawtab</a>
+      <br><a href="ls_sinetab.html">sinetab</a>
+      <br><a href="ls_wavetab.html">wavetab</a>
+    </p>
+      
+    
+  </div>
+  </body>
+  </html>
+    

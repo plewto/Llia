@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+  <meta name="robots" content="index,follow,archive">
+  <link rel="stylesheet" type="text/css" href="ls_style.css"/>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+  <title>Lliascript wavetab</title>
+  </head>
+  <body>
+  <div id="page_wrapper">
+    <header>
+      <img class="banner_image" src="images/llia_logo.png" alt="Llia Logo"/>
+      <h1 class="banner_text">Lliascript</h1>
+    </header>
+
+    <hr>
+    <hr>
+    <p class=command>
+      wavetab
+    </p>
+    <p class=mono>
+      Function, create buffer containing wide variety of waveforms.
+      <br><br>
+      wavetab(name, harmonics=512, decay=0.5, skip=-1, cutoff=-1, mode="",
+      depth=0.5, frames=1024)
+      <br><br>
+      ARGS:
+    </p>
+    <pre class=args>
+      name      - String, buffer name,
+                  If buffer with same name already exists,do nothing.
+                  If a non-buffer object is already named name, produce warning.
+      harmonics - int, set number of harmonics.
+      decay     - float, harmonic amplitude falloff.
+                  For harmonic n, amp(n) = 1/(n^decay)
+                  decay = 0 --&gt; amp(n) = 1, for all n.
+                  decay = 1 --&gt; amp(n) = 1/(n+1)
+                  decay = 2 --&gt; amp(n) = 1/(n+1)^2
+      skip      - int, sets which harmonics are skipped.
+                  skip = 2 --&gt; (1, 3, 5, 7, 9, ...)
+                  skip = 3 --&gt; (1,2,  4,5,  7,8, ...)
+                  skip = 4 --&gt; (1,2,3,  5,6,7,  9,10,11, ...)
+                  Disable if skip &lt; 0 --&gt; (1,2,3,4,5,6, ...)
+      mode      - String, sets quasi filter mode. Possible values are:
+                  "lowpass", "highpass", "bandpass" or "bandreject"
+                  Any other value disables filter.
+      cutoff    - int, filter cutoff in terms of harmonic number.
+      depth     - float, filter depth, 0 &lt;= depth &lt;= 1 
+      frames    - int, number of buffer frames, must be power of 2.
+    </pre>
+
+    <p class=command>
+      See
+      <br><a href="ls_pulsetab.html">pulsetab</a>
+      <br><a href="ls_sawtab.html">sawtab</a>
+      <br><a href="ls_sinetab.html">sinetab</a>
+    </p>
+      
+    
+  </div>
+  </body>
+  </html>
+    
