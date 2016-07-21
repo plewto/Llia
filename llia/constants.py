@@ -11,8 +11,8 @@ BANNER ="""
 `-----'`--'`--' `--`--' 
 """
 
-HELP_PATH = "resources/help"
-HELP_EXT = "md"                 # Help file extension
+HELP_PATH = "doc"
+HELP_EXT = "html"                 # Help file extension
 
 GUI_OPTIONS = (("None", "Use Llia without GUI."),
                ("TK", "Aviliable wherever Python is sold."))
