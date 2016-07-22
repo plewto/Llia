@@ -139,16 +139,14 @@ class TkAddSynthDialog(Toplevel):
         self.var_voice_count.set(8)
         frame_keymode = factory.label_frame(main, "Key mode")
         col = 0
-        for km in con.KEY_MODES:
+        for km in specs["keymodes"]:
             rb = factory.radio(frame_keymode, km, self.var_keymode, km)
             rb.grid(row=0, column=col, sticky="w", padx=4, pady=4)
             if self.is_efx:
                 rb.config(state="disabled")
             col += 1
-        if is_efx:
-            self.var_keymode.set("EFX")
-        else:
-            self.var_keymode.set("Poly1")
+        self.var_keymode.set(specs["keymodes"][0])  # Set default keymode
+       
         lab_vc = factory.label(frame_keymode, "Voice count")
         spin_vc = factory.int_spinbox(frame_keymode, self.var_voice_count, from_=1, to=128)
         # voice count spin_vc is place hoder for future.

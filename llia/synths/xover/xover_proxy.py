@@ -30,7 +30,7 @@ xover_pallet["SLIDER-TROUGH"] = "#1f2f40"
 
 specs["constructor"] = XOverProxy
 specs["description"] = "Crossover Filter Effect"
-specs["keymodes"] = ("Efx",)
+specs["keymodes"] = ("EFX",)
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["audio-input-buses"] = (("inbus", 1),)
 specs["program-generator"] = gen_xover_program

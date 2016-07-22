@@ -30,7 +30,7 @@ dirty_pallet["SLIDER-TROUGH"] = "#2C3742"
 
 specs["constructor"] = DirtyProxy
 specs["description"] = "An unclean delay"
-specs["keymodes"] = ("Efx", )
+specs["keymodes"] = ("EFX", )
 specs["audio-output-buses"] = (("outbus", 2),)
 specs["audio-input-buses"] = (("inbus", 1),)
 specs["pretty-printer"] = pp_dirty
