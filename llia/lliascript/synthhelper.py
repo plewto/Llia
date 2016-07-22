@@ -231,7 +231,9 @@ class SynthHelper(object):
             return obarg
 
     # outbus as list [bus-name, param, offset]
-    def add_synth(self, stype, id_, keymode="Poly1", voice_count=8, outbus=["out_0", "outbus", 0]):
+    # Warning: There is no restriction on keymode selection.
+    # Using Poly1 keymode with SynDrm may bring SupperCollider down.
+    def add_synth(self, stype, id_, keymode, voice_count=8, outbus=["out_0", "outbus", 0]):
 
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
