@@ -17,6 +17,7 @@ from llia.llia_app import LliaApp
 
 import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
+import llia.synths.syndrm.sd_proxy
 import llia.synths.dirtyburger.dirty_proxy
 import llia.synths.stepfilter.sf_proxy
 import llia.synths.xover.xover_proxy
