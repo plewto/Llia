@@ -57,6 +57,7 @@ class SynthSpecs(dict):
         super(SynthSpecs, self).__setitem__("help", None)
         super(SynthSpecs, self).__setitem__("notes", None)
         super(SynthSpecs, self).__setitem__("is-efx", False)
+        super(SynthSpecs, self).__setitem__("keymodes", [])
         # buses [[param1, channels], [param2, channels] ...]
         super(SynthSpecs, self).__setitem__("audio-output-buses", [])   
         super(SynthSpecs, self).__setitem__("audio-input-buses", [])

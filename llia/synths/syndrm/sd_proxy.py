@@ -28,6 +28,7 @@ class SynDrmProxy(SynthProxy):
 sd_pallet = Pallet(default_pallet)
 specs["constructor"] = SynDrmProxy
 specs["description"] = "Syntheic Percussion Instruiments"
+specs["keymodes"] = ("Mono1", )
 specs["audio-output-buses"] = (("hhOutbus", 1),("cymOutbus", 1),
                                ("claveOutbus", 1),("drum1Outbus", 1),
                                ("rdrumOutbus", 1),("noiseOutbus", 1))

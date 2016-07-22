@@ -29,6 +29,7 @@ orgn_pallet = Pallet(default_pallet)
 
 specs["constructor"] = OrgnProxy
 specs["description"] = "FM Combo Organ"
+specs["keymodes"] = ("Poly1", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["pretty-printer"] = pp_orgn    
 specs["program-generator"] = gen_orgn_program
