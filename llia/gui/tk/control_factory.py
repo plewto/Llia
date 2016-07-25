@@ -88,52 +88,6 @@ def linear_slider(master, param, editor, domain=(0, 200), range_=(0.0, 1.0), tti
     return s
 
 
-        
-
-
-# def positive_exponentail_slider(master, param, editor,
-#                                 range_ = (0, 1),
-#                                 degree = 2,
-#                                 ttip = ""):
-#     slider_positions = 200
-#     q, r = range_
-#     q,r = min(q,r), max(q,r)
-#     bias = q
-#     scale = r-q
-
-#     def v_to_a(v):
-#         try:
-#             w = logn(v, degree)
-#         except ValueError:
-#             w = 0
-#         w = max(0, w)
-#         pos = w*scale
-#         return pos
-    
-#     def a_to_v(a):
-#         pos = a/float(slider_positions)
-#         v = bias + scale * pos**degree
-#         # START DEBUG
-#         a2 = v_to_a(v)
-#         print("DEBUG a = %3d   v = %5.4f   a2 = %f" % (a,v,a2))
-#         # END DEBUG
-#         return v
-    
-
-   
-
-    # s = ControlSlider(master, param, editor,
-    #                   domain = (0, slider_positions),
-    #                   curves=(v_to_a, a_to_v),
-    #                   ttip = ttip)
-    # return s
-    
-                                
-                                 
-        
-    
-
-
 def third_octave_slider(master, param, editor, ttip=""):
     a_to_v = absctrl.aspect_to_third_octave
     v_to_a = absctrl.third_octave_to_aspect
@@ -181,7 +135,7 @@ def discrete_slider(master, param, editor, values=range(8), ttip=""):
 #
 # Coarse Radio buttons: (0) 1/8 1/4 1/2 1 2 4 8
 # Fine slider domain 0...199  codomain 1.0...2.00 (resolution 0.005)
-# **DEPRECIATE**
+# As a finer resolution alternative, consider using gui/tk/oscfreq_control
  
 ZERO_FREQ = -1000
 
@@ -243,4 +197,31 @@ class OscFrequencyControl(absctrl.AbstractControl):
             self.scale_fine.set(ff_aspect)
         else:
             pass
-            
+
+class ControlCheckbutton(absctrl.AbstractControl):
+
+    def __init__(self, master, param, editor,
+                 text="", values=(0,1), ttip=""):
+        self._var = tk.BooleanVar()
+        self._cb = factory.checkbutton(master, text, self._var,
+                                       command=self.callback, ttip=ttip)
+        self._values = values
+        super(ControlCheckbutton, self).__init__(param, editor, self._cb)
+
+    def callback(self, *_):
+        flg = float(self._var.get())
+        if flg:
+            v = self._values[1]
+        else:
+            v = self._values[0]
+        self.synth.x_param_change(self.param, v)
+        program = self.synth.bank()[None]
+        program[self.param] = v
+        msg = "[%s] -> %s" % (self.param, v)
+        self.editor.status(msg)
+        
+
+    def update_aspect(self):
+        program = self.synth.bank()[None]
+        v = program[self.param]
+        self._var.set(v==self._values[1])

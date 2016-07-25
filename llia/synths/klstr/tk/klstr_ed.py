@@ -71,8 +71,6 @@ class TkKlsterPanel(TkSubEditor):
         self.add_control("lfoDelay", s_lfo_delay)
         self.add_control("lfoDepth", s_lfo_depth)
         self.add_control("vibrato", s_vibrato)
-
-      
         
         # Filter
         s_filter = ExpSlider(frame, "filterFreq", self, range_= 16000)
@@ -95,16 +93,16 @@ class TkKlsterPanel(TkSubEditor):
         s_decay = ExpSlider(frame, "decay", self, range_=60, degree=3)
         s_release = ExpSlider(frame, "release", self, range_=60, degree=3)
         s_sustain = cfactory.normalized_slider(frame, "sustain", self)
-        cb_trigmode = factory.checkbutton(frame, "Trig", self.var_env_mode)
+        cb_trigmode = cfactory.ControlCheckbutton(frame, "envMode", self, "Trig")
         self.add_control("attack", s_attack)
         self.add_control("decay", s_decay)
         self.add_control("release", s_release)
         self.add_control("sustain", s_sustain)
+        self.add_control("envMode", cb_trigmode)
 
         # Amp
         s_amp = cfactory.volume_slider(frame, "amp", self)
         self.add_control("amp", s_amp)
-        
         
         y0, y1 = 50, 300
         x0 = 50
@@ -163,7 +161,7 @@ class TkKlsterPanel(TkSubEditor):
         s_decay.layout(offset=(x6, y1), checkbutton_offset = None)
         s_sustain.widget().place(x=x7, y=y1)
         s_release.layout(offset=(x8, y1), checkbutton_offset = None)
-        cb_trigmode.place(x=x9, y=y1)
+        cb_trigmode.widget().place(x=x9, y=y1)
         
         x10 = x8+120
         s_amp.widget().place(x=x10, y=y1)
