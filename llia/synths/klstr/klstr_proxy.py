@@ -19,11 +19,10 @@ class KlstrProxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            pass
-            # from llia.synths.klstr.tk.klstr_ed import create_tk_klstr_editor
-            # appwin = self.app.main_window()
-            # parent_editor = appwin[self.sid]
-            # create_tk_klstr_editor(parent_editor)
+            from llia.synths.klstr.tk.klstr_ed import create_editor
+            appwin = self.app.main_window()
+            parent_editor = appwin[self.sid]
+            create_editor(parent_editor)
             
 klstr_pallet = Pallet(default_pallet)        
 

@@ -11,6 +11,8 @@ from llia.gui.abstract_control import AbstractControl
 from llia.curves import linear_function
 import llia.gui.tk.tk_factory as factory
 
+
+
 class ExpSlider(AbstractControl):
 
     """

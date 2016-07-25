@@ -122,11 +122,11 @@ def linear_slider(master, param, editor, domain=(0, 200), range_=(0.0, 1.0), tti
 
    
 
-    s = ControlSlider(master, param, editor,
-                      domain = (0, slider_positions),
-                      curves=(v_to_a, a_to_v),
-                      ttip = ttip)
-    return s
+    # s = ControlSlider(master, param, editor,
+    #                   domain = (0, slider_positions),
+    #                   curves=(v_to_a, a_to_v),
+    #                   ttip = ttip)
+    # return s
     
                                 
                                  

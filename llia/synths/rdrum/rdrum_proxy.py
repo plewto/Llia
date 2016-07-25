@@ -19,11 +19,10 @@ class RdrumProxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            pass
-            # from llia.synths.rdrum.tk.rdrum_ed import create_tk_rdrum_editor
-            # appwin = self.app.main_window()
-            # parent_editor = appwin[self.sid]
-            # create_tk_rdrum_editor(parent_editor)
+            from llia.synths.rdrum.tk.rdrum_ed import create_tk_rdrum_editor
+            appwin = self.app.main_window()
+            parent_editor = appwin[self.sid]
+            create_tk_rdrum_editor(parent_editor)
             
 rdrum_pallet = Pallet(default_pallet)        
 
