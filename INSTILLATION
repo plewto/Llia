@@ -1,16 +1,16 @@
 Llia instillation.
 
-Llia is divided into two major components; host and client.  The host
-software is coded in sclang and is found in the Llia/sc directory.  The
-client code is Python 2.7 with sources located in the Llia/llia directory.
+Llia is divided into two major components; server and client.  The server
+program is coded in sclang and is located in the Llia/sc directory.  The
+client code is Python 2.7 with sources located under the Llia/llia directory.
 
           ******************************************************
-                               Host Software
+                               Server Software
           ******************************************************
 
 Overview:
 
-The host code is located in the two directories: Llia/sc/Extensions/Classes
+The server code is located in the two directories: Llia/sc/Extensions/Classes
 and Llia/sc/SynthDefs.  For the most part these files need only be executed
 once to be made a permanent part of SuperCollider.  The one exception is
 Llia/sc/SynthDefs/llia.scd.  This file, or something like it, must be run
@@ -42,9 +42,9 @@ Details:
 
 3) Load each .scd file in the directory Llia/sc/SynthDefs/ one by one into
    the SuperCollider IDE and execute them.  This step need only be carried
-   out once and makes the various Llia synthesizers and effects a permanent
-   part of the SuperCollider instillation.  It is not necessary to include
-   llia.scd or testtones.scd at this time.
+   out once and makes the various Llia synthesizers a permanent part of the
+   SuperCollider instillation.  It is not necessary to include llia.scd or
+   testtones.scd at this time.
 
    As new instruments are released, corresponding .scd file will need to be
    executed in this way.
@@ -97,7 +97,7 @@ must be resolved.
 
 5) Under the [MIDI] section of configuration file locate the line which
    reads 'backend : mido.backends.rtmidi'  If you are using portmidi 
-   change this line to
+   change this line to read
 
         backend : mido.backends.portmidi
  

@@ -1,37 +1,41 @@
 
-Llia is an OSC client for SuperCollider.  It provides both a collection of
-SuperCollider synths and effects, and also a comprehensive MIDI
-implementation. 
+Llia is an Open Sound Control (OSC) client for SuperCollider.  
 
 
 Features:
 
 
 1) An open set of SuperCollider synths.  These include both "instruments"
-and "effects".  At the time this is written (2016.07.13) there are two
-synthesizers, "Orgn" and "Saw3", and three effects, "DirtyBurger",
-"StepFilter" and "XOver".  Additional synths will be added later. 
+   and "effects".  At the time this is written (2016.07.25) there are four
+   synthesizers and three effects:
 
-2) Support for all MIDI channel-messages with exception of polyphonic
-aftertouch.  MIDI events are handled on the client side and are processed
-through various mapping functions before being forwarded to SuperCollider.
-Most MIDI values may be mapped to synth parameters.  Two very common
-examples is the mapping of MIDI controller 1 (modulation wheel) to synth
-vibrato and velocity to volume.  A single MIDI value may be mapped to any
-number of parameters.  Velocity for instance may simultaneously control
-volume and filter cutoff.
+    * Klstr uses clusters of pulse waves to produce a wide variety of
+      electronic sounds.  The inspiration for Klstr comes from early,
+      pre-sampler, drum machines which used a similar technique for
+      cymbal and hi-hat sounds.  It tends to have a rather thin sound.
 
-3) Synthesizer outputs may be “patched” to effect inputs and since an
-effect is really just a special form of synth, an effect may be processed
-through additional effects. 
+    * Orgn is a straight forward organ based on static FM tone
+      generators.
 
-FIXME:  BUG 0005 Chaining two or more effects is not currently working. 
-        
-4) A simple Python API provides script support.  Python code may be entered
-interactively at a command line prompt or loaded from external script
-files.
+    * RDrum is a percussive instrument synthesizer based on the
+      Risset Drum algorithm.
 
-5) GUI support is optional. If the GUI is disabled Llia operates as
-terminal based program with an interactive REPL prompt.  The default GUI
-system is Tk.  Support for alternate GUI systems *may* be provided later.
-If so either QT or GTK are prime candidates.
+    * Saw3 is a 3 oscillator subtractive synthesizer.
+
+    * DirtyBurger is a delay effect with distortion and EQ in the
+      feedback path.
+
+    * StepFilter is a duel filter effect using complex stepped
+      control signals.
+
+   * XOver is another filter effect using complementary low and high
+     pass filters,
+
+
+2) A comprehensive MIDI implementation which allows mapping of most MIDI
+   channel message values to synthesizer/effect parameters.
+
+
+3) Optional GUI mode.  Llia may be executed with or without a GUI system.
+
+4) Scripting via a simple Python API.
