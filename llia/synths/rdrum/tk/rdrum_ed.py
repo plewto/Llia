@@ -10,9 +10,6 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 from llia.gui.tk.decade_control import DecadeControl
 from llia.gui.tk.discreate_control import DiscreateControl
 
-
-
-
 def create_tk_rdrum_editor(parent):
     tone_panel = TkRdrumPanel1(parent)
     #info_panel = TkRdrumInfoPanel(parent
@@ -37,7 +34,7 @@ class TkRdrumPanel1(TkSubEditor):
         s_a_attack = cfactory.linear_slider(frame, "aAttack", self, range_=(0.0, 6.0))
         s_a_decay = cfactory.linear_slider(frame, "aDecay", self, range_=(0.0, 6.0))
         s_a_bend = cfactory.bipolar_slider(frame, "aBend", self, "Tone A Pitch Bend")
-        s_a_amp = cfactory.volume_slider(frame, "aAmp", self, "Tone A Amp")
+        s_a_amp = cfactory.mix_slider(frame, "aAmp", self, "Tone A Amp")
         self.add_control("aRatio", dc_a_ratio)
         self.add_control("aTone", s_a_clip)
         self.add_control("aAttack", s_a_attack)
@@ -51,7 +48,7 @@ class TkRdrumPanel1(TkSubEditor):
         s_b_attack = cfactory.linear_slider(frame, "bAttack", self, range_=(0.0, 6.0))
         s_b_decay = cfactory.linear_slider(frame, "bDecay", self, range_=(0.0, 6.0))
         s_b_bend = cfactory.bipolar_slider(frame, "bBend", self, "Tone B Pitch Bend")
-        s_b_amp = cfactory.volume_slider(frame, "bAmp", self, "Tone B Amp")
+        s_b_amp = cfactory.mix_slider(frame, "bAmp", self, "Tone B Amp")
         self.add_control("bRatio", dc_b_ratio)
         self.add_control("bTune", s_b_tune)
         self.add_control("bAttack", s_b_attack)
@@ -66,7 +63,7 @@ class TkRdrumPanel1(TkSubEditor):
         s_noise_attack = cfactory.linear_slider(frame, "noiseAttack", self, range_=(0.0, 6.0))
         s_noise_decay = cfactory.linear_slider(frame, "noiseDecay", self, range_=(0.0, 6.0))
         s_noise_bend = cfactory.bipolar_slider(frame, "noiseBend", self)
-        s_noise_amp = cfactory.volume_slider(frame, "noiseAmp", self)
+        s_noise_amp = cfactory.mix_slider(frame, "noiseAmp", self)
         self.add_control("noiseRatio", s_noise_ratio)
         self.add_control("noiseBias", s_noise_bias)
         self.add_control("noiseRes", s_noise_res)

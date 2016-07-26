@@ -85,7 +85,7 @@ class TkStepFilterPanel1(TkSubEditor):
                                    "A Pan position")
         s_apanlfo = cf.normalized_slider(self, "panLfoA", editor, 
                                          "LFO -> A Pan")
-        s_aamp = cf.volume_slider(self, "aAmp", editor, "A Filter amp")
+        s_aamp = cf.mix_slider(self, "aAmp", editor, "A Filter amp")
         s_blag = cf.normalized_slider(self, "bLag", editor, 
                                       "B Lag time")
         s_bmin = cf.discrete_slider(self, "bMin", editor, 
@@ -102,12 +102,12 @@ class TkStepFilterPanel1(TkSubEditor):
                                          "LFO -> B Pan")
         s_bpanratio = cf.linear_slider(self, "panLfoBRatio", editor, 
                                        range_=(1, 8))
-        s_bamp = cf.volume_slider(self, "bAmp", editor, "B Filter Amp")
+        s_bamp = cf.mix_slider(self, "bAmp", editor, "B Filter Amp")
         s_drypan = cf.bipolar_slider(self, "dryPan", editor, 
                                      "Dry signal Pan")
         s_drypanlfo = cf.normalized_slider(self, "panLfoDry", editor, 
                                            "LFO -> Dry pan")
-        s_dryamp = cf.volume_slider(self, "dryAmp", editor, 
+        s_dryamp = cf.mix_slider(self, "dryAmp", editor, 
                                     "Dry signal amp")
         s_amp = cf.volume_slider(self, "amp", editor, "Overall amp")
         s_lfo = cf.simple_lfo_freq_slider(self, "panLfoFreq", editor, 

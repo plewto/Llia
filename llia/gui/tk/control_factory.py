@@ -71,13 +71,27 @@ def simple_lfo_freq_slider(master, param, editor, ttip="LFO Frequency"):
                        absctrl.aspect_to_simple_lfo),
                       dom,ttip=ttip)
     return s
-    
+
+# volume_slider is for overall synth volume, and allows for up to 6db
+# of positive gain.   There are slider "dead spots" at +6, +3 and 0db.
+#
 def volume_slider(master, param, editor, ttip=""):
     s = ControlSlider(master, param, editor,
                       (absctrl.amp_to_volume_aspect,
                        absctrl.volume_aspect_to_amp),
                       ttip=ttip)
     return s
+
+# mix_slider is for levels of synth components such as oscilators.
+# It is an atenuator only with maximum gain of 0db.
+#
+def mix_slider(master, param, editor, ttip=""):
+    s = ControlSlider(master, param, editor,
+                      (absctrl.amp_to_mix_aspect,
+                       absctrl.mix_aspect_to_amp),
+                      ttip=ttip)
+    return s
+
 
 def linear_slider(master, param, editor, domain=(0, 200), range_=(0.0, 1.0), ttip=""):
     a_to_v = linfn(domain, range_)

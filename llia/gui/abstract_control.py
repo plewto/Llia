@@ -125,40 +125,98 @@ def polar_to_aspect(n):
 def aspect_to_polar(n):
     return float(clip(_aspect_to_polar(n), -1.0, 1.0))
 
+
+# Two sets of amplitude related functions are defied: mix and volume.
+# Both have aspect domains of (0,199).
+#
+# The mix functions are intended for the relative mix between synth
+# elements, such as oscillator levels.   
+#
+# The volume functions are for over all instrument/effect amplitude, and
+# provide up to +6db of gain.
+#
+#  ---------------------------------------------------------------------- 
+#                                   Mix
+#
+# Mix is expressed as a liner aspect between 0 and 199 with a discontinuous
+# mapping to amplitude.   Maximum gain is 0.  
+#
+# aspect(199)   ->   0db
+# aspect(100)   ->  -9db
+# aspect(  1)   -> -48db
+# aspect(  0)   -> -infinitiy
+
+def mix_aspect_to_amp(va):
+    if va == 0:
+        return 0
+    elif va <= 99:
+        a,b = 0.398,-48.4
+    else:
+        a,b = 0.091,-18.11
+    return db_to_amp(min(a*va+b, 0))
+
+def amp_to_mix_aspect(amp):
+    amp = abs(amp)
+    if amp == 0:
+        return 0
+    else:
+        db = amp_to_db(amp)
+        if db < -9:
+            a,b = 2.51,121.6
+        else:
+            a,b = 11,199.0
+        pos = a*db+b
+        return int(min(pos, 199))
+    
+        
 #  ---------------------------------------------------------------------- 
 #                                   Volume
 #
-# Volume is expressed as a liner value between 0 and 99 with a discontinuous
-# mapping to amplitude.
+# Volume is similer to mix but allows positive gain and has control "dead"
+# spots.
 #
-# vol(99) -> amp(1.000)   0.00 db
-# vol(98) -> amp(0.944)  -0.50 db
-# vol(97) -> amp(0.891)  -1.00 db
-# vol(96) -> amp(0.841)  -1.50 db
-# vol( 1) -> amp(0.004)  -48 db
-# vol( 0) -> amp(0.000)   -infinity
-
-
-VOLUME_ASPECT_DOMAIN = (0, 199)
-VOLUME_CODOMAIN = (0.0, 1.0)
+# aspect(191...199)  ->  +6db
+# aspect(181...189)  ->  +3db
+# aspect(179...180)  ->   0db
+# aspect(81)         -> -12db
+# aspect(1)          -> -48db
+# aspect(0)          -> -infinity
 
 def volume_aspect_to_amp(va):
-    if va < 1:
-        amp = 0.0
+    if 191 <= va:
+        db = 6
+    elif 181 <= va:
+        db = 3
+    elif 171 <= va:
+        db = 0
+    elif 81 <= va:
+        db = int(0.135 * va -23)
+    elif 1 <= va:
+        db = int(0.462 * va -48.462)
     else:
-        #db = 0.48*va-47.52
-        db = 0.2424*va-48
-        amp = db_to_amp(db)
-    return float(clip(amp, 0, 1))
+        return 0.0
+    amp = float(db_to_amp(db))
+    return amp
 
 def amp_to_volume_aspect(amp):
-    db = amp_to_db(amp)
-    if db <= -48:
-        aspect = 0
+    amp = abs(amp)
+    if amp == 0:
+        return 0
     else:
-        #aspect = 2.042*db + 99
-        aspect = 4.125*db+199
-    return int(aspect)
+        db = int(amp_to_db(amp))
+        if db >= 6:
+            aspect = 199
+        elif db >= 3:
+            aspect = 185
+        elif db >= 0:
+            aspect = 175
+        elif -12 <= db:
+            aspect = 7.42*db + 170
+        elif -48 <= db:
+            aspect = 2.2*db + 106.4
+        else:
+            aspect = 0
+        return int(aspect)
 
 #  ---------------------------------------------------------------------- 
 #                               Envelope Times

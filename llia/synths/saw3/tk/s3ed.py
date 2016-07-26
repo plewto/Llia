@@ -33,7 +33,7 @@ class TkSaw3Panel1(TkSubEditor):
         ofc_1 = OscFrequencyControl(frame, "osc1Freq", editor)
         s_wave1 = cfactory.normalized_slider(frame, "osc1Wave", editor, 
                                              "OSC 1 Wave")
-        s_osc1_amp = cfactory.volume_slider(frame, "osc1Amp", editor, 
+        s_osc1_amp = cfactory.mix_slider(frame, "osc1Amp", editor, 
                                             "OSC 1 Amp")
         s_wave1_env = cfactory.bipolar_slider(frame, "osc1Wave_env1", editor, 
                                               "ENV1 -> OSC 1 Wave")
@@ -53,7 +53,7 @@ class TkSaw3Panel1(TkSubEditor):
         ofc_2 = OscFrequencyControl(frame, "osc2Freq", editor)
         s_wave2 = cfactory.normalized_slider(frame, "osc2Wave", editor, 
                                              "OSC 2 Wave")
-        s_osc2_amp = cfactory.volume_slider(frame, "osc2Amp", editor, 
+        s_osc2_amp = cfactory.mix_slider(frame, "osc2Amp", editor, 
                                             "OSC 2 Amp")
         s_wave2_env = cfactory.bipolar_slider(frame, "osc2Wave_env1", editor, 
                                               "ENV1 -> OSC 2 Wave")
@@ -73,7 +73,7 @@ class TkSaw3Panel1(TkSubEditor):
         dc_bias3 = DecadeControl(frame, "osc3Bias", editor, (0.01, 1000))
         s_wave3 = cfactory.normalized_slider(frame, "osc3Wave", editor, 
                                              "OSC 3 Wave")
-        s_osc3_amp = cfactory.volume_slider(frame, "osc3Amp", editor, 
+        s_osc3_amp = cfactory.mix_slider(frame, "osc3Amp", editor, 
                                             "OSC 3 Amp")
         s_wave3_env = cfactory.bipolar_slider(frame, "osc3Wave_env1", editor, 
                                               "ENV1 -> OSC 3 Wave")
@@ -103,7 +103,7 @@ class TkSaw3Panel1(TkSubEditor):
                                             ttip="Noise frequency")
         s_nse_bw = cfactory.normalized_slider(frame, "noiseBW", editor, 
                                               "Noise Bandwidth")
-        s_nse_amp = cfactory.volume_slider(frame, "noiseAmp", editor, 
+        s_nse_amp = cfactory.mix_slider(frame, "noiseAmp", editor, 
                                            "Noise amp")
         s_nse_amp_env = cfactory.normalized_slider(frame, "noiseAmp_env1", 
                                                    editor, "ENV1 -> Noise amp")

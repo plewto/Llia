@@ -52,7 +52,7 @@ class TkKlsterPanel(TkSubEditor):
         self.add_control("pwLfo", s_pwm)
 
         # Noise
-        s_noise = cfactory.volume_slider(frame, "noiseAmp", self)
+        s_noise = cfactory.mix_slider(frame, "noiseAmp", self)
         self.add_control("noiseAmp", s_noise)
 
         # LFO

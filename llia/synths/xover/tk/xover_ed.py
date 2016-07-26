@@ -50,11 +50,11 @@ class TkXOverPanel(TkSubEditor):
                                                   "LFO -> spread")
         s_dry_pan = cfactory.bipolar_slider(frame, "dryPan", self,
                                              "Dry signal pan")
-        s_dry_amp = cfactory.volume_slider(frame, "dryAmp", self,
+        s_dry_amp = cfactory.mix_slider(frame, "dryAmp", self,
                                            "Dry signal amplitude")
-        s_filter1_amp = cfactory.volume_slider(frame, "lpAmp", self,
+        s_filter1_amp = cfactory.mix_slider(frame, "lpAmp", self,
                                                "Filter 1 amplitude")
-        s_filter2_amp = cfactory.volume_slider(frame, "hpAmp", self,
+        s_filter2_amp = cfactory.mix_slider(frame, "hpAmp", self,
                                                "Filter 2 amplitude")
         s_amp = cfactory.volume_slider(frame, "amp", self,
                                        "Main amplitude")

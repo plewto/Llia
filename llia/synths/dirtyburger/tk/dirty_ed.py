@@ -32,9 +32,9 @@ class TkDirtyPanel(TkSubEditor):
         s_highcut = cfactory.third_octave_slider(self, "highcut", editor)
         s_feedback = cfactory.normalized_slider(self, "feedback", editor)
         # Mixer Frame
-        s_wet_mix = cfactory.volume_slider(self, "wetAmp", editor)
+        s_wet_mix = cfactory.mix_slider(self, "wetAmp", editor)
         s_wet_pan = cfactory.bipolar_slider(self, "wetPan", editor)
-        s_dry_mix = cfactory.volume_slider(self, "dryAmp", editor)
+        s_dry_mix = cfactory.mix_slider(self, "dryAmp", editor)
         s_dry_pan = cfactory.bipolar_slider(self, "dryPan", editor)
         s_vol = cfactory.volume_slider(self, "volume", editor)
         y0 = 55
