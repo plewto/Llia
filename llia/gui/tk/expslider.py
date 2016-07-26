@@ -26,6 +26,7 @@ class ExpSlider(AbstractControl):
     def __init__(self, master, param, editor,
                  range_ = 1000,
                  degree = 2,
+                 clip=None,
                  ttip=""):
         """
         Construct new ExpSlider object.
@@ -41,6 +42,10 @@ class ExpSlider(AbstractControl):
         super(ExpSlider, self).__init__(param, editor, master)
         self.degree = degree
         self.inv_degree = 1.0/degree
+        if clip:
+            self._clip = clip
+        else:
+            self._clip = (0, range_)
         self.var_aspect = tk.StringVar()
         self.var_sign = tk.IntVar()
         self.var_aspect.set(0.0)
@@ -61,13 +66,17 @@ class ExpSlider(AbstractControl):
         return self.var_sign.get() != 0
         
     def aspect_to_value(self, a):
+        mn, mx = self._clip
         n = float(a)**self.degree
         v = n*self.range_
+        v = max(min(v, mx), mn)
         if self.qinvert(): v = -1 * v
         return v
 
     def value_to_aspect(self, v):
+        mn, mx = clip
         v = abs(v)
+        v = max(min(v, mx), mn)
         d = float(v)/self.range_
         a = d**self.inv_degree
         return a
