@@ -74,7 +74,7 @@ class ExpSlider(AbstractControl):
         return v
 
     def value_to_aspect(self, v):
-        mn, mx = clip
+        mn, mx = self._clip
         v = abs(v)
         v = max(min(v, mx), mn)
         d = float(v)/self.range_
