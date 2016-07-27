@@ -215,7 +215,7 @@ if args.listgui:
     sys.exit(0)
 
 
-config = LliaConfig.create_instance(args)  # UNCOMMENT AFTER TEST
+config = LliaConfig.create_instance(args)
 app = LliaApp(config, args.skip_mainloop)
 
 

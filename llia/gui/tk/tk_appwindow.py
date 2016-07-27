@@ -15,6 +15,8 @@ from  llia.proxy import LliaProxy
 import llia.constants as con
 from llia.gui.tk.tk_addsynth import TkAddSynthDialog
 from llia.synth_proxy import SynthSpecs
+from llia.gui.tk.group_window import GroupWindow
+
 
 specs = SynthSpecs.global_synth_type_registry
 
@@ -38,7 +40,9 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._init_menu()
         self._init_center_frame(self._main.center)
         self.root.minsize(width=665, height=375)
-        
+        self.group_windows = []
+        self.add_synth_group()
+       
     def _init_status_panel(self):
         south = self._main.south
         south.configure(padx=4, pady=4)
@@ -108,6 +112,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
 
     def _init_file_menu(self, fmenu):
         fmenu.add_command(label="Lliascript", command = self.show_history_editor)
+        fmenu.add_separator()
+        fmenu.add_command(label="New Synth Group", command = self.add_synth_group)
         fmenu.add_separator()
         fmenu.add_command(label="Quit", command = self.exit_app)
 
@@ -242,3 +248,9 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkAddSynthDialog(self.root, self.app, st, True)
         self.root.wait_window(dialog)
 
+    def add_synth_group(self):
+        gw = GroupWindow(self.app)
+        gw.transient(self.root)
+        self.group_windows.append(gw)
+        self.status("Added new Synth Group Window")
+        

@@ -10,9 +10,9 @@ import llia.gui.tk.control_factory as cfactory
 
 
 
-def create_tk_orgn_editor(parent):
-    tone_panel = TkOrgnPanel1(parent)
-    info_panel = TkOrgnInfoPanel(parent)
+def create_editor(parent_editor):
+    tone_panel = TkOrgnPanel1(parent_editor)
+    info_panel = TkOrgnInfoPanel(parent_editor)
 
 
 class TkOrgnPanel1(TkSubEditor):

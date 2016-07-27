@@ -3,7 +3,7 @@
 
 
 from __future__ import print_function
-from Tkinter import Toplevel, StringVar
+from Tkinter import Frame, StringVar
 
 from llia.generic import is_list
 import llia.gui.tk.tk_factory as factory
@@ -13,10 +13,10 @@ from llia.gui.tk.tk_bus_and_buffer import TkBusAndBufferEditor
 from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, delete_map_dialog
 
 
-class TkSynthWindow(Toplevel):
+class TkSynthWindow(Frame):
 
-    def __init__(self, sproxy):
-        Toplevel.__init__(self, None)
+    def __init__(self, master, sproxy):
+        Frame.__init__(self, master)
         self.config(background=factory.bg())
         self.synth = sproxy
         self.synth.synth_editor = self

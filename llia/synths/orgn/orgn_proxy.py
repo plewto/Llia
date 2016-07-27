@@ -20,10 +20,11 @@ class OrgnProxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            from llia.synths.orgn.tk.orgn_ed import create_tk_orgn_editor
+            from llia.synths.orgn.tk.orgn_ed import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
-            create_tk_orgn_editor(parent_editor)
+            create_editor(parent_editor)
+            return parent_editor
             
 orgn_pallet = Pallet(default_pallet)        
 

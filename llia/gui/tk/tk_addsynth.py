@@ -189,9 +189,13 @@ class TkAddSynthDialog(Toplevel):
         for p,bname in self._buffername_map.items():
             shelper.assign_buffer(p, bname)
         factory.set_pallet(sy.specs["pallet"])
-        swin = TkSynthWindow(sy)
-        self.app.main_window()[self.sid] = swin
+        mw = self.app.main_window()
+        group = mw.group_windows[-1]
+        swin = TkSynthWindow(group.notebook, sy)
+        group.notebook.add(swin, text=self.sid)
+        mw[self.sid] = swin
         sy.create_subeditors()
         self.app.main_window().status("Added %s" % self.sid)
         self.destroy()
+        
 
