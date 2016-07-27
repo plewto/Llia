@@ -56,7 +56,7 @@ class TkKlsterPanel(TkSubEditor):
         self.add_control("noiseAmp", s_noise)
 
         # LFO
-        s_lfo_freq = ExpSlider(frame, "lfoFreq", self, range_=100, degree=3)
+        s_lfo_freq = ExpSlider(frame, "lfoFreq", self, range_=100, degree=3, clip=(0.001, 100))
         s_lfo_ratio = cfactory.discrete_slider(frame, "lfo2FreqRatio", self,
                                               values = [0.01, 0.1, 0.25, 0.333, 0.5, 0.667,
                                                         0.75, 1.0, 1.125, 1.25, 1.5, 1.175,
@@ -79,7 +79,9 @@ class TkKlsterPanel(TkSubEditor):
         s_filter_lag = cfactory.normalized_slider(frame, "filterLag", self)
         s_filter_res = cfactory.normalized_slider(frame, "res", self)
         s_filter_mix = cfactory.normalized_slider(frame, "filterMix", self)
-
+        s_filter_env.widget("checkbutton-sign").config(background="#2c272e")
+        s_filter_lfo.widget("checkbutton-sign").config(background="#2c272e")
+        
         self.add_control("filterFreq", s_filter)  
         self.add_control("filterLfo", s_filter_lfo)  
         self.add_control("filterEnv", s_filter_env)  
@@ -94,6 +96,7 @@ class TkKlsterPanel(TkSubEditor):
         s_release = ExpSlider(frame, "release", self, range_=60, degree=3)
         s_sustain = cfactory.normalized_slider(frame, "sustain", self)
         cb_trigmode = cfactory.ControlCheckbutton(frame, "envMode", self, "Trig")
+        cb_trigmode.widget().config(background="#3D3937")
         self.add_control("attack", s_attack)
         self.add_control("decay", s_decay)
         self.add_control("release", s_release)
@@ -142,14 +145,15 @@ class TkKlsterPanel(TkSubEditor):
         s_lfo_depth.widget().place(x=x13, y=y0)
         s_vibrato.widget().place(x=x14, y=y0)
         
-        
         # ROW 2
         s_filter.layout(offset=(x0, y1), checkbutton_offset = None)
-        s_filter_lfo.layout(offset=(x1, y1)) 
-        s_filter_env.layout(offset=(x2, y1)) 
+        s_filter_lfo.layout(offset=(x1, y1), checkbutton_offset = (-6, -24))
+        s_filter_env.layout(offset=(x2, y1), checkbutton_offset = (-6, -24))
         s_filter_lag.widget().place(x=x2+30, y=y1, width=14, height=75)
         s_filter_res.widget().place(x=x3, y=y1)
         s_filter_mix.widget().place(x=x4, y=y1)
+        
+
 
         
         x5 = x4 + 90
