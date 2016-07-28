@@ -85,7 +85,8 @@ class Composer(object):
     def _build_synths(self):
         acc = []
         for e in self.parser.entities.values():
-            if e.lstype == "synth":
+            print("DEBUG parse, e.lstype = ", e.lstype)
+            if e.lstype == "synth" or e.lstype == "group":
                 acc.append(e)
         acc.sort(key=lambda x: x.data["serial-number"])
         code = "# Synths\n"
@@ -95,13 +96,18 @@ class Composer(object):
                 code += '%d, ' % int(e.data["id"])
                 outbus,param,offset = fill_outbus_args(e.data["outbus"])
                 code += '["%s","%s",%d])\n' % (outbus,param,offset)
+            elif e.data["is-group"]:
+                name = e.data["name"]
+                code += 'new_group("%s")\n' % name
             else:
+                # Assume an instrumental synth
                 code += 'synth("%s", ' % e.data["stype"]
                 code += '%d, ' % int(e.data["id"])
                 code += '"%s", ' % e.data["keymode"]
                 code += '%d, ' % int(e.data["voice-count"])
                 outbus,param,offset = fill_outbus_args(e.data["outbus"])
                 code += '["%s", "%s", %d])\n' % (outbus,param,offset)
+            code += "create_editor()\n"
             # Load bank
             sy = self.parser.synthhelper.get_synth()
             bnk = sy.bank()

@@ -29,6 +29,7 @@ class SynthHelper(object):
         ns["input_channel"] = self.input_channel
         ns["keyrange"] = self.keyrange
         ns["synth"] = self.add_synth
+        ns["new_group"] = self.new_group
         ns["create_editor"] = self.create_editor
         ns["transpose"] = self.transpose
         ns["use"] = self.use_synth
@@ -246,6 +247,7 @@ class SynthHelper(object):
             rs = self.proxy.add_synth(stype, id_, keymode, voice_count)
             self.parser.register_entity(sid, "synth",
                                         {"serial-number" : self._synth_serial_number,
+                                         "is-group" : False,
                                          "stype" : stype,
                                          "id" : id_,
                                          "keymode" : keymode,
@@ -294,6 +296,7 @@ class SynthHelper(object):
             rs = self.proxy.add_efx(stype, id_)
             self.parser.register_entity(sid, "synth",
                                         {"serial-number" : self._synth_serial_number,
+                                         "is-group" : False,
                                          "stype" : stype,
                                          "id" : id_,
                                          "outbus" : outbus,
@@ -592,6 +595,17 @@ class SynthHelper(object):
             for b in buffers:
                 print("#    ", b)
         return buffers
+
+    def new_group(self, grp_name=""):
+        mw = self.parser.app.main_window()
+        grp = mw.add_synth_group(grp_name)
+        data = {"name" : grp.name,
+                "is-efx" : False,
+                "is-group" : True,
+                "serial-number" : self._synth_serial_number}
+        self.parser.register_entity(grp.name, "group", data)
+        self._synth_serial_number += 1
+        
         
         
         

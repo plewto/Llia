@@ -113,7 +113,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def _init_file_menu(self, fmenu):
         fmenu.add_command(label="Lliascript", command = self.show_history_editor)
         fmenu.add_separator()
-        fmenu.add_command(label="New Synth Group", command = self.add_synth_group)
+        fmenu.add_command(label="New Synth Group", command = self._add_synth_group)
         fmenu.add_separator()
         fmenu.add_command(label="Quit", command = self.exit_app)
 
@@ -248,9 +248,13 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkAddSynthDialog(self.root, self.app, st, True)
         self.root.wait_window(dialog)
 
-    def add_synth_group(self):
-        gw = GroupWindow(self.app)
+    def _add_synth_group(self):
+        sh = self.app.ls_parser.synthhelper
+        sh.new_group()
+        
+    def add_synth_group(self, name=None):
+        gw = GroupWindow(self.app, name)
         gw.transient(self.root)
         self.group_windows.append(gw)
         self.status("Added new Synth Group Window")
-        
+        return gw
