@@ -63,14 +63,15 @@ def _init_theme():
 
 #  ---------------------------------------------------------------------- 
 #                                   ToolTip
-
+# Tooltips DEPRECIATED
 # Global flag, tooltips enabled/disabled across all instances of Llia
 #
-enable_tooltips = True
+#enable_tooltips = True
 
 def tooltip(widget, text):
-    if enable_tooltips and text:
-        tt = ToolTip(widget, msg=text, delay=1.0, follow=True)
+    pass 
+    # if enable_tooltips and text:
+    #     tt = ToolTip(widget, msg=text, delay=1.0, follow=True)
         
 
 #  ---------------------------------------------------------------------- 

@@ -296,9 +296,9 @@ class LliaConfig(dict):
     def gui(self):
         return self.__get_value("GUI", "gui", "NONE").upper()
     
-    def enable_tooltips(self):
-        flg = str(self.__get_value("GUI", "enable-tooltips", True)).upper()
-        return flg != "FALSE"
+    # def enable_tooltips(self):
+    #     flg = str(self.__get_value("GUI", "enable-tooltips", True)).upper()
+    #     return flg != "FALSE"
     
     def warn_on_overwrite(self):
         flg = str(self.__get_value("GUI", "warn-on-overwrite", True)).upper()
