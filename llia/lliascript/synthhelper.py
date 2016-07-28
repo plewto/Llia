@@ -29,6 +29,7 @@ class SynthHelper(object):
         ns["input_channel"] = self.input_channel
         ns["keyrange"] = self.keyrange
         ns["synth"] = self.add_synth
+        ns["create_editor"] = self.create_editor
         ns["transpose"] = self.transpose
         ns["use"] = self.use_synth
         ns["pmap"] = self.parameter_map
@@ -259,6 +260,30 @@ class SynthHelper(object):
                 self.update_prompt()
             return rs
 
+    # Creates editor for current synth.
+    # Ignore if synth already has an editor or
+    # GUI is not enabled.
+    def create_editor(self):
+        gui = self.parser.config.gui().upper()
+        if gui == "NONE":
+            return
+        if gui == "TK":
+            sy = self.get_synth()
+            if sy.synth_editor:
+                # print("Synth %s already has an editor" % sy.sid)
+                return
+            else:
+                from llia.gui.tk.tk_synthwindow import TkSynthWindow
+                mw = self.parser.app.main_window()
+                notebook = mw.group_windows[-1].notebook
+                swin = TkSynthWindow(notebook, sy)
+                sy.synth_editor = swin
+                mw[sy.sid] = swin
+                sy.create_subeditors()
+                notebook.add(swin, text=sy.sid)
+                
+        
+        
     def add_efx(self, stype, id_, outbus=["out_0", "outbus", 0]):
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
