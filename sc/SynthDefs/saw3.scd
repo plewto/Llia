@@ -5,79 +5,79 @@
  * freq            - Main frequency in Hertz.
  * detune          - Pitchwheel detune ratio.
  * gate            - Envelop gate signal.
- * doneAction      -                                                                  
+ * doneAction      -
  * outbus          - Main output bus number.
- * amp             - Main linear amplitude.                                                           
+ * amp             - Main linear amplitude.
  * port            - Portamento time.
  *
- *                   Envelope 1 -> modulation.                                                            
- * env1Attack      -                                                                   
- * env1Decay       -                                                                  
- * env1Sustain     -                                                                    
+ *                   Envelope 1 -> modulation.
+ * env1Attack      -
+ * env1Decay       -
+ * env1Sustain     -
  * env1Release     -
  *
- *                   Envelope 2 -> main amplitude envelope.                                                                    
- * env2Attack      -                                                                   
- * env2Decay       -                                                                  
- * env2Sustain     -                                                                    
- * env2Release     - 
+ *                   Envelope 2 -> main amplitude envelope.
+ * env2Attack      -
+ * env2Decay       -
+ * env2Sustain     -
+ * env2Release     -
  *
- *                   Vibrato                                                                   
- * vfreq           - Vibrato frequency in Hertz.                                                             
- * vsens           - Vibrato sensitivity.                                                             
- * vdelay          - Vibrato onset delay in seconds.                                                              
- * vdepth          - Programmed vibrato depth.                                                              
+ *                   Vibrato
+ * vfreq           - Vibrato frequency in Hertz.
+ * vsens           - Vibrato sensitivity.
+ * vdelay          - Vibrato onset delay in seconds.
+ * vdepth          - Programmed vibrato depth.
  * vibrato         - Manual vibrato depth.
  *
- *                   LFO                                                               
- * lfoFreq         - LFO frequency in Hertz.                                                               
- * lfoDelay        - LFO onset delay in seconds                                                                
+ *                   LFO
+ * lfoFreq         - LFO frequency in Hertz.
+ * lfoDelay        - LFO onset delay in seconds
  * lfoDepth        - LFO output amplitude.
  *
- *                   OSC1 (filtered sawtooth)                                                                
- * osc1Freq        - OSC1 frequency ratio.                                                                
- * osc1Wave        - OSC1 waveshape, [0.0,1.0].                                                                
- * osc1Wave_env1   - OSC1 waveshape mod by env1.                                                                     
- * osc1Wave_lfo    - OSC1 waveshape mod by lfo.                                                                    
- * osc1Amp         - OSC1 linear amplitude.                                                               
+ *                   OSC1 (filtered sawtooth)
+ * osc1Freq        - OSC1 frequency ratio.
+ * osc1Wave        - OSC1 waveshape, [0.0,1.0].
+ * osc1Wave_env1   - OSC1 waveshape mod by env1.
+ * osc1Wave_lfo    - OSC1 waveshape mod by lfo.
+ * osc1Amp         - OSC1 linear amplitude.
  * osc1Amp_env1    - OSC1 amplitude mod by env1.
  *
- *                   OSC2 (pulse)                                                                  
- * osc2Freq        - OSC2 frequency ratio.                                                                
- * osc2Wave        - OSC2 pulse width [0.0, 1.0].                                                                
- * osc2Wave_env1   - OSC2 PWM from env1.                                                                      
- * osc2Wave_lfo    - OSC2 PWM from lfo.                                                                    
- * osc2Amp         - OSC2 linear amplitude.                                                               
+ *                   OSC2 (pulse)
+ * osc2Freq        - OSC2 frequency ratio.
+ * osc2Wave        - OSC2 pulse width [0.0, 1.0].
+ * osc2Wave_env1   - OSC2 PWM from env1.
+ * osc2Wave_lfo    - OSC2 PWM from lfo.
+ * osc2Amp         - OSC2 linear amplitude.
  * osc2Amp_env1    - OSC2 amplitude mod by env1.
  *
- *                   OSC3 (Sync Saw)                                                                   
- * osc3Freq        - OSC3 frequency ratio.                                                                
- * osc3Bias        - OSC3 frequency bias in Hertz.                                                                
- * osc3Wave        - OSC3 sync frequency [0.0, 1.0].                                                                
- * osc3Wave_env1   - OSC3 sync freq mod by env1.                                                                     
- * osc3Wave_lfo    - OSC3 sync freq mod by lfo.                                                                    
- * osc3WaveLag     - OSC3 sync freq mod lag time >= 0.                                                                   
- * osc3Amp         - OSC3 linear amplitude.                                                               
+ *                   OSC3 (Sync Saw)
+ * osc3Freq        - OSC3 frequency ratio.
+ * osc3Bias        - OSC3 frequency bias in Hertz.
+ * osc3Wave        - OSC3 sync frequency [0.0, 1.0].
+ * osc3Wave_env1   - OSC3 sync freq mod by env1.
+ * osc3Wave_lfo    - OSC3 sync freq mod by lfo.
+ * osc3WaveLag     - OSC3 sync freq mod lag time >= 0.
+ * osc3Amp         - OSC3 linear amplitude.
  * osc3Amp_env1    - OSC3 amplitude mod by env1.
  *
- *                   Noise (filtered and ring modulated with OSC3)                                                                    
- * noiseFreq       - Noise filter frequency ratio.                                                                 
- * noiseBW         - Noise filter width [0.0, 1.0].                                                               
- * noiseAmp        - Noise linear amplitude.                                                                
- * noiseAmp_env1   - Noise amplitude mod by env1. 
+ *                   Noise (filtered and ring modulated with OSC3)
+ * noiseFreq       - Noise filter frequency ratio.
+ * noiseBW         - Noise filter width [0.0, 1.0].
+ * noiseAmp        - Noise linear amplitude.
+ * noiseAmp_env1   - Noise amplitude mod by env1.
  *
- *                   Filters, dual low and band pass.                                                                    
- * filterFreq      - Filter frequency in Hertz.                                                                  
- * filterKeytrack  - Filter keyboard track (ratio)                                                                      
- * filterFreq_env1 - Filter freq mod by env1 in Hertz.                                                                       
- * filterFreq_lfo  - Filter freq mod by lfo in Hertz.                                                                      
- * filterRes       - Filter resonance, [0.0, 1.0].                                                                 
- * filterRes_env1  - Resonance mod by env1.                                                                      
- * filterRes_lfo   - Resonance mod by lfo.                                                                     
- * filterMix       - Filter mode mix [-1=lowpass, +1=bandpass].                                                                 
- * filterMix_lfo   - Filter mix mod by lfo.                                                                     
- * filterMix_env1  - Filter mix mod by env1.                                                                      
- * bandpassOffset  - Bandpass filter frequency offset (ratio)                                                                      
+ *                   Filters, dual low and band pass.
+ * filterFreq      - Filter frequency in Hertz.
+ * filterKeytrack  - Filter keyboard track (ratio)
+ * filterFreq_env1 - Filter freq mod by env1 in Hertz.
+ * filterFreq_lfo  - Filter freq mod by lfo in Hertz.
+ * filterRes       - Filter resonance, [0.0, 1.0].
+ * filterRes_env1  - Resonance mod by env1.
+ * filterRes_lfo   - Resonance mod by lfo.
+ * filterMix       - Filter mode mix [-1=lowpass, +1=bandpass].
+ * filterMix_lfo   - Filter mix mod by lfo.
+ * filterMix_env1  - Filter mix mod by env1.
+ * bandpassOffset  - Bandpass filter frequency offset (ratio)
  * bandpassLag     - Bandpass frequency mod lag time.
 */
 
@@ -188,7 +188,7 @@
 		w1 = w1.linexp(0.0, 1.0, 1, 16).max(1);
 		w1 = (w1*f1).clip(f1, 16*f1);
 		a1 = osc1Amp + (osc1Amp_env1 * env1);
-		a1 = (a1/2).min(1).max(0);
+		a1 = (1.4*a1).min(1.4).max(0);
 		osc1 = BRF.ar(Saw.ar(f1), w1);
 
 		// OSC2 pulse wave
@@ -196,17 +196,17 @@
 		w2 = osc2Wave + (lfo * osc2Wave_lfo) + (env1 * osc2Wave_env1);
 		w2 = w2.max(0).min(1);
 		a2 = osc2Amp + (osc2Amp_env1 * env1);
-		a2 = (a2/2).min(1).max(0);
+		a2 = a2.min(1).max(0);
 		osc2 = Pulse.ar(f2, w2);
 
 		// OSC3 Sync saw
 		f3 = (f0*osc3Freq+osc3Bias).max(0).min(12000);
-		w3 = osc3Wave + ((1 + lfo) * osc3Wave_lfo) + (env1 * osc3Wave_env1);
+		w3 = osc3Wave + ((1 + (0.5*lfo)) * 0.5 * osc3Wave_lfo) + (env1 * osc3Wave_env1);
 		w3 = w3.abs.linlin(0, 1, 1, 16);
 		w3 = w3*f3.max(f3+1);
 		w3 = Lag2.kr(w3, osc3WaveLag).min(11999);
 		a3 = osc3Amp + (osc3Amp_env1 * env1);
-		a3 = (a3/2).min(1).max(0);
+		a3 = (0.5*a3).min(1).max(0);
 		osc3 = SyncSaw.ar(f3, w3);
 
 		// Noise (ring modulated with OSC3)

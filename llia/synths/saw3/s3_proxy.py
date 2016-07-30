@@ -27,6 +27,7 @@ class Saw3Proxy(SynthProxy):
 
 s3_pallet = Pallet(default_pallet)
 s3_pallet["BG"] = "#131313"
+s3_pallet["FG"] = "#DAC0C0"
 s3_pallet["SLIDER-TROUGH"] = "#1f2f40"
             
 specs["constructor"] = Saw3Proxy
