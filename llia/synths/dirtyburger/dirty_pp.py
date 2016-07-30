@@ -43,7 +43,7 @@ def pp_dirty(program, slot=127):
     acc += frmt
 
     amp, pan = db('wetAmp'), fval('wetPan')
-    frmt = '%swet = [%d, %5.3f],\n' % (pad, amp, pan)
+    frmt = '%swet = [%d, %5.3f])\n' % (pad, amp, pan)
     acc += frmt
     return acc
 

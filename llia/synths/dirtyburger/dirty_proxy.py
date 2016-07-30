@@ -7,6 +7,7 @@ from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.dirtyburger.dirty_data import program_bank
 from llia.synths.dirtyburger.dirty_pp import pp_dirty
+from llia.synths.dirtyburger.dirty_gen import dirty_gen
 
 specs = SynthSpecs("DirtyBurger")
 
@@ -34,6 +35,7 @@ specs["keymodes"] = ("EFX", )
 specs["audio-output-buses"] = (("outbus", 2),)
 specs["audio-input-buses"] = (("inbus", 1),)
 specs["pretty-printer"] = pp_dirty
+specs["program-generator"] = dirty_gen
 specs["is-efx"] = True
 specs["help"] = "dirtyburger"
 specs["pallet"] = dirty_pallet
