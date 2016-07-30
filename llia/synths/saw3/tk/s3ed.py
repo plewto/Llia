@@ -10,15 +10,14 @@ from llia.gui.tk.expslider import ExpSlider
 from llia.gui.tk.oscfreq_control import OscFrequencyControl
 from llia.gui.tk.decade_control import DecadeControl
 from llia.synths.saw3.tk.s3filter import TkSaw3FilterPanel
-#from llia.synths.saw3.tk.s3ctrl import TkSaw3ControlPanel
+
 
 
 
 def create_editor(parent):
     panel1 = TkSaw3Panel1(parent)
     panel2 = TkSaw3FilterPanel(parent)
-    #panel3 = TkSaw3ControlPanel(parent)
-    #panel4 = TkSaw3InfoPanel(parent)
+    panel4 = TkSaw3InfoPanel(parent)
     
 class TkSaw3Panel1(TkSubEditor):
 
@@ -142,7 +141,7 @@ class TkSaw3Panel1(TkSubEditor):
 class TkSaw3InfoPanel(object):
 
     NAME = "Info"
-    IMAGE_FILE = "resources/Saw3/info.png"
+    IMAGE_FILE = "resources/Saw3/editor_info.png"
 
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)

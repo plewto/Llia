@@ -15,7 +15,7 @@ from llia.gui.tk.expslider import ExpSlider
 
 class TkSaw3FilterPanel(TkSubEditor):
 
-    NAME = "Filter"
+    NAME = "Filter/Env/LFO"
     IMAGE_FILE = "resources/Saw3/editor_filter.png"
 
     def __init__(self, editor):

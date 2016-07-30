@@ -30,7 +30,7 @@ def rnd_lfo(vfreq):
     if coin(0.25):
         n = pick([1,2,3])
         d = float(pick([1,2,4,8,3,6,9,12,5]))
-        freq = (n*vfreq)/d
+        freq = min((n*vfreq)/d, 20)
     else:
         freq = coin(0.75, rnd(), rnd(7))
     return lfo(freq,
@@ -99,7 +99,7 @@ def pick_osc3(freq, bias):
                 wave = coin(0.75, 0.5, rnd()),
                 env1 = coin(0.5, 0, random_sign(0.5, rnd())),
                 lfo = coin(0.5, 0, rnd()),
-                lag = rnd(2),
+                lag = rnd(),
                 bias=bias)
     
 def pick_noise():
