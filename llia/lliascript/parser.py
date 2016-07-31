@@ -32,6 +32,7 @@ class Parser(object):
         self.exit_repl = False
         self._prompt = "Llia> "
         self.entities = {}
+        # Default audio buses
         # ISSUE: Number of private input and output buses is hard coded.
         #
         for i in range(8):
@@ -39,6 +40,15 @@ class Parser(object):
                 name = "%s%d" % (n, i)
                 e = LsEntity(name, "abus")
                 self.entities[name] = e
+        # Default control buses
+        #
+        name = "default_input_cbus"
+        e = LsEntity(name, "cbus")
+        self.entities[name] = e
+        name = "default_output_cbus"
+        e = LsEntity(name, "cbus")
+        self.entities[name] = e
+        
         self._history = ""
         self._global_namespace = {}
         self._local_namespace = {}

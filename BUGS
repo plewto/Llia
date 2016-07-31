@@ -1,7 +1,7 @@
 LLia Bugs
 
----------------------------------------------------------------------- OPEN
-BUG 0000 2016.05.08 OPEN
+---------------------------------------------------------------------- CLOSED
+BUG 0000 2016.05.08 CLOSED
 Effected files: llia.sc, proxy.py
 
 LliaProxy.sync_to_host does not detect first control bus added to host.
@@ -14,6 +14,11 @@ bus defined.  If two control buses are created, the client and host agree
 that there are two buses.  If one of these buses is then removed, the
 client no longer "sees" the remaining bus.
 
+
+Closed 2016.07.31
+The problem was not solved directly but as a consequence of adding
+default control buses.  Two control buses were added to serve as
+default input and output control buses. 
 
 ---------------------------------------------------------------------- OPEN
 BUG 0001 2016.05.08 OPEN

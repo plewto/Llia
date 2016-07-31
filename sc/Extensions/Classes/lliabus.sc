@@ -64,6 +64,8 @@ LliaBuses : Object {
 					buses.add(name -> Bus.new(\audio, index, 1))});
 			},{
 				buses = Dictionary.new(8);
+				buses.add("default_input_cbus" -> Bus.new(\control, 0, 1));
+				buses.add("default_output_cbus" -> Bus.new(\control, 1, 1));
 			});
 	} // end init
 
