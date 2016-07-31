@@ -8,7 +8,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cfactory
 
-def create_tk_editor(parent):
+def create_editor(parent):
     panel1 = TkDirtyPanel(parent)
 
 class TkDirtyPanel(TkSubEditor):
@@ -84,3 +84,4 @@ class TkDirtyPanel(TkSubEditor):
         self.add_control("dryPan", s_dry_pan)
         self.add_control("volume", s_vol)
 
+   

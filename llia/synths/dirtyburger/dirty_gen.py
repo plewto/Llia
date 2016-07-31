@@ -10,7 +10,7 @@ from llia.synths.dirtyburger.dirty_data import dirty
 def dirty_gen(slot=127, *_):
     dtime = coin(0.75, rnd(0.5), 0.5+rnd())
     fb = coin(0.75,
-              [[coin(0.5, rnd(0.5), 0.5+rnd(0.4))],1.0, 1.0],
+              [[coin(0.5, rnd(), 0.5+rnd(0.4))],1.0, 1.0],
               [rnd(0.75), coin(0.75, 1 + rnd(0.2)), 0.125+rnd(0.75)])
     lp = coin(0.75, 2000 + rnd(8000), 100+rnd(8000))
     hp = coin(0.75, 100, 100+rnd(2000))

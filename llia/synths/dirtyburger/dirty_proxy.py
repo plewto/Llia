@@ -20,7 +20,7 @@ class DirtyProxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            from llia.synths.dirtyburger.tk.dirty_ed import create_tk_editor
+            from llia.synths.dirtyburger.tk.dirty_ed import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_tk_editor(parent_editor)
