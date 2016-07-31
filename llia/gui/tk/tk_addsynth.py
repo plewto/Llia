@@ -93,6 +93,7 @@ class TkAddSynthDialog(Toplevel):
                 bname = b[0]
                 lab_name = factory.label(frame_control_out, bname)
                 combo = factory.control_bus_combobox(frame_control_out, self.app)
+                combo.set("default_input_cbus")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 self._busname_map[bname] = combo
                 spin = spinbox(frame_control_out, bname)
@@ -110,6 +111,7 @@ class TkAddSynthDialog(Toplevel):
                 bname = b[0]
                 lab_name = factory.label(frame_control_in, bname)
                 combo = factory.control_bus_combobox(frame_control_in, self.app)
+                combo.set("default_output_cbus")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 self._busname_map[bname] = combo
                 spin = spinbox(frame_control_in, bname)
