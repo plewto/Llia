@@ -29,7 +29,7 @@ class SynthHelper(object):
         ns["input_channel"] = self.input_channel
         ns["keyrange"] = self.keyrange
         ns["synth"] = self.add_synth
-        ns["new_group"] = self.new_group
+        ns["group"] = self.new_group
         ns["create_editor"] = self.create_editor
         ns["transpose"] = self.transpose
         ns["use"] = self.use_synth
@@ -49,6 +49,8 @@ class SynthHelper(object):
         ns["fill_performance"] = self.fill_performance
         ns["qbuses"] = self.q_buses
         ns["qbuffers"] = self.q_buffers
+        ns["qparams"] = self.q_params
+        ns["param"] = self.param
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -605,7 +607,23 @@ class SynthHelper(object):
                 "serial-number" : self._synth_serial_number}
         self.parser.register_entity(grp.name, "group", data)
         self._synth_serial_number += 1
-        
-        
-        
-        
+
+    def q_params(self, sid=None, silent=False):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        params = bnk.template.keys()
+        if not silent:
+            for p in sorted(params):
+                print("# %s" % p)
+        return params
+
+    def param(self, pname, new_value=None, slot=None, sid=None, silent=False):
+        sy = self.get_synth(sid)
+        bnk = sy.bank()
+        program = bnk[slot]
+        if new_value != None:
+            program[pname] = new_value
+        value = program[pname]
+        if not silent:
+            print("# [%s] -> %s" % (pname, value))
+        return value

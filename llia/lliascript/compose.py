@@ -98,7 +98,7 @@ class Composer(object):
                 code += '["%s","%s",%d])\n' % (outbus,param,offset)
             elif e.data["is-group"]:
                 name = e.data["name"]
-                code += 'new_group("%s")\n' % name
+                code += 'group("%s")\n' % name
             else:
                 # Assume an instrumental synth
                 code += 'synth("%s", ' % e.data["stype"]

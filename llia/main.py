@@ -15,7 +15,6 @@ import llia.constants as constants
 from llia.config import LliaConfig
 from llia.llia_app import LliaApp
 
-import llia.synths.algo6.a6_proxy
 import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
 import llia.synths.klstr.klstr_proxy
