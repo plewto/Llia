@@ -18,8 +18,11 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
                ("TK", "Aviliable wherever Python is sold."))
 
 KEY_MODES = ("Poly1", "Mono1", "EFX")
+
+CONTROLLER_SYNTH_TYPES = ("LFO1",)
 SYNTH_TYPES = ("Orgn", "Saw3", "Klstr", "RDrum", "MASA")
 EFFECT_TYPES = ("DirtyBurger", "StepFilter", "XOver")
+
 
 MAX_UNDO = 10
 BANK_LENGTH = 128

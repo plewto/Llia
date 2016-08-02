@@ -29,6 +29,7 @@ class SynthHelper(object):
         ns["input_channel"] = self.input_channel
         ns["keyrange"] = self.keyrange
         ns["synth"] = self.add_synth
+        ns["control_synth"] = self.add_control_synth
         ns["group"] = self.new_group
         ns["create_editor"] = self.create_editor
         ns["transpose"] = self.transpose
@@ -96,6 +97,12 @@ class SynthHelper(object):
     def assert_efx_type(stype):
         if stype not in EFFECT_TYPES:
             msg = "Invalid EFX synthtype: '%s'" % stype
+            raise LliascriptError(msg)
+
+    @staticmethod
+    def assert_control_synth_type(stype):
+        if stype not in CONTROLLER_SYNTH_TYPES:
+            msg = "Invalid Controler synthtype: '%s'" % stype
             raise LliascriptError(msg)
         
     @staticmethod
@@ -285,9 +292,7 @@ class SynthHelper(object):
                 mw[sy.sid] = swin
                 sy.create_subeditors()
                 notebook.add(swin, text=sy.sid)
-                
-        
-        
+
     def add_efx(self, stype, id_, outbus=["out_0", "outbus", 0]):
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
@@ -310,7 +315,27 @@ class SynthHelper(object):
                 self.assign_abus(param, bname, offset)
                 self.update_prompt()
             return rs
-                
+
+    def add_control_synth(self, stype, id_):
+        sid = "%s_%s" % (stype, id_)
+        if self.synth_exists(sid):
+            self.use_synth(sid)
+            return True
+        else:
+            self.assert_control_synth_type(stype)
+            rs = self.proxy.add_efx(stype, id_)
+            self.parser.register_entity(sid, "synth",
+                                         {"serial-number" : self._synth_serial_number,
+                                          "is-group" : False,
+                                          "is-efx" : False,
+                                          "is-control-synth" : True,
+                                          "stype" : id_})
+            self._synth_serial_number += 1
+            if rs:
+                self.current_sid = sid
+                self.update_prompt()
+            return rs
+        
     def input_channel(self, chan=None, sid=None):
         sy = self.get_synth(sid)
         chan_number = None

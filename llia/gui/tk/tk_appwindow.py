@@ -56,28 +56,56 @@ class TkApplicationWindow(AbstractApplicationWindow):
         south.config(background=factory.bg())
 
     def _init_center_frame(self, master):
-        frame_north = layout.FlowGrid(master)
-        frame_south = layout.FlowGrid(master)
-        frame_north.pack(expand=True, fill=BOTH, pady=8)
-        frame_south.pack(expand=True, fill=BOTH)
-        w = factory.image_label(frame_north, "resources/logos/synth.png")
-        frame_north.add(w)
+        
+        frame_synths = layout.FlowGrid(master)
+        frame_efx = layout.FlowGrid(master)
+        frame_controllers = layout.FlowGrid(master)
+        
+        # frame_synths.pack(expand=True, fill=BOTH, pady=8)
+        # frame_efx.pack(expand=True, fill=BOTH)
+        # frame_controllers.pack(expand=True, fill=BOTH, pady=8)
+
+        frame_synths.grid(row=0, column=0)
+        frame_efx.grid(row=1, column=0, sticky='w')
+        frame_controllers.grid(row=2, column=0, sticky='w')
+        
+        w = factory.image_label(frame_synths, "resources/logos/synth.png")
+        frame_synths.add(w)
         for st in sorted(con.SYNTH_TYPES):
             sp = specs[st]
             ttp = "Add %s Synthesizer (%s)" % (st, sp["description"])
-            b = factory.logo_button(frame_north, st, ttip=ttp)
+            b = factory.logo_button(frame_synths, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_synth_dialog)
-            frame_north.add(b)
-        w = factory.image_label(frame_south, "resources/logos/efx.png")
-        frame_south.add(w)
+            frame_synths.add(b)
+            
+        w = factory.image_label(frame_efx, "resources/logos/efx.png")
+        frame_efx.add(w)
         for st in sorted(con.EFFECT_TYPES):
             sp = specs[st]
             ttp = "Add %s Effect (%s)" % (st, sp["description"])
-            b = factory.logo_button(frame_south, st, ttip=ttp)
+            b = factory.logo_button(frame_efx, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_efx_dialog)
-            frame_south.add(b)
-        frame_north.config(background=factory.bg())
-        frame_south.config(background=factory.bg())
+            frame_efx.add(b)
+
+        w = factory.image_label(frame_controllers, "resources/logos/controllers.png")
+        frame_controllers.add(w)
+        for st in sorted(con.CONTROLLER_SYNTH_TYPES):
+            sp = specs[st]
+            ttp = "Add %s Effect (%s)" % (st, sp["description"])
+            b = factory.logo_button(frame_controllers, st, ttip=ttp)
+            b.bind("<Button-1>", self._show_add_controller_dialog)
+            frame_controllers.add(b)
+            
+        # w = factory.image_label(frame_controllers, "resources/logos/controllers.png")
+        # for st in sorted(con.CONTROLLER_SYNTHS):
+        #     sp = specs[st]
+        #     b = factory.logo_button(frame_controllers, st)
+        #     frame_controllers.add(b)
+        
+        
+        frame_synths.config(background=factory.bg())
+        frame_efx.config(background=factory.bg())
+        frame_controllers.config(background=factory.bg())
         
     @staticmethod
     def menu(master):
@@ -245,9 +273,15 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def _show_add_efx_dialog(self, event):
         w = event.widget
         st = w.config()["text"][-1]
-        dialog = TkAddSynthDialog(self.root, self.app, st, True)
+        dialog = TkAddSynthDialog(self.root, self.app, st, is_efx=True, is_controller=False)
         self.root.wait_window(dialog)
 
+    def _show_add_controller_dialog(self, event):
+        w = event.widget
+        st = w.config()["text"][-1]
+        dialog = TkAddSynthDialog(self.root, self.app, st, is_efx=False, is_controller=True)
+        self.root,wait_window(dialog)
+        
     def _add_synth_group(self):
         sh = self.app.ls_parser.synthhelper
         sh.new_group()

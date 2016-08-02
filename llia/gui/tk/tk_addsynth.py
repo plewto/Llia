@@ -21,13 +21,14 @@ def select_synth_id(app, stype):
         
 class TkAddSynthDialog(Toplevel):
 
-    def __init__(self, master, app, synth_type, is_efx):
+    def __init__(self, master, app, synth_type, is_efx=False, is_controller=False):
         Toplevel.__init__(self, master)
         main = factory.frame(self)
         main.pack(anchor=W, expand=True, fill=BOTH)
         self.app = app
         self.stype = synth_type
         self.is_efx = is_efx
+        self.is_controller = is_controller
         self.id_ = select_synth_id(self.app, synth_type)
         self.sid = "%s_%d" % (synth_type, self.id_)
         specs = SynthSpecs.global_synth_type_registry[synth_type]
@@ -37,6 +38,8 @@ class TkAddSynthDialog(Toplevel):
         title = "Add %s " % synth_type
         if is_efx:
             title += "Effect"
+        elif is_controller:
+            title += "Controller Synth"
         else:
             title += "Synth"
         title += "      sid = %s" % self.sid
@@ -144,8 +147,8 @@ class TkAddSynthDialog(Toplevel):
         for km in specs["keymodes"]:
             rb = factory.radio(frame_keymode, km, self.var_keymode, km)
             rb.grid(row=0, column=col, sticky="w", padx=4, pady=4)
-            if self.is_efx:
-                rb.config(state="disabled")
+            # if self.is_efx:
+            #     rb.config(state="disabled")
             col += 1
         self.var_keymode.set(specs["keymodes"][0])  # Set default keymode
        
@@ -179,7 +182,9 @@ class TkAddSynthDialog(Toplevel):
     def accept(self):
         shelper = self.app.ls_parser.synthhelper
         if self.is_efx:
-            sy = shelper.add_efx(self.stype, self.id_, outbus=None) 
+            sy = shelper.add_efx(self.stype, self.id_, outbus=None)
+        elif self.is_controller:
+            sy = shelper.add_control_synth(self.stype, self.id_)
         else:
             km = self.var_keymode.get()
             vc = int(self.var_voice_count.get())
