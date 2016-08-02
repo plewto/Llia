@@ -1,5 +1,5 @@
 (
-s = Server.local.boot;
+s = Server.default.boot;
 a.free;
 a = LliaHandler.new();
 )

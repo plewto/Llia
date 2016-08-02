@@ -19,6 +19,7 @@ import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
 import llia.synths.klstr.klstr_proxy
 import llia.synths.rdrum.rdrum_proxy
+import llia.synths.masa.masa_proxy
 
 import llia.synths.dirtyburger.dirty_proxy
 import llia.synths.stepfilter.sf_proxy
