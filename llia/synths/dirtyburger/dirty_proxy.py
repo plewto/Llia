@@ -23,7 +23,7 @@ class DirtyProxy(SynthProxy):
             from llia.synths.dirtyburger.tk.dirty_ed import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
-            create_tk_editor(parent_editor)
+            create_editor(parent_editor)
             
 
 dirty_pallet = Pallet(default_pallet)
