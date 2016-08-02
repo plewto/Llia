@@ -6,9 +6,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cfactory
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.oscfreq_control import OscFrequencyControl
 from llia.gui.tk.decade_control import DecadeControl
-from llia.synths.saw3.tk.s3filter import TkSaw3FilterPanel
 
 def create_editor(parent):
     panel1 = TkMasaPanel1(parent)
