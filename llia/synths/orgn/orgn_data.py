@@ -1,5 +1,3 @@
-# llia.synths.orgn.orgn_data
-# 2016.06.04
 
 from __future__ import print_function
 
@@ -10,29 +8,30 @@ from llia.performance_edit import performance
 
 prototype = {"amp" : 0.05,
              "vfreq" : 5.0,
-             "vdelay" : 2.0,
-             "vsens" : 0.30,
+             "vdelay" : 0.0,
              "vdepth" : 0.0,
              "vibrato" : 0.0,
              "chorus" : 0.0,
-             "chorusDelay" : 1.0,
-             "c1" : 0.5,
-             "m1" : 0.5,
-             "mod1" : 1.0,
-             "amp1" : 1.0,
-             "c2" : 1.0,
-             "m2" : 1.0,
-             "mod2" : 1.0,
-             "amp2" : 1.0,
-             "c3" : 3.0,
-             "m3" : 3.0,
-             "mod3" : 0.0,
-             "amp3" : 1.0,
-             "attack3" : 0.0,
-             "decay3" : 0.0,
-             "sustain3" : 1.0,
-             "release3" : 0.0,
-             "brightness" : 1.0}
+             "chorusDelay" : 2.0,
+             "r1" : 1.00,
+             "r2" : 1.00,
+             "r3" : 2.00,
+             "r4" : 4.00,
+             "amp1" : 1.00,
+             "amp2" : 1.00,
+             "amp3" : 1.00,
+             "amp4" : 1.00,
+             "cattack" : 0.0,
+             "cdecay" : 0.0,
+             "csustain" : 1.0,
+             "crelease" : 0.0,
+             "mattack" : 2.0,
+             "mdecay" : 0.0,
+             "msustain" : 1.0,
+             "mrelease" : 4.0,
+             "modulationDepth" : 1.0,
+             "xToModulationDepth" : 0.0,
+             "xToPitch" : 0.0}
 
 class Orgn(Program):
 
@@ -42,201 +41,170 @@ class Orgn(Program):
 program_bank = ProgramBank(Orgn("Init"))
 program_bank.enable_undo = False
 
-def nlimit(value):
-    return clip(float(value), 0.0, 1.0)
-
-def fill(lst, template):
+def _fill(lst, template):
     acc = []
-    for i, v in enumerate(template):
+    for i,d in enumerate(template):
         try:
-            acc.append(lst[i])
+            v = lst[i]
         except IndexError:
-            acc.append(v)
+            v = d
+        acc.append(v)
     return acc
 
+
 def orgn(slot, name, amp=-12,
-         vfreq=5.0, vdelay=0.0, vsens=0.30, vdepth=0.00,
-         chorus = [0.00, 1.00],
-         a=[0.5, 0.5, 1.00, 0], # [c m mod db]
-         b=[1.0, 0.5, 1.00, 0],
-         c=[3.0, 3.0, 1.00, 0],
-         adsr = [0.0, 1.0, 1.0, 0.0],
-         brightness = 1.0):
+         cenv = [0.00, 0.00, 1.00, 0.00], # ADSR
+         menv = [0.00, 0.00, 1.00, 0.00],
+         op1 = [1.00, 0],   # freq-ratio, amp(db)
+         op2 = [1.00, 0],   # freq-ratio, modulation-depth
+         op3 = [2.00, -99], # freq-ratio, amp(db)
+         op4 = [2.00, 0],   # freq-ratio, modulation-depth
+         vibrato = [5.00, 0.00, 0.00, 0.00], # freq, delay, depth, x->pitch
+         chorus = [0.00, 0.00], # delay, depth
+         mod_depth = [1.0, 0.0]): # [depth, x->depth]
+    cenv = _fill(cenv, [0.0, 0.0, 1.0, 0.0])
+    menv = _fill(menv, [0.0, 0.0, 1.0, 0.0])
+    op1 = _fill(op1, [1.0, 0])
+    op2 = _fill(op2, [1.0, 0.0])
+    op3 = _fill(op3, [2.0, -99])
+    op4 = _fill(op4, [2.0, 0.0])
+    vibrato = _fill(vibrato, [5.0, 0.0, 0.0, 0.0])
+    chorus = _fill(chorus, [0.0, 0.0])
+    mod_depth = _fill(mod_depth, [1.0, 0.0])
     p = Orgn(name)
-    p["amp"] = db_to_amp(min(amp, 12))
-    p["vfreq"] = float(max(0.001, vfreq))
-    p["vdelay"] = abs(float(vdelay))
-    p["vsens"] = nlimit(vsens)
-    chorus = fill(chorus, [0.0, 1.0])
-    p["chorus"] = nlimit(chorus[0])
-    p["chorusDelay"] = float(max(chorus[1], 0))
-    a = fill(a, [0.5, 0.5, 1.0, 0])
-    p["c1"] = float(max(a[0], 0.125))
-    p["m1"] = float(max(a[1], 0.125))
-    p["mod1"] = nlimit(a[2])
-    p["amp1"] = db_to_amp(clip(a[3], -99, 0))
-    b = fill(b, [1.0, 0.5, 1.0, 0])
-    p["c2"] = float(max(b[0], 0.125))
-    p["m2"] = float(max(b[1], 0.125))
-    p["mod2"] = nlimit(b[2])
-    p["amp2"] = db_to_amp(clip(b[3], -99, 0))
-    c = fill(c, [3.0, 1.5, 0.0, 0])
-    p["c3"] = float(max(c[0], 0.125))
-    p["m3"] = float(max(c[1], 0.125))
-    p["mod3"] = nlimit(c[2])
-    p["amp3"] = db_to_amp(clip(c[3], -99, 0))
-    adsr = fill(adsr, [0.0, 1.0, 1.0, 0.0])
-    p["attack3"] = float(max(0, adsr[0]))
-    p["decay3"] = float(max(0, adsr[1]))
-    p["sustain3"] = nlimit(adsr[2])
-    p["release3"] = float(max(0, adsr[3]))
-    p["brightness"] = nlimit(brightness)
     p.performance = performance()
+    p["amp"] = db_to_amp(amp)
+    for i,param in enumerate(("cattack","cdecay","csustain","crelease")):
+        p[param] = float(cenv[i])
+    for i,param in enumerate(("mattack","mdecay","msustain","mrelease")):
+        p[param] = float(menv[i])
+    p["r1"] = float(op1[0])
+    p["r2"] = float(op2[0])
+    p["r3"] = float(op3[0])
+    p["r4"] = float(op4[0])
+    p["amp1"] = float(db_to_amp(op1[1]))
+    p["amp2"] = float(op2[1])
+    p["amp3"] = float(db_to_amp(op3[1]))
+    p["amp4"] = float(op4[1])
+    for i,param in enumerate(("vfreq","vdelay","vdepth","xToPitch")):
+        v = float(vibrato[i])
+        p[param] = v
+    p["chorusDelay"] = float(chorus[0])
+    p["chorus"] = float(chorus[1])
+    p["modulationDepth"] = float(mod_depth[0])
+    p["xToModulationDepth"] = float(mod_depth[1])
     program_bank[slot] = p
     return p
+   
+    
+    
+    
+orgn(0  , "Boxholm", amp=-12,
+         cenv = [0.339,0.128,0.900,0.252],
+         menv = [0.330,0.449,0.668,0.394],
+         op1 = [1.5000,   0],
+         op2 = [2.2500, 0.083],
+         op3 = [1.5000,  -9],
+         op4 = [0.5000, 0.355],
+         vibrato = [8.476,0.000,0.000,0.0000],
+         chorus = [0.000, 0.000],
+         mod_depth = [1.000, 0.000])
 
+orgn(1, "Buckeye", amp = -12,
+     cenv = [0.00, 0.10, 0.70, 2.25],
+     menv = [0.20, 0.50, 0.70, 1.00],
+     op1 = [1.00, 0],
+     op2 = [1.00, 0.5],
+     op3 = [1.50, -6],
+     op4 = [1.50, 0.3],
+     vibrato = [6.00, 1.00, 0.00, 0.05],
+     chorus = [0.0, 0.0],
+     mod_depth = [1.0, 0.0])
 
-orgn(  0, "Boxholm", amp=-18,
-     vfreq=5.000, vdelay=0.000, vsens=0.300, vdepth=0.000,
-     chorus = [0.000, 1.000],
-     a = [0.500, 0.500, 1.000, 0],
-     b = [1.000, 0.500, 1.000, 0],
-     c = [3.000, 1.500, 0.000, 0],
-     adsr = [0.000, 1.000, 1.000, 1.000],
-     brightness = 0.342)
+orgn(2  , "High8", amp=-12,
+         cenv = [4.045,1.924,0.846,1.819],
+         menv = [1.334,2.315,0.523,1.085],
+         op1 = [8.0000,   0],
+         op2 = [8.0000, 0.740],
+         op3 = [2.0000,  -9],
+         op4 = [8.0000, 0.355],
+         vibrato = [4.149,1.585,0.000,0.0000],
+         chorus = [1.340, 0.000],
+         mod_depth = [1.000, 0.000])
 
-orgn(  1, "Buckeye", amp=-18,
-     vfreq=5.000, vdelay=0.000, vsens=0.300, vdepth=0.000,
-     chorus = [0.296, 1.000],
-     a = [0.500, 0.500, 1.000, 0],
-     b = [1.000, 0.500, 1.000, -35],
-     c = [3.000, 3.000, 0.296, 0],
-     adsr = [0.015, 1.000, 1.000, 0.000],
-     brightness = 0.387)
+orgn(3, "Fm Ensemble Winds", amp=-12,
+         cenv = [4.074,3.274,0.098,0.567],
+         menv = [3.870,1.362,0.582,0.907],
+         op1 = [3.0000,   0],
+         op2 = [2.0000, 0.230],
+         op3 = [1.0000, -12],
+         op4 = [0.5000, 0.251],
+         vibrato = [2.385,2.140,0.000,0.0000],
+         chorus = [0.911, 0.000],
+         mod_depth = [1.000, 0.000])
 
-orgn(  2, "Cleghorn", amp=-11,
-     vfreq=5.994, vdelay=1.338, vsens=0.261, vdepth=0.000,
-     chorus = [0.261, 0.573],
-     a = [0.500, 0.500, 0.503, 0],
-     b = [2.020, 1.001, 0.427, -11],
-     c = [2.000, 3.002, 0.055, -17],
-     adsr = [0.000, 1.000, 1.000, 0.000],
-     brightness = 0.302)
+orgn(4, "Thin Gate", amp=-18,
+         cenv = [0.000,0.000,1.000,0.000],
+         menv = [0.000,0.000,1.000,0.000],
+         op1 = [8.0000,   0],
+         op2 = [1.0000, 0.835],
+         op3 = [4.0000,  -9],
+         op4 = [5.0000, 0.355],
+         vibrato = [6.161,0.000,0.022,0.0000],
+         chorus = [0.000, 0.000],
+         mod_depth = [1.000, 0.000])
 
-orgn(  3, "Cresco", amp=-12,
-     vfreq=7.000, vdelay=1.532, vsens=0.191, vdepth=0.000,
-     chorus = [0.734, 0.281],
-     a = [0.500, 1.000, 0.156, 0],
-     b = [1.000, 1.000, 0.151, -20],
-     c = [2.000, 1.000, 0.724, -14],
-     adsr = [0.000, 0.734, 0.965, 0.628],
-     brightness = 0.714)
+orgn(5, "Low Reed", amp=-12,
+         cenv = [0.371,0.372,0.756,0.177],
+         menv = [0.178,0.415,0.753,0.036],
+         op1 = [0.5000,   0],
+         op2 = [6.0000, 0.812],
+         op3 = [0.5000,   5],
+         op4 = [2.0000, 1.995],
+         vibrato = [2.799,0.505,0.096,0.0000],
+         chorus = [0.000, 0.000],
+         mod_depth = [1.000, 0.000])
 
-orgn(  4, "Albion", amp=-17,
-     vfreq=4.989, vdelay=1.761, vsens=0.065, vdepth=0.000,
-     chorus = [0.000, 1.000],
-     a = [0.500, 1.000, 0.352, -17],
-     b = [1.005, 1.000, 0.749, 0],
-     c = [3.025, 0.997, 0.402, -8],
-     adsr = [0.000, 1.000, 1.000, 0.000],
-     brightness = 0.513)
+orgn(6, "Release Trigger", amp=-12,
+         cenv = [2.787,0.973,0.199,0.788],
+         menv = [0.000,0.000,1.000,0.000],
+         op1 = [2.0000,   0],
+         op2 = [5.0000, 0.335],
+         op3 = [5.0000,  -9],
+         op4 = [2.0000, 0.355],
+         vibrato = [2.925,0.000,0.017,0.0000],
+         chorus = [0.293, 0.000],
+         mod_depth = [1.000, 0.000])
 
-orgn(  5, "Amboy", amp=-18,
-     vfreq=5.890, vdelay=2.679, vsens=0.387, vdepth=0.246,
-     chorus = [0.327, 0.673],
-     a = [0.500, 0.500, 0.477, 0],
-     b = [2.000, 2.000, 0.286, -8],
-     c = [3.005, 2.000, 0.628, -29],
-     adsr = [0.000, 1.000, 1.000, 0.000],
-     brightness = 0.628)
+orgn(7, "Combo 1", amp=-12,
+         cenv = [0.000,0.000,1.000,0.000],
+         menv = [0.000,0.000,1.000,0.000],
+         op1 = [3.0000,   0],
+         op2 = [1.0000, 0.213],
+         op3 = [0.5000, -12],
+         op4 = [1.5000, 0.251],
+         vibrato = [5.00,3.00,0.00,0.0000],
+         chorus = [1.506, 0.00],
+         mod_depth = [1.000, 0.000])
 
-orgn(  6, "Arcadia", amp=-18,
-     vfreq=4.989, vdelay=0.000, vsens=0.146, vdepth=0.000,
-     chorus = [0.950, 1.000],
-     a = [0.500, 0.500, 0.709, 0],
-     b = [1.000, 0.500, 0.352, -17],
-     c = [3.000, 3.005, 0.005, -8],
-     adsr = [0.000, 1.000, 1.000, 0.000],
-     brightness = 1.000)
+orgn(  8, "DeepVibe", amp=-12,
+         cenv = [6.000,0.000,1.000,6.000],
+         menv = [6.000,0.000,1.000,6.000],
+         op1 = [1.0000, -99],
+         op2 = [1.0000, 0.000],
+         op3 = [1.9988,   0],
+         op4 = [1.9988, 1.000],
+         vibrato = [6.985,1.000,0.894,0.0452],
+         chorus = [0.000, 1.000],
+         mod_depth = [1.000, 0.000])
 
-orgn(  7, "Avon", amp=-18,
-     vfreq=4.989, vdelay=1.018, vsens=0.241, vdepth=0.000,
-     chorus = [0.427, 0.000],
-     a = [0.500, 0.250, 0.704, -20],
-     b = [1.000, 1.000, 0.281, 0],
-     c = [1.500, 1.000, 0.462, -9],
-     adsr = [0.000, 0.387, 0.754, 0.930],
-     brightness = 0.573)
-
-orgn(  8, "Birdseye", amp=-18,
-     vfreq=4.989, vdelay=0.000, vsens=0.266, vdepth=0.000,
-     chorus = [0.271, 1.000],
-     a = [0.500, 0.500, 0.106, -29],
-     b = [1.000, 1.000, 0.598, 0],
-     c = [3.000, 2.000, 0.633, -9],
-     adsr = [0.000, 0.503, 0.317, 0.769],
-     brightness = 0.618)
-
-orgn(  9, "Blountsville", amp=-18,
-     vfreq=5.682, vdelay=1.421, vsens=0.186, vdepth=0.427,
-     chorus = [0.000, 0.000],
-     a = [1.000, 2.000, 0.769, 0],
-     b = [2.000, 4.000, 0.342, -5],
-     c = [4.000, 8.000, 0.548, -11],
-     adsr = [0.000, 0.950, 0.618, 0.518],
-     brightness = 0.271)
-
-orgn( 10, "Boswell", amp=-18,
-     vfreq=6.965, vdelay=0.911, vsens=0.045, vdepth=0.000,
-     chorus = [0.000, 1.000],
-     a = [0.500, 0.500, 0.819, 0],
-     b = [0.993, 0.991, 0.477, 0],
-     c = [1.508, 2.010, 0.307, -12],
-     adsr = [0.000, 1.000, 1.000, 0.000],
-     brightness = 1.000)
-
-orgn( 11, "Brocksburg", amp=-18,
-     vfreq=5.994, vdelay=0.000, vsens=0.794, vdepth=0.000,
-     chorus = [0.181, 0.000],
-     a = [0.500, 0.500, 0.844, 0],
-     b = [1.503, 3.518, 0.327, -2],
-     c = [4.010, 2.000, 0.060, -4],
-     adsr = [0.000, 0.663, 0.563, 0.141],
-     brightness = 0.573)
-
-orgn( 12, "Bristol", amp=-18,
-     vfreq=4.989, vdelay=0.112, vsens=0.065, vdepth=0.000,
-     chorus = [0.000, 1.000],
-     a = [0.500, 0.500, 0.337, -23],
-     b = [2.000, 2.000, 0.568, 0],
-     c = [2.000, 1.503, 0.095, -8],
-     adsr = [0.000, 0.774, 0.724, 0.367],
-     brightness = 0.734)
-
-orgn( 13, "Cadiz", amp=-18,
-     vfreq=4.989, vdelay=2.453, vsens=0.068, vdepth=0.000,
-     chorus = [0.698, 4.000],
-     a = [0.500, 0.250, 0.005, -5],
-     b = [1.005, 0.500, 0.166, 0],
-     c = [3.005, 1.000, 0.482, -15],
-     adsr = [0.101, 1.000, 1.000, 1.000],
-     brightness = 0.859)
-
-orgn( 14, "Cayuga", amp=-11,
-     vfreq=6.965, vdelay=2.263, vsens=0.296, vdepth=0.000,
-     chorus = [0.095, 2.090],
-     a = [0.500, 0.500, 0.226, 0],
-     b = [3.005, 1.000, 0.513, -31],
-     c = [2.000, 2.000, 0.085, 0],
-     adsr = [0.000, 0.332, 0.226, 0.000],
-     brightness = 0.789)
-
-orgn( 15, "Chalmers", amp=-17,
-     vfreq=5.994, vdelay=1.157, vsens=0.899, vdepth=0.000,
-     chorus = [0.698, 0.111],
-     a = [0.500, 0.250, 1.000, 0],
-     b = [1.000, 0.500, 0.749, 0],
-     c = [3.005, 3.005, 0.497, -8],
-     adsr = [0.000, 0.563, 0.905, 0.347],
-     brightness = 0.327)
-
+orgn(  9, "Combo 2", amp=-11,
+         cenv = [0.000,0.000,1.000,0.000],
+         menv = [0.000,0.000,1.000,0.000],
+         op1 = [1.0000,  -6],
+         op2 = [3.0000, 0.362],
+         op3 = [2.0000,  -9],
+         op4 = [2.0000, 0.324],
+         vibrato = [5.830,3.520,0.176,0.0000],
+         chorus = [0.920, 0.156],
+         mod_depth = [1.000, 0.000])

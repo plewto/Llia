@@ -1,39 +1,14 @@
 /*
  * Orgn
  *
- * An Fm Organ using 3 carrier/modulator pairs.
+ * Bare bones FM synth
  *
- *    [m1]-->[c1]------------+
+ *    [m2]-->[c1]------------+
  *                           |
- *    [m2]-->[c2]------------+----> out
- *                           |
- *    [m3]-->[c3]---[adsr]---+
+ *    [m4]-->[c3]------------+----> out
  *
- * Parameters:
- *   c1, c2, c3  - carrier frequencies.
- *   m1, m2, m3  - modulator frequencies.
- *   mod1, mod2, mod3 - Modulation depths, normalized.
- *   amp1, amp2, amp3 - linear carrier amplitudes.
- *
- *   vfreq   - vibrato frequency.
- *   vsens   - vibrato sensitivity, normalized
- *   vdelay  - programed vibrato onset delay
- *   vdepth  - programed vibrato depth, normalized
- *   vibrato - manual vibrato depth, normalized
- *
- *   chorus      - chorus depth, normalized.
- *   chorusDelay - chorus onset delay.
- *                 The chorus effect is produced by adding offset 
- *                 values to carriers 2 and 3 frequencies.
- *
- *   attack3  - carrier 3 attack time
- *   decay3   - carrier 3 decay time
- *   sustain3 - carrier 3 sustain level
- *   release3 - carrier 3 release time
- *
- *   brightness - scales mod depths for all modulators, normalized.
- *                
 */
+
 
 (SynthDef (\Orgn,
 	{|freq = 440,
@@ -41,54 +16,62 @@
 		gate = 1,
 		doneAction = 2,
 		outbus = 0,
+		xbus = 1024,
 		amp = 0.05,
 		vfreq = 5.0,
-		vdelay = 2.0,
-		vsens = 1.00,
-		vdepth = 1.0,
+		vdelay = 0.0,
+		vdepth = 0.0,
 		vibrato = 0.0,
 		chorus = 0.0,
 		chorusDelay = 2.0,
-		c1 = 0.5,
-		m1 = 0.5,
-		mod1 = 1.0,
-		amp1 = 1.0,
-		c2 = 1.0,
-		m2 = 1.0,
-		mod2 = 1.0,
-		amp2 = 1.0,
-		c3 = 2.0,
-		m3 = 2.0,
-		mod3 = 1.0,
-		amp3 = 1.0,
-		attack3 = 1.0,
-		decay3 = 0.0,
-		sustain3 = 1.0,
-		release3 = 3.0,
-		brightness = 1.0|
-		var vibEnv = EnvGen.kr(Env([0.001, 0.001, 1.0, 1.0],
-			[vdelay, vdelay, 0.5], \linear, 2), gate, doneAction: 0);
-		var chorusEnv = EnvGen.kr(Env([0.001, 0.001, 1.0, 1.0],
-			[chorusDelay, chorusDelay, 0.5], \linear, 2), gate, doneAction: 0);
-		var env3 = EnvGen.kr(Env.adsr(attack3, decay3, sustain3, release3,
-			1.0, \exp, 0.001),gate, 1, 0, 1, doneAction);
-		var vib = 1 + ((LFCub.kr(vfreq)*(vibrato+vdepth*vibEnv))*linlin(vsens, 0, 1, 0, 0.03));
-		var chorusBias = chorus.linlin(0,1,0,7) * chorusEnv;
-		var f0 = freq*detune*vib;
-		var f1c = f0*c1;
-		var f1m = f0*m1;
-		var f2c = (f0*c2)-chorusBias;
-		var f2m = f0*m2;
-		var f3c = (f0*c3)+chorusBias;
-		var f3m = f0*m3;
-		var brightScale = brightness.linlin(0, 1, 0, 4);
-		var modsig1 = f1c * SinOsc.ar(f1m) * (linlin(mod1, 0,1,0,4) * brightScale);
-		var carsig1 = SinOsc.ar(f1c+modsig1);
-		var modsig2 = f2c * SinOsc.ar(f2m) * (linlin(mod2, 0,1,0,4) * brightScale);
-		var carsig2 = SinOsc.ar(f2c+modsig2);
-		var modsig3 = f3c * SinOsc.ar(f3m) * (linlin(mod3, 0,1,0,4) * brightScale);
-		var carsig3 = SinOsc.ar(f3c+modsig3);
-		var outsig = (carsig1*amp1*gate) + (carsig2*amp2*gate) + (carsig3*amp3*env3);
+		r1 = 1.00,
+		r2 = 1.00,
+		r3 = 2.00,
+		r4 = 4.00,
+		amp1 = 1.00,
+		amp2 = 1.00,
+		amp3 = 1.00,
+		amp4 = 1.00,
+		enable1 = 1.0,
+		enable2 = 1.0,
+		enable3 = 1.0,
+		enable4 = 1.0,
+		cattack = 0.0,
+		cdecay = 0.0,
+		csustain = 1.0,
+		crelease = 0.0,
+		mattack = 2.0,
+		mdecay = 0.0,
+		msustain = 1.0,
+		mrelease = 4.0,
+		modulationDepth = 1.0,
+		xToModulationDepth = 0.0,
+		xToPitch = 0.0|
+		var release = crelease.max(mrelease);
+		var venv = EnvGen.kr(Env([0, 0, 1, 0], [vdelay, vdelay, release],\lin,2),gate);
+		var chorusenv = EnvGen.kr(Env([0,0,1, 0],[chorusDelay,chorusDelay,release],\lin,2),gate);
+		var cenv = EnvGen.kr(Env.adsr(cattack,cdecay,csustain,crelease),gate, doneAction: doneAction);
+		var menv = EnvGen.kr(Env.adsr(mattack,mdecay,msustain,mrelease), gate);
+		var xsig = In.kr(xbus);
+		var vsens = 0.02;
+		var vibamp = (vibrato + (vdepth*venv)).clip(0,1) * vsens;
+		var vibsig = LFCub.kr(vfreq,0, vibamp);
+		var modBias = chorus.linlin(0,1,0,6) * chorusenv;
+		var f0 = (freq*detune) * (1+vibsig) * (1 + (xToPitch * xsig));
+		var f1 = f0 * r1;
+		var f2 = f0 * r2 + modBias;
+		var f3 = f0 * r3;
+		var f4 = f0 * r4 - modBias;
+		var fmDepth = modulationDepth * (1 + (xToModulationDepth * xsig));
+		var op2Amp = f1 * amp2.linlin(0,1,0,8) * fmDepth;
+		var op4Amp = f3 * amp4.linlin(0,1,0,8) * fmDepth;
+		var sine2 = SinOsc.ar(f2);
+		var op2 = sine2 * op2Amp * menv;
+		var op1 = SinOsc.ar(f1+op2) * amp1 * cenv;
+		var sine4 = SinOsc.ar(f4);
+		var op4 = sine4 * op4Amp * menv;
+		var op3 = SinOsc.ar(f3+op4) * amp3 * cenv;
+		var outsig = op1 + op3;
 		Out.ar(outbus, outsig*amp);
 }).load;)
 

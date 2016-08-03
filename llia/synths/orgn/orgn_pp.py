@@ -10,32 +10,38 @@ from llia.performance_edit import performance_pp
 def amp_to_db(amp):
     return int(math.amp_to_db(amp))
 
-def pp_orgn(program, slot=127):
-    def db (key):
+def pp_orgn(program, slot):
+
+    def db(key):
         return int(amp_to_db(program[key]))
-    def flt(key):
+
+    def fval(key):
         return float(program[key])
+
     pad = ' '*5
-    acc = ''
+    pad2 = pad + ' '*4
     acc = 'orgn(%3d, "%s", amp=%d,\n' % (slot, program.name, db('amp'))
-    s = '%svfreq=%5.3f, vdelay=%5.3f, vsens=%5.3f, vdepth=%5.3f,\n'
-    s = s % (pad,flt('vfreq'),flt('vdelay'),flt('vsens'),flt('vdepth'))
-    acc += s
-    s = '%schorus = [%5.3f, %5.3f],\n'
-    s = s % (pad, flt("chorus"), flt("chorusDelay"))
-    acc += s
-    s = '%s%s = [%5.3f, %5.3f, %5.3f, %d],\n'
-    d = (pad,'a',flt('c1'),flt('m1'),flt('mod1'),db("amp1"))
-    acc += s % d
-    d = (pad,'b',flt('c2'),flt('m2'),flt('mod2'),db("amp2"))
-    acc += s % d
-    d = (pad,'c',flt('c3'),flt('m3'),flt('mod3'),db("amp3"))
-    acc += s % d
-    s = '%sadsr = [%5.3f, %5.3f, %5.3f, %5.3f],\n'
-    d = (pad,flt('attack3'),flt('decay3'),flt('sustain3'),flt('release3'))
-    acc += s % d
-    s = '%sbrightness = %5.3f)\n' % (pad, flt('brightness'))
-    acc += s
+    frmt = '%scenv = [%5.3f,%5.3f,%5.3f,%5.3f],\n'
+    data = (pad2,fval('cattack'),fval('cdecay'),fval('csustain'),fval('crelease'))
+    acc += frmt % data
+    frmt = '%smenv = [%5.3f,%5.3f,%5.3f,%5.3f],\n'
+    data = (pad2,fval('mattack'),fval('mdecay'),fval('msustain'),fval('mrelease'))
+    acc += frmt % data
+    acc += '%sop1 = [%6.4f, %3d],\n' % (pad2, fval('r1'), db('amp1'))
+    acc += '%sop2 = [%6.4f, %5.3f],\n' % (pad2, fval('r2'), fval('amp2'))
+    acc += '%sop3 = [%6.4f, %3d],\n' % (pad2, fval('r3'), db('amp3'))
+    acc += '%sop4 = [%6.4f, %5.3f],\n' % (pad2, fval('r4'), fval('amp3'))
+    frmt = '%svibrato = [%5.3f,%5.3f,%5.3f,%6.4f],\n'
+    data = (pad2,fval('vfreq'),fval('vdelay'),fval('vdepth'),fval('xToPitch'))
+    acc += frmt % data
+    
+    frmt = '%schorus = [%5.3f, %5.3f],\n'
+    data = (pad2,fval('chorusDelay'),fval('chorus'))
+    acc += frmt % data
+
+    frmt = '%smod_depth = [%5.3f, %5.3f])\n'
+    data = (pad2,fval('modulationDepth'),fval('xToModulationDepth'))
+    acc += frmt % data
     return acc
     
     

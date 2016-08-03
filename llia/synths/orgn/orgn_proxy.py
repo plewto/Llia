@@ -27,9 +27,12 @@ class OrgnProxy(SynthProxy):
             return parent_editor
             
 orgn_pallet = Pallet(default_pallet)        
+orgn_pallet["BG"] = "#000000"
+orgn_pallet["SLIDER-TROUGH"] = "#281b2b"
+orgn_pallet["SLIDER-OUTLINE"] = "#1b2b18"
 
 specs["constructor"] = OrgnProxy
-specs["description"] = "FM Combo Organ"
+specs["description"] = "Simple FM Synth"
 specs["keymodes"] = ("Poly1", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["pretty-printer"] = pp_orgn    
