@@ -19,10 +19,10 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
 
 KEY_MODES = ("Poly1", "Mono1", "EFX")
 
-CONTROLLER_SYNTH_TYPES = ("LFO1",)
-SYNTH_TYPES = ("Orgn", "Saw3", "Klstr", "RDrum", "MASA")
-EFFECT_TYPES = ("DirtyBurger", "StepFilter", "XOver", "Flngr")
 
+SYNTH_TYPES = ("Orgn", "Saw3", "Klstr", "RDrum", "MASA")
+EFFECT_TYPES = ("DirtyBurger", "StepFilter", "XOver", "Flngr", "Tremolo")
+CONTROLLER_SYNTH_TYPES = ("LFO1",)
 
 MAX_UNDO = 10
 BANK_LENGTH = 128

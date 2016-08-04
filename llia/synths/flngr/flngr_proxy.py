@@ -28,7 +28,7 @@ flngr_pallet["SLIDER-OUTLINE"] = "#a5a08a"
 
 specs["is-efx"] = True
 specs["constructor"] = FlngrProxy
-specs["description"] = "Crossover Filter Effect"
+specs["description"] = "Flanger (Mono)"
 specs["keymodes"] = ("EFX",)
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["audio-input-buses"] = (("inbus", 1),)

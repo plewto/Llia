@@ -27,6 +27,7 @@ import llia.synths.dirtyburger.dirty_proxy
 import llia.synths.stepfilter.sf_proxy
 import llia.synths.xover.xover_proxy
 import llia.synths.flngr.flngr_proxy
+import llia.synths.tremolo.trm_proxy
 
 
 
