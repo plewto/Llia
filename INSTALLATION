@@ -1,4 +1,4 @@
-Llia instillation.
+Llia installation.
 
 Llia is divided into two major components; server and client.  The server
 program is coded in sclang and is located in the Llia/sc directory.  The
@@ -43,7 +43,7 @@ Details:
 3) Load each .scd file in the directory Llia/sc/SynthDefs/ one by one into
    the SuperCollider IDE and execute them.  This step need only be carried
    out once and makes the various Llia synthesizers a permanent part of the
-   SuperCollider instillation.  It is not necessary to include llia.scd or
+   SuperCollider installation.  It is not necessary to include llia.scd or
    testtones.scd at this time.
 
    As new instruments are released, corresponding .scd file will need to be
@@ -54,7 +54,7 @@ Details:
                               Client Software
           ******************************************************
 
-FIXME: client instillation is still being worked out.  Llia was developed on
+FIXME: client installation is still being worked out.  Llia was developed on
        an Ubuntu "studio" system 15.04, and all seems well there.  However
        there are early indications of problems on OSX, these are being
        actively investigated.  At this time Windows is not being considered.
