@@ -120,7 +120,7 @@ _polar_to_aspect = linfn((-1.0, 1.0),(0,199))
 _aspect_to_polar = linfn((0,199),(-1.0, 1.0))
 
 def polar_to_aspect(n):
-    return int(clip(_polar_to_aspect(n), 0, 99))
+    return int(clip(_polar_to_aspect(n), 0, 199))
 
 def aspect_to_polar(n):
     return float(clip(_aspect_to_polar(n), -1.0, 1.0))
