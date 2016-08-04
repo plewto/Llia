@@ -17,7 +17,7 @@ SynthDef (\Flngr, {
 	var drysig = In.ar(inbus, 1);
 	var xmix = In.kr(mixbus, 1);
 	var fb = HPF.ar(LPF.ar(LocalIn.ar(1), feedbackLowpass), feedbackHighpass)* (feedback.max(-1).min(1));
-	var maxDelay = 0.02;
+	var maxDelay = 0.01;
 	var meanDelay = maxDelay/2;
 	var delayScale = meanDelay/2;
 	var lfo = SinOsc.kr(imodFreq);
