@@ -20,7 +20,7 @@ SynthDef (\Flngr, {
 	var maxDelay = 0.01;
 	var meanDelay = maxDelay/2;
 	var delayScale = meanDelay/2;
-	var lfo = SinOsc.kr(imodFreq);
+	var lfo = LFTri.kr(imodFreq);
 	var dt1 = delay.linlin(0, 1, -1*delayScale, delayScale);
 	var dt2 = lfo.linlin(-1, 1, -1*delayScale, delayScale) * imodDepth;
 	var dt3 = In.kr(delaybus, 1).linlin(-1, 1, -1*delayScale, delayScale) * xmodDepth;
