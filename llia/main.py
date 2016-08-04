@@ -26,6 +26,7 @@ import llia.synths.masa.masa_proxy
 import llia.synths.dirtyburger.dirty_proxy
 import llia.synths.stepfilter.sf_proxy
 import llia.synths.xover.xover_proxy
+import llia.synths.flngr.flngr_proxy
 
 
 
