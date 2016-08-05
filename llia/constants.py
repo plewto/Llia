@@ -21,7 +21,7 @@ KEY_MODES = ("Poly1", "Mono1", "EFX")
 
 
 SYNTH_TYPES = ("Orgn", "Saw3", "Klstr", "RDrum", "MASA")
-EFFECT_TYPES = ("DirtyBurger", "StepFilter", "XOver", "Flngr", "Tremolo")
+EFFECT_TYPES = ("CarnalDelay", "StepFilter", "XOver", "Flngr", "Tremolo")
 CONTROLLER_SYNTH_TYPES = ("LFO1",)
 
 MAX_UNDO = 10
