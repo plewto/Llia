@@ -88,4 +88,11 @@ So for instrument Foo feeding effect Bar which then feeds effect Baz.
 BUG 0006 2016.07.14
 
 New synths are not immediately "active" after creation.  It is necessary
-select a program first before the synth produces output.  
+select a program first before the synth produces output.
+
+
+---------------------------------------------------------------------- OPEN
+BUG 0007 2016.08.06
+
+Control bus names are not being displayed in "add synth" dialog
+
