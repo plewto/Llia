@@ -7,21 +7,6 @@ from llia.gui.tk.expslider import ExpSlider
 from llia.gui.tk.decade_control import DecadeControl
 from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 
-
-# shRate    - decade control
-# srcFreq   - decade control
-# srcSelect - normal slider
-# shLag     - normal slider
-# shBleed   - normal slider
-# shDelay   - exp slider (0..4)
-# shAttack  - exp slider (0..4)
-# shHold    - exp slider (0..4)
-# shRelease - exp slider (0..4)
-# shScale   - recipricol slider control
-# shBias    - linear slider
-
-
-
 def create_editor(parent):
     panel = TkSnHPanel(parent)
 
@@ -51,7 +36,6 @@ class TkSnHPanel(TkSubEditor):
         sx_release = ExpSlider(frame, "shRelease", editor, range_=4)
         sr_scale = ReciprocalSlider(frame, "shScale", editor, range_=4, degree=1)
         s_bias = cf.linear_slider(frame, "shBias", editor, range_=(-4,4))
-        
         self.add_control("shRate", dc_rate)
         self.add_control("srcFreq", dc_srcfreq)
         self.add_control("srcSelect", s_src)
@@ -63,7 +47,6 @@ class TkSnHPanel(TkSubEditor):
         self.add_control("shRelease", sx_release)
         self.add_control("shScale", sr_scale)
         self.add_control("shBias", s_bias)
-        
         y0 = 90
         x0 = 90
         x_rate = x0
@@ -77,7 +60,6 @@ class TkSnHPanel(TkSubEditor):
         x_bleed = x_release + 60
         x_scale = x_bleed + 90
         x_bias = x_scale + 75
-        
         dc_rate.layout(offset=(x_rate, y0), label_offset=(0, 100),
                        slider_offset = (80, 0, 14, 200))
         dc_srcfreq.layout(offset=(x_srcfreq, y0), label_offset=(0,100),

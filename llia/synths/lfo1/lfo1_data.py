@@ -69,23 +69,30 @@ def random_lfo1(slot=127, *_):
              bias = 0)
     return p
 
-lfo1( 0, "scale=1", freq=1, bleed=1,
-      delay = 1, attack=2, hold=3, release=4,
-      scale = 1)
+lfo1( 0, "Delayed Vibrato",
+      freq=5.00, feedback=0.0, bleed=0.0,
+      delay=1.5, attack=2, hold=1, release=1)
 
+lfo1( 1, "1Hz",
+      freq=1.00, feedback=0.0, bleed=1.0,
+      delay=0, attack=0, hold=0, release=0)
 
-lfo1( 1, "scale=2", freq=2, bleed=1,
-      delay=5, attack=6, hold=7, release=8,
-      scale = 2)
+lfo1( 2, "2Hz",
+      freq=2.00, feedback=0.0, bleed=1.0,
+      delay=0, attack=0, hold=0, release=0)
 
+lfo1( 3, "3Hz",
+      freq=3.00, feedback=0.0, bleed=1.0,
+      delay=0, attack=0, hold=0, release=0)
 
-lfo1( 2, "scale=3", freq=3, bleed=1,
-      scale = 3)
-      
-lfo1( 3, "scale=4", freq=4, bleed=1,
-      scale = 4)
+lfo1( 4, "4Hz",
+      freq=4.00, feedback=0.0, bleed=1.0,
+      delay=0, attack=0, hold=0, release=0)
 
-lfo1( 4, "scale = 0.5", freq=5, bleed=1, scale=0.5)
-lfo1( 5, "scale = 0.25", freq=6, bleed=1, scale = 0.25)
-lfo1( 6, "7Hz", freq=7, bleed=1)
-lfo1( 7, "8Hz", freq=8, bleed=1)
+lfo1( 5, "5Hz",
+      freq=5.00, feedback=0.0, bleed=1.0,
+      delay=0, attack=0, hold=0, release=0)
+
+lfo1( 6, "6Hz w feedback",
+      freq=6.00, feedback=0.3, bleed=1.0,
+      delay=0, attack=0, hold=0, release=0)
