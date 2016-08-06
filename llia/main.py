@@ -16,6 +16,8 @@ from llia.config import LliaConfig
 from llia.llia_app import LliaApp
 
 import llia.synths.lfo1.lfo1_proxy
+import llia.synths.lfo3.lfo3_proxy
+import llia.synths.snh.snh_proxy
 
 import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
@@ -23,7 +25,6 @@ import llia.synths.klstr.klstr_proxy
 import llia.synths.rdrum.rdrum_proxy
 import llia.synths.masa.masa_proxy
 
-# import llia.synths.dirtyburger.dirty_proxy  # DEPRECIATED
 import llia.synths.carnal.crnl_proxy
 import llia.synths.stepfilter.sf_proxy
 import llia.synths.xover.xover_proxy

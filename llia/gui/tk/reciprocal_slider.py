@@ -100,7 +100,7 @@ class ReciprocalSlider(AbstractControl):
                sign_offset = (18, 21),
                invert_offset = (18, 0)):
         x0, y0 = offset
-        self._widgets["slider"].place(x=x0, y=x0, width=width, height=height)
+        self._widgets["slider"].place(x=x0, y=y0, width=width, height=height)
         if sign_offset:
             x = x0 + sign_offset[0]
             y = y0 + sign_offset[1]
@@ -109,7 +109,4 @@ class ReciprocalSlider(AbstractControl):
             x = x0 + invert_offset[0]
             y = y0 + invert_offset[1]
             self._widgets["checkbutton-invert"].place(x=x, y=y)
-                   
             
-                
-                 
