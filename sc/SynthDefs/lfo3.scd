@@ -9,7 +9,7 @@
  * lfoScale      - Scale values applied to all primary LFOs                                  
  * lfoBias       - Bias value added to allprimary  LFOs                                 
  * lfoFreq       - Common frequency for primary LFOs                                        
- * lfoModFreq    - Frequency of modulatin LFO                                    
+ * lfoModFreq    - Frequency of modulatin LFO  (realtive to lfoFreq)                                  
  * lfoFM         - Modulation LFO -> Primary freq                               
  * lfoAM         - Modulation LFO -> primary amp                               
  * lfoEnvToFreq  - env -> primary freq                                      
@@ -57,7 +57,7 @@ SynthDef (\LFO3, {
 		\lin, 2) ,gate, doneAction: 0);
 	var fmEnv = 1 + (lfoEnvToFreq * env);
 	var ampEnv = XFade2.kr(env, 1, lfoBleed.linlin(0,1,-1,1));
-	var modSig = SinOsc.kr(lfoModFreq);
+	var modSig = SinOsc.kr(lfoModFreq*lfoFreq);
 	var fmMod = 1 + (lfoFM * modSig);
 	var ampMod = XFade2.kr(1, modSig, lfoAM.linlin(0,1,-1,1));
 	var freq = lfoFreq * fmEnv * fmMod;
