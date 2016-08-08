@@ -1,6 +1,6 @@
 /*
  * Simple sine/FM Feedback LFO with integrated envelope.
- * ctrlOutbus  - Control output bus
+ * outbus      - Control output bus
  * gate        - Envelope gate signal.
  * lfoFreq     - Frequency in Hertz.
  * lfoFeedback - FM Feedback, normalized
@@ -15,7 +15,7 @@
 */
 
 (SynthDef (\LFO1, {
-	|ctrlOutbus = 1024,
+	|outbus = 1024,
 	gate = 1,
 	lfoFreq = 1.0,
 	lfoFeedback = 0.0,
@@ -33,7 +33,7 @@
 	fb = lfoFeedback.linlin(0, 1, 0, 4);
 	sine = SinOscFB.kr(lfoFreq, fb) * env;
 	outsig = sine * lfoScale + lfoBias;
-	Out.kr(ctrlOutbus, outsig);
+	Out.kr(outbus, outsig);
 }).load;
 )
 

@@ -16,7 +16,8 @@ from llia.config import LliaConfig
 from llia.llia_app import LliaApp
 
 import llia.synths.lfo1.lfo1_proxy
-import llia.synths.lfo3.lfo3_proxy
+import llia.synths.lfo2.lfo2_proxy
+# import llia.synths.lfo3.lfo3_proxy
 import llia.synths.snh.snh_proxy
 
 import llia.synths.orgn.orgn_proxy

@@ -1,6 +1,6 @@
 (
 SynthDef (\SnH, {
-	|controlOutbus = 1024, 
+	|outbus = 1024, 
 	gate = 1             //
 	shRate = 1.0,        // sample rate
 	srcFreq = 3.0,       // internal LFO freq
@@ -21,7 +21,7 @@ SynthDef (\SnH, {
 	var sh = Latch.kr(srcsig, clock);
 	env = XFade2.kr(env, 1, shBleed.linlin(0,1,-1,1));
 	sh = Lag3.kr(sh, shLag.linlin(0,1,0,0.5))*env*shScale+shBias;
-	Out.kr(controlOutbus, sh);
+	Out.kr(outbus, sh);
 }).load;
 )
 
