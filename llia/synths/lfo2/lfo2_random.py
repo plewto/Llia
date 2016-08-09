@@ -3,25 +3,30 @@
 from __future__ import print_function
 
 from llia.util.lmath import *
-from llia.synths.lfo2.lfo2_data import lfo2
-
-
+from llia.synths.lfo2.lfo2_data import lfo2, RANDOM_RATIOS
 
 def pick_clock_frequency():
     f = coin(0.75, 0.5+rnd(3),
              coin(0.50, rnd(0.5), rnd(8)))
     return f
 
+# def pick_frequency_ratios(clkfreq):
+#     low_ratios = [0.5, 1, 1.5, 2, 2.5]
+#     high_ratios = [1,2,2,3,3,3,4,4,4,4,5,6,6,7,8,9,12]
+#     if clkfreq >= 5:
+#         saw = coin(0.80, pick(low_ratios), rnd(8))
+#         pls = coin(0.80, pick(low_ratios), rnd(8))
+#     else:
+#         saw = coin(0.8, pick(high_ratios), rnd(8))
+#         pls = coin(0.8, pick(high_ratios), rnd(8))
+#     return saw,pls
+
 def pick_frequency_ratios(clkfreq):
-    low_ratios = [0.5, 1, 1.5, 2, 2.5]
-    high_ratios = [1,2,2,3,3,3,4,4,4,4,5,6,6,7,8,9,12]
+    n = len(RANDOM_RATIOS)
     if clkfreq >= 5:
-        saw = coin(0.80, pick(low_ratios), rnd(8))
-        pls = coin(0.80, pick(low_ratios), rnd(8))
+        return pick(RANDOM_RATIOS[:n])
     else:
-        saw = coin(0.8, pick(high_ratios), rnd(8))
-        pls = coin(0.8, pick(high_ratios), rnd(8))
-    return saw,pls
+        return pick(RANDOM_RATIOS)
 
 
 def random_lfo2(slot=127, *_):

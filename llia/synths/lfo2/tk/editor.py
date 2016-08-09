@@ -6,12 +6,10 @@ import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
 from llia.gui.tk.decade_control import DecadeControl
 from llia.gui.tk.reciprocal_slider import ReciprocalSlider
+from llia.synths.lfo2.lfo2_data import RATIOS
 
 def create_editor(parent):
     TkLfo2Panel(parent)
-
-
-HARMONICS = [0.5, 1, 1.5, 2, 2.5, 2, 3, 4, 5, 6, 7, 8, 9, 12]
 
 
 # clkFreq     - decade dontrol (0.01 .. 100)
@@ -52,14 +50,14 @@ class TkLfo2Panel(TkSubEditor):
                                     limit = (0.01, 100))
         s_clk_pw = cf.normalized_slider(frame, "clkPw", editor)
         s_saw_ratio = cf.discrete_slider(frame, "sawRatio", editor,
-                                         values = HARMONICS)
+                                         values = RATIOS)
         s_saw_slew = cf.normalized_slider(frame, "sawSlew", editor)
         s_saw_amp = cf.linear_slider(frame, "sawAmp", editor, range_=(0,4))
         s_saw_bleed = cf.normalized_slider(frame, "sawBleed", editor)
         s_saw_bias = cf.linear_slider(frame, "sawBias", editor, range_=(-4,4))
 
         s_pulse_ratio = cf.discrete_slider(frame, "pulseRatio", editor,
-                                           values = HARMONICS)
+                                           values = RATIOS)
         s_pulse_width = cf.normalized_slider(frame, "pulseWidth", editor)
         s_pulse_amp = cf.linear_slider(frame, "pulseAmp", editor, range_=(0,4))
         s_pulse_bleed = cf.normalized_slider(frame, "pulseBleed", editor)

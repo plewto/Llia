@@ -6,6 +6,14 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
+RATIOS = (0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8,
+          9, 10, 11, 12, 13, 14, 15, 16)
+
+RANDOM_RATIOS = (0.125, 0.25, 0.5, 0.5, 0.75,
+                 1, 1, 1.5, 1.5,
+                 2, 2, 2, 2.5, 3, 3, 3,
+                 4, 4, 4, 5, 6, 6, 7, 8, 9,
+                 10, 11, 12, 13, 14, 15, 16)
 
 prototype = {
 	"clkFreq" : 1.00, 
