@@ -30,24 +30,20 @@ class TkLfo3Panel(TkSubEditor):
         s_scale = cf.linear_slider(frame, "lfoScale", editor, range_=(0,4))
         s_bias = cf.linear_slider(frame, "lfoBias", editor, range_=(-4,4))
         s_mod_freq = cf.discrete_slider(frame, "lfoModFreq", editor, values=HARMONICS)
-        s_fm = cf.linear_slider(frame, "lfoFM", editor, range_=(0, 4))
+        s_fm = cf.linear_slider(frame, "lfoFM", editor, range_=(0, 8))
         s_am = cf.normalized_slider(frame, "lfoAM", editor)
         s_delay = ExpSlider(frame, "lfoDelay", editor, range_=8)
         s_attack = ExpSlider(frame, "lfoAttack", editor, range_=8)
         s_hold = ExpSlider(frame, "lfoHold", editor, range_=8)
         s_release = ExpSlider(frame, "lfoRelease", editor, range_=8)
-        s_env_fm = cf.linear_slider(frame, "lfoEnvToFreq", editor, range_=(0,4))
+        s_env_fm = cf.linear_slider(frame, "lfoEnvToFreq", editor, range_=(0,8))
         s_env_bleed = cf.normalized_slider(frame, "lfoBleed", editor)
-
         s_ratio_a = cf.discrete_slider(frame, "lfoRatioA", editor, values=HARMONICS)
         s_ratio_b = cf.discrete_slider(frame, "lfoRatioB", editor, values=HARMONICS)
         s_ratio_c = cf.discrete_slider(frame, "lfoRatioC", editor, values=HARMONICS)
-
         s_amp_a = cf.normalized_slider(frame, "lfoAmpA", editor)
         s_amp_b = cf.normalized_slider(frame, "lfoAmpB", editor)
         s_amp_c = cf.normalized_slider(frame, "lfoAmpC", editor)
-
-        
         self.add_control("lfoFreq", dc_freq)
         self.add_control("lfoScale", s_scale)
         self.add_control("lfoBias", s_bias)
@@ -60,14 +56,12 @@ class TkLfo3Panel(TkSubEditor):
         self.add_control("lfoRelease", s_release)
         self.add_control("lfoEnvToFreq", s_env_fm)
         self.add_control("lfoBleed", s_env_bleed)
-
         self.add_control("lfoRatioA", s_ratio_a)
         self.add_control("lfoRatioB", s_ratio_b)
         self.add_control("lfoRatioC", s_ratio_c)
         self.add_control("lfoAmpA", s_amp_a)
         self.add_control("lfoAmpB", s_amp_b)
         self.add_control("lfoAmpC", s_amp_c)
-        
         y0, y1 = 90, 350
         x0 = 90
         x1 = x0 + 140
@@ -81,13 +75,10 @@ class TkLfo3Panel(TkSubEditor):
         x_release = x_hold + 60
         x_env_fm = x_release + 60
         x_bleed = x_env_fm + 60
-
-
-        x_a = x_mod
+        x_a = x0
         x_b = x_a + 120
         x_c = x_b + 120
-        
-        dc_freq.layout(offset=(x0,y0))
+        dc_freq.layout(offset=(x0,y0), label_offset=(10,100))
         s_scale.widget().place(x=x1, y=y0)
         s_bias.widget().place(x=x2, y=y0)
         s_mod_freq.widget().place(x=x_mod, y=y0)
@@ -99,11 +90,9 @@ class TkLfo3Panel(TkSubEditor):
         s_release.layout(offset=(x_release, y0),checkbutton_offset=None)
         s_env_fm.widget().place(x=x_env_fm, y=y0)
         s_env_bleed.widget().place(x=x_bleed, y=y0)
-
         s_ratio_a.widget().place(x=x_a, y=y1)
         s_ratio_b.widget().place(x=x_b, y=y1)
         s_ratio_c.widget().place(x=x_c, y=y1)
-
         s_amp_a.widget().place(x=x_a+60, y=y1)
         s_amp_b.widget().place(x=x_b+60, y=y1)
         s_amp_c.widget().place(x=x_c+60, y=y1)

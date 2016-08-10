@@ -6,25 +6,9 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-
-
-# HARMONICS = (0.5, 0.50, 0.5,
-#              0.75,
-#              1, 1, 1,
-#              1.333,
-#              1.5, 1.5, 1.5,
-#              1.667,
-#              1.75,
-#              2, 2, 2,
-#              3, 3, 3,
-#              4, 4, 4,
-#              5,
-#              6, 6,
-#              7,
-#              8, 8,
-#              9, 10, 11, 12, 13, 14, 15, 16)
-HARMONICS = (0.5, 0.75, 1, 1.333, 1.5, 1.667, 1.75, 2, 3, 4, 5, 6, 7, 8,
-             9, 10, 11, 12, 13, 14, 15, 16)
+HARMONICS = [0.125, 0.25, 0.375, 0.5, 0.675,0.75,0.875,
+             1, 1.125, 1.25, 1.5, 1.75,
+             2, 2.25, 2.5, 3, 4, 5, 6, 7, 8, 9, 12, 16] 
 
 prototype = {
     "lfoScale" : 1.0,      # Common scale factor  (1/4 ... 4)
@@ -33,12 +17,16 @@ prototype = {
     "lfoModFreq" : 1,      # restric to harmonics
     "lfoFM" : 0.0,         # MOD LFO -> FM depth (0 ... 4) 
     "lfoAM" : 0.0,         # MOD LFO -> AM depth (0 ... 1)
-    "lfoEnvToFreq" : 0.0,  # env -> LFO freq (0 ... 4)
-    "lfoBleed" : 1.0,      # amp envelope signal bleed (0 ... 1)
+
+
     "lfoDelay" : 0.0,      # env onset delay (0 ... 8)
     "lfoAttack" : 0.0,     # env attack time (0 ... 8)
     "lfoHold" : 1.0,       # env hold time (0 ... 8)
     "lfoRelease" : 0.0,    # env release time (0 ... 8)
+    "lfoEnvToFreq" : 0.0,  # env -> LFO freq (0 ... 4)
+    "lfoBleed" : 1.0,      # amp envelope signal bleed (0 ... 1)
+
+    
     "lfoRatioA" : 1.0,     # LFO A freq ratio (restric to harmonics)
     "lfoRatioB" : 1.0,     # LFO B freq ratio (restric to harmonics)
     "lfoRatioC" : 1.0,     # LFO C freq ratio (restric to harmonics)
