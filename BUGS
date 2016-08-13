@@ -91,8 +91,9 @@ New synths are not immediately "active" after creation.  It is necessary
 select a program first before the synth produces output.
 
 
----------------------------------------------------------------------- OPEN
-BUG 0007 2016.08.06
+---------------------------------------------------------------------- CLOSED
+BUG 0007 2016.08.06  CLOSED 2016.08.13
 
 Control bus names are not being displayed in "add synth" dialog
 
+Changed layout of tk_addsynth.

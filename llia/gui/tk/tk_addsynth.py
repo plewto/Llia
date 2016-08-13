@@ -9,6 +9,8 @@ from llia.gui.tk.tk_synthwindow import TkSynthWindow
 
 
 HELP_TOPIC = "add_synth_dialog"
+MAX_BUS_COUNT = 8
+
 
 def select_synth_id(app, stype):
     n = 1
@@ -52,31 +54,15 @@ class TkAddSynthDialog(Toplevel):
             sp  = factory.int_spinbox(master, var, 0, 128, "Bus offset")
             self._busoffset_map[param] = var
             return sp
-        
-        # Audio Output Buses
-        frame_audio_out = factory.label_frame(main, "Audio Output Buses")
-        row = 0
-        for b in specs["audio-output-buses"]:
-            bname = b[0]
-            lab_name = factory.label(frame_audio_out, bname)
-            combo = factory.audio_bus_combobox(frame_audio_out, self.app)
-            combo.set("out_0")
-            lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
-            self._busname_map[bname] = combo
-            spin = spinbox(frame_audio_out, bname)
-            combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-            spin.grid(row=row, column=2, sticky="e", padx=4, pady=4)
-            row += 1
-        factory.padding_label(frame_audio_out).grid(row=row, column=0)
-        frame_audio_out.grid(row=5, column=0, padx=4, pady=4)
-        
+
         # Audio Input Buses
-        if specs["audio-input-buses"]:
-            frame_audio_in = factory.label_frame(main, "Audio Input Buses")
-            row = 0
-            for b in specs["audio-input-buses"]:
+        frame_audio_in = factory.label_frame(main, "Audio Input Buses")
+        row = 0
+        for i in range(MAX_BUS_COUNT):
+            try:
+                b = specs["audio-input-buses"][i]
                 bname = b[0]
-                lab_name = factory.label(frame_audio_in, bname)
+                lab_name = factory.label(frame_audio_in, "%d - %s" % (i+1, bname))
                 combo = factory.audio_bus_combobox(frame_audio_in, self.app)
                 combo.set("in_0")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
@@ -84,35 +70,42 @@ class TkAddSynthDialog(Toplevel):
                 spin = spinbox(frame_audio_in, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
                 spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
-                row += 1
-            factory.padding_label(frame_audio_in).grid(row=row, column=0)
-            frame_audio_in.grid(row=1, column=0, padx=4, pady=4)
-
-        # Control Output Buses
-        if specs["control-output-buses"]:
-            frame_control_out = factory.label_frame(main, "Control Output Buses")
-            row = 0
-            for b in specs["control-output-buses"]:
+            except IndexError:
+                lab_dummy = factory.label(frame_audio_in, "%d - n/a" % (i+1, ))
+                lab_dummy.grid(row=row, column=0)
+            row += 1
+        factory.padding_label(frame_audio_in).grid(row=row, column=0)
+        frame_audio_in.grid(row=1, column=0, padx=4, pady=4)
+        
+        # Audio Output Buses
+        frame_audio_out = factory.label_frame(main, "Audio Output Buses")
+        row = 0
+        for i in range(MAX_BUS_COUNT):
+            try:
+                b = specs["audio-output-buses"][i]
                 bname = b[0]
-                lab_name = factory.label(frame_control_out, bname)
-                combo = factory.control_bus_combobox(frame_control_out, self.app)
-                combo.set("CBUS_A")
+                lab_name = factory.label(frame_audio_out, "%d - %s" % (i+1, bname))
+                combo = factory.audio_bus_combobox(frame_audio_out, self.app)
+                combo.set("out_0")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 self._busname_map[bname] = combo
-                spin = spinbox(frame_control_out, bname)
+                spin = spinbox(frame_audio_out, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
-                row += 1
-            factory.padding_label(frame_control_out).grid(row=row, column=0)
-            frame_control_out.grid(row=5, column=3, padx=4, pady=4)
+                spin.grid(row=row, column=2, sticky="e", padx=4, pady=4)
+            except IndexError:
+                lab_dummy = factory.label(frame_audio_out, "%d - n/a" % (i+1,))
+                lab_dummy.grid(row=row, column=0)
+            row += 1
+        factory.padding_label(frame_audio_out).grid(row=row, column=0)
+        frame_audio_out.grid(row=5, column=0, padx=4, pady=4)
         
-        # # Control Input Buses
-        if specs["control-input-buses"]:
-            frame_control_in = factory.label_frame(main, "Control Input Buses")
-            row = 0
-            for b in specs["control-input-buses"]:
-                bname = b[0]
-                lab_name = factory.label(frame_control_in, bname)
+        # Control Input Buses
+        frame_control_in = factory.label_frame(main, "Control Input Buses")
+        row = 0
+        for i in range(MAX_BUS_COUNT):
+            try:
+                bname = specs["control-input-buses"][i]
+                lab_name = factory.label(frame_control_in, "%d - %s" % (i+1, bname))
                 combo = factory.control_bus_combobox(frame_control_in, self.app)
                 combo.set("CBUS_A")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
@@ -120,9 +113,36 @@ class TkAddSynthDialog(Toplevel):
                 spin = spinbox(frame_control_in, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
                 spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
-                row += 1
-            factory.padding_label(frame_control_in).grid(row=row, column=0)
-            frame_control_in.grid(row=1, column=3, padx=4, pady=4)
+            except IndexError:
+                lab_dummy = factory.label(frame_control_in, "%d - n/a" % (i+1, ))
+                lab_dummy.grid(row=row, column=0)
+            row += 1
+        factory.padding_label(frame_control_in).grid(row=row, column=0)
+        frame_control_in.grid(row=1, column=3, padx=4, pady=4)
+
+        # Control Output Buses
+        frame_control_out = factory.label_frame(main, "Control Output Buses")
+        row = 0
+        #for b in specs["control-output-buses"]:
+        for i in range(MAX_BUS_COUNT):
+            try:
+                bname = specs["control-output-buses"][i]
+                lab_name = factory.label(frame_control_out, "%d - %s" % (i+1, bname))
+                combo = factory.control_bus_combobox(frame_control_out, self.app)
+                combo.set("CBUS_A")
+                lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+                self._busname_map[bname] = combo
+                spin = spinbox(frame_control_out, bname)
+                combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
+                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
+            except IndexError:
+                lab_dummy = factory.label(frame_control_out, "%d - n/a" % (i+1, ))
+                lab_dummy.grid(row=row, column=0)
+            row += 1
+        factory.padding_label(frame_control_out).grid(row=row, column=0)
+        frame_control_out.grid(row=5, column=3, padx=4, pady=4)
+        
+       
 
         # # Buffers
         if specs["buffers"]:
