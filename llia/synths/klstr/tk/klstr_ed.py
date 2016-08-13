@@ -8,7 +8,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 from llia.gui.tk.decade_control import DecadeControl
 from llia.gui.tk.discreate_control import DiscreateControl
 from llia.gui.tk.expslider import ExpSlider
-
+from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 
 def create_editor(parent):
     tone_panel = TkKlsterPanel(parent)
@@ -106,6 +106,17 @@ class TkKlsterPanel(TkSubEditor):
         # Amp
         s_amp = cfactory.volume_slider(frame, "amp", self)
         self.add_control("amp", s_amp)
+
+        s_xtone = cfactory.normalized_slider(frame, "xToSpread", editor)
+        s_xnoise = cfactory.normalized_slider(frame, "xToNoise", editor)
+        s_xfilter = cfactory.normalized_slider(frame, "xToFilter", editor)
+        rs_xscale = ReciprocalSlider(frame, "xScale", editor, range_ = 4, degree=1)
+        s_xbias = cfactory.linear_slider(frame, "xBias", editor, range_=(-4, 4))
+        self.add_control("xToSpread", s_xtone)
+        self.add_control("xToNoise", s_xnoise)
+        self.add_control("xToFilter", s_xfilter)
+        self.add_control("xScale", rs_xscale)
+        self.add_control("xBias", s_xbias)
         
         y0, y1 = 50, 300
         x0 = 50
@@ -167,5 +178,28 @@ class TkKlsterPanel(TkSubEditor):
         s_release.layout(offset=(x8, y1), checkbutton_offset = None)
         cb_trigmode.widget().place(x=x9, y=y1)
         
+        # x10 = x8+120
+        # s_amp.widget().place(x=x10, y=y1)
+
+        # x11 = x10 + 190
+        # x12 = x11 + 60
+        # x13 = x12 + 60
+        # s_xtone.widget().place(x=x11, y=y1)
+        # s_xnoise.widget().place(x=x12, y=y1)
+        # s_xfilter.widget().place(x=x13, y=y1)
+
+
         x10 = x8+120
-        s_amp.widget().place(x=x10, y=y1)
+        x11 = x10+60
+        x12 = x11 + 60
+        x13 = x12 + 60
+        x14 = x13 + 60
+        x15 = x14 + 60
+        s_xtone.widget().place(x=x10, y=y1)
+        s_xnoise.widget().place(x=x11, y=y1)
+        s_xfilter.widget().place(x=x12, y=y1)
+        rs_xscale.layout(offset=(x13,y1),
+                         sign_offset = None,
+                         invert_offset = (-4, -20))
+        s_xbias.widget().place(x=x14, y=y1)
+        s_amp.widget().place(x=x15, y=y1)

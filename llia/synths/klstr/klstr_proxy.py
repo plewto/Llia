@@ -19,17 +19,21 @@ class KlstrProxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            from llia.synths.klstr.tk.klstr_ed import create_editor
+            from llia.synths.klstr.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
             
 klstr_pallet = Pallet(default_pallet)        
+klstr_pallet["SLIDER-TROUGH"] = "#4d424f"
+klstr_pallet["SLIDER-OUTLINE"] = "#464f42"
+
 
 specs["constructor"] = KlstrProxy
 specs["description"] = "Massed pulse waves"
 specs["keymodes"] = ("Poly1", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
+specs["control-input-buses"] = ("xbus", )
 specs["pretty-printer"] = pp_klstr    
 specs["program-generator"] = gen_klstr_program
 specs["help"] = "klstr"

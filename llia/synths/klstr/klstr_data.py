@@ -7,6 +7,8 @@ from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
 from llia.performance_edit import performance
 
+LFO_RATIOS = (0.5, 0.667, 0.75, 1, 1.25, 1.333, 1.5, 1.667, 1.75, 2, 2.5, 3, 3.5, 4, 6, 8) 
+
 prototype = {
     "amp" : 1.0,            # linear main amplitude (0,1)                     
     "lfoFreq" : 1.0,        # Hz, (0.01,100)                           
@@ -35,7 +37,12 @@ prototype = {
     "filterEnv" : 7000,     # Hz (-9999, +9999)                              
     "filterLag" : 0.0,      # norm (0,1)                             
     "res" : 0.5,            # norm (0,1)
-    "noiseAmp" : 0.0        # linear noise amp (0,1)
+    "noiseAmp" : 0.0,       # linear noise amp (0,1)
+    "xScale" : 1.0,         # external input scale factor
+    "xBias" : 0.0,
+    "xToSpread" :  0.0,     # xternal signal to spread amount
+    "xToNoise" : 0.0,
+    "xToFilter" : 0.0       # external to filter, normalized
 }
 
 class Klstr(Program):
@@ -76,7 +83,12 @@ def klstr(slot, name, amp=-12,
                      "lag" : 0.0,
                      "res" : 0.5,
                      "mix" : 1.0},
-           pw = 0.5,
+          external = {"spread" : 0.0,
+                      "noise" : 0.0,
+                      "filter" : 0.0,
+                      "scale" : 1.0,
+                      "bias" : 0.0},
+          pw = 0.5,
           pwLfo = 0.0,
           noise = -99,
           remarks = ""):
@@ -91,14 +103,10 @@ def klstr(slot, name, amp=-12,
     p["vibrato"] = float(clip(lfo.get("vibrato",0), 0, 1))
     p["pw"] = float(clip(pw, 0, 1))
     p["pwLfo"] = float(clip(pwLfo, 0, 1))
-    p["attack"] = float(clip(env.get("attack", 0), 0, 16))
-    p["decay"] = float(clip(env.get("decay", 0), 0, 16))
-    p["release"] = float(clip(env.get("release", 0), 0, 16))
+    p["attack"] = float(clip(env.get("attack", 0), 0, 32))
+    p["decay"] = float(clip(env.get("decay", 0), 0, 32))
+    p["release"] = float(clip(env.get("release", 0), 0, 32))
     p["sustain"] = float(clip(env.get("sustain", 0), 0, 1))
-    # if int(env.get("adsr", 1)) == 0:
-    #     adsr = 1.0
-    # else:
-    #     adsr = 0.0
     if env.get("gatted", True):
         env_mode = 0
     else:
@@ -118,6 +126,11 @@ def klstr(slot, name, amp=-12,
     p["res"] = float(clip(filter_.get("res"),0,1))
     p["filterMix"] = float(clip(filter_.get("mix", 1.0),0,1))
     p["noise"] = db_to_amp(noise)
+    p["xScale"] = float(clip(external.get("scale", 1.0),0,4))
+    p["xBias"] = float(clip(external.get("bias", 0.0),-4, +4))
+    p["xToSpread"] = float(clip(external.get("spread", 0), 0, 1))
+    p["xToNoise"] = float(clip(external.get("noise", 0), 0, 1))
+    p["xToFilter"] = float(clip(external.get("filter", 0), 0, 1))
     p.remarks = remarks
     program_bank[slot] = p
     
@@ -820,3 +833,4 @@ klstr(23, "Tuesday", amp=-16,
        pw = 0.500,
        pwLfo = 0.794,
        noise = -99)
+

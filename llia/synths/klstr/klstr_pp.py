@@ -20,6 +20,7 @@ def pp_klstr(program, slot=127):
     pad3 = pad + ' '*10
     pad4 = pad + ' '*11
     pad5 = pad4
+    pad6 = pad4 + ' '
     acc = 'klstr(%d, "%s", amp=%+d,\n' % (slot, program.name, db('amp'))
     acc += '%slfo = {"freq"    : %6.4f,\n' % (pad, fval("lfoFreq"))
     acc += '%s"ratio"   : %6.4f,\n' % (pad2, fval("lfo2FreqRatio"))
@@ -50,6 +51,12 @@ def pp_klstr(program, slot=127):
     acc += '%s"res"  : %5.3f,\n' % (pad5, fval("res"))
     acc += '%s"mix"  : %5.3f},\n' % (pad5, fval("filterMix"))
 
+    acc += '%sexternal = {"spread" : %5.3f,\n' % (pad, fval("xToSpread"))
+    acc += '%s"noise"  : %5.3f,\n' % (pad6, fval('xToNoise'))
+    acc += '%s"filter" : %5.3f,\n' % (pad6, fval('xToFilter'))
+    acc += '%s"scale"  : %5.3f,\n' % (pad6, fval('xScale'))
+    acc += '%s"bias    : %5.3f},\n' % (pad6, fval('xBias'))
+    
     acc += '%spw = %5.3f,\n' % (pad, fval("pw"))
     acc += '%spwLfo = %5.3f,\n' % (pad, fval("pwLfo"))
     acc += '%snoise = %+d)\n' % (pad, db("noiseAmp"))
