@@ -30,6 +30,8 @@ class TkSaw3FilterPanel(TkSubEditor):
         s_keytrack = cfactory.linear_slider(frame, "filterKeytrack", editor,range_ = (0.0, 4.0))
         s_freq_env1 = ExpSlider(frame, "filterFreq_env1", editor, range_=12000, degree=4)
         s_freq_lfo =  ExpSlider(frame, "filterFreq_lfo", editor, range_=12000, degree=4)
+        #s_freq_external = cfactory.normalized_slider(frame,"xToFilterFreq", editor)
+        s_freq_external = ExpSlider(frame, "xToFilterFreq", editor, range_=12000, degree=4)
         s_bandpass_offset = cfactory.linear_slider(frame, "bandpassOffset", editor,range_ = (1, 16))
         s_bandpass_lag = cfactory.normalized_slider(frame, "bandpassLag", editor)
         y0, y1 = 50, 300
@@ -41,6 +43,8 @@ class TkSaw3FilterPanel(TkSubEditor):
         s_keytrack.widget().place(x=x1, y=y0)
         s_freq_env1.layout((x0,y1), checkbutton_offset=(-5,-28))
         s_freq_lfo.layout((x1,y1), checkbutton_offset=(-5,-28))
+        #s_freq_external.widget().place(x=x1+30, y=y1)
+        s_freq_external.layout(offset = (x1+30, y1), checkbutton_offset = None)
         s_bandpass_offset.widget().place(x=x2, y=y0)
         s_bandpass_lag.widget().place(x=x3, y=y0, width=10, height=75)
         # Filter Resonace
@@ -72,6 +76,7 @@ class TkSaw3FilterPanel(TkSubEditor):
         self.add_control("filterMix", s_filter_mix)
         self.add_control("filterMix_env1", s_filter_mix_env1)
         self.add_control("filterMix_lfo", s_filter_mix_lfo)
+        self.add_control("xToFilterFreq", s_freq_external)
         # Env1 
         s_env1_a = ExpSlider(frame, "env1Attack", editor, range_=8, degree=2)
         s_env1_d = ExpSlider(frame, "env1Decay", editor, range_=8, degree=2)

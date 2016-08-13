@@ -34,6 +34,7 @@ specs["constructor"] = Saw3Proxy
 specs["description"] = "A 3 Oscillator Subtractive Synth"
 specs["keymodes"] = ("Poly1", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
+specs["control-input-buses"] = ("xbus",)
 specs["pretty-printer"] = pp_saw3  
 specs["program-generator"] = s3gen
 specs["pallet"] = s3_pallet

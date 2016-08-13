@@ -39,6 +39,7 @@ class TkSaw3Panel1(TkSubEditor):
         s_wave1_lfo = ExpSlider(frame, "osc1Wave_lfo", editor, 1.0)
         s_amp1_env = ExpSlider(frame, "osc1Amp_env1", editor, 1.0)
         s_port = cfactory.normalized_slider(frame, "port", editor)
+        s_xpitch = cfactory.normalized_slider(frame, 'xToPitch', editor)
         self.add_control("osc1Freq", ofc_1)
         self.add_control("osc1Wave", s_wave1)
         self.add_control("osc1Amp", s_amp1)
@@ -46,6 +47,7 @@ class TkSaw3Panel1(TkSubEditor):
         self.add_control("osc1Wave_lfo", s_wave1_lfo)
         self.add_control("osc1Amp_env1", s_amp1_env)
         self.add_control("port", s_port)
+        self.add_control('xToPitch', s_xpitch)
         y0, y1 = 50, 300
         x0 = 50
         x1 = x0 + 190
@@ -59,6 +61,7 @@ class TkSaw3Panel1(TkSubEditor):
         x2 = x1 + 60
         x3 = x2 + 60
         s_port.widget().place(x=x0, y=y1)
+        s_xpitch.widget().place(x=x0+60, y=y1)
         s_wave1_env.layout(offset=(x1, y1), checkbutton_offset=(-5,-28))
         s_wave1_lfo.layout(offset=(x2, y1), checkbutton_offset=(-5,-28))
         s_amp1_env.layout(offset=(x3, y1), checkbutton_offset=(-5,-28))
@@ -69,6 +72,7 @@ class TkSaw3Panel1(TkSubEditor):
         s_wave2_env = ExpSlider(frame, "osc2Wave_env1", editor, 1.0)
         s_wave2_lfo = ExpSlider(frame, "osc2Wave_lfo", editor, 1.0)
         s_amp2_env = ExpSlider(frame, "osc2Amp_env1", editor, 1.0)
+
         self.add_control("osc2Freq", ofc_2)
         self.add_control("osc2Wave", s_wave2)
         self.add_control("osc2Amp", s_amp2)

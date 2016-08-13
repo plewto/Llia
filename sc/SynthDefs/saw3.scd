@@ -79,6 +79,9 @@
  * filterMix_env1  - Filter mix mod by env1.
  * bandpassOffset  - Bandpass filter frequency offset (ratio)
  * bandpassLag     - Bandpass frequency mod lag time.
+ *
+ *
+
 */
 
 
@@ -88,6 +91,7 @@
 		gate = 1,
 		doneAction = 2,
 		outbus = 0,
+		xbus = 1024, 					// external control bus
 		amp = 0.07,
 		port = 0.0,
 		// ENV1  modulation
@@ -150,7 +154,10 @@
 		filterMix_lfo = 0.0,
 		filterMix_env1 = 0.0,
 		bandpassOffset = 1.0,				// as scale factor 0 < v
-		bandpassLag = 0.0|
+		bandpassLag = 0.0,
+		xToPitch = 0.0,					    // external signal -> pitch (0..1)
+		xToFilterFreq = 0.0|                // external -> filter (0..1)
+		var x,xpitch,xfilter;
 		var env1, env2;
 		var vibenv, vamp, vsig;
 		var lfoenv, lfoamp, lfo;
@@ -162,6 +169,7 @@
 		var fltin, fltout, fltmix;
 		var ffreq, res, lpgain, lpsig, bpfreq, bprq, bpsig;
 		var outsig;
+		x = In.kr(xbus, 1);
 		env1 = EnvGen.kr(Env.adsr(env1Attack, env1Decay, env1Sustain, env1Release,
 			curve: \linear, bias: 0.001), gate, 1, 0, 1, 0);
 		env1 = env1 * env1;
@@ -180,7 +188,8 @@
 		lfoamp = lfoDepth * lfoenv;
 		lfo = LFCub.kr(lfoFreq, 0, lfoamp);
 
-		f0 = Lag2.kr(freq*detune, port) * vsig;
+		xpitch = 1 + (x*xToPitch);
+		f0 = Lag2.kr(freq*detune, port) * vsig * xpitch;
 
 		// OSC1  bandpass sawtooth.
 		f1 = (f0*osc1Freq).max(0);
@@ -220,9 +229,11 @@
 
 		// Filters
 		fltin = (osc1*a1) + (osc2*a2) + (osc3*a3) + (nse*nseAmp);
+		xfilter = 1 + (x * xToFilterFreq);
 		ffreq = filterFreq + (filterKeytrack * f0);
 		ffreq = ffreq + (filterFreq_env1 * env1);
 		ffreq = ffreq + (filterFreq_lfo * lfo);
+		ffreq = ffreq * xfilter;
 		ffreq = ffreq.clip(100, 12000);
 		res = filterRes;
 		res = res + (filterRes_lfo * lfo);

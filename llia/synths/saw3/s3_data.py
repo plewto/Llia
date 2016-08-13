@@ -9,7 +9,7 @@ from llia.util.lmath import clip, db_to_amp
 from llia.performance_edit import performance, smap, ccmap
 
 prototype = {
-    "outbus"          : 0     , # Main output bus number.
+    #"outbus"          : 0     , # Main output bus number.
     "amp"             : 0.1   , # Main linear amplitude.
     "port"            : 0.0   , # Portamento time.
     "env1Attack"      : 0.0   , # 
@@ -71,6 +71,9 @@ prototype = {
     
     "bandpassOffset"  : 1.0   , # Bandpass filter frequency offset (ratio)
     "bandpassLag"     : 0.0   , # Bandpass frequency mod lag time.
+    "xToPitch"        : 0.0   , # External control signal to pitch [0.0, 1.0]
+    "xToFilterFreq"   : 0.0     # External control signal to filter [0.0, 1.0]
+    
 }
 
 class Saw3(Program):
@@ -151,13 +154,14 @@ def mix(osc1=0, osc2=0, osc3=0, noise=-99,
             "osc3Amp_env1" : nclip(osc3Env1),
             "noiseAmp_env1" : nclip(noiseEnv1)}
 
-def filter_(freq=10000, keytrack=0.0, env1=0.0, lfo=0.0, bpoffset = 1.0, bplag=0.0):
+def filter_(freq=10000, keytrack=0.0, env1=0.0, lfo=0.0, bpoffset = 1.0, bplag=0.0, external=0.0):
     return {"filterFreq" : float(clip(freq, 0, 12000)),
             "filterKeytrack" : float(clip(keytrack, 0, 4)),
             "filterFreq_env1" : float(clip(env1, -12000, 12000)),
             "filterFreq_lfo" : float(clip(lfo, -12000, 12000)),
             "bandpassOffset" : float(clip(bpoffset, 1, 16)),
-            "bandpassLag" : float(max(bplag, 0))}
+            "bandpassLag" : float(max(bplag, 0)),
+            "external" : float(clip(external, 0, 1))}
 
 def res(n, env1=0.0, lfo=0.0):
     return {"filterRes" : nclip(n),
@@ -183,8 +187,10 @@ def saw3(slot, name,
          filter_ = filter_(),
          res = res(0.5),
          filter_mix = filter_mix(0),
-         port = 0.0):
+         port = 0.0,
+         externalToPitch = 0.0):
     acc = {"amp" : db_to_amp(amp),
+           "xToPitch" : float(clip(externalToPitch, 0, 1)),
            "port" : float(max(port, 0))}
     acc.update(vibrato)
     acc.update(env1)

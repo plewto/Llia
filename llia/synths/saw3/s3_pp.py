@@ -77,10 +77,11 @@ def pp_saw3(program, slot=127):
     s = frmt % (pad, db('noiseAmp'), fval('noiseAmp_env1'))
     acc += s
     
-    frmt = '%sfilter_(%d, keytrack=%d, env1=%d, lfo=%d, bpoffset=%5.3f, bplag=%5.3f),\n'
+    frmt = '%sfilter_(%d, keytrack=%d, env1=%d, lfo=%d, bpoffset=%5.3f, bplag=%5.3f, "external=%5.3f),\n'
     s = frmt % (pad, ival('filterFreq'), ival('filterKeytrack'),
                 ival('filterFreq_env1'), ival('filterFreq_lfo'),
-                fval('bandpassOffset'), fval('bandpassLag'))
+                fval('bandpassOffset'), fval('bandpassLag'),
+                fval('xToFilterFreq'))
     acc += s
     
     frmt = '%sres(%5.3f, env1=%5.3f, lfo=%5.3f),\n'
@@ -92,6 +93,7 @@ def pp_saw3(program, slot=127):
     s = frmt % (pad, fval('filterMix'),fval('filterMix_env1'),
                 fval('filterMix_lfo'))
     acc += s
+    acc += '%sexternalToPitch = %5.3f,\n' % (pad, fval('xToPitch'))
     acc += '%sport = %5.3f)\n' % (pad, fval('port'))
     return acc
 
