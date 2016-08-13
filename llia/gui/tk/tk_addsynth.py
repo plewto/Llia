@@ -75,7 +75,7 @@ class TkAddSynthDialog(Toplevel):
                 lab_dummy.grid(row=row, column=0)
             row += 1
         factory.padding_label(frame_audio_in).grid(row=row, column=0)
-        frame_audio_in.grid(row=1, column=0, padx=4, pady=4)
+        frame_audio_in.grid(row=1, column=0, padx=4, pady=4, sticky='ew')
         
         # Audio Output Buses
         frame_audio_out = factory.label_frame(main, "Audio Output Buses")
@@ -97,7 +97,7 @@ class TkAddSynthDialog(Toplevel):
                 lab_dummy.grid(row=row, column=0)
             row += 1
         factory.padding_label(frame_audio_out).grid(row=row, column=0)
-        frame_audio_out.grid(row=5, column=0, padx=4, pady=4)
+        frame_audio_out.grid(row=5, column=0, padx=4, pady=4, sticky='ew')
         
         # Control Input Buses
         frame_control_in = factory.label_frame(main, "Control Input Buses")
@@ -118,12 +118,11 @@ class TkAddSynthDialog(Toplevel):
                 lab_dummy.grid(row=row, column=0)
             row += 1
         factory.padding_label(frame_control_in).grid(row=row, column=0)
-        frame_control_in.grid(row=1, column=3, padx=4, pady=4)
+        frame_control_in.grid(row=1, column=3, padx=4, pady=4, sticky='ew')
 
         # Control Output Buses
         frame_control_out = factory.label_frame(main, "Control Output Buses")
         row = 0
-        #for b in specs["control-output-buses"]:
         for i in range(MAX_BUS_COUNT):
             try:
                 bname = specs["control-output-buses"][i]
@@ -140,7 +139,7 @@ class TkAddSynthDialog(Toplevel):
                 lab_dummy.grid(row=row, column=0)
             row += 1
         factory.padding_label(frame_control_out).grid(row=row, column=0)
-        frame_control_out.grid(row=5, column=3, padx=4, pady=4)
+        frame_control_out.grid(row=5, column=3, padx=4, pady=4, sticky='ew')
         
        
 
@@ -155,7 +154,7 @@ class TkAddSynthDialog(Toplevel):
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
                 self._buffername_map[bname] = combo
                 row += 1
-            factory.padding_label(frame_buffers).grid(row=row, column=0)
+            factory.padding_label(frame_buffers).grid(row=row, column=0, sticky='ew')
             frame_buffers.grid(row=9, column=3, padx=4, pady=4)
 
         # # Keymode
@@ -177,7 +176,7 @@ class TkAddSynthDialog(Toplevel):
         # voice count spin_vc is place hoder for future.
         lab_vc.grid(row=1, column=0, padx=4)
         spin_vc.grid(row=1, column=1, columnspan=3, padx=4, pady=4)
-        frame_keymode.grid(row=9, column=0, padx=4, pady=4)
+        frame_keymode.grid(row=9, column=0, padx=4, pady=4, sticky='ew')
         factory.padding_label(frame_keymode).grid(row=2, column=0)
         # South Toolbar
         toolbar = factory.frame(main)
