@@ -20,14 +20,14 @@ The problem was not solved directly but as a consequence of adding
 default control buses.  Two control buses were added to serve as
 default input and output control buses. 
 
----------------------------------------------------------------------- OPEN
+---------------------------------------------------------------------- OPEN 0001
 BUG 0001 2016.05.08 OPEN
 Effected files: llia.sc, proxy.py, parser.py
 
 Lliscript command id-this breaks communication between host and server
 Temporary fix: Disabled command
 
----------------------------------------------------------------------- OPEN
+---------------------------------------------------------------------- OPEN 0002
 BUG 0002 2016.05.10
 Effected files: llia.sc, lliabuses.sc
 
@@ -36,7 +36,7 @@ IO buses, causing mayhem with future SC operations.
 
 This should be a simple fix.
 
----------------------------------------------------------------------- OPEN
+---------------------------------------------------------------------- OPEN 0003
 BUG 0003 2016.05.13
 Multiple identical parameters can pile up in Keymode.fixedParameters.
 
@@ -52,7 +52,9 @@ Possible fix:
 Switch from using an array to some sort of Dictionary, most likely an sclang
 Event. 
 
----------------------------------------------------------------------- OPEN
+Fix at same time as BUG 0008
+
+---------------------------------------------------------------------- OPEN 0004
 BUG 0004 2016.06.20
 At times Toplevel.grab_set() raises TclError.
 This prevents dialogs from being modal.
@@ -84,7 +86,7 @@ So for instrument Foo feeding effect Bar which then feeds effect Baz.
    3) Create efx Baz,    input <- B, output -> out_0   (sound card)
    4) Create efx Bar,    input <- A, output -> B
 
----------------------------------------------------------------------- OPEN
+---------------------------------------------------------------------- OPEN 0006
 BUG 0006 2016.07.14
 
 New synths are not immediately "active" after creation.  It is necessary
@@ -97,3 +99,11 @@ BUG 0007 2016.08.06  CLOSED 2016.08.13
 Control bus names are not being displayed in "add synth" dialog
 
 Changed layout of tk_addsynth.
+
+---------------------------------------------------------------------- OPEN 0008
+BUG 0008 2016.08.13
+
+Control bus assignments are not being made properly.
+This is probably due to problems in the sc classes.
+BUG 0003 should be addressed at the same time as this bug.
+
