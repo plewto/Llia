@@ -1,7 +1,8 @@
 from __future__ import print_function
 
 from Tkinter import (BOTH, W, EW, E, X, LEFT, Toplevel, StringVar)
-#from ttk import (Frame,)
+import os.path
+
 import llia.constants as con
 import llia.gui.tk.tk_factory as factory
 from llia.synth_proxy import SynthSpecs
@@ -45,9 +46,13 @@ class TkAddSynthDialog(Toplevel):
         else:
             title += "Synth"
         title += "      sid = %s" % self.sid
-        w = factory.dialog_title_label(main, title)
-        w.grid(row = 0, column = 0, sticky="w", padx=4, pady=8)
-
+        frame_north = factory.frame(main)
+        frame_north.grid(row=0, column=0, columnspan=2, sticky='ew', padx=4, pady=8)
+        logo_filename = os.path.join("resources", synth_type, "logo_small.png")
+        lab_logo = factory.image_label(frame_north, logo_filename, synth_type)
+        lab_id = factory.dialog_title_label(frame_north, title)
+        lab_logo.grid(row=0, column=0, padx=8)
+        lab_id.grid(row=0, column=1)
         def spinbox(master, param):
             var = StringVar()
             var.set("0")
@@ -140,8 +145,6 @@ class TkAddSynthDialog(Toplevel):
             row += 1
         factory.padding_label(frame_control_out).grid(row=row, column=0)
         frame_control_out.grid(row=5, column=3, padx=4, pady=4, sticky='ew')
-        
-       
 
         # # Buffers
         if specs["buffers"]:
@@ -166,8 +169,6 @@ class TkAddSynthDialog(Toplevel):
         for km in specs["keymodes"]:
             rb = factory.radio(frame_keymode, km, self.var_keymode, km)
             rb.grid(row=0, column=col, sticky="w", padx=4, pady=4)
-            # if self.is_efx:
-            #     rb.config(state="disabled")
             col += 1
         self.var_keymode.set(specs["keymodes"][0])  # Set default keymode
        

@@ -175,7 +175,7 @@ def panic_button(master, text="PANIC", command=None, ttip="Panic"):
 
 def logo_button(master, name, fname=None, command=None, ttip=""):
     if not fname:
-        fname = os.path.join("/home/sj/dev/Llia/resources", name, "logo.png")
+        fname = os.path.join("resources", name, "logo.png")
     try:
         img = Image.open(fname)
         photo = ImageTk.PhotoImage(img)
