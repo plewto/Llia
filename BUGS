@@ -105,8 +105,9 @@ BUG 0008 2016.08.13
 
 Control bus assignments are not being made properly.
 
-    ---------------------------------------------------------------------- OPEN 0008A
-     SUB BUG 0008A 2016.08.13
+    ---------------------------------------------------------------------- 
      New control buses created by the client have bus indexes starting with 0.
      The first indes should be 2 due to the default buses (see BUG 0000)
+
+     Solved by altering how sc LliaBus class allocatwes buses.
 
