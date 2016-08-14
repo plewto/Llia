@@ -35,6 +35,7 @@ specs["constructor"] = OrgnProxy
 specs["description"] = "Simple FM Synth"
 specs["keymodes"] = ("Poly1", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
+specs["control-input-buses"] = ("xbus",)
 specs["pretty-printer"] = pp_orgn    
 specs["program-generator"] = gen_orgn_program
 specs["help"] = "orgn"
