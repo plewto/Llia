@@ -104,6 +104,9 @@ Changed layout of tk_addsynth.
 BUG 0008 2016.08.13
 
 Control bus assignments are not being made properly.
-This is probably due to problems in the sc classes.
-BUG 0003 should be addressed at the same time as this bug.
+
+    ---------------------------------------------------------------------- OPEN 0008A
+     SUB BUG 0008A 2016.08.13
+     New control buses created by the client have bus indexes starting with 0.
+     The first indes should be 2 due to the default buses (see BUG 0000)
 
