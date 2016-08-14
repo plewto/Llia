@@ -31,7 +31,7 @@ LliaHandler : Object {
 	}
 
 	/*
-    ** Create new instance of LliaHandler.
+    ** Create new instance of LliaHandler
 	** ARGS:
     **   oscid - String, root OSC id 
     **   clientAddress - String, ip address for client

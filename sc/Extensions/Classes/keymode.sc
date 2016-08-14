@@ -9,7 +9,7 @@ Keymode : Object {
 	var synthID;
 	var <netAddress;
 	var <synthType;
-	var <fixedParameters;  // See BUG 0003
+	//var <fixedParameters;  // See BUG 0003
 	var currentProgram;
 	var oscHandlers;
 	var <isDead;
@@ -40,7 +40,7 @@ Keymode : Object {
 		lliaApp = app;
 		synthType = stype;
 		synthID = sid;
-		fixedParameters = Array.new;
+		//fixedParameters = Array.new;
 		currentProgram = Program.new();
 		oscHandlers = [];
 		isDead = false;
@@ -122,7 +122,8 @@ Keymode : Object {
 	
 	synthParams {
 		var plst = currentProgram.synthParams;
-		^(plst ++ fixedParameters);
+		^plst;
+		//^(plst ++ fixedParameters);
 	}
 
 	allNotesOff {
@@ -141,14 +142,16 @@ Keymode : Object {
 	setBusParameter {|param, rate, busName, offset=0|
 		var index;
 		index = lliaApp.getBusIndex(rate, busName, offset);
-		fixedParameters = fixedParameters.add(param);
-		fixedParameters = fixedParameters.add(index);
+		// fixedParameters = fixedParameters.add(param);
+		// fixedParameters = fixedParameters.add(index);
+		currentProgram.set_(param, index);
 	}
 
 	setBufferParameter {|param, bufferName|
 		var buffer = lliaApp.getBuffer(bufferName);
-		fixedParameters = fixedParameters.add(param);
-		fixedParameters = fixedParameters.add(buffer);
+		// fixedParameters = fixedParameters.add(param);
+		// fixedParameters = fixedParameters.add(buffer);
+		currentProgram.set_(param, buffer);
 	}
 	
 	// Abstract method

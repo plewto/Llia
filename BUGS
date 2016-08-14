@@ -36,8 +36,10 @@ IO buses, causing mayhem with future SC operations.
 
 This should be a simple fix.
 
----------------------------------------------------------------------- OPEN 0003
+---------------------------------------------------------------------- CLOSED
 BUG 0003 2016.05.13
+CLOSED  2016.08.13
+
 Multiple identical parameters can pile up in Keymode.fixedParameters.
 
 Keymode.fixedParameters is an Array used to hold fixed synth parameters such
@@ -47,12 +49,8 @@ assignment is made repeatedly, such as happens when reevaluating a script
 file, the the new assignment is appended to the end of fixedParameters with
 the original assignment left in place.
 
-
-Possible fix:
-Switch from using an array to some sort of Dictionary, most likely an sclang
-Event. 
-
-Fix at same time as BUG 0008
+Removed separate "fixedParameter" array from SC keymode class.
+The current program is now used for all parameters.
 
 ---------------------------------------------------------------------- OPEN 0004
 BUG 0004 2016.06.20
@@ -67,7 +65,7 @@ BUG 0005 2016.07.13
 
 There is no output when processing one effect through another effect.  This
 may be related to the "addAction" when creating the effect Synths in
-Supercollider.
+SuperCollider.
 
 Solution 2016.07.15
 The problem was a mistake in the order in which effect synths were created.
@@ -100,14 +98,19 @@ Control bus names are not being displayed in "add synth" dialog
 
 Changed layout of tk_addsynth.
 
----------------------------------------------------------------------- OPEN 0008
+---------------------------------------------------------------------- CLOSED
 BUG 0008 2016.08.13
+CLOSED 2016.08.13
 
 Control bus assignments are not being made properly.
 
     ---------------------------------------------------------------------- 
      New control buses created by the client have bus indexes starting with 0.
-     The first indes should be 2 due to the default buses (see BUG 0000)
+     The first index should be 2 due to the default buses (see BUG 0000)
 
-     Solved by altering how sc LliaBus class allocatwes buses.
-
+     Solved by altering how sc LliaBus class allocates buses.
+    ----------------------------------------------------------------------
+    
+Removed "fixedParameters" array from SC keymode class and all sub-classes.
+All parameters, including bus and buffer assignments, are now stored as
+part of the current synth program.   This change also fixed BUG 0003
