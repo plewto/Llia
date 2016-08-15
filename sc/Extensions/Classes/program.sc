@@ -38,6 +38,10 @@ Program : Object {
 	synthParams {
 		^pdata.getPairs;
 	}
+
+	getPairs {  // alias for synthParams
+		^pdata.getPairs;
+	}
 	
 	synthParams_ {|plist, clearFirst=true|
 		if (clearFirst, {this.clear});

@@ -9,7 +9,7 @@ Keymode : Object {
 	var synthID;
 	var <netAddress;
 	var <synthType;
-	//var <fixedParameters;  // See BUG 0003
+	var fixedParameters;
 	var currentProgram;
 	var oscHandlers;
 	var <isDead;
@@ -40,7 +40,7 @@ Keymode : Object {
 		lliaApp = app;
 		synthType = stype;
 		synthID = sid;
-		//fixedParameters = Array.new;
+		fixedParameters = IdentityDictionary.new();
 		currentProgram = Program.new();
 		oscHandlers = [];
 		isDead = false;
@@ -142,18 +142,32 @@ Keymode : Object {
 	setBusParameter {|param, rate, busName, offset=0|
 		var index;
 		index = lliaApp.getBusIndex(rate, busName, offset);
-		// fixedParameters = fixedParameters.add(param);
-		// fixedParameters = fixedParameters.add(index);
-		currentProgram.set_(param, index);
+		fixedParameters.put(param.asSymbol, index);
 	}
 
 	setBufferParameter {|param, bufferName|
 		var buffer = lliaApp.getBuffer(bufferName);
-		// fixedParameters = fixedParameters.add(param);
-		// fixedParameters = fixedParameters.add(buffer);
-		currentProgram.set_(param, buffer);
+		fixedParameters.put(param.asSymbol, buffer);
 	}
-	
+
+	/*
+     * Merge transient parameters from note-on event and currentProgram
+     * with fixed parameters (mostly bus and buffer assignments).
+     *
+     * ARGS:     
+     *    alist argument is associatein list from note-on event.
+     *    [\gate, 1, \freq, n, \keynumber, n ...]
+     *
+     * RETURNS: merged parameter/value association liet
+     *   [\param1, value1, \param2, value2, ...]
+	*/
+	mergeParameters {|alist|
+		var alist1 = currentProgram.getPairs;
+		var alist2 = fixedParameters.getPairs;
+		^ alist ++ alist1 ++ alist2;
+	}
+
+		
 	// Abstract method
 	// velocity "normalized" [0.0, 1.0]
 	noteOn {|keynumber, frequency, velocity|

@@ -36,7 +36,7 @@ EfxKeymode : Keymode {
 	noteOn {|keynumber, frequency, velocity|
 		var params = [\gate, 1, \freq, frequency, \keynumber, keynumber,
 			\velocity, velocity];
-		params = super.synthParams ++ params;
+		params = super.mergeParameters(params);
 		Keymode.zip(params).do({|q|
 			var param = q[0];
 			var value = q[1];

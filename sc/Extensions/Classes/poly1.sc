@@ -37,13 +37,11 @@ Poly1 : Keymode {
 	}
 
 	noteOn {|keynumber, frequency, velocity|
-		var paramList, sy, old;
-		paramList = super.synthParams ++
-		    [\gate, 0, \freq, frequency, \keynumber, keynumber];
-		sy = Synth(synthType, paramList);
+		var params, sy, old;
+		params = [\gate, 0, \freq, frequency, \keynumber, keynumber];
+		params = super.mergeParameters(params);
+		sy = Synth(synthType, params);
 		old = activeNotes[keynumber];
-		// postf("DEBUG Poly1 keynum [%] freq % vel %\n", keynumber, frequency, velocity);
-		// postf("DEBUG Poly1.noteOn  super.fixedParameters -> %\n", super.fixedParameters);
 		sy.set(\gate, 1);
 		old.set(\gate, 0);
 		activeNotes[keynumber] = sy;
