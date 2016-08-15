@@ -33,6 +33,7 @@ specs["keymodes"] = ("EFX",)
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["audio-input-buses"] = (("inbus", 1),)
 specs["control-input-buses"] = ("delaybus","mixbus")
+specs["control-output-buses"] = ("lfoOutbus",)
 specs["program-generator"] = random_flanger
 specs["pretty-printer"] = pp
 specs["pallet"] = flngr_pallet

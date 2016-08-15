@@ -4,6 +4,7 @@ SynthDef (\Flngr, {
 	outbus = 0,
 	delaybus = 1024,    // external delay time control.
 	mixbus = 1024,      // external mix level.
+	lfoOutbus = 1023,   // internal LFO -> control bus
 	delay = 0.5,        // mean delay time, normalized
 	xmodDepth = 0.0,    // external delay time scale.
 	imodDepth = 0.5,    // internal LFO modulation depth, normalized.
@@ -16,7 +17,8 @@ SynthDef (\Flngr, {
 	amp = 1.00|         // overall linear amplitude.
 	var drysig = In.ar(inbus, 1);
 	var xmix = In.kr(mixbus, 1);
-	var fb = HPF.ar(LPF.ar(LocalIn.ar(1), feedbackLowpass), feedbackHighpass)* (feedback.max(-1).min(1));
+	var fb = HPF.ar(LPF.ar(LocalIn.ar(1), feedbackLowpass),
+		feedbackHighpass)*(feedback.max(-1).min(1));
 	var maxDelay = 0.01;
 	var meanDelay = maxDelay/2;
 	var delayScale = meanDelay/2;
@@ -32,6 +34,7 @@ SynthDef (\Flngr, {
 	var outsig = XFade2.ar(drysig, wetsig, efxLevel);
 	LocalOut.ar(delayOut);
 	Out.ar(outbus, outsig*amp);
+	Out.kr(lfoOutbus, lfo);
 }).load;
 )
 

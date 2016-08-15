@@ -34,6 +34,7 @@ specs["keymodes"] = ("EFX",)
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["audio-input-buses"] = (("inbus", 1),)
 specs["control-input-buses"] = ("xbus",)
+specs["control-output-buses"] = ("lfoOutbus",)
 specs["program-generator"] = random_tremolo
 specs["pretty-printer"] = pp
 specs["pallet"] = tremolo_pallet

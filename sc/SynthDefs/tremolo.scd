@@ -9,6 +9,7 @@ SynthDef(\Tremolo, {
 	outbus = 0,
 	xbus = 1024,      // external control bus
 	lfoFreq = 5.0,    // internal LFO freq
+	lfoOutbus = 1023, // internal LFO -> control bus
 	modDepth = 0.0,   // internal LFO modulation depth, normalized
 	limit = 1.0,      // absolute maximum modulation amplitude
 	amp = 1.0,        // overall amplitude
@@ -23,5 +24,6 @@ SynthDef(\Tremolo, {
 	var ctrl = ((x*xDepth) + XFade2.kr(1, lfo, modDepth.linlin(0,1,-1,1))).max(0).min(limit);
 	var outsig = dry * ctrl * amp;
 	Out.ar(outbus, outsig);
+	Out.kr(lfoOutbus, lfo);
 }).load;
 )
