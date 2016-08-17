@@ -7,28 +7,40 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp, amp_to_db
 from llia.performance_edit import performance
+from llia.util.lmath import (coin,rnd,pick,random)
+
+LF_RATIOS = (0.125, 0.250, 0.333, 0.325, 0.50, 0.625, 0.667, 0.75, 0.875,
+             1.0, 1.333, 1.50, 1.667, 1.75,
+             2.0, 2.5, 3, 4, 5, 6, 7, 8, 9, 12, 16)
+
+CROSSOVER_FREQUENCIES = (100, 125, 160, 200, 250, 315, 400, 500, 630, 800,
+                        1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000,
+                        6300, 8000, 10000, 12500, 16000)
 
 prototype = {
-    "res" : 0.5,                # Resonace (0, 1)
-    "crossover" : 500,          # Filter crossover (100, 16000) Hz
-    "lfoCrossover" : 0.0,       # LFO -> crossover (0, 1)
-    "lfoCrossoverRatio" : 1.0,  # Freq ratio for crossover LFO > 0
-    "lfoFreq" : 1.0,            # Primary LFO frequency in Hz
-    "lpMode" : 1.0,             # Filter 1 mode (0=bandpass, 1=lowpass)
-    "lpMod" : 1.0,              # LFO -> filter1 amp mod (0, 1)
-    "lpAmp" : 1.0,              # Filter1 linear amplitude.
-    "hpMode" : 1.0,             # Filter 2 mode (0=bandpass, 1=highpass)
-    "hpMod"  : 1.0,             # LFO -> filter2 amp (90 out of phase with lp)
-    "hpAmp"  : 1.0,             # Filter 2 linear amp.
-    "spread" : 0.0,             # Filter1, filter2, pan (0=center, 1=left & right)
-    "lfoPanMod" : 0.0,          # LFO -> filter pan
-    "lfoPanRatio" : 1.0,        # Panning LFO frequency ratio
-    "dryAmp" : 1.0,             # Dry signal, linear amp
-    "dryPan" : 0.0,             # Dry signal pan position (-1,+1)
-    "amp" : 1.0                 # Main linear amp.
-    }
-
-
+    "xScale" : 1.0,           # external control signal scale (0..4)
+    "xBias" : 0.0,            # external control bias (-4..+4)
+    "lfoFreq" : 1.0,          # Reference LFO frequency in Hertz.
+    "crossover" : 500,        # crossover freq in Hertz.
+    "minCrossover" : 200,     # min/max crossover frequency in Hz
+    "maxCrossover" : 16000,
+    "xoverLfoRatio" : 1.0,    # crossover LFO frequency relative to lfoFreq  (LFO 1)
+    "xoverLfoDepth" : 0.0,    # LFO -> crossover freq (0..1)
+    "xoverX" : 0.0,           # external -> crossover freq (0..1)
+    "res" : 0.5,              # resonace (0..1)
+    "lpMode" : 1.0,           # 0 -> bandpass, 1 -> lowpass
+    "lpMix" : 1.0,            # lowpass filter static gain (0..2)
+    "lpMixLfo" : 0.0,         # LFO -> lowpass mix (0..1)
+    "lpMixX" : 0.0,           # external -> lowpass mix (0..1)
+    "lpLfoRatio" : 1.0,       # lowpass LFO freq ratio
+    "hpMode" : 1.0,           # 0 -> band-reject, 1 -> highpass
+    "hpMix" : 1.0,            #   highpass LFO is 90 degrees
+    "hpMixLfo" : 0.0,         #   relative to lowpass
+    "hpMixX" : 0.0,
+    "hpLfoRatio" : 1.0,
+    "dryMix" : 0.0,           # dry signal gain (0..2)
+    "amp" : 1.0               # Overall gain (applies to lowpass, highpass and dry), (0..2)
+}
 
 class XOver(Program):
 
@@ -36,8 +48,7 @@ class XOver(Program):
         super(XOver, self).__init__(name, "XOver", prototype)
         self.performance = performance()
 
-INIT_PROGRAM = XOver("Init");
-program_bank = ProgramBank(INIT_PROGRAM)
+program_bank = ProgramBank(XOver("Init"))
 program_bank.enable_undo = False
         
 def fclip (n, mn=0, mx=1):
@@ -46,51 +57,62 @@ def fclip (n, mn=0, mx=1):
 def iclip (n, mn=0, mx=1):
     return int(clip(n, mn, mx))
 
-def xover(slot, name,
+
+def xover(slot, name, 
+          xScale = 1.0,
+          xBias = 0.0,
           lfoFreq = 1.0,
-          crossover = 800,
-          lfoCrossover = 0.00,
-          lfoCrossoverRatio = 1.00,
+          crossover = 500,
+          minCrossover = 200,
+          maxCrossover = 16000,
+          xoverLfoRatio = 1.0,
+          xoverLfoDepth = 0.0,
+          xoverX = 0.0,
           res = 0.5,
-          lpMode = 1.00,
-          lpMod = 1.00,
-          lpAmp = 0,
-          hpMode = 1.00,
-          hpMod = 1.00,
-          hpAmp = 0,
-          spread = 0.75,
-          lfoPanMod = 0.00,
-          lfoPanRatio = 1.00,
-          dryAmp = 0,
-          dryPan = 0,
+          lpMode = 1.0,
+          lpMix = 0,
+          lpMixLfo = 0.0,
+          lpMixX = 0.0,
+          lpLfoRatio = 1.0,
+          hpMode = 1.0,
+          hpMix = 0,
+          hpMixLfo = 0.0,
+          hpMixX = 0.0,
+          hpLfoRatio = 1.0,
+          dryMix = -99,
           amp = 0):
     p = XOver(name)
-    p["res"] = fclip(res)
-    p["crossover"] = iclip(crossover, 100, 16000)
-    p["lfoCrossover"] = fclip(lfoCrossover)
-    p["lfoCrossoverRatio"] = float(abs(lfoCrossoverRatio))
-    p["lfoFreq"] = float(abs(lfoFreq))
-    p["lpMode"] = fclip(lpMode)
-    p["lpMod"] = fclip(lpMod)
-    p["lpAmp"] = db_to_amp(lpAmp)
-    p["hpMode"] = fclip(hpMode)
-    p["hpMod"] = fclip(hpMod)
-    p["hpAmp"] = db_to_amp(hpAmp)
-    p["spread"] = fclip(spread, -1, 1)
-    p["lfoPanMod"] = fclip(lfoPanMod, -1, 1)
-    p["lfoPanRatio"] = abs(float(lfoPanRatio))
-    p["dryAmp"] = db_to_amp(dryAmp)
-    p["dryPan"] = fclip(dryPan, -1, 1)
-    p["amp"] = db_to_amp(amp)
+    p["xScale"] = float(xScale)
+    p["xBias"] = float(xBias)
+    p["lfoFreq"] = float(lfoFreq)
+    p["crossover"] = int(crossover)
+    p["minCrossover"] = int(min(minCrossover, maxCrossover))
+    p["maxCrossover"] = int(max(minCrossover, maxCrossover))
+    p["xoverLfoRatio"] = float(xoverLfoRatio)
+    p["xoverLfoDepth"] = float(xoverLfoDepth)
+    p["xoverX"] = float(xoverX)
+    p["res"] = float(res)
+    p["lpMode"] = float(lpMode)
+    p["lpMixLfo"] = float(lpMixLfo)
+    p["lpMixX"] = float(lpMixX)
+    p["lpLfoRatio"] = float(lpLfoRatio)
+    p["hpMode"] = float(hpMode)
+    p["hpMixLfo"] = float(hpMixLfo)
+    p["hpMixX"] = float(hpMixX)
+    p["hpLfoRatio"] = float(hpLfoRatio)
+    p["dryMix"] = float(db_to_amp(dryMix))
+    p["hpMix"] = float(db_to_amp(hpMix))
+    p["lpMix"] = float(db_to_amp(lpMix))
+    p["amp"] = float(db_to_amp(amp))
     program_bank[slot] = p
     return p
-
-
-def pp_xover(program, slot=127):
     
+
+def pp(program, slot=127):
+
     def db(key):
         return int(amp_to_db(program[key]))
-    
+
     def fval(key):
         return float(program[key])
 
@@ -98,113 +120,297 @@ def pp_xover(program, slot=127):
         return int(program[key])
 
     pad = ' '*5
-    acc = ''
-    acc = 'xover(%3d, "%s",\n' % (slot, program.name)
+    acc = 'xover(%d, "%s",\n' % (slot, program.name)
+    acc += '%scrossover = %d,\n' % (pad, ival('crossover'))
+    acc += '%sminCrossover = %d,\n' % (pad, ival("minCrossover"))
+    acc += '%smaxCrossover = %d,\n' % (pad, ival("maxCrossover"))
+    acc += '%sxScale = %5.4f,\n' % (pad, fval('xScale'))
+    acc += '%sxBias = %5.4f,\n' % (pad, fval('xBias'))
     acc += '%slfoFreq = %5.4f,\n' % (pad, fval('lfoFreq'))
-    frmt = '%scrossover = %4d, lfoCrossover = %5.3f,\n'
-    acc += frmt % (pad, ival('crossover'), fval('lfoCrossover'))
-    frmt = '%slfoCrossoverRatio = %5.3f, res = %5.3f,\n'
-    acc += frmt % (pad, fval('lfoCrossoverRatio'), fval('res'))
-    frmt = '%slpMode = %5.3f, lpMod = %5.3f, lpAmp = %2d,\n'
-    acc += frmt % (pad, fval('lpMode'), fval('lpMod'), db('lpAmp'))
-    frmt = '%shpMode = %5.3f, hpMod = %5.3f, hpAmp = %2d,\n'
-    acc += frmt % (pad, fval('hpMode'), fval('hpMod'), db('hpAmp'))
-    frmt = '%sspread = %5.3f, lfoPanMod = %5.3f, lfoPanRatio = %5.3f,\n'
-    acc += frmt % (pad, fval('spread'), fval('lfoPanMod'), fval('lfoPanRatio'))
-    frmt = '%sdryAmp = %d, dryPan = %5.3f,\n'
-    acc += frmt % (pad, db('dryAmp'), fval('dryPan'))
-    frmt = '%samp = %d)\n'
-    acc += frmt % (pad, db('amp'))
+    acc += '%sxoverLfoRatio = %5.4f,\n' % (pad, fval('xoverLfoRatio'))
+    acc += '%sxoverLfoDepth = %5.4f,\n' % (pad, fval('xoverLfoDepth'))
+    acc += '%sxoverX = %5.4f,\n' % (pad, fval('xoverX'))
+    acc += '%sres = %5.4f,\n' % (pad, fval('res'))
+    acc += '%slpMode = %5.4f,\n' % (pad, fval('lpMode'))
+    acc += '%slpMixLfo = %5.4f,\n' % (pad, fval('lpMixLfo'))
+    acc += '%slpMixX = %5.4f,\n' % (pad, fval('lpMixX'))
+    acc += '%slpLfoRatio = %5.4f,\n' % (pad, fval('lpLfoRatio'))
+    acc += '%shpMode = %5.4f,\n' % (pad, fval('hpMode'))
+    acc += '%shpMixLfo = %5.4f,\n' % (pad, fval('hpMixLfo'))
+    acc += '%shpMixX = %5.4f,\n' % (pad, fval('hpMixX'))
+    acc += '%shpLfoRatio = %5.4f,\n' % (pad, fval('hpLfoRatio'))
+    acc += '%shpMix = %d,\n' % (pad, db('hpMix'))
+    acc += '%slpMix = %d,\n' % (pad, db('lpMix'))
+    acc += '%sdryMix = %d,\n' % (pad, db('dryMix'))
+    acc += '%samp = %d)\n' % (pad, db('amp'))
     return acc
 
 
-xover(  0, "Init",
+
+def random_xover(slot=127, *_):
+    low_ratios = [0.125, 0.250, 0.250, 0.333, 0.333, 0.5, 0.5, 0.5,
+                  0.667, 0.667, 0.75, 0.87]
+    med_ratios = [1.0, 1.0, 1.0, 1.0, 1.333, 1.5, 1.5, 1.5, 1.667,
+                  1.75, 2.0, 2.0, 2.0, 2.5, 3.0, 3.0]
+    high_ratios = [4, 4, 4, 4, 4, 5, 5, 6, 6, 6, 7, 8, 9, 12, 16]
+
+    def pick_ratio():
+        rs = coin(0.50, pick(med_ratios),
+                  coin(0.75, pick(low_ratios), pick(high_ratios)))
+        return rs
+
+    lpmode = coin(0.75, 1, 0)
+    if lpmode == 0:
+        hpmode = 1
+    else:
+        hpmode = coin(0.75, 1, 0)
+
+    mixLfoDepth = coin(0.75, 0.5+rnd(0.5), rnd())
+
+    mn_crossover = int(coin(0.75, 200, rnd(1500)))
+    mx_crossover = mn_crossover + int(coin(0.75, 10000, rnd(5000)))
+
+    rs = xover(slot, "Random",
+               xScale = 1.0,
+               xBias = 0.0,
+               lfoFreq = coin(0.75, rnd(), coin(0.5, rnd(0.2), rnd(10))),
+               crossover = coin(0.75, pick(CROSSOVER_FREQUENCIES[6:-6]),
+                                pick(CROSSOVER_FREQUENCIES)),
+               minCrossover = mn_crossover,
+               maxCrossover = mx_crossover,
+               xoverLfoRatio = pick_ratio(),
+               xoverLfoDepth = coin(0.5, 0, rnd()),
+               xoverX = 0.0,
+               res = rnd(),
+               lpMode = lpmode,
+               lpMix = coin(0.80, pick([0, 0, 0, -3, -3, -6, -6]), -99),
+               lpMixLfo = mixLfoDepth,
+               lpLfoRatio = pick_ratio(),
+               lpMixX = 0.0,
+               hpMode = hpmode,
+               hpMix = coin(0.80, pick([0, 0, 0, -3, -3, -6, -6]), -99),
+               hpMixLfo = coin(0.8, mixLfoDepth, rnd()),
+               hpMixX = 0.0,
+               hpLfoRatio = pick_ratio(),
+               dryMix = coin(0.8, -99, pick([0, -3, -6, -9, -12])),
+               amp = -12)
+    return rs
+               
+               
+               
+xover(0, "Bypass",
+     crossover = 500,
+     minCrossover = 200,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
      lfoFreq = 1.0000,
-     crossover =  500, lfoCrossover = 0.000,
-     lfoCrossoverRatio = 1.000, res = 0.500,
-     lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
-     hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = 0.000, lfoPanMod = 0.000, lfoPanRatio = 1.000,
-     dryAmp = 0, dryPan = 0.000,
+     xoverLfoRatio = 1.0000,
+     xoverLfoDepth = 0.0000,
+     xoverX = 0.0000,
+     res = 0.5000,
+     lpMode = 1.0000,
+     lpMixLfo = 0.0000,
+     lpMixX = 0.0000,
+     lpLfoRatio = 1.0000,
+     hpMode = 1.0000,
+     hpMixLfo = 0.0000,
+     hpMixX = 0.0000,
+     hpLfoRatio = 1.0000,
+     hpMix = -99,
+     lpMix = -99,
+     dryMix = 0,
      amp = 0)
 
-xover(  1, "One",
-     lfoFreq = 1.4000,
-     crossover = 1600, lfoCrossover = 0.141,
-     lfoCrossoverRatio = 1.000, res = 0.387,
-     lpMode = 0.000, lpMod = 1.000, lpAmp =  0,
-     hpMode = 0.000, hpMod = 1.000, hpAmp =  0,
-     spread = 0.638, lfoPanMod = 0.000, lfoPanRatio = 1.000,
-     dryAmp = -4, dryPan = 0.000,
+xover(1, "Slow And Mild",
+     crossover = 1000,
+     minCrossover = 200,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
+     lfoFreq = 1.0000,
+     xoverLfoRatio = 1.0000,
+     xoverLfoDepth = 0.0000,
+     xoverX = 0.0000,
+     res = 0.5000,
+     lpMode = 1.0000,
+     lpMixLfo = 1.0000,
+     lpMixX = 0.0000,
+     lpLfoRatio = 1.0000,
+     hpMode = 1.0000,
+     hpMixLfo = 1.0000,
+     hpMixX = 0.0000,
+     hpLfoRatio = 1.0000,
+     hpMix = 0,
+     lpMix = 0,
+     dryMix = -99,
      amp = 0)
 
-xover(  2, "Slow Fade",
-     lfoFreq = 0.1500,
-     crossover =  800, lfoCrossover = 0.000,
-     lfoCrossoverRatio = 1.000, res = 0.663,
-     lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
-     hpMode = 0.372, hpMod = 1.000, hpAmp =  0,
-     spread = -1.000, lfoPanMod = 0.583, lfoPanRatio = 1.000,
-     dryAmp = -99, dryPan = 0.000,
+xover(2, "4 Hz Mild Wha",
+     crossover = 400,
+     minCrossover = 200,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
+     lfoFreq = 4.0000,
+     xoverLfoRatio = 0.3250,
+     xoverLfoDepth = 0.1307,
+     xoverX = 0.0000,
+     res = 0.5628,
+     lpMode = 1.0000,
+     lpMixLfo = 1.0000,
+     lpMixX = 0.0000,
+     lpLfoRatio = 1.0000,
+     hpMode = 1.0000,
+     hpMixLfo = 1.0000,
+     hpMixX = 0.0000,
+     hpLfoRatio = 1.0000,
+     hpMix = 0,
+     lpMix = 0,
+     dryMix = -99,
      amp = 0)
 
-xover(  3, "Three",
-     lfoFreq = 2.5000,
-     crossover =  600, lfoCrossover = 0.915,
-     lfoCrossoverRatio = 0.125, res = 0.432,
-     lpMode = 1.000, lpMod = 1.000, lpAmp = -16,
-     hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = -0.055, lfoPanMod = 0.859, lfoPanRatio = 1.000,
-     dryAmp = 0, dryPan = 0.000,
+xover(3, "0.66 Hz Wha",
+     crossover = 315,
+     minCrossover = 200,
+     maxCrossover = 10200,
+     xScale = 1.0000,
+     xBias = 0.0000,
+     lfoFreq = 0.6600,
+     xoverLfoRatio = 1.6670,
+     xoverLfoDepth = 0.9849,
+     xoverX = 0.0000,
+     res = 0.5126,
+     lpMode = 0.8643,
+     lpMixLfo = 0.7487,
+     lpMixX = 0.0000,
+     lpLfoRatio = 0.6670,
+     hpMode = 1.0000,
+     hpMixLfo = 0.7487,
+     hpMixX = 0.0000,
+     hpLfoRatio = 0.7500,
+     hpMix = 0,
+     lpMix = -6,
+     dryMix = -99,
      amp = 0)
 
-xover(  4, "Slow & Deep",
-     lfoFreq = 0.3300,
-     crossover =  400, lfoCrossover = 0.246,
-     lfoCrossoverRatio = 1.500, res = 0.518,
-     lpMode = 1.000, lpMod = 1.000, lpAmp =  0,
-     hpMode = 0.583, hpMod = 1.000, hpAmp =  0,
-     spread = -0.005, lfoPanMod = 0.558, lfoPanRatio = 0.250,
-     dryAmp = -99, dryPan = 0.000,
+xover(4, "No Highpass",
+     crossover = 800,
+     minCrossover = 200,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
+     lfoFreq = 1.0000,
+     xoverLfoRatio = 1.0000,
+     xoverLfoDepth = 0.5427,
+     xoverX = 0.0000,
+     res = 0.3618,
+     lpMode = 0.4724,
+     lpMixLfo = 0.0000,
+     lpMixX = 0.0000,
+     lpLfoRatio = 7.0000,
+     hpMode = 1.0000,
+     hpMixLfo = 0.0000,
+     hpMixX = 0.0000,
+     hpLfoRatio = 2.0000,
+     hpMix = -99,
+     lpMix = 0,
+     dryMix = -99,
      amp = 0)
 
-xover(  5, "Fast & Shallow",
-     lfoFreq = 6.6000,
-     crossover =  600, lfoCrossover = 0.286,
-     lfoCrossoverRatio = 0.500, res = 0.497,
-     lpMode = 0.000, lpMod = 1.000, lpAmp =  0,
-     hpMode = 1.000, hpMod = 1.000, hpAmp = -3,
-     spread = 0.000, lfoPanMod = 0.528, lfoPanRatio = 0.750,
-     dryAmp = 0, dryPan = 0.000,
+xover(5, "Only Highpass",
+     crossover = 630,
+     minCrossover = 200,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
+     lfoFreq = 1.0000,
+     xoverLfoRatio = 1.0000,
+     xoverLfoDepth = 0.9347,
+     xoverX = 0.0000,
+     res = 0.3618,
+     lpMode = 1.0000,
+     lpMixLfo = 0.0000,
+     lpMixX = 0.0000,
+     lpLfoRatio = 0.1250,
+     hpMode = 1.0000,
+     hpMixLfo = 0.0000,
+     hpMixX = 0.0000,
+     hpLfoRatio = 0.1250,
+     hpMix = 0,
+     lpMix = -99,
+     dryMix = -99,
      amp = 0)
 
-xover(  6, "Bandpass 1k",
-     lfoFreq = 0.9200,
-     crossover = 1200, lfoCrossover = 0.111,
-     lfoCrossoverRatio = 1.000, res = 0.814,
-     lpMode = 0.111, lpMod = 0.563, lpAmp =  0,
-     hpMode = 0.000, hpMod = 1.000, hpAmp =  0,
-     spread = 1.000, lfoPanMod = 0.286, lfoPanRatio = 0.250,
-     dryAmp = -3, dryPan = 0.000,
+xover(6, "XOver 6",
+     crossover = 630,
+     minCrossover = 200,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
+     lfoFreq = 0.6600,
+     xoverLfoRatio = 6.0000,
+     xoverLfoDepth = 0.1759,
+     xoverX = 0.0000,
+     res = 0.3568,
+     lpMode = 1.0000,
+     lpMixLfo = 0.5879,
+     lpMixX = 0.0000,
+     lpLfoRatio = 4.0000,
+     hpMode = 1.0000,
+     hpMixLfo = 0.5879,
+     hpMixX = 0.0000,
+     hpLfoRatio = 1.0000,
+     hpMix = 3,
+     lpMix = -3,
+     dryMix = -99,
      amp = 0)
 
-xover(  7, "Slow Res",
-     lfoFreq = 0.2372,
-     crossover =  100, lfoCrossover = 0.950,
-     lfoCrossoverRatio = 0.125, res = 0.915,
-     lpMode = 1.000, lpMod = 0.980, lpAmp = -5,
-     hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = -1.000, lfoPanMod = 0.352, lfoPanRatio = 1.000,
-     dryAmp = -99, dryPan = 0.000,
+xover(7, "Syncopated",
+     crossover = 1000,
+     minCrossover = 200,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
+     lfoFreq = 0.8200,
+     xoverLfoRatio = 9.0000,
+     xoverLfoDepth = 0.6734,
+     xoverX = 0.0000,
+     res = 0.7186,
+     lpMode = 1.0000,
+     lpMixLfo = 1.0000,
+     lpMixX = 0.0000,
+     lpLfoRatio = 2.5000,
+     hpMode = 1.0000,
+     hpMixLfo = 1.0000,
+     hpMixX = 0.0000,
+     hpLfoRatio = 1.0000,
+     hpMix = -7,
+     lpMix = 0,
+     dryMix = -99,
      amp = 0)
 
-xover(  8, "Tenth Second",
+xover(8, "Very Slow Crossfade",
+     crossover = 630,
+     minCrossover = 100,
+     maxCrossover = 16000,
+     xScale = 1.0000,
+     xBias = 0.0000,
      lfoFreq = 0.1000,
-     crossover =  600, lfoCrossover = 0.271,
-     lfoCrossoverRatio = 1.000, res = 0.477,
-     lpMode = 0.583, lpMod = 1.000, lpAmp =  0,
-     hpMode = 1.000, hpMod = 1.000, hpAmp =  0,
-     spread = -0.538, lfoPanMod = 0.975, lfoPanRatio = 1.000,
-     dryAmp = -9, dryPan = 0.000,
+     xoverLfoRatio = 1.0000,
+     xoverLfoDepth = 0.2613,
+     xoverX = 0.0000,
+     res = 0.4975,
+     lpMode = 1.0000,
+     lpMixLfo = 1.0000,
+     lpMixX = 0.0000,
+     lpLfoRatio = 1.0000,
+     hpMode = 1.0000,
+     hpMixLfo = 1.0000,
+     hpMixX = 0.0000,
+     hpLfoRatio = 1.3330,
+     hpMix = -6,
+     lpMix = -3,
+     dryMix = -99,
      amp = 0)
 

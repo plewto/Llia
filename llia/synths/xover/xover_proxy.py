@@ -5,8 +5,8 @@ from __future__ import print_function
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
-from llia.synths.xover.xover_data import program_bank, pp_xover
-from llia.synths.xover.xover_gen import gen_xover_program
+from llia.synths.xover.xover_data import program_bank, pp, random_xover
+#from llia.synths.xover.xover_gen import gen_xover_program
 
 specs = SynthSpecs("XOver");
 
@@ -19,22 +19,26 @@ class XOverProxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            from llia.synths.xover.tk.xover_ed import create_editor
+            from llia.synths.xover.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
 
 xover_pallet = Pallet(default_pallet)
 xover_pallet["BG"] = "#131313"
-xover_pallet["SLIDER-TROUGH"] = "#1f2f40"
+xover_pallet["SLIDER-TROUGH"] = "#0a1414"
+xover_pallet["SLIDER-OUTLINE"] = "#3d1e29"
 
 specs["constructor"] = XOverProxy
 specs["description"] = "Crossover Filter Effect"
 specs["keymodes"] = ("EFX",)
-specs["audio-output-buses"] = (("outbus", 1),)
+specs["audio-output-buses"] = (("lpOutbus",1),("hpOutbus",1),("dryOutbus",1))
 specs["audio-input-buses"] = (("inbus", 1),)
-specs["program-generator"] = gen_xover_program
+specs["control-input-buses"] = ("xbus",)
+specs["control-output-buses"] = ("xoverLfoOutbus","lpModLfoOutbus","hpModLfoOutbus")
+specs["program-generator"] = random_xover
 specs["is-efx"] = True
-specs["pretty-printer"] = pp_xover
+specs["pretty-printer"] = pp
 specs["pallet"] = xover_pallet
 specs["help"] = "xover"
+
