@@ -108,7 +108,7 @@ def mix_slider(master, param, editor, ttip=""):
                       (absctrl.amp_to_mix_aspect,
                        absctrl.mix_aspect_to_amp),
                       ttip=ttip)
-      def enter_callback(*_):
+    def enter_callback(*_):
         amp = float(s.value())
         db = int(amp_to_db(amp))
         frmt = "[%s] -> %5.3f (%d db)"
