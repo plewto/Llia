@@ -47,6 +47,13 @@ class ReciprocalSlider(AbstractControl):
         self._widgets["slider"] = s
         self._widgets["checkbutton-sign"] = cb_sign
         self._widgets["checkbutton-invert"] = cb_invert
+        self._editor = editor
+        self._param = param
+        s.bind("<Enter>", self.enter_callback)
+
+    def enter_callback(self, *_):
+        msg = "[%s] -> %s" % (self._param, self.value())
+        self._editor.status(msg)
 
     def q_sign(self):
         # Return true if sign checkbutton selected

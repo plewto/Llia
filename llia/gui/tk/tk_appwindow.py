@@ -280,7 +280,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         w = event.widget
         st = w.config()["text"][-1]
         dialog = TkAddSynthDialog(self.root, self.app, st, is_efx=False, is_controller=True)
-        self.root,wait_window(dialog)
+        self.root.wait_window(dialog)
         
     def _add_synth_group(self):
         sh = self.app.ls_parser.synthhelper

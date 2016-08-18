@@ -61,6 +61,13 @@ class ExpSlider(AbstractControl):
                                  command = self.callback)
         self._widgets["slider"] = s
         self._widgets["checkbutton-sign"] = cb
+        self._editor = editor
+        self._param = param
+        s.bind("<Enter>", self.enter_callback)
+
+    def enter_callback(self, *_):
+        msg = "[%s] -> %s" % (self._param, self.value())
+        self._editor.status(msg)
 
     def qinvert(self):
         return self.var_sign.get() != 0

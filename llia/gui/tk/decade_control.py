@@ -68,14 +68,22 @@ class DecadeControl(AbstractControl):
             widget_key = "radio-range-%d" % value
             self._widgets[widget_key] = rb
             self._radio_buttons.append(rb)
+            rb.bind("<Enter>", self.enter_callback)
         s_scale = factory.scale(master, from_=90, to=0,
                                 var = self.var_scale,
                                 command = self.callback,
                                 ttip = "%s scale" % param)
+        s_scale.bind("<Enter>", self.enter_callback)
         self._widgets["slider"] = s_scale
         lab_value = factory.label(master, "X.XXX")
         self._widgets["label-value"] = lab_value
+        self._editor = editor
+        self._param = param
 
+    def enter_callback(self, *_):
+        msg = "[%s] -> %s" % (self._param, self.value())
+        self._editor.status(msg)
+    
     def callback(self, *_):
         d = float(self.var_decade.get())
         delta = d/10.0

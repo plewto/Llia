@@ -47,6 +47,7 @@ class OscFrequencyControl(AbstractControl):
             widget_key = "radio-octave-%d" % value
             self._widgets[widget_key] = rb
             self._radio_buttons.append(rb)
+            rb.bind("<Enter>", self.enter_callback)
         s_step = factory.scale(master, from_=11, to=0,
                                var = self.var_transpose,
                                command = self.callback,
@@ -67,7 +68,24 @@ class OscFrequencyControl(AbstractControl):
         self._widgets["label-transpose"] = lab_transpose
         self._widgets["label-detune"] = lab_detune
         self._widgets["label-value"] = lab_value
+        self._editor = editor
+        self._param = param
+        s_step.bind("<Enter>", self.enter_callback)
+        s_detune.bind("<Enter>", self.enter_callback)
 
+        
+
+    def enter_callback(self, *_):
+        try:
+            octave = int(self.var_octave.get())
+            step = self.var_transpose.get()
+            detune = self.var_detune.get()
+            frmt = "[%s] -> [octave %d, step %d, detune %d cents] = freq %6.4f"
+            msg = frmt % (self._param, octave, step, detune, self.value())
+            self._editor.status(msg)
+        except TypeError:
+            pass   # Values may not be assigned yet
+        
     def callback(self, *_):
         octave = int(self.var_octave.get())
         step = self.var_transpose.get()

@@ -9,7 +9,7 @@ import Tkinter as tk
 import llia.constants as con
 import llia.gui.abstract_control as absctrl
 import llia.gui.tk.tk_factory as factory
-from llia.util.lmath import log2, logn, log10, clip
+from llia.util.lmath import log2, logn, log10, clip, db_to_amp, amp_to_db
 from llia.curves import linear_function as linfn, normal_exp_curve
 
 
@@ -34,7 +34,16 @@ class ControlSlider(absctrl.AbstractControl):
         self.value_to_aspect_transform = curves[0] or absctrl.norm_to_aspect
         self.aspect_to_value_transform = curves[1] or absctrl.aspect_to_norm
         self.client_callback = ControlSlider.default_client_callback
+        self._tkscale.bind("<Enter>", self.enter_callback)
+        self._editor = editor
+        self._param = param
+        
+    def enter_callback(self, *_):
+        #self._editor.status(self._param)
+        msg = "[%s] -> %s" % (self._param, self.value())
+        self._editor.status(msg)
 
+        
     def update_aspect(self):
         self._tkscale.set(self._current_aspect)
 
@@ -80,6 +89,15 @@ def volume_slider(master, param, editor, ttip=""):
                       (absctrl.amp_to_volume_aspect,
                        absctrl.volume_aspect_to_amp),
                       ttip=ttip)
+    def enter_callback(*_):
+        amp = float(s.value())
+        db = int(amp_to_db(amp))
+        frmt = "[%s] -> %5.3f (%d db)"
+        msg = frmt % (param, amp, db)
+        editor.status(msg)
+
+    s.widget().bind("<Enter>", enter_callback)
+    s.widget().bind("<Leave>", enter_callback)
     return s
 
 # mix_slider is for levels of synth components such as oscilators.
@@ -90,6 +108,15 @@ def mix_slider(master, param, editor, ttip=""):
                       (absctrl.amp_to_mix_aspect,
                        absctrl.mix_aspect_to_amp),
                       ttip=ttip)
+      def enter_callback(*_):
+        amp = float(s.value())
+        db = int(amp_to_db(amp))
+        frmt = "[%s] -> %5.3f (%d db)"
+        msg = frmt % (param, amp, db)
+        editor.status(msg)
+
+    s.widget().bind("<Enter>", enter_callback)
+    s.widget().bind("<Leave>", enter_callback)
     return s
 
 
