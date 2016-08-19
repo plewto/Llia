@@ -31,6 +31,7 @@ import llia.synths.carnal.crnl_proxy
 import llia.synths.xover.xover_proxy
 import llia.synths.flngr.flngr_proxy
 import llia.synths.tremolo.trm_proxy
+import llia.synths.mixer.mixer_proxy
 
 
 

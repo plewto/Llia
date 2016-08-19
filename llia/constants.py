@@ -21,7 +21,7 @@ KEY_MODES = ("Poly1", "Mono1", "EFX")
 
 
 SYNTH_TYPES = ("Orgn", "Saw3", "Klstr", "RDrum", "MASA")
-EFFECT_TYPES = ("CarnalDelay", "XOver", "Flngr", "Tremolo")
+EFFECT_TYPES = ("CarnalDelay", "XOver", "Flngr", "Tremolo", "Mixer")
 CONTROLLER_SYNTH_TYPES = ("LFO1","LFO2","LFO3","PulseGen","SnH")
 
 MAX_UNDO = 10
