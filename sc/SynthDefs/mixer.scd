@@ -19,11 +19,11 @@
 	gain4 = 1.0,
 	pan4 = 0.0,
 	reverb4 = 0.0,
-	reverbSend = 1.0,
 	reverbReturn = 0.0,
 	reverbRoomSize = 0.25,
 	reverbLowpass = 16000,   // Hertz
 	reverbHighpass = 40,     // Hertz
+	reverbBalance = 0.09,
 	reverbDamp = 0.0
 	mainAmpA = 1.0,
 	mainAmpB = 1.0|
@@ -31,13 +31,12 @@
 	var b = Pan2.ar(In.ar(inbus2)*gain2, pan2);
 	var c = Pan2.ar(In.ar(inbus3)*gain3, pan3);
 	var d = Pan2.ar(In.ar(inbus4)*gain4, pan4);
-	var reverbIn = ((a*reverb1) + (b*reverb2) + (c*reverb3) + (d*reverb4))
-	    * reverbSend;
+	var reverbIn = ((a*reverb1) + (b*reverb2) + (c*reverb3) + (d*reverb4));
 	var reverbFilterIn = FreeVerb2.ar(reverbIn[0], reverbIn[1],1,
 		reverbRoomSize,reverbDamp);
 	var reverbFilterOut = LPF.ar(HPF.ar(reverbFilterIn,reverbHighpass),
-		reverbLowpass);
-	var reverb = reverbFilterOut * reverbReturn;
+		reverbLowpass) * reverbReturn;
+	var reverb = Balance2.ar(reverbFilterOut[0], reverbFilterOut[1], reverbBalance);
 	var outA = (a[0]+b[0]+c[0]+d[0]+reverb[0])*mainAmpA;
 	var outB = (a[1]+b[1]+c[1]+d[1]+reverb[1])*mainAmpB;
 	Out.ar(outbusA, outA);

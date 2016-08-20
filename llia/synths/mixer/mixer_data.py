@@ -20,13 +20,12 @@ prototype = {
     "gain4" : 1.0,
     "pan4" : 0.0,
     "reverb4" : 0.0,
-    "reverbSend" : 1.0,
-    
     "reverbReturn" : 0.0,      # Reverb return gain 
     "reverbRoomSize" : 0.25,   # Room size 0 <= size <= 1
     "reverbLowpass" : 16000,   # Hertz
     "reverbHighpass" : 40,     # Hertz
     "reverbDamp" : 0.0,        # Reverb high frequency damping 0 <= damp <= 1
+    "reverbBalance" : 0.0,    # left/right balance  -1 <= balance <= +1
     
     "mainAmpA" : 1.0,          # Main out gain 1 
     "mainAmpB" : 1.0           # Main out gain 2
@@ -49,6 +48,7 @@ def mixer(slot, name,
                     "damp" : 0.00,
                     "lowpass" : 20000,
                     "highpass" : 10,
+                    "balance" : 0.0,
                     "return" : -99}, #  return in db
           main = [  0,   0]):       # [out-1 out-2] (db)
 
@@ -84,6 +84,7 @@ def mixer(slot, name,
               "damp" : float(clip(d.get("damp", 0.0), 0.0, 1.0)),
               "lowpass" : int(clip(d.get("lowpass", 20000), 10, 20000)),
               "highpass" : int(clip(d.get("highpass", 10), 10, 20000)),
+              "balance" : float(clip(d.get("balance", 0.0), -1, 1)),
               "return" : float(db_to_amp(d.get("return", -99)))}
         return rs
     
@@ -104,6 +105,7 @@ def mixer(slot, name,
                 ("damp","reverbDamp"),
                 ("lowpass","reverbLowpass"),
                 ("highpass","reverbHighpass"),
+                ("balance","reverbBalance"),
                 ("return","reverbReturn")):
         program[q] = reverb[p]
     program_bank[slot] = program
@@ -129,6 +131,8 @@ def pp(program, slot=127):
     acc += '%s"lowpass"  : %5d,\n' % values
     values = (pad2, int(program["reverbHighpass"]))
     acc += '%s"highpass" : %5d,\n' % values
+    values = (pad2, float(program["reverbBalance"]))
+    acc += '%s"balance" : %4.2f,\n' % values
     values = (pad2, int(amp_to_db(program["reverbReturn"])))
     acc += '%s"return"   : %+3d},\n' % values
     values = (pad,
@@ -148,6 +152,7 @@ mixer(0, "Unity",
                 "damp" : 0.50,
                 "lowpass"  : 20000,
                 "highpass" :    40,
+                "balnace"  : 0.0,
                 "return"   : -99},
       main = [0, 0])
 
@@ -160,5 +165,6 @@ mixer(1, "All OFF",
                 "damp" : 0.50,
                 "lowpass"  : 20000,
                 "highpass" :    40,
+                "balance"  : 0.0,
                 "return"   : -99},
       main = [-99, -99])
