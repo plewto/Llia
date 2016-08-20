@@ -13,7 +13,7 @@ from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
 import llia.gui.pallet 
 
-_current_pallet = None
+_current_pallet = llia.gui.pallet.default_pallet
 _style = None
 
 def set_pallet(p):
@@ -23,7 +23,11 @@ def set_pallet(p):
         _style = None
 
 set_pallet(llia.gui.pallet.default_pallet)
-    
+
+def restore_pallet():
+    global _current_pallet
+    _current_pallet = llia.gui.pallet.default_pallet
+
 def pallet(key):
     return _current_pallet[key]
 
