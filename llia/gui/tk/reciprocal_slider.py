@@ -90,7 +90,9 @@ class ReciprocalSlider(AbstractControl):
 
     def update_aspect(self, *_):
         value = self._current_value
-        if value < 0:
+        if value == 0:
+            return # Abort to prevent division by zero.
+        elif value < 0:
             self.var_sign.set(1)
         else:
             self.var_sign.set(0)

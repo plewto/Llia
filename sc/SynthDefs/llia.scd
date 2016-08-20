@@ -8,3 +8,4 @@ a = LliaHandler.new();
 )
 
 
+Stethoscope.new(s);
