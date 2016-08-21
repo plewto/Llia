@@ -22,7 +22,7 @@ KEY_MODES = ("Poly1", "Mono1", "EFX")
 
 SYNTH_TYPES = ("Orgn", "Saw3", "Klstr", "RDrum", "MASA")
 EFFECT_TYPES = ("CarnalDelay", "XOver", "Flngr", "Tremolo", "Mixer", "Panner")
-CONTROLLER_SYNTH_TYPES = ("LFO1","LFO2","LFO3","PulseGen","SnH", "Ghostbus")
+CONTROLLER_SYNTH_TYPES = ("LFO1","LFO2","LFO3","PulseGen","SnH", "Ghostbus", "Mus")
 
 MAX_UNDO = 10
 BANK_LENGTH = 128

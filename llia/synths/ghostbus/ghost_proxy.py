@@ -27,7 +27,7 @@ class GhostbusProxy(SynthProxy):
 ghostbus_pallet = Pallet(default_pallet)
 
 specs["constructor"] = GhostbusProxy
-specs["description"] = "Simple sine LFO"
+specs["description"] = "Reads and modifies control bus values"
 specs["keymodes"] = ("EFX", )
 specs["audio-output-buses"] = []
 specs["audio-input-buses"] = []
@@ -36,5 +36,5 @@ specs["control-output-buses"] = ("outbus",)
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_ghostbus
 specs["is-efx"] = True
-specs["help"] = "GHOSTBUS"
+specs["help"] = "Ghostbus"
 specs["pallet"] = ghostbus_pallet
