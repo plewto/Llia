@@ -56,57 +56,34 @@ class TkApplicationWindow(AbstractApplicationWindow):
         south.config(background=factory.bg())
 
     def _init_center_frame(self, master):
-        
-        frame_synths = layout.FlowGrid(master)
-        frame_efx = layout.FlowGrid(master)
-        frame_controllers = layout.FlowGrid(master)
-        
-        # frame_synths.pack(expand=True, fill=BOTH, pady=8)
-        # frame_efx.pack(expand=True, fill=BOTH)
-        # frame_controllers.pack(expand=True, fill=BOTH, pady=8)
-
-        frame_synths.grid(row=0, column=0)
-        frame_efx.grid(row=1, column=0, sticky='w')
-        frame_controllers.grid(row=2, column=0, sticky='w')
-        
-        w = factory.image_label(frame_synths, "resources/logos/synth.png")
-        frame_synths.add(w)
-        for st in sorted(con.SYNTH_TYPES):
+        nb = ttk.Notebook(master)
+        nb.pack(expand=True, fill="both")
+        frame_synths = layout.FlowGrid(nb, 6)
+        frame_efx = layout.FlowGrid(nb, 6)
+        frame_controllers = layout.FlowGrid(nb, 6)
+        nb.add(frame_synths, text = "Synths")
+        nb.add(frame_efx, text = "Effects")
+        nb.add(frame_controllers, text = "Controllers")
+        for st in con.SYNTH_TYPES:
             sp = specs[st]
             ttp = "Add %s Synthesizer (%s)" % (st, sp["description"])
             b = factory.logo_button(frame_synths, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_synth_dialog)
             frame_synths.add(b)
-            
-        w = factory.image_label(frame_efx, "resources/logos/efx.png")
-        frame_efx.add(w)
-        for st in sorted(con.EFFECT_TYPES):
+        for st in con.EFFECT_TYPES:
             sp = specs[st]
             ttp = "Add %s Effect (%s)" % (st, sp["description"])
             b = factory.logo_button(frame_efx, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_efx_dialog)
             frame_efx.add(b)
-
-        w = factory.image_label(frame_controllers, "resources/logos/controllers.png")
-        frame_controllers.add(w)
-        for st in sorted(con.CONTROLLER_SYNTH_TYPES):
+        for st in con.CONTROLLER_SYNTH_TYPES:
             sp = specs[st]
             ttp = "Add %s Effect (%s)" % (st, sp["description"])
             b = factory.logo_button(frame_controllers, st, ttip=ttp)
             b.bind("<Button-1>", self._show_add_controller_dialog)
             frame_controllers.add(b)
-            
-        # w = factory.image_label(frame_controllers, "resources/logos/controllers.png")
-        # for st in sorted(con.CONTROLLER_SYNTHS):
-        #     sp = specs[st]
-        #     b = factory.logo_button(frame_controllers, st)
-        #     frame_controllers.add(b)
-        
-        
-        frame_synths.config(background=factory.bg())
-        frame_efx.config(background=factory.bg())
-        frame_controllers.config(background=factory.bg())
-        
+
+    
     @staticmethod
     def menu(master):
         m = Menu(master, tearoff=0)
