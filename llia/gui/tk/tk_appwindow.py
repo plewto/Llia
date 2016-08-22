@@ -244,8 +244,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         st = w.config()["text"][-1]
         dialog = TkAddSynthDialog(self.root, self.app, st, False)
         self.root.wait_window(dialog)
-        # FPO
-        self.add_active_synth_button(None)
         
     def _show_add_efx_dialog(self, event):
         w = event.widget
