@@ -1,9 +1,39 @@
+x/*
+ * An 8-operator FM synth
+ *
+ *  [3]-->[2]-->[1]---+
+ *                    |
+ *  [5]--+            |
+ *       +--->[4]--+--+-->
+ *  [6]--+         |  |
+ *   ^             |  |
+ *   |             |  |
+ *   +-------------+  |
+ *                    | 
+ *  [8]--+----[7]-----+
+ *   ^   |
+ *   |   |
+ *   +---+
+ *
+ * 4 Envelopes ADDSR or ADDR modes
+ *     2 shared by carriers
+ *     2 shared by modulators
+ *     modulator envelops may be inverted
+ *
+ * Single LFO 
+ * 
+ * Feedback on operators 6 and 8
+ *
+ * Each FM "stack" may be output to separate bus.
+*/
+
 
 (SynthDef (\Algo2,
-	{|gate = 1
+      {|gate = 1
+	    amp = 0.2
 		doneAction = 2
 		xbus = 1023        // external control bus
-		outbus1 = 0        // op1 output bus
+		outbus = 0        // op1 output bus
 		outbus4 = 0        // op4 output bus
 		outbus7 = 0        // op7 output bus
 		freq = 440
@@ -48,9 +78,9 @@
 		envd_attack = 0.0      // general envelope D
 		envd_decay1 = 0.0
 		envd_decay2 = 0.0
-		envd_releaseease = 0.0
+		envd_release = 0.0
 		envd_breakpoint = 1.0
-		envs_sustain = 1.0
+		envd_sustain = 1.0
 
 		// OP1 (Carrier)
 		op1_ratio = 1.0,            // op1 frequency ratio
@@ -160,7 +190,7 @@
 
 		|
 		var hp_cutoff = 10;
-		var hold_time = enva_release.max(envb_release).max(envc_release).max(envd_releaseease);
+		var hold_time = enva_release.max(envb_release).max(envc_release).max(envd_release);
 		var lfo_env = EnvGen.kr(Env([0,0,1,0],[lfo_delay,lfo_delay,hold_time],\lin,2),gate);
 		var lfo = LFCub.kr([lfo_freq, lfo_freq*lfo_ratio],0,[1,lfo_mix]);
 		var vibrato_amp = (vibrato + (lfo_env*vdepth)).min(1).max(0);
@@ -196,12 +226,12 @@
 			gate, 1, 0, 1, 0);
 
 		var env_d_addsr = EnvGen.kr(Env(
-			[0.0, 1.0, envd_breakpoint, envs_sustain, 0.0],
-			[envd_attack, envd_decay1, envd_decay2, envd_releaseease],\lin, 3),
+			[0.0, 1.0, envd_breakpoint, envd_sustain, 0.0],
+			[envd_attack, envd_decay1, envd_decay2, envd_release],\lin, 3),
 			gate, 1, 0, 1, 0);
 		var env_d_addr = EnvGen.kr(Env(
-			[0.0, 1.0, envd_breakpoint, envs_sustain, 0.0],
-			[envd_attack, envd_decay1, envd_decay2, envd_releaseease],\lin, 4),
+			[0.0, 1.0, envd_breakpoint, envd_sustain, 0.0],
+			[envd_attack, envd_decay1, envd_decay2, envd_release],\lin, 4),
 			gate, 1, 0, 1, 0);
 		var carrier_envelopes = [env_a_addsr, env_a_addr, env_b_addsr, env_b_addr];
 		var modulator_envelopes = [env_c_addsr, env_c_addr, env_d_addsr, env_d_addr,
@@ -283,7 +313,7 @@
 
 		var op3 = SinOsc.ar(f3)*a3*env3;
 		var op2 = HPF.ar(SinOsc.ar(f2+op3)*a2*env2, hp_cutoff);
-		var op1 = SinOsc.ar(f1+op2)*a1*env1;
+		var op1 = SinOsc.ar(f1+op2)*a1*env1*amp;
 		var op5 = SinOsc.ar(f5)*a5*env5;
 		var op6_feedback_amp = op6_feedback * 0.3 *
 		(1 + (mlfo * op6_lfo_feedback)) *
@@ -291,16 +321,16 @@
 		(1 + (x * op6_feedback));
 		var op6_internal_feedback = LocalIn.ar(1) * f6 * op6_feedback_amp;
 		var op6 = HPF.ar(SinOsc.ar(f6+op6_internal_feedback), hp_cutoff);
-		var op4 = SinOsc.ar(f4+op5+(op6 * f4 * env6 * a6)) * a4 * env4;
+		var op4 = SinOsc.ar(f4+op5+(op6 * f4 * env6 * a6)) * a4 * env4* amp;
 
 		var op8_feedback_amp = op8_feedback *
 		(1 + (mlfo * op8_lfo_feedback)) *
 		(1 + (env8 * op8_env_feedback)) *
 		(1 + (x * op8_x_feedback));
 		var op8 = HPF.ar(SinOscFB.ar(f8,op8_feedback_amp)*a8*env8, hp_cutoff);
-		var op7 = SinOsc.ar(f7+op8)*a7*env7;
+		var op7 = SinOsc.ar(f7+op8)*a7*env7*amp;
 
-		Out.ar(outbus1, op1);
+		Out.ar(outbus, op1);
 		Out.ar(outbus4, op4);
 		Out.ar(outbus7, op7);
 
