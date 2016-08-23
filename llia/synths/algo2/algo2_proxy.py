@@ -5,7 +5,7 @@ from __future__ import print_function
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.algo2.algo2_data import program_bank
-# from llia.synths.algo2.algo2_pp import pp_algo2
+from llia.synths.algo2.algo2_pp import pp_algo2
 from llia.synths.algo2.algo2_random import random_algo2
 
 specs = SynthSpecs("Algo2")
@@ -33,7 +33,7 @@ specs["description"] = "An 8 Operator FM Synth"
 specs["keymodes"] = ("Poly1", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),("outbus4", 1),("outbus7", 1))
 specs["control-input-buses"] = ("xbus",)
-# specs["pretty-printer"] = pp_algo2    
+specs["pretty-printer"] = pp_algo2    
 specs["program-generator"] = random_algo2
 specs["help"] = "algo2"
 specs["pallet"] = algo2_pallet
