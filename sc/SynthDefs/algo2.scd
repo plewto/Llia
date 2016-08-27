@@ -91,8 +91,8 @@ x/*
 		op1_left_scale = 6          // op1 left key scale, db/octave
 		op1_right_scale = -3        // op1 right key scale db/octave
 		op1_lfo_amp = 0.0           // op1 lfo -> amp
-		op1_env_select = 0.0        // 0 -> envA ADDSR  1 -> envA ADDR
-		//                          // 2 -> envB ADDSR  3 -> envB ADDR
+		op1_env_select = 0.0        // 0..3  -> envA envB envC envD  gated
+		//                          // 4..7  -> envA envB envC envD  triggerd       
 
 		// OP4 (Carrier)
 	    op4_ratio = 1.00
@@ -126,11 +126,10 @@ x/*
 		op2_left_scale = 0
 		op2_right_scale = 0
 		op2_lfo_amp = 0.0
-		op2_env_select = 0.0        // 0 -> envC ADDSR  1 -> envC ADDR
-		//                          // 2 -> envD ADDSR  3 -> envD ADDR
-		//                          // 4 -> envC ADDSR  5 -> envC ADDR (inverted)
-		//                          // 6 -> envC ADDSR  7 -> envC ADDR (inverted)
-
+		op2_env_select = 0.0        // 0..3   -> A B C D gatted
+		//                          // 4..7   -> A B C D triggerd
+		//                          // 8..11  -> A B C D inverted gated
+		//                          // 12..15 -> A B C D triggerd inverted  
 		// OP3 (Modulator)
 	    op3_ratio = 1.00
 		op3_bias = 0.00
@@ -190,6 +189,8 @@ x/*
 
 		|
 		var hp_cutoff = 10;
+	
+		  
 		var hold_time = enva_release.max(envb_release).max(envc_release).max(envd_release);
 		var lfo_env = EnvGen.kr(Env([0,0,1,0],[lfo_delay,lfo_delay,hold_time],\lin,2),gate);
 		var lfo = LFCub.kr([lfo_freq, lfo_freq*lfo_ratio],0,[1,lfo_mix]);
@@ -199,43 +200,60 @@ x/*
 
 		// Envelopes
 		var env_floor = 0.05;
+		var triga = Trig1.kr(gate, enva_attack + enva_decay1 + enva_decay2);
+		var trigb = Trig1.kr(gate, envb_attack + envb_decay1 + envb_decay2);
+		var trigc = Trig1.kr(gate, envc_attack + envc_decay1 + envc_decay2);
+		var trigd = Trig1.kr(gate, envd_attack + envd_decay1 + envd_decay2);
+
 		var env_a_addsr = EnvGen.kr(Env(
 			[env_floor, 1.0, enva_breakpoint.max(env_floor), enva_sustain.max(env_floor), env_floor],
 			[enva_attack, enva_decay1, enva_decay2, enva_release],\exp, 3),
 			gate, 1, 0, 1, 0)-env_floor;
+		  
 		var env_a_addr = EnvGen.kr(Env(
 			[env_floor, 1.0, enva_breakpoint.max(env_floor), enva_sustain.max(env_floor), env_floor],
-			[enva_attack, enva_decay1, enva_decay2, enva_release],\exp, 4),
-			gate, 1, 0, 1, 0)-env_floor;
+			[enva_attack, enva_decay1, enva_decay2, enva_release],\exp, 3),
+			triga, 1, 0, 1, 0)-env_floor;
+		  
 		var env_b_addsr = EnvGen.kr(Env(
 			[env_floor, 1.0, envb_breakpoint.max(env_floor), envb_sustain.max(env_floor), env_floor],
 			[envb_attack, envb_decay1, envb_decay2, envb_release],\exp, 3),
 			gate, 1, 0, 1, 0);
+
 		var env_b_addr = EnvGen.kr(Env(
 			[env_floor, 1.0, envb_breakpoint.max(env_floor), envb_sustain.max(env_floor), env_floor],
-			[envb_attack, envb_decay1, envb_decay2, envb_release],\exp, 4),
-			gate, 1, 0, 1, 0);
+			[envb_attack, envb_decay1, envb_decay2, envb_release],\exp, 3),
+			trigb, 1, 0, 1, 0);
 
 		var env_c_addsr = EnvGen.kr(Env(
 			[0.0, 1.0, envc_breakpoint, envc_sustain, 0.0],
 			[envc_attack, envc_decay1, envc_decay2, envc_release],\lin, 3),
 			gate, 1, 0, 1, 0);
+		  
 		var env_c_addr = EnvGen.kr(Env(
 			[0.0, 1.0, envc_breakpoint, envc_sustain, 0.0],
-			[envc_attack, envc_decay1, envc_decay2, envc_release],\lin, 4),
-			gate, 1, 0, 1, 0);
+			[envc_attack, envc_decay1, envc_decay2, envc_release],\lin, 3),
+			trigc, 1, 0, 1, 0);
 
 		var env_d_addsr = EnvGen.kr(Env(
 			[0.0, 1.0, envd_breakpoint, envd_sustain, 0.0],
 			[envd_attack, envd_decay1, envd_decay2, envd_release],\lin, 3),
 			gate, 1, 0, 1, 0);
+		  
 		var env_d_addr = EnvGen.kr(Env(
 			[0.0, 1.0, envd_breakpoint, envd_sustain, 0.0],
-			[envd_attack, envd_decay1, envd_decay2, envd_release],\lin, 4),
-			gate, 1, 0, 1, 0);
-		var carrier_envelopes = [env_a_addsr, env_a_addr, env_b_addsr, env_b_addr];
-		var modulator_envelopes = [env_c_addsr, env_c_addr, env_d_addsr, env_d_addr,
-			1-env_c_addsr, 1-env_c_addr, 1-env_d_addsr, 1-env_d_addr];
+			[envd_attack, envd_decay1, envd_decay2, envd_release],\lin, 3),
+			trigd, 1, 0, 1, 0);
+		  
+	   var carrier_envelopes = [env_a_addsr, env_b_addsr, env_c_addsr, env_d_addsr,
+		   env_a_addr, env_b_addr, env_c_addr, env_d_addr];
+
+	   var modulator_envelopes = [env_a_addsr, env_b_addsr, env_c_addsr, env_d_addsr,
+			env_a_addr, env_b_addr, env_c_addr, env_d_addr,
+			1-env_a_addsr, 1-env_b_addsr, 1-env_c_addsr, 1-env_d_addsr,
+			1-env_a_addr, 1-env_b_addr, 1-env_c_addr, 1-env_d_addr];
+
+			
 		var env1 = Select.kr(op1_env_select, carrier_envelopes);
 		var env4 = Select.kr(op4_env_select, carrier_envelopes);
 		var env7 = Select.kr(op7_env_select, carrier_envelopes);
@@ -295,11 +313,11 @@ x/*
 			(octave_right8 * op8_right_scale));
 		// Operator amplitudes
 		var a1 = (op1_amp * op1_enable) * (1 + (x * op1_x_amp)) *
-		(1 + (mlfo * 0.5 * op1_lfo_amp)) * ascale1 * env1 * env1;
+		(1 + (mlfo * 0.5 * op1_lfo_amp)) * ascale1 * env1;
 		var a4 = (op4_amp * op4_enable) * (1 + (x * op4_x_amp)) *
-		(1 + (mlfo * 0.5 * op4_lfo_amp)) * ascale4 * env4 * env4;
+		(1 + (mlfo * 0.5 * op4_lfo_amp)) * ascale4 * env4;
 		var a7 = (op7_amp * op7_enable) * (1 + (x * op7_x_amp)) *
-		(1 + (mlfo * 0.5 * op7_lfo_amp)) * ascale7 * env4 * env4;
+		(1 + (mlfo * 0.5 * op7_lfo_amp)) * ascale7 * env4;
 		var a3 = (op3_amp * op3_enable) * (1 + (x * op3_x_amp)) *
 		(1 + (mlfo * op3_lfo_amp)) * f2 * ascale3 * env3;
 		var a2 = (op2_amp * op2_enable) * (1 + (x * op2_x_amp)) *

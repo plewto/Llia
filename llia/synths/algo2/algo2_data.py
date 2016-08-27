@@ -7,6 +7,7 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
 from llia.performance_edit import performance
+import llia.synths.algo2.algo2_constants as con
 
 prototype = {
     "amp" : 0.2,              # Main linear amp 
@@ -30,19 +31,19 @@ prototype = {
     "enva_breakpoint" : 1.0,
     "enva_sustain" : 1.0,
 
-    "envb_attack" : 0.0,      # Envelope B
+    "envb_attack" : 0.0,      # Envelope B 
     "envb_decay1" : 0.0,
     "envb_decay2" : 0.0,
     "envb_release" : 0.0,
     "envb_breakpoint" : 1.0,
     "envb_sustain" : 1.0,
-    "envc_attack" : 0.0,      # Envelope C
+    "envc_attack" : 0.0,      # Envelope C 
     "envc_decay1" : 0.0,
     "envc_decay2" : 0.0,
     "envc_release" : 0.0,
     "envc_breakpoint" : 1.0,
     "envc_sustain" : 1.0,
-    "envd_attack" : 0.0,      # Envelope D
+    "envd_attack" : 0.0,      # Envelope D 
     "envd_decay1" : 0.0,
     "envd_decay2" : 0.0,
     "envd_release" : 0.0,
@@ -57,9 +58,10 @@ prototype = {
     "op1_left_scale" : 6,     # DB per octave (-12..+12)
     "op1_right_scale" : -3,   # DB per octave (-12..+12)
     "op1_lfo_amp" : 0.0,      # (0..1)
-    "op1_env_select" : 0.0,   # (0, 1, 2, 3)
-                              # 0 -> env a ADDSR   1 -> env a ADDR
-                              # 2 -> env b ADDSR   3 -> env b ADDR
+    "op1_env_select" : 0.0,   # (0..7)
+                              #        0..3 --> A B C D gated
+                              #        4..7 --> A B C D triggerd
+                              # 
     "op4_ratio" : 1.00,       # OP4 (carrier)
     "op4_amp" : 1.00,
     "op4_enable" : 1,
@@ -90,7 +92,7 @@ prototype = {
     "op2_lfo_amp" : 0.0,
     "op2_env_select" : 0.0,
     "op3_ratio" : 1.00,       # OP3 (Modulator) [3]-->[1]
-    "op3_bias" : 0.00,        # (0..999) Hertz
+    "op3_bias" : 0.00,        # (0..299) Hertz
     "op3_amp" : 1.00,
     "op3_enable" : 1,
     "op3_x_amp" : 0.00,
@@ -98,11 +100,13 @@ prototype = {
     "op3_left_scale" : 0,
     "op3_right_scale" : 0,
     "op3_lfo_amp" : 0.0,
-    "op3_env_select" : 0,     # (0, 1, 2, 3, 4, 5, 6, 7)
-                              # 0 -> env c ADDSR  1 -> env c ADDR
-                              # 2 -> env d ADDR   3 -> env d ADDR
-                              # 3 -> env c ADDSR  4 -> env c ADDR Inverted
-                              # 5 -> env d ADDR   6 -> env d ADDR Inverted
+    "op3_env_select" : 0,     # (0..15)
+                              #         0..3   -> A B C D  gated
+                              #         4..7   -> A B C D  triggerd
+                              #         8..11  -> A B C D  gated inverted
+                              #        12..15 -> A B C D  triggerd inverted
+
+                              
     "op5_ratio" : 1.00,       # OP5 (Modulator) [5]-->[4]
     "op5_bias" : 0.00,
     "op5_amp" : 1.00,
@@ -227,7 +231,7 @@ def _fill_modulator(prefix, d):
     acc["op%s_right_scale" % prefix] = ival("right-scale", 0)
     env = clip(ival("env", 0), 0, 7)
     acc["op%s_env_select"] = env
-    acc["op%s_bias" % prefix] = clip(ival("bias",0), 0, 9999)
+    acc["op%s_bias" % prefix] = clip(fval("bias",0), 0, con.MAX_OSC_BIAS_FREQUENCY)
     if prefix == 6 or prefix == 8:
         acc["op%s_feedback" % prefix] = fval("feedback", 0)
         acc["op%s_env_feedback" % prefix] = fval("env->feedback", 0)
@@ -529,6 +533,141 @@ algo2(0, "Random0", amp=-12, port=0.000,
           "env"         : 0,
           "feedback"      : 0.000,
           "env->feedback" : 0.000,
+          "lfo->feedback" : 0.000,
+          "x->feedback"   : 0.000})
+
+algo2(1, "Random1", amp=-12, port=0.000,
+      external = {
+          "pitch" : 0.000,
+          "scale" : 1.000,
+          "bias"  : 0.000},
+      lfo = {
+          "freq"   : 6.499,
+          "ratio"  : 3.000,
+          "mix"    : 0.000,
+          "delay"  : 3.090,
+          "depth"  : 0.615,
+          "vsens"  : 0.006,
+          "vdepth" : 0.094},
+      enva = {
+          "attack"     : 0.002,
+          "decay1"     : 0.231,
+          "decay2"     : 0.407,
+          "release"    : 0.141,
+          "breakpoint" : 1.000,
+          "sustain"    : 0.769},
+      envb = {
+          "attack"     : 0.689,
+          "decay1"     : 0.821,
+          "decay2"     : 0.473,
+          "release"    : 0.119,
+          "breakpoint" : 1.000,
+          "sustain"    : 0.670},
+      envc = {
+          "attack"     : 0.713,
+          "decay1"     : 0.406,
+          "decay2"     : 0.974,
+          "release"    : 4.574,
+          "breakpoint" : 1.000,
+          "sustain"    : 0.993},
+      envd = {
+          "attack"     : 0.347,
+          "decay1"     : 1.887,
+          "decay2"     : 0.019,
+          "release"    : 0.528,
+          "breakpoint" : 1.000,
+          "sustain"    : 0.513},
+      op1 = {
+          "ratio"  : 15.9912,
+          "amp"    : 0,
+          "enable" : 1,
+          "x"      : 0.000,
+          "lfo"    : 0.000,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0},
+      op4 = {
+          "ratio"  : 24.9192,
+          "amp"    : 0,
+          "enable" : 1,
+          "x"      : 0.000,
+          "lfo"    : 0.000,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0},
+      op7 = {
+          "ratio"  : 3.9870,
+          "amp"    : 0,
+          "enable" : 1,
+          "x"      : 0.000,
+          "lfo"    : 0.000,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0},
+      op3 = {
+          "ratio"  : 4.0000,
+          "bias"   : 0,
+          "amp"    : 1,
+          "enable" : 1,
+          "x"      : 0.000,
+          "lfo"    : 0.933,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0},
+      op2 = {
+          "ratio"  : 64.0000,
+          "bias"   : 0,
+          "amp"    : 1,
+          "enable" : 0,
+          "x"      : 0.000,
+          "lfo"    : 0.000,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0},
+      op5 = {
+          "ratio"  : 1.0000,
+          "bias"   : 0,
+          "amp"    : 1,
+          "enable" : 1,
+          "x"      : 0.000,
+          "lfo"    : 0.000,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0},
+      op6 = {
+          "ratio"  : 0.9979,
+          "bias"   : 0,
+          "amp"    : 1,
+          "enable" : 1,
+          "x"      : 0.000,
+          "lfo"    : 0.000,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0,
+          "feedback"      : 0.000,
+          "env->feedback" : 0.000,
+          "lfo->feedback" : 0.000,
+          "x->feedback"   : 0.000},
+      op8 = {
+          "ratio"  : 0.2500,
+          "bias"   : 0,
+          "amp"    : 1,
+          "enable" : 1,
+          "x"      : 0.000,
+          "lfo"    : 0.963,
+          "break-key"   : 60,
+          "left-scale"  : -99,
+          "right-scale" : 9,
+          "env"         : 0,
+          "feedback"      : 0.000,
+          "env->feedback" : 0.723,
           "lfo->feedback" : 0.000,
           "x->feedback"   : 0.000})
 

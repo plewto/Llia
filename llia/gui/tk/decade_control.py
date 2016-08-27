@@ -2,7 +2,7 @@
 #
 # Defines compound synth control with
 # coarse (radio button) and fine (slider) widgets
-#
+# where coarse values are powers of 10
 
 from __future__ import print_function
 import Tkinter as tk

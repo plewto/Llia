@@ -59,13 +59,14 @@ def select_op_ratios(hint):
 
 def select_modulator_bias(hint):
     acc = []
+    mx = con.MAX_OSC_BIAS_FREQUENCY
     for op in (2,3,5,6,8):
         if hint == "HARMONIC":
             b = coin(0.80, 0, int(rnd(5)))
         elif hint == "SEMI-HARMONIC":
-            b = coin(0.75, 0, coin(0.5, int(rnd(5)), int(rnd(100))))
+            b = coin(0.75, 0, coin(0.5, rnd(5), rnd(mx)))
         else:
-            b = coin(0.90, 0, int(rnd(100)))
+            b = coin(0.90, 0, rnd(100))
         acc.append(b)
     return acc
 

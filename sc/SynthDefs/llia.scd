@@ -9,3 +9,5 @@ a = LliaHandler.new();
 
 
 Stethoscope.new(s);
+
+s.plotTree;

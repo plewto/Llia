@@ -35,7 +35,7 @@ def pp_algo2(program, slot):
         prefix = 'op%s_' % op
         bcc = '%sop%d = {\n' % (pad, op)
         bcc += '%s"ratio"  : %6.4f,\n' % (pad2, fval(prefix+'ratio'))
-        bcc += '%s"bias"   : %d,\n' % (pad2, ival(prefix+'bias'))
+        bcc += '%s"bias"   : %d,\n' % (pad2, fval(prefix+'bias'))
         bcc += '%s"amp"    : %d,\n' % (pad2, fval(prefix+'amp'))
         bcc += '%s"enable" : %d,\n' % (pad2, ival(prefix+'enable'))
         bcc += '%s"x"      : %5.3f,\n' % (pad2, fval(prefix+'x_amp'))
