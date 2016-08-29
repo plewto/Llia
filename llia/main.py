@@ -28,7 +28,7 @@ import llia.synths.saw3.s3_proxy
 import llia.synths.klstr.klstr_proxy
 import llia.synths.rdrum.rdrum_proxy
 import llia.synths.masa.masa_proxy
-import llia.synths.algo2.algo2_proxy
+#import llia.synths.algo2.algo2_proxy
 
 import llia.synths.carnal.crnl_proxy
 import llia.synths.xover.xover_proxy
