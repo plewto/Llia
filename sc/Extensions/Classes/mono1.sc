@@ -38,7 +38,7 @@ Mono1 : Keymode {
 
 	noteOn {|keynumber, frequency, velocity|
 		var params;
-		params = [\gate, 1, \freq, frequency, \keynumber, keynumber];
+		params = [\gate, 1, \freq, frequency, \keynumber, keynumber, \velocity, velocity];
 		params = super.mergeParameters(params);
 		Keymode.zip(params).do({|q|
 			var param = q[0];

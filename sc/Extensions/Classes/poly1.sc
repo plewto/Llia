@@ -38,7 +38,7 @@ Poly1 : Keymode {
 
 	noteOn {|keynumber, frequency, velocity|
 		var params, sy, old;
-		params = [\gate, 0, \freq, frequency, \keynumber, keynumber];
+		params = [\gate, 0, \freq, frequency, \keynumber, keynumber, \velocity, velocity];
 		params = super.mergeParameters(params);
 		sy = Synth(synthType, params);
 		old = activeNotes[keynumber];
