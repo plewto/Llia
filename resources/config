@@ -18,7 +18,7 @@ input-port : Launchkey Mini 20:0
 output-port : Launchkey Mini 20:0
 backend : mido.backends.rtmidi
 ; backend : midi.backends.portmidi
-enable-program-pp : False
+enable-program-pp : True
 enable-keyswitch : True
 keyswitch-channel : 10
 keyswitch-transpose : -40
@@ -34,7 +34,7 @@ trace-osc-transmission : False
 
 [GUI]
 gui : Tk
-no-splash : False
+no-splash : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
 warn-on-exit : False
