@@ -38,7 +38,7 @@ def fg():
     return pallet("fg")
 
 
-_logo_cachet = []
+_image_cachet = []
 
 
 def _init_theme():
@@ -79,6 +79,32 @@ def tooltip(widget, text):
         
 
 #  ---------------------------------------------------------------------- 
+#                              Canvas and Image
+
+def image(fname):
+    try:
+        img = Image.open(fname)
+        photo = ImageTk.PhotoImage(img)
+        _image_cachet.append(photo)
+        return photo
+    except IOError as err:
+        msg = "Can not open image file '%s'" % fname
+        raise IOError(msg)
+
+# Creates Canvas with optional background image
+#
+def canvas(master, width, height, image_file=None,
+           image_position=(0,0), image_anchor='nw'):
+    c = Canvas(master, width=width, height=height, background=bg())
+    if image_file:
+        photo = image(image_file)
+        x,y = image_position
+        img = c.create_image(x,y,image=photo,tags="initial-image",
+                             anchor=image_anchor)
+    return c
+    
+    
+#  ---------------------------------------------------------------------- 
 #                                   Labels
 
 def label(master, text, var=None, modal=False):
@@ -111,13 +137,17 @@ def padding_label(master, n=4, modal=True):
     w = label(master, "", modal=modal)
     return w
 
+
+    
+
+
 def image_label(master, fname, alt=None):
     alt = alt or fname
     w = label(master, "")
     try:
         img = Image.open(fname)
         photo = ImageTk.PhotoImage(img)
-        _logo_cachet.append(photo)
+        _image_cachet.append(photo)
         w.config(image=photo)
     except IOError as err:
         w.config(text=alt)
@@ -183,7 +213,7 @@ def logo_button(master, name, fname=None, command=None, ttip=""):
     try:
         img = Image.open(fname)
         photo = ImageTk.PhotoImage(img)
-        _logo_cachet.append(photo)
+        _image_cachet.append(photo)
         b = Button(master, text = name, image=photo)
         b.config(compound="top")
         tooltip(b, ttip)
