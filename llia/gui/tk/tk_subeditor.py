@@ -8,6 +8,8 @@ import abc
 from llia.generic import is_synth_control
 import llia.gui.tk.tk_factory as factory
 
+
+
 class TkSubEditor(Frame):
 
     # parent - either TkSubEditor or TkSynthWindow

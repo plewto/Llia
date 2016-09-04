@@ -82,6 +82,10 @@ class MsbAspect(dict):
 #  ---------------------------------------------------------------------- 
 #                                  MSB class
 
+def null_callback(*_):
+    pass
+
+
 class MSB(object):
 
     '''
@@ -109,7 +113,9 @@ class MSB(object):
         ARGS:
           canvas - An instance of Tk Canvas.
           param  - String, the synth parameter
-          editor - TkApplicationWindow
+          editor - TkApplicationWindow or None.
+                   An MSB may be used as a general widget by 
+                   setting editor to None.
           naspects - int, number of possible aspects
 
         The number of possible aspects can not be changed once the button
@@ -141,6 +147,7 @@ class MSB(object):
         self.canvas.tag_bind(self._outline, '<Button-3>', self.previous_state)
         self.canvas.tag_bind(self._text, '<Button-1>', self.next_state)
         self.canvas.tag_bind(self._text, '<Button-3>', self.previous_state)
+        self.client_callback = null_callback
         
     def __len__(self):
         '''Returns number of possible aspects.'''
@@ -208,6 +215,9 @@ class MSB(object):
         '''
         return []
 
+    def has_widget(self, key):
+        return False
+    
     def update_aspect(self):
         '''
         Update the button appearance to match its current aspect/
@@ -237,7 +247,8 @@ class MSB(object):
             canvas.itemconfig(self._outline, outline=self['active-outline'])
             canvas.itemconfig(self._text, fill=self['active-foreground'])
             msg = "[%s] -> %s" % (self.param, self.value())
-            self.editor.status(msg)
+            if self.editor:
+                self.editor.status(msg)
             
             
     def _exit_callback(self, *_):
@@ -256,14 +267,15 @@ class MSB(object):
         self.next()
 
     def _update_synths(self):
-        a = self._aspects[self._current_aspect]
-        value = a['value']
-        synth = self.editor.synth
-        synth.x_param_change(self.param, value)
-        program = synth.bank()[None]
-        program[self.param] = value
-        msg = '[%s] -> %s' % (self.param, value)
-        self.editor.status(msg)
+        if self.editor:
+            a = self._aspects[self._current_aspect]
+            value = a['value']
+            synth = self.editor.synth
+            synth.x_param_change(self.param, value)
+            program = synth.bank()[None]
+            program[self.param] = value
+            msg = '[%s] -> %s' % (self.param, value)
+            self.editor.status(msg)
         
     def next_state(self, *_):
         '''
@@ -283,6 +295,7 @@ class MSB(object):
             self._current_aspect = n
             self.update_aspect()
             self._update_synths()
+            self.client_callback(self)
         
 
     def previous_state(self, *_):
@@ -303,6 +316,7 @@ class MSB(object):
             self._current_aspect = n
             self.update_aspect()
             self._update_synths()
+            self.client_callback(self)
         
     def disable(self, flag):
         self._disabled = flag
@@ -333,6 +347,8 @@ class MSB(object):
             else:
                 msg = "Invalid MSB aspect: %s" % new_aspect
                 raise IndexError(msg)
+        else:
+            self.update_aspect()
         return self._current_aspect
 
     def value(self, new_value=None):

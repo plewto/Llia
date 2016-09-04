@@ -1,5 +1,6 @@
 # llia.gui.subeditor
 # 2016.04.25
+# DEPRECIATED
 
 from __future__ import print_function
 import abc
@@ -10,6 +11,7 @@ from llia.generic import is_subeditor
 class SubEditor(object):
 
     def __init__(self, parent, synth_proxy):
+        print("DEPRCIATION warning: llia.gui.subeditor.SubEditor is depreciated")
         super(SubEditor, self).__init__()
         self.parent = parent
         self.synth_proxy = synth_proxy
