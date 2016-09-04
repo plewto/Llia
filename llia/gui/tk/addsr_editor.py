@@ -44,12 +44,6 @@ class ADDSREditor(EnvEditorSpecs):
                  'sustain' : 1.0,
                  'gate-mode' : 0}
     
-    # position -> [x,y]
-    # size -> [w,h]
-    # paramlist -> [attack, decay1, decay2, release, breakpoint, sustain, gate-mode] 
-    #
-    # max_segment_time -> maximum duration for any one segment
-    # 
     def __init__(self, canvas, envid, position, size, paramlist, parent_editor,
                  max_segment_time=12):
         '''
@@ -74,9 +68,7 @@ class ADDSREditor(EnvEditorSpecs):
         self.parent = parent_editor
         self.synth = parent_editor.synth
         self.bank = self.synth.bank()
-        # self._child_editors = {}
-        # self._controls = {}
-        #self.zoom = 1
+        self.zoom = 1
         self.max_segment_time = max_segment_time
         self.params = {'attack' : paramlist[0],
                        'decay1' : paramlist[1],
@@ -126,7 +118,6 @@ class ADDSREditor(EnvEditorSpecs):
             p = canvas.create_line(xi0,yi0,xi1,yi1,
                                    fill=self['segment-fill'],
                                    activefill = self['segment-activefill'],
-                                   #tags=(name,'segment-%s'%i,'segment')
                                    tags = ("env%s-%s" % (self.envid, name),
                                            "env%s-segment-%s" % (self.envid, i),
                                            "segment"))
@@ -139,7 +130,6 @@ class ADDSREditor(EnvEditorSpecs):
                                    activefill = self['point-activefill'],
                                    outline=self['point-outline'],
                                    activeoutline=self['point-activeoutline'],
-                                   #tags=('point-%s' % i, 'point', 'dynamic'))
                                    tags = ("env%s-point-%s" % (self.envid, i),
                                            'point', 'dynamic'))
             self.points.append(p)
@@ -148,24 +138,45 @@ class ADDSREditor(EnvEditorSpecs):
         self.canvas.tag_bind("env%s-point-3" % self.envid, "<B1-Motion>",self.decay2_drag)
         self.canvas.tag_bind("env%s-point-4" % self.envid, "<B1-Motion>",self.sustain_drag)
         self.canvas.tag_bind("env%s-point-5" % self.envid, "<B1-Motion>",self.release_drag)
+        self._init_zoom_button()
         self._init_gate_button()
         self._init_init_button()
         self._init_copy_button()
         self._init_paste_button()
-        
-    def _init_gate_button(self):
-        msb = MSB(self.canvas, self.params['gate-mode'], self.parent, 2)
-        aparams = {
+
+    def _msb_aspect(self, text, extras={}):
+        d = {
+            'text' : text,
             'font' : ('Times', 12),
             'fill' : self['fill'],
             'outline' : self['outline'],
             'active-outline' : self['point-activefill'],
             'foreground' : self['text-color'],
             'active-foreground' : self['point-activefill']}
-        a0 = {"text" : "GATE"}
-        a0.update(aparams)
-        a1 = {"text" : "TRIG"}
-        a1.update(aparams)
+        for k,v in extras.items(): d[k] = v
+        return d
+        
+    def _init_zoom_button(self):
+        msb = MSB(self.canvas, "", None, 3)
+        a0 = self._msb_aspect("X1")
+        a1 = self._msb_aspect("X10")
+        a2 = self._msb_aspect("X100")
+        msb.define_aspect(0, 1, a0)
+        msb.define_aspect(1, 10, a1)
+        msb.define_aspect(2, 100, a2)
+        x, y = self.xi0 + 256, self.y1-50
+        msb.layout((x,y))
+        msb.value(1)
+        msb.update_aspect()
+        def zoom_callback(*_):
+            self.zoom = msb.value()
+            self.sync_ui()
+        msb.client_callback = zoom_callback
+        
+    def _init_gate_button(self):
+        msb = MSB(self.canvas, self.params['gate-mode'], self.parent, 2)
+        a0 = self._msb_aspect("GATE")
+        a1 = self._msb_aspect("TRIG", {"foreground" : "green"})
         msb.define_aspect(0, 0, a0)
         msb.define_aspect(1, 1, a1)
         x, y = self.xi0, self.y1-50
@@ -175,15 +186,8 @@ class ADDSREditor(EnvEditorSpecs):
             
     def _init_init_button(self):
         msb = MSB(self.canvas, '', None, 1)
-        aparams = {
-            'font' : ('Times', 12),
-            'fill' : self['fill'],
-            'outline' : self['outline'],
-            'active-outline' : self['point-activefill'],
-            'foreground' : self['text-color'],
-            'active-foreground' : self['point-activefill'],
-            'text' : 'INIT'}
-        msb.define_aspect(0,0,aparams)
+        a0 = self._msb_aspect("Init")
+        msb.define_aspect(0,0,a0)
         x,y = self.xi0+64, self.y1-50
         msb.layout((x,y))
         msb.update_aspect()
@@ -195,21 +199,14 @@ class ADDSREditor(EnvEditorSpecs):
             self.set_synth_value(self.params['breakpoint'], 1.0)
             self.set_synth_value(self.params['sustain'], 1.0)
             self.set_synth_value(self.params['gate-mode'], 0)
-            self.sync()
+            self.sync_ui()
             self.status("Reset envelope")
         msb.client_callback = init_callback 
 
     def _init_copy_button(self):
         msb = MSB(self.canvas, '', None, 1)
-        aparams = {
-            'font' : ('Times', 12),
-            'fill' : self['fill'],
-            'outline' : self['outline'],
-            'active-outline' : self['point-activefill'],
-            'foreground' : self['text-color'],
-            'active-foreground' : self['point-activefill'],
-            'text' : 'COPY'}
-        msb.define_aspect(0,0,aparams)
+        a0 = self._msb_aspect("Copy")
+        msb.define_aspect(0,0,a0)
         x,y = self.xi0+128, self.y1-50
         msb.layout((x,y))
         msb.update_aspect()
@@ -224,15 +221,8 @@ class ADDSREditor(EnvEditorSpecs):
         
     def _init_paste_button(self):
         msb = MSB(self.canvas, '', None, 1)
-        aparams = {
-            'font' : ('Times', 12),
-            'fill' : self['fill'],
-            'outline' : self['outline'],
-            'active-outline' : self['point-activefill'],
-            'foreground' : self['text-color'],
-            'active-foreground' : self['point-activefill'],
-            'text' : 'PASTE'}
-        msb.define_aspect(0,0,aparams)
+        a0 = self._msb_aspect("Paste")
+        msb.define_aspect(0,0,a0)
         x,y = self.xi0+192, self.y1-50
         msb.layout((x,y))
         msb.update_aspect()
@@ -241,7 +231,7 @@ class ADDSREditor(EnvEditorSpecs):
                 p = self.params[k]
                 v = self.clipboard[k]
                 self.set_synth_value(p,v)
-            self.sync()
+            self.sync_ui()
             self.status("Envelope pasted from clipboard")
         msb.client_callback = paste_callback
 
@@ -252,29 +242,6 @@ class ADDSREditor(EnvEditorSpecs):
             msg = "Can not add %s as synth control to TkSubEditor, param = %s"
             msg = msg % (type(sctrl), param)
             raise(TypeError(msg))
-
-    # def get_control(self, param):
-    #     acc = []
-    #     try:
-    #         acc.append(self._controls[param])
-    #     except KeyError:
-    #         pass
-    #     for child in self._child_editors:
-    #         acc.append(child.get_control[param])
-    #     return acc
-        
-    # def has_control(self, param):
-    #     f = self._controls.has_key(param)
-    #     if f:
-    #         return True
-    #     else:
-    #         for child in self._child_editors:
-    #             f = child.has_control(param)
-    #             if f: return True
-    #     return False
-
-    # def add_child_editor(self, name, child):
-    #     self._child_editors[name] = child
 
     def status(self, msg):
         self.parent.status(msg)
@@ -297,7 +264,7 @@ class ADDSREditor(EnvEditorSpecs):
         xref = pref[0]
         xabs = event.x
         xrel = max(0, xabs-xref)
-        time = min(self.max_segment_time, xrel/self.xscale)
+        time = min(self.max_segment_time, xrel/(self.xscale*self.zoom))
 
         yref = self.canvas.coords("env%s-point-0" % self.envid)[1]
         yabs = event.y
@@ -310,31 +277,31 @@ class ADDSREditor(EnvEditorSpecs):
         param = self.params['attack']
         self.set_value(param, time)
         self.set_synth_value(param, time)
-        self.sync()
+        self.sync_ui()
 
     def decay1_drag(self, event):
         time, level = self._drag_helper("env%s-point-1" % self.envid, event)
         self.set_synth_value(self.params['decay1'], time)
         self.set_synth_value(self.params['breakpoint'], level)
-        self.sync()
+        self.sync_ui()
 
     def decay2_drag(self, event):
         time, level = self._drag_helper("env%s-point-2" % self.envid, event)
         self.set_synth_value(self.params['decay2'], time)
         self.set_synth_value(self.params['sustain'], level)
-        self.sync()
+        self.sync_ui()
         
     def sustain_drag(self, event):
         time, level = self._drag_helper("env%s-point-3" % self.envid, event)
         self.set_synth_value(self.params['sustain'], level)
-        self.sync()
+        self.sync_ui()
         
     def release_drag(self, event):
         time, level = self._drag_helper("env%s-point-4" % self.envid, event)
         self.set_synth_value(self.params['release'], time)
-        self.sync()
+        self.sync_ui()
         
-    def sync(self, *_):
+    def sync_ui(self, *_):
         self.canvas.itemconfig('pad',
                                fill=self['fill'],
                                outline=self['outline'],
@@ -366,7 +333,7 @@ class ADDSREditor(EnvEditorSpecs):
         coords = []
         radius = self['point-radius']/2
         for i in range(6):
-            xc = int(self.xorigin + times[i]*self.xscale)
+            xc = int(self.xorigin + times[i]*self.xscale*self.zoom)
             yc = int(self.yorigin + levels[i]*self.yscale)
             coords.append((xc,yc))
             tag = 'env%s-point-%s' % (self.envid, i)
@@ -380,18 +347,10 @@ class ADDSREditor(EnvEditorSpecs):
         gate_value = program[gate_param]
         self.msb_gate_mode.value(gate_value)
             
-    def sync_ui(self):
-        # ISSUE: Ugly method name inconsistancy
-        # should either sync or sync_ui.
-        self.sync()
-        
-        
-        
-                                       
-            
-                           
-                           
-        
+    def sync(self, *_):
+        # ISSUE: UGLY inconsistent method name
+        # Requiers both sync and sync_ui
+        self.sync_ui()
     
 
     
