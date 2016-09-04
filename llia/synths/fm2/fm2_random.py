@@ -35,14 +35,6 @@ def addsr_envelope(time_hint):
     hold = False  # coin(0.75, False, True)
     return a,d1,d2,r,bp,s,hold
 
-# def get_envelope(time_hint, shape_hint):
-#     if shape_hint == "PERCUSION":
-#         p = 0.75
-#     else:
-#         p = 0.25
-#     e = coin(p, percussion_envelope(time_hint), addsr_envelope(time_hint))
-#     return e
-
 
 def get_envelope(time_hint, shape_hint):
     return addsr_envelope(time_hint)
@@ -53,7 +45,7 @@ def fm2_random(slot=127, *_):
     env_hint = get_env_hint()
     env1 = get_envelope(time_hint, env_hint)
     env2 = get_envelope(time_hint, env_hint)
-    op1_chorus = coin(1)
+    op1_chorus = coin(0.2)
     op1_ratio = float(pick([0.5, 0.5, 0.75,
                            1,1,1,1,1.5,
                            2,2,2,2,2.25,

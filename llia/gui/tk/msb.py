@@ -40,7 +40,7 @@ class MsbAspect(dict):
         'outline' : 'foreground',
         'disabled-outline' : 'outline',
         'active-outline' : 'outline',
-        'text' : '',
+        'text' : 'text',
         'image' : None
     }
     
@@ -58,6 +58,7 @@ class MsbAspect(dict):
         self['value'] = -1
         self['fill'] = 'black'
         self['foreground'] = 'white'
+        self['text'] = ''
 
     def __getitem__(self, key):
         try:
@@ -159,7 +160,7 @@ class MSB(object):
         
         ARGS:
            n     - The aspect index, 0 <= n < len(self)
-           value - Float/int, synth parameter value for this aspect.
+           value - float, synth parameter value for this aspect.
            adict - dictionary holding aspect values.
 
         adict is used internally to update the MsbAspect object for this 
@@ -181,6 +182,7 @@ class MSB(object):
        The 'active' colors are used to highlight the button when the mouse
        enters it.
         '''
+       
         a = self._aspects[n]
         self._current_aspect = n
         ck = self._common.keys()
@@ -189,9 +191,11 @@ class MSB(object):
                 self._common[k] = v
             else:
                 a[k] = v
+        value = float(value)
         a['value'] = value
+        self._aspects[n] = a
         self._value_map[value] = n
-
+        
     def __getitem__(self, key):
         ''' 
         self.__getitem__(key) ==> self[key]
@@ -229,10 +233,12 @@ class MSB(object):
             canvas.itemconfig(self._pad, fill=self['disabled-fill'])
             canvas.itemconfig(self._outline, outline=self['disabled-outline'])
             canvas.itemconfig(self._text, fill=self['disabled-foreground'])
+            canvas.itemconfig(self._text, text=self['text'])
         else:
             canvas.itemconfig(self._pad, fill=self['fill'])
             canvas.itemconfig(self._outline, outline=self['outline'])
             canvas.itemconfig(self._text, fill=self['foreground'])
+            canvas.itemconfig(self._text, text=self['text'])
         canvas.update_idletasks()
 
     def _enter_callback(self, *_):
@@ -264,7 +270,7 @@ class MSB(object):
             canvas.itemconfig(self._text, fill=self['foreground'])
             
     def callback(self, *_):
-        self.next()
+        self.next_state()
 
     def _update_synths(self):
         if self.editor:
@@ -364,12 +370,14 @@ class MSB(object):
 
         Raises KeyError if no aspect has matching value.
         '''
+        
         if new_value is not None:
             try:
-                self._current_aspect = self._value_map[new_value]
+                value = float(new_value)
+                self._current_aspect = self._value_map[value]
                 self.update_aspect()
             except KeyError:
-                msg = "'%s' MSB does not have value: %s" % (self.param, new_value)
+                msg = "'%s' MSB does not have value: %s" % (self.param, value)
                 raise KeyError(msg)
         a = self._aspects[self._current_aspect]
         return a['value']

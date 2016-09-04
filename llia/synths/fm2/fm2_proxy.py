@@ -25,8 +25,9 @@ class FM2Proxy(SynthProxy):
             create_editor(parent_editor)
             return parent_editor
             
-fm2_pallet = Pallet(default_pallet)        
-
+fm2_pallet = Pallet(default_pallet)
+fm2_pallet["BG"] = "black"
+fm2_pallet["SLIDER-OUTLINE"] = "blue"
 
 specs["constructor"] = FM2Proxy
 specs["description"] = "A 2-Operator FM Synth"
