@@ -50,7 +50,7 @@ class ADDSREditor(EnvEditorSpecs):
     #
     # max_segment_time -> maximum duration for any one segment
     # 
-    def __init__(self, canvas, position, size, paramlist, parent_editor,
+    def __init__(self, canvas, envid, position, size, paramlist, parent_editor,
                  max_segment_time=12):
         '''
         Creates new instance of ADDSREditor
@@ -58,6 +58,9 @@ class ADDSREditor(EnvEditorSpecs):
         ARGS:
            
            canvas    - a Tk Canvas
+           envid     - int, a envelope id.
+                       Each envelope editor on the same canvas MUST 
+                       have a unique id.
            position  - tuple (x,y) location on canvas to place editor
            size      - tuple (w,h)
            paramlist - list of synth parameters 
@@ -66,6 +69,7 @@ class ADDSREditor(EnvEditorSpecs):
            parent_editor - TkSubEditor
         '''
         EnvEditorSpecs.__init__(self)
+        self.envid = envid
         self.canvas = canvas
         self.parent = parent_editor
         self.synth = parent_editor.synth
@@ -122,7 +126,10 @@ class ADDSREditor(EnvEditorSpecs):
             p = canvas.create_line(xi0,yi0,xi1,yi1,
                                    fill=self['segment-fill'],
                                    activefill = self['segment-activefill'],
-                                   tags=(name,'segment-%s'%i,'segment'))
+                                   #tags=(name,'segment-%s'%i,'segment')
+                                   tags = ("env%s-%s" % (self.envid, name),
+                                           "env%s-segment-%s" % (self.envid, i),
+                                           "segment"))
             self.segments.append(p)
         canvas.itemconfig('sustain', dash=self['sustain-dash'])
         self.points = []
@@ -132,13 +139,15 @@ class ADDSREditor(EnvEditorSpecs):
                                    activefill = self['point-activefill'],
                                    outline=self['point-outline'],
                                    activeoutline=self['point-activeoutline'],
-                                   tags=('point-%s' % i, 'point', 'dynamic'))
+                                   #tags=('point-%s' % i, 'point', 'dynamic'))
+                                   tags = ("env%s-point-%s" % (self.envid, i),
+                                           'point', 'dynamic'))
             self.points.append(p)
-        self.canvas.tag_bind("point-1", "<B1-Motion>",self.attack_drag)
-        self.canvas.tag_bind("point-2", "<B1-Motion>",self.decay1_drag)
-        self.canvas.tag_bind("point-3", "<B1-Motion>",self.decay2_drag)
-        self.canvas.tag_bind("point-4", "<B1-Motion>",self.sustain_drag)
-        self.canvas.tag_bind("point-5", "<B1-Motion>",self.release_drag)
+        self.canvas.tag_bind("env%s-point-1" % self.envid, "<B1-Motion>",self.attack_drag)
+        self.canvas.tag_bind("env%s-point-2" % self.envid, "<B1-Motion>",self.decay1_drag)
+        self.canvas.tag_bind("env%s-point-3" % self.envid, "<B1-Motion>",self.decay2_drag)
+        self.canvas.tag_bind("env%s-point-4" % self.envid, "<B1-Motion>",self.sustain_drag)
+        self.canvas.tag_bind("env%s-point-5" % self.envid, "<B1-Motion>",self.release_drag)
         self._init_gate_button()
         self._init_init_button()
         self._init_copy_button()
@@ -273,8 +282,8 @@ class ADDSREditor(EnvEditorSpecs):
     def warning(self, msg):
         self.parent.warning(msg)
 
-    # def set_value(self, param, value):
-    #     pass
+    def set_value(self, param, value):
+        pass
 
     def set_synth_value(self, param, value):
         program = self.bank[None]
@@ -290,38 +299,38 @@ class ADDSREditor(EnvEditorSpecs):
         xrel = max(0, xabs-xref)
         time = min(self.max_segment_time, xrel/self.xscale)
 
-        yref = self.canvas.coords("point-0")[1]
+        yref = self.canvas.coords("env%s-point-0" % self.envid)[1]
         yabs = event.y
         yrel =(yabs-yref)/self.yscale
         level = max(0, min(yrel,1))
         return time,level
 
     def attack_drag(self, event):
-        time, level = self._drag_helper("point-0", event)
+        time, level = self._drag_helper("env%s-point-0" % self.envid, event)
         param = self.params['attack']
         self.set_value(param, time)
         self.set_synth_value(param, time)
         self.sync()
 
     def decay1_drag(self, event):
-        time, level = self._drag_helper("point-1", event)
+        time, level = self._drag_helper("env%s-point-1" % self.envid, event)
         self.set_synth_value(self.params['decay1'], time)
         self.set_synth_value(self.params['breakpoint'], level)
         self.sync()
 
     def decay2_drag(self, event):
-        time, level = self._drag_helper("point-2", event)
+        time, level = self._drag_helper("env%s-point-2" % self.envid, event)
         self.set_synth_value(self.params['decay2'], time)
         self.set_synth_value(self.params['sustain'], level)
         self.sync()
         
     def sustain_drag(self, event):
-        time, level = self._drag_helper("point-3", event)
+        time, level = self._drag_helper("env%s-point-3" % self.envid, event)
         self.set_synth_value(self.params['sustain'], level)
         self.sync()
         
     def release_drag(self, event):
-        time, level = self._drag_helper("point-4", event)
+        time, level = self._drag_helper("env%s-point-4" % self.envid, event)
         self.set_synth_value(self.params['release'], time)
         self.sync()
         
@@ -360,12 +369,12 @@ class ADDSREditor(EnvEditorSpecs):
             xc = int(self.xorigin + times[i]*self.xscale)
             yc = int(self.yorigin + levels[i]*self.yscale)
             coords.append((xc,yc))
-            tag = 'point-%s' % i
+            tag = 'env%s-point-%s' % (self.envid, i)
             self.canvas.coords(tag, xc-radius, yc+radius, xc+radius, yc-radius)
         for i in range(5):
             q0 = coords[i]
             q1 = coords[i+1]
-            tag = 'segment-%s' % i
+            tag = 'env%s-segment-%s' % (self.envid, i)
             self.canvas.coords(tag,q0[0],q0[1],q1[0],q1[1])
         gate_param = self.params['gate-mode']
         gate_value = program[gate_param]
