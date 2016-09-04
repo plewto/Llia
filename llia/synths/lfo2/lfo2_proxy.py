@@ -41,4 +41,3 @@ specs["is-efx"] = True
 specs["help"] = "LFO2"
 specs["pallet"] = lfo2_pallet
 
-print("DEBUG LFO2_proxy returns")
