@@ -67,7 +67,7 @@ class TkSubEditor(Frame):
         except KeyError:
             pass
         for ed in self._child_editors.items():
-            ed.set_value(param, value)
+            ed[1].set_value(param, value)
     
     def sync(self, *ignore):
         for key, ed in self._child_editors.items():
