@@ -27,6 +27,7 @@ class GroupWindow(Toplevel):
         self.notebook.pack(expand=True, fill="both")
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.bind("<Destroy>", self.on_closing)
+        self.withdraw() # hide initially
         
     def on_closing(self, *args):
         pass

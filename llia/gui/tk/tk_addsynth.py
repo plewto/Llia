@@ -217,8 +217,10 @@ class TkAddSynthDialog(Toplevel):
             shelper.assign_buffer(p, bname)
         mw = self.app.main_window()
         group = mw.group_windows[-1]
+        
         swin = TkSynthWindow(group.notebook, sy)
         group.notebook.add(swin, text=self.sid)
+        group.deiconify()
         mw[self.sid] = swin
         factory.set_pallet(sy.specs["pallet"])
         sy.create_subeditors()
