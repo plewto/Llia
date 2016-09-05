@@ -10,6 +10,7 @@ LliaBuses : Object {
 	var <rate;							// Symbol 'audio' or 'control'
 	var <busCount;						// int
 	var buses;							// Dictionary
+	var protectedControlBuses = 2;
 
 	*busDoesNotExistsException {|srate, id|
 		var msg = srate.asString + "bus '";
@@ -176,7 +177,7 @@ LliaBuses : Object {
     **   id - String
     ** 
 	*/	
-	free {|id|
+	free {|id, verbose=1|
 		if (this.busExists(id),
 			{
 				var b = this.getBus(id);
@@ -190,13 +191,25 @@ LliaBuses : Object {
 								buses.removeAt(id);
 							});
 					},{
-						b.free;
-						buses.removeAt(id);
+						if (index >= protectedControlBuses,{
+							b.free;
+							buses.removeAt(id);
+						});
 					});
-				postf("% bus '%' freed\n", rate, id);
+				if (verbose==1, {
+					postf("% bus '%' freed\n", rate, id);
+				});
 			});
 	}
 
+	restart {
+		buses.keys.do({|b|
+			this.free(b, 0);
+		});
+	}
+
+	
+	
 	/*
     ** Free all buses manged by this.
     ** The first n public audio input and output buses are not molested.

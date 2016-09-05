@@ -34,15 +34,8 @@ class LliaProxy(object):
                      "get-buffer-info", "get-buffer-info", "bus-added",
                      "buffer-added"):
             self.osc_receiver.add_handler(rmsg, self._expect_response)
+        self.restart()
         self.sync_to_host()
-        
-    # def init(self):
-    #     self._synths = {}
-    #     self._audio_buses = {}
-    #     self._control_buses = {}
-    #     self._bufers = {}
-    #     self.establish_default_buses()
-    #     self.status("LliaProxy initialized")
 
     def _expect_response(self, path, tags, args, source):
         self._callback_message = {"path" : path,
@@ -124,7 +117,15 @@ class LliaProxy(object):
     
     def free(self):
         self._send("free")
-    
+
+    def restart(self):
+        self._send("restart")
+        rs = self.expect_osc_response("restarted")
+        # if not rs:
+        #     msg = "Did not receive 'restart' acknowledgement from Llia server"
+        #     raise LliaPingError(msg)
+        # return rs
+        
     def dump(self):
         self._send("dump")
         pad1 = " "*4

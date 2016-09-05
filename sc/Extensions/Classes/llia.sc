@@ -69,6 +69,14 @@ LliaHandler : Object {
 		synths.values.do({|sy| sy.free});
 	}
 
+	restart {
+		audioBuses.restart;
+		controlBuses.restart;
+		buffers.freeAll;
+		synths.values.do({|sy| sy.free});
+		postf("*** Llia restarted ***\n");
+	}
+
 	//  ---------------------------------------------------------------------- 
 	// 								   Buses
 
@@ -337,6 +345,11 @@ LliaHandler : Object {
 				this.free},
 				this.path("free")),
 
+			OSCFunc ({|msg|
+				postf("Llia/%/restart\n", oscID);
+				this.restart},
+				this.path("restart")),
+			
 			OSCFunc ({|msg|
 				this.lliaDump},
 				this.path("dump")),
