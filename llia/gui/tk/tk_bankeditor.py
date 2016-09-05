@@ -281,6 +281,7 @@ class TkBankEditor(Frame):
         try:
             bnk = self.synth.bank()
             bnk.paste_performance()
+            self.sync()
             self.status("Clipboard pasted to performance")
         except KeyError:
             msg = "Performance clipboard empty"
@@ -338,20 +339,16 @@ class TkBankEditor(Frame):
         slot = bnk.current_slot
         var_name = StringVar()
         var_start = StringVar()
-        var_end = StringVar()
         var_name.set(program.name)
         var_start.set(slot)
-        var_end.set(slot+1)
         dialog = Toplevel()
         frame = factory.frame(dialog, True)
         frame.pack(expand=True, fill="both")
         lab_title = factory.label(frame, "Store Program", modal=True)
         lab_name = factory.label(frame, "Name", modal=True)
         lab_start = factory.label(frame, "Slot", modal=True)
-        lab_end = factory.label(frame, "End", modal=True)
         entry_name = factory.entry(frame, var_name, "Program name")
         spin_start = factory.int_spinbox(frame, var_start, 0, len(bnk), "Startng slot")
-        spin_end = factory.int_spinbox(frame, var_end, 0, len(bnk), "Ending slot")
         frame_remarks = factory.label_frame(frame, "Remarks", True)
         text_remarks = factory.text_widget(frame_remarks, "Remarks text", modal=True)
         text_remarks.insert("end", program.remarks)
@@ -371,20 +368,20 @@ class TkBankEditor(Frame):
         frame_remarks.grid(row=2, column=0, rowspan=4, columnspan=4, padx=4, pady=4)
         lab_start.grid(row=6, column=0, padx=4, sticky="w")
         spin_start.grid(row=6, column=1, columnspan=2, pady=4)
-        lab_end.grid(row=7, column=0, padx=4, sticky="w")
-        spin_end.grid(row=7, column=1, columnspan=2)
+        b_accept = factory.accept_button(frame)
+        b_cancel = factory.cancel_button(frame)
+        b_accept.grid(row=8, column=1, pady=8, sticky="ew")
+        b_cancel.grid(row=8, column=2, pady=8, sticky="ew")
         
         def accept():
             try:
-                a,b = int(var_start.get()), int(var_end.get())
-                if b <= a: b = a+1
+                a = int(var_start.get())
                 name = var_name.get()
                 remarks = text_remarks.get(1.0, "end")
                 program.name = name
                 program.remarks = remarks
-                for slot in range(a, b):
-                    bnk[slot] = program
-                msg = "Stored program '%s' to slots [%3d, %3d]" % (name, a, b)
+                bnk[a] = program
+                msg = "Stored program '%s' to slots [%3d]" % (name, a)
                 self.status(msg)
                 dialog.destroy()
                 self.sync()
@@ -397,18 +394,8 @@ class TkBankEditor(Frame):
             self.status(msg)
             dialog.destroy()
 
-        def auto_increment(*_):
-            try:
-                a = int(var_start.get())
-                var_end.set(a+1)
-            except ValueError:
-                pass
-            
-        b_accept = factory.accept_button(frame, command=accept)
-        b_cancel = factory.cancel_button(frame, command=cancel)
-        b_accept.grid(row=8, column=1, pady=8, sticky="ew")
-        b_cancel.grid(row=8, column=2, pady=8, sticky="ew")
-        spin_start.config(command=auto_increment)
+        b_accept.config(command=accept)
+        b_cancel.config(command=cancel)
         dialog.grab_set()
         dialog.mainloop()
         
