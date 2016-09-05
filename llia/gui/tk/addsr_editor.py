@@ -70,6 +70,7 @@ class ADDSREditor(EnvEditorSpecs):
         self.bank = self.synth.bank()
         self.zoom = 1
         self.max_segment_time = max_segment_time
+        self.paramlist = paramlist
         self.params = {'attack' : paramlist[0],
                        'decay1' : paramlist[1],
                        'decay2' : paramlist[2],
@@ -250,7 +251,9 @@ class ADDSREditor(EnvEditorSpecs):
         self.parent.warning(msg)
 
     def set_value(self, param, value):
-        pass
+        if param in self.paramlist:
+            self.set_synth_value(param, value)
+            self.sync()
 
     def set_synth_value(self, param, value):
         program = self.bank[None]
