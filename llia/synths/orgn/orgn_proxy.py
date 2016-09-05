@@ -33,7 +33,7 @@ orgn_pallet["RADIO-SELECT"] = "#9c90a6"
 
 specs["constructor"] = OrgnProxy
 specs["description"] = "Simple FM Synth"
-specs["keymodes"] = ("Poly1", "Mono1")
+specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["control-input-buses"] = ("xbus",)
 specs["pretty-printer"] = pp_orgn    

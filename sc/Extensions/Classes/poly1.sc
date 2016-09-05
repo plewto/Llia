@@ -11,6 +11,8 @@
 **    - May not be fast enough for some complex instruments.
 **    - Effects which require continuity between voices, such as
 **      portamento are not supported. 
+**    - Complex synths with long decays may consume too much 
+**      resources.
 */
 
 Poly1 : Keymode {

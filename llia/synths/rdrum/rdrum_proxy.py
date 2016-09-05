@@ -28,7 +28,7 @@ rdrum_pallet = Pallet(default_pallet)
 
 specs["constructor"] = RdrumProxy
 specs["description"] = "Massed pulse waves"
-specs["keymodes"] = ("Poly1", "Mono1")
+specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["pretty-printer"] = pp_rdrum    
 specs["program-generator"] = gen_rdrum_program

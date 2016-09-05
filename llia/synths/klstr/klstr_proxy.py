@@ -31,7 +31,7 @@ klstr_pallet["SLIDER-OUTLINE"] = "#464f42"
 
 specs["constructor"] = KlstrProxy
 specs["description"] = "Massed pulse waves"
-specs["keymodes"] = ("Poly1", "Mono1")
+specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
 specs["audio-output-buses"] = (("outbus", 1),)
 specs["control-input-buses"] = ("xbus", )
 specs["pretty-printer"] = pp_klstr    
