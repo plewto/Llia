@@ -20,9 +20,15 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
 KEY_MODES = ("Poly1", "PolyRotate", "Mono1", "EFX")
 
 
-SYNTH_TYPES = ("FM2","Orgn", "Saw3", "Klstr", "RDrum", "MASA")
-EFFECT_TYPES = ("CarnalDelay", "XOver", "Flngr", "Tremolo", "Mixer", "Panner")
-CONTROLLER_SYNTH_TYPES = ("LFO1","LFO2","LFO3","PulseGen","SnH", "Ghostbus")
+# SYNTH_TYPES = ("FM2","Orgn", "Saw3", "Klstr", "RDrum", "MASA")
+# EFFECT_TYPES = ("CarnalDelay", "XOver", "Flngr", "Tremolo", "Mixer", "Panner")
+# CONTROLLER_SYNTH_TYPES = ("LFO1","LFO2","LFO3","PulseGen","SnH", "Ghostbus")
+
+SYNTH_TYPES = []
+EFFECT_TYPES = []
+CONTROLLER_SYNTH_TYPES = []
+
+
 
 MAX_UNDO = 10
 BANK_LENGTH = 128

@@ -374,3 +374,7 @@ class LliaConfig(dict):
         except ValueError:
             pass
         return x
+
+    def import_synth(self, section, stype):
+        flag = self.get_option(section,stype)
+        return str(flag).upper() == "TRUE"

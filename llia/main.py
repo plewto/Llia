@@ -2,7 +2,7 @@
 #
 
 from __future__ import print_function
-import os, sys
+import os, sys, imp, warnings
 abs_path = os.path.abspath(__file__)
 project_root = os.path.dirname(abs_path)
 project_root = os.path.dirname(project_root)
@@ -14,28 +14,6 @@ from argparse import ArgumentParser
 import llia.constants as constants
 from llia.config import LliaConfig
 from llia.llia_app import LliaApp
-
-import llia.synths.lfo1.lfo1_proxy
-import llia.synths.lfo2.lfo2_proxy
-import llia.synths.lfo3.lfo3_proxy
-import llia.synths.pulsegen.pulsegen_proxy
-import llia.synths.snh.snh_proxy
-import llia.synths.ghostbus.ghost_proxy
-
-import llia.synths.orgn.orgn_proxy
-import llia.synths.saw3.s3_proxy
-import llia.synths.klstr.klstr_proxy
-import llia.synths.rdrum.rdrum_proxy
-import llia.synths.masa.masa_proxy
-import llia.synths.fm2.fm2_proxy
-
-import llia.synths.carnal.crnl_proxy
-import llia.synths.xover.xover_proxy
-import llia.synths.flngr.flngr_proxy
-import llia.synths.tremolo.trm_proxy
-import llia.synths.mixer.mixer_proxy
-import llia.synths.panner.panner_proxy
-
 
 
 HM_VERSION="display version and exit."
@@ -228,6 +206,53 @@ if args.listgui:
 
 
 config = LliaConfig.create_instance(args)
+
+
+def import_synth(stype, modname, path):
+    if config.import_synth("SYNTH-IMPORTS", stype):
+        print("Importing synth: %s" % stype)
+        imp.load_source(modname, path)
+        constants.SYNTH_TYPES.append(stype)
+
+def import_effect(stype, modname, path):
+    if config.import_synth("EFX-IMPORTS", stype):
+        print("Importing effect: %s" % stype)
+        imp.load_source(modname, path)
+        constants.EFFECT_TYPES.append(stype)
+
+def import_controller(stype, modname, path):
+    if config.import_synth("CONTROL-SYNTH-IMPORTS", stype):
+        print("Importing controller: %s" % stype)
+        imp.load_source(modname, path)
+        constants.CONTROLLER_SYNTH_TYPES.append(stype)      
+        
+    
+
+warnings.filterwarnings("ignore")  # ISSUE: I dont like this! 
+
+import_synth("Orgn", "llia.synths.orgn.orgn_proxy","llia/synths/orgn/orgn_proxy.py")
+import_synth("Saw3", "llia.synths.saw3.s3_proxy","llia/synths/saw3/s3_proxy.py")
+import_synth("Klstr", "llia.synths.klstr.klstr_proxy","llia/synths/klstr/klstr_proxy.py")
+import_synth("RDrum", "llia.synths.rdrum.rdrum_proxy","llia/synths/rdrum/rdrum_proxy.py")
+import_synth("MASA", "llia.synths.masa.masa_proxy", "llia/synths/masa/masa_proxy.py")
+import_synth("FM2", "llia.synths.fm2.fm2_proxy","llia/synths/fm2/fm2_proxy.py")
+print()    
+import_effect("CarnalDelay", "llia.synths.carnal.crnl_proxy", "llia/synths/carnal/crnl_proxy.py")
+import_effect("XOver", "llia.synths.xover.xover_proxy", "llia/synths/xover/xover_proxy.py")
+import_effect("Flngr", "llia.synths.flngr.flngr_proxy", "llia/synths/flngr/flngr_proxy.py")
+import_effect("Tremolo", "llia.synths.tremolo.trm_proxy", "llia/synths/tremolo/trm_proxy.py")
+import_effect("Mixer", "llia.synths.mixer.mixer_proxy", "llia/synths/mixer/mixer_proxy.py")
+import_effect("Panner", "llia.synths.panner.panner_proxy", "llia/synths/panner/panner_proxy.py")
+print()
+import_controller("LFO1", "llia.synths.lfo1.lfo1_proxy", "llia/synths/lfo1/lfo1_proxy.py")
+import_controller("LFO2", "llia.synths.lfo2.lfo2_proxy", "llia/synths/lfo2/lfo2_proxy.py")
+import_controller("LFO3", "llia.synths.lfo3.lfo3_proxy", "llia/synths/lfo3/lfo3_proxy.py")
+import_controller("PulseGen", "llia.synths.pulsegen.pulsegen_proxy", "llia/synths/pulsegen/pulsegen_proxy.py")
+import_controller("SnH", "llia.synths.snh.snh_proxy", "llia/synths/snh/snh_proxy.py")
+import_controller("Ghostbus", "llia.synths.ghostbus.ghost_proxy", "llia/synths/ghostbus/ghost_proxy.py")
+print()
+    
+
 app = LliaApp(config, args.skip_mainloop)
 
 
