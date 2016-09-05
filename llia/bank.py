@@ -261,7 +261,7 @@ class ProgramBank(list):
         
     def paste_performance(self):
         try:
-            self[None].performance = ProgramBank.clipboard["Perfromance"]
+            self[None].performance = ProgramBank.clipboard["Performance"]
         except KeyError:
             msg = "Bank clipboard does not contain Performance."
             raise KeyError(msg)
