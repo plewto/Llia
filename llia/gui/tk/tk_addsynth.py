@@ -53,12 +53,12 @@ class TkAddSynthDialog(Toplevel):
         lab_id = factory.dialog_title_label(frame_north, title)
         lab_logo.grid(row=0, column=0, padx=8)
         lab_id.grid(row=0, column=1)
-        def spinbox(master, param):
-            var = StringVar()
-            var.set("0")
-            sp  = factory.int_spinbox(master, var, 0, 128, "Bus offset")
-            self._busoffset_map[param] = var
-            return sp
+        # def spinbox(master, param):
+        #     var = StringVar()
+        #     var.set("0")
+        #     sp  = factory.int_spinbox(master, var, 0, 128, "Bus offset")
+        #     self._busoffset_map[param] = var
+        #     return sp
 
         # Audio Input Buses
         frame_audio_in = factory.label_frame(main, "Audio Input Buses")
@@ -72,9 +72,9 @@ class TkAddSynthDialog(Toplevel):
                 combo.set("in_0")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 self._busname_map[bname] = combo
-                spin = spinbox(frame_audio_in, bname)
+                #spin = spinbox(frame_audio_in, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
+                #spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
             except IndexError:
                 lab_dummy = factory.label(frame_audio_in, "%d - n/a" % (i+1, ))
                 lab_dummy.grid(row=row, column=0)
@@ -94,9 +94,9 @@ class TkAddSynthDialog(Toplevel):
                 combo.set("out_0")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 self._busname_map[bname] = combo
-                spin = spinbox(frame_audio_out, bname)
+                #spin = spinbox(frame_audio_out, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                spin.grid(row=row, column=2, sticky="e", padx=4, pady=4)
+                #spin.grid(row=row, column=2, sticky="e", padx=4, pady=4)
             except IndexError:
                 lab_dummy = factory.label(frame_audio_out, "%d - n/a" % (i+1,))
                 lab_dummy.grid(row=row, column=0)
@@ -115,9 +115,9 @@ class TkAddSynthDialog(Toplevel):
                 combo.set("CBUS_A")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 self._busname_map[bname] = combo
-                spin = spinbox(frame_control_in, bname)
+                #spin = spinbox(frame_control_in, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
+                #spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
             except IndexError:
                 lab_dummy = factory.label(frame_control_in, "%d - n/a" % (i+1, ))
                 lab_dummy.grid(row=row, column=0)
@@ -136,9 +136,9 @@ class TkAddSynthDialog(Toplevel):
                 combo.set("CBUS_A")
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
                 self._busname_map[bname] = combo
-                spin = spinbox(frame_control_out, bname)
+                #spin = spinbox(frame_control_out, bname)
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
+                #spin.grid(row=row, column=2, sticky="w", padx=4, pady=4)
             except IndexError:
                 lab_dummy = factory.label(frame_control_out, "%d - n/a" % (i+1, ))
                 lab_dummy.grid(row=row, column=0)
@@ -211,7 +211,7 @@ class TkAddSynthDialog(Toplevel):
             sy = shelper.add_synth(self.stype, self.id_, km, vc, outbus=None)
         for p in self._busname_map.keys():
             busname = self._busname_map[p].get()
-            offset = int(self._busoffset_map[p].get())
+            offset = 0 # int(self._busoffset_map[p].get())
             shelper.assign_buffer_or_bus(p, busname, offset)
         for p,bname in self._buffername_map.items():
             shelper.assign_buffer(p, bname)
