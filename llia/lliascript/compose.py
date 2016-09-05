@@ -22,6 +22,7 @@ class Composer(object):
         code += self._build_audio_bus_assignments()
         code += self._build_control_bus_assignments()
         code += self._build_buffer_assignments()
+        code += 'show_group("ALL")\n'
         return code
 
     @staticmethod

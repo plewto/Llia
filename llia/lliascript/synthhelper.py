@@ -31,6 +31,7 @@ class SynthHelper(object):
         ns["synth"] = self.add_synth
         ns["control_synth"] = self.add_control_synth
         ns["group"] = self.new_group
+        ns["show_group"] = self.show_group
         ns["create_editor"] = self.create_editor
         ns["transpose"] = self.transpose
         ns["use"] = self.use_synth
@@ -633,6 +634,19 @@ class SynthHelper(object):
         self.parser.register_entity(grp.name, "group", data)
         self._synth_serial_number += 1
 
+    # deiconify group window(s)
+    # index may be either int, the windows index 
+    # or 'ALL'
+    #
+    def show_group(self, index=-1):
+        mw = self.parser.app.main_window()
+        if str(index).upper() == 'ALL':
+            for grp in mw.group_windows:
+                grp.deiconify()
+        else:
+            grp = mw.group_windows[index]
+            grp.deiconify()
+        
     def q_params(self, sid=None, silent=False):
         sy = self.get_synth(sid)
         bnk = sy.bank()
