@@ -72,20 +72,25 @@ class TkSynthWindow(Frame):
         f = factory.frame(self.notebook)
         self.notebook.add(f, text=name)
         return f
-        
+
     def _init_program_tab(self, master):
         frame = factory.frame(master)
-        master.add(frame, text = "Program")
-        text_widget = factory.text_widget(frame)
-        vsb = factory.scrollbar(frame, orientation="vertical")
-        hsb = factory.scrollbar(frame, orientation="horizontal")
+        inner_frame = factory.frame(frame)
+        master.add(frame, text="Program")
+        text_widget = factory.text_widget(inner_frame)
         text_widget.config(width=80, height=40)
-        text_widget.grid(row=0, column=0, rowspan=8, columnspan=8)
-        vsb.grid(row=0, column=8, rowspan=8, sticky="ns")
-        hsb.grid(row=8, column=0, columnspan=8, sticky="ew")
+        vsb = factory.scrollbar(inner_frame, orientation='vertical')
+        vsb.config(command=text_widget.yview)
+        text_widget.config(yscrollcommand=vsb.set)
+        text_widget.pack(side='left', expand=True, fill='both')
+        vsb.pack(side='right', fill='y')
+        inner_frame.grid(row=0, column=0, rowspan=8, columnspan=8)
+        b_update = factory.button(frame, "Update",
+                                  command=self.sync_program_tab)
+        b_update.grid(row=9, column=0)
         self._info_text_widget = text_widget
-        b_update = factory.button(frame, "Update", command=self.sync_program_tab)
-        b_update.grid(row=9, column=0, padx=4, pady=8)
+        
+        
 
     def sync_program_tab(self):
         bnk = self.synth.bank()
