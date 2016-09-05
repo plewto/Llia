@@ -21,7 +21,6 @@ import llia.synths.lfo3.lfo3_proxy
 import llia.synths.pulsegen.pulsegen_proxy
 import llia.synths.snh.snh_proxy
 import llia.synths.ghostbus.ghost_proxy
-import llia.synths.mus.mus_proxy
 
 import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
