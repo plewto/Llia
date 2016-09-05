@@ -134,6 +134,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         mmenu.add_cascade(label = "MIDI Maps", menu = map_menu)
         mmenu.add_command(label = "Toggle MIDI Input Trace", command = self.toggle_midi_input_trace)
         mmenu.add_command(label = "Toggle MIDI Output Trace", command = self.toggle_midi_output_trace)
+        mmenu.add_command(label = "Toggle Program Pretty Printer", command = self.toggle_program_pretty_printer)
+
         
     def _init_bus_menu(self, bmenu):
         bmenu.add_command(label="Audio", command=self.show_audiobus_dialog)
@@ -224,6 +226,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def toggle_midi_output_trace(self):
         self.status("MIDI output not available") # FIX ME
 
+    def toggle_program_pretty_printer(self):
+        self.app.pp_enabled = not self.app.pp_enabled
+        if self.app.pp_enabled:
+            self.status("Pretty printer enabled")
+        else:
+            self.status("Pretty printer disabled")
+        
+        
     def show_audiobus_dialog(self):
         from llia.gui.tk.tk_audiobus_editor import TkAudiobusEditor
         dialog = TkAudiobusEditor(self.root, self.app)

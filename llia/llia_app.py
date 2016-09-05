@@ -18,6 +18,7 @@ class LliaApp(object):
     def __init__(self, config, skip_mainloop=False):
         super(LliaApp, self).__init__()
         self.config = config
+        self.pp_enabled = config.program_pp_enabled()
         self.proxy = LliaProxy(config, self)
         self._main_window = create_application_window(self)
         self.midi_in_trace = config.trace_midi_reception_enabled()

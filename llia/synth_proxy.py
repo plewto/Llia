@@ -204,7 +204,7 @@ class SynthProxy(object):
         self.x_program(cp)
         if self.synth_editor:
             self.synth_editor.sync()
-        if self.app.config.program_pp_enabled():
+        if self.app.pp_enabled:
             try:
                 pp = self.specs["pretty-printer"]
                 print(pp(cp, slot))
