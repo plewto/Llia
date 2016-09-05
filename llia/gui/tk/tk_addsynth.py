@@ -190,7 +190,7 @@ class TkAddSynthDialog(Toplevel):
         b_cancel.grid(row=0, column=3, sticky="e")
         toolbar.grid(row=10, column=0, columnspan=5, sticky="ew", padx=4, pady=8)
         #self.grab_set() # ISSUE: Throws TclError: grab failed: window not viewable?
-        self.mainloop()
+        #self.mainloop()
 
     def display_help(self):
         self.app.main_window().display_help(HELP_TOPIC)
