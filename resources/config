@@ -12,6 +12,7 @@
 
 [GENERAL]
 no-repl : False
+startup-script : 
 
 [MIDI]
 input-port : Launchkey Mini 20:0

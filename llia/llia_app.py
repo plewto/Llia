@@ -43,8 +43,13 @@ class LliaApp(object):
         self.keytables = KeyTableRegistry()
         self._repl_thread = None
         self.ls_parser = lliascript_parser(self)
+        ss = config.startup_script()
+        if ss:
+            print("Loading startup script '%s'" % ss)
+            self.ls_parser.load_python(ss)
         if not skip_mainloop:
             self.start_main_loop()
+       
         
     def global_osc_id(self):
         return self.config.global_osc_id()

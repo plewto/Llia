@@ -375,6 +375,14 @@ class LliaConfig(dict):
             pass
         return x
 
+    # Returns True if synth module is to be loaed
+    # section, one of "SYNTH-IMPORTS", "EFX-IMPORTS" or "CONTROL-SYNTH-IMPORTS"
+    # 
     def import_synth(self, section, stype):
         flag = self.get_option(section,stype)
         return str(flag).upper() == "TRUE"
+
+    def startup_script(self):
+        ss = self.get_option("GENERAL", "startup-script")
+        return ss
+        
