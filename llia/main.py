@@ -243,6 +243,7 @@ import_effect("Flngr", "llia.synths.flngr.flngr_proxy", "llia/synths/flngr/flngr
 import_effect("Tremolo", "llia.synths.tremolo.trm_proxy", "llia/synths/tremolo/trm_proxy.py")
 import_effect("Mixer", "llia.synths.mixer.mixer_proxy", "llia/synths/mixer/mixer_proxy.py")
 import_effect("Panner", "llia.synths.panner.panner_proxy", "llia/synths/panner/panner_proxy.py")
+import_effect("ASplit", "llia.synths.asplit.asplit_proxy", "llia/synths/asplit/asplit_proxy.py")
 print()
 import_controller("LFO1", "llia.synths.lfo1.lfo1_proxy", "llia/synths/lfo1/lfo1_proxy.py")
 import_controller("LFO2", "llia.synths.lfo2.lfo2_proxy", "llia/synths/lfo2/lfo2_proxy.py")

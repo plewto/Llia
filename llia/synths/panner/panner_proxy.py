@@ -15,7 +15,6 @@ class PannerProxy(SynthProxy):
         self.app = app
         
     def create_subeditors(self):
-        pass
         gui = self.app.config["gui"].upper()
         if gui == "TK":
             from llia.synths.panner.tk.editor import create_editor
@@ -29,7 +28,7 @@ panner_pallet["SLIDER-TROUGH"] = "#432703"
 panner_pallet["SLIDER-OUTLINE"] = "#42033E"
 
 specs["constructor"] = PannerProxy
-specs["description"] = "4 x 2 Panner with Reverb"
+specs["description"] = "Audio signal panner"
 specs["keymodes"] = ("EFX", )
 specs["audio-output-buses"] = (("outbusA", 1),("outbusB", 1))
 specs["audio-input-buses"] = (("inbus", 1),)

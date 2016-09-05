@@ -56,6 +56,8 @@ flngr       : True
 tremolo     : True                
 mixer       : True              
 panner      : True
+asplit      : True
+
 
 [CONTROL-SYNTH-IMPORTS]
 lfo1      : True             
