@@ -272,15 +272,23 @@ class Parser(object):
     def abus(self, name):
         lstype = self.register_entity(name, "abus", {"channels" : 1})
         if lstype:
-            rs = self.proxy.add_audio_bus(name, 1)
+            rs = self.proxy.add_audio_bus(name)
             return rs
         else:
             return lstype == "abus"
 
-    def cbus(self, name, channels=1):
-        lstype = self.register_entity(name, "cbus", {"channels" : channels})
+    # def cbus(self, name, channels=1):
+    #     lstype = self.register_entity(name, "cbus", {"channels" : channels})
+    #     if lstype:
+    #         rs = self.proxy.add_control_bus(name, channels)
+    #         return rs
+    #     else:
+    #         return lstype == "cbus"
+
+    def cbus(self, name):
+        lstype = self.register_entity(name, "cbus", {"channels" : 1})
         if lstype:
-            rs = self.proxy.add_control_bus(name, channels)
+            rs = self.proxy.add_control_bus(name)
             return rs
         else:
             return lstype == "cbus"

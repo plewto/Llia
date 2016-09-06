@@ -179,9 +179,11 @@ class Bus(object):
         return acc
 
     def __str__(self):
-        frmt = '%sBus("%s")'
-        return frmt % (self.rate(), self.name)
-    
+        frmt = '%sBus("%s") # '
+        acc = frmt % (self.rate(), self.name)
+        frmt = '%d sources, %d sinks'
+        acc += frmt % (len(self._sources),len(self._sinks))
+        return acc
         
 class AudioBus(Bus):
 

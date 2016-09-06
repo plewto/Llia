@@ -124,3 +124,11 @@ def serialize(obj):
 @generic
 def hash_(obj):
     return crc32(str(obj).lower())
+
+@generic
+def is_bus_source(obj):
+    return False
+
+@generic
+def is_bus_sink(obj):
+    return False
