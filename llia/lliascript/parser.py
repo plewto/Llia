@@ -269,10 +269,10 @@ class Parser(object):
             self.entities[name] = ent
             return True
         
-    def abus(self, name, channels=1):
-        lstype = self.register_entity(name, "abus", {"channels" : channels})
+    def abus(self, name):
+        lstype = self.register_entity(name, "abus", {"channels" : 1})
         if lstype:
-            rs = self.proxy.add_audio_bus(name, channels)
+            rs = self.proxy.add_audio_bus(name, 1)
             return rs
         else:
             return lstype == "abus"
