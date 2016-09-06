@@ -217,13 +217,14 @@ class TkAddSynthDialog(Toplevel):
             shelper.assign_buffer(p, bname)
         mw = self.app.main_window()
         group = mw.group_windows[-1]
-        
         swin = TkSynthWindow(group.notebook, sy)
+        grp_index = len(mw.group_windows)-1
         group.notebook.add(swin, text=self.sid)
         group.deiconify()
         mw[self.sid] = swin
         factory.set_pallet(sy.specs["pallet"])
         sy.create_subeditors()
+        swin.group_index = grp_index
         factory.restore_pallet()
         self.app.main_window().status("Added %s" % self.sid)
         self.destroy()

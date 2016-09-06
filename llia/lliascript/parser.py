@@ -440,14 +440,14 @@ class Parser(object):
             raise NoSuchBusError(name)
 
     # Universal remove  (bus, buffer, synth, map)
-    def rm(self, name, param=ALL, sid=None):
+    def rm(self, name, param=ALL, sid=None, force=False):
         lstype = self.what_is(name)
         if lstype == "abus" or lstype == "cbus":
             self.remove_bus(name)
         elif lstype == "buffer":
             self.bufferhelper.remove_buffer(name)
         elif lstype == "synth" or lstype == "efx":
-            self.synthhelper.remove_synth(name)
+            self.synthhelper.remove_synth(name, force)
         elif "controller" in lstype:
             self.synthhelper.remove_parameter_map(name, param, sid)
         elif name in (velocity,aftertouch,keynumber,pitchwheel):

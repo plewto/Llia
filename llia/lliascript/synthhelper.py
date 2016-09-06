@@ -33,6 +33,7 @@ class SynthHelper(object):
         ns["group"] = self.new_group
         ns["show_group"] = self.show_group
         ns["create_editor"] = self.create_editor
+        ns["destroy_editor"] = self.destroy_editor
         ns["transpose"] = self.transpose
         ns["use"] = self.use_synth
         ns["pmap"] = self.parameter_map
@@ -287,13 +288,35 @@ class SynthHelper(object):
             else:
                 from llia.gui.tk.tk_synthwindow import TkSynthWindow
                 mw = self.parser.app.main_window()
+                group_index = len(mw.group_windows)-1
                 notebook = mw.group_windows[-1].notebook
                 swin = TkSynthWindow(notebook, sy)
+                swin.group_index = group_index
                 sy.synth_editor = swin
                 mw[sy.sid] = swin
                 sy.create_subeditors()
                 notebook.add(swin, text=sy.sid)
 
+    # Destroy editor for indicated synth
+    # NOTES:
+    #  For tk at least the synth *MUST* still be defined!!!
+    #    First: destroy editor
+    #    Next: remove synth
+    #  
+    def destroy_editor(self, sid='*'):
+        gui = self.parser.config.gui().upper()
+        if gui == "NONE":
+            return
+        if gui == "TK":
+            sy = self.get_synth(sid)
+            swin = sy.synth_editor
+            grp_index = swin.group_index
+            mw = self.parser.app.main_window()
+            grp = mw.group_windows[grp_index]
+            notebook = grp.notebook
+            notebook.forget(swin)
+            
+                
     def add_efx(self, stype, id_, outbus=["out_0", "outbus", 0]):
         sid = "%s_%s" % (stype, id_)
         if self.synth_exists(sid):
@@ -459,8 +482,8 @@ class SynthHelper(object):
             msg = "Do not understand remove parameter map source: '%s'" % source
             raise LliascriptError(msg)
         
-    def remove_synth(self, sid):
-        if sid == self.current_sid:
+    def remove_synth(self, sid, force=False):
+        if sid == self.current_sid and not force:
             msg = "Can not free current synth: '%s'" % self.current_sid
             raise LliascriptError(msg)
         self.get_synth(sid)
@@ -468,6 +491,9 @@ class SynthHelper(object):
         self.proxy.free_synth(stype, id_)
         self.parser.forget(sid)
         self.status("Removed synth: '%s'" % sid)
+        if sid == self.current_sid:
+            msg = "Lliascript current_sid '%s' has been removed" % sid
+            self.warning(msg)
         return True
         
     def dump_synth(self, sid=None):

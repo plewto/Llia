@@ -22,6 +22,7 @@ class TkSynthWindow(Frame):
         self.synth.synth_editor = self
         self.app = sproxy.app
         self.sid = sproxy.sid
+        self.group_index = -1
         factory.set_pallet(sproxy.specs["pallet"])
         main = factory.paned_window(self)
         main.pack(expand=True, fill="both")
@@ -73,6 +74,14 @@ class TkSynthWindow(Frame):
         self.notebook.add(f, text=name)
         return f
 
+    def remove_synth(self, *_):
+        sid = self.synth.sid
+        parser = self.app.ls_parser
+        sh = parser.synthhelper
+        sh.destroy_editor(sid)
+        sh.remove_synth(sid, force=True)
+        self.status("Removed synth: %s" % sid)
+    
     def _init_program_tab(self, master):
         frame = factory.frame(master)
         inner_frame = factory.frame(frame)
@@ -88,9 +97,9 @@ class TkSynthWindow(Frame):
         b_update = factory.button(frame, "Update",
                                   command=self.sync_program_tab)
         b_update.grid(row=9, column=0)
+        b_remove = factory.button(frame, "Remove Synth", command=self.remove_synth)
+        b_remove.grid(row=9, column=1)
         self._info_text_widget = text_widget
-        
-        
 
     def sync_program_tab(self):
         bnk = self.synth.bank()
@@ -103,13 +112,6 @@ class TkSynthWindow(Frame):
             txt = ""
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
-
-
-    # def _init_bus_and_buffer_tab(self, master):
-    #     frame = factory.frame(master)
-    #     master.add(frame, text = "Buses/Buffers")
-    #     lab = factory.label(frame, "Place holder for future")
-    #     lab.pack()
 
     def _init_bus_and_buffer_tab(self, master):
         bbe = TkBusAndBufferEditor(master, self, self.synth)
