@@ -237,6 +237,7 @@ import_synth("RDrum", "llia.synths.rdrum.rdrum_proxy","llia/synths/rdrum/rdrum_p
 import_synth("MASA", "llia.synths.masa.masa_proxy", "llia/synths/masa/masa_proxy.py")
 import_synth("FM2", "llia.synths.fm2.fm2_proxy","llia/synths/fm2/fm2_proxy.py")
 print()    
+
 import_effect("CarnalDelay", "llia.synths.carnal.crnl_proxy", "llia/synths/carnal/crnl_proxy.py")
 import_effect("XOver", "llia.synths.xover.xover_proxy", "llia/synths/xover/xover_proxy.py")
 import_effect("Flngr", "llia.synths.flngr.flngr_proxy", "llia/synths/flngr/flngr_proxy.py")
@@ -245,6 +246,7 @@ import_effect("Mixer", "llia.synths.mixer.mixer_proxy", "llia/synths/mixer/mixer
 import_effect("Panner", "llia.synths.panner.panner_proxy", "llia/synths/panner/panner_proxy.py")
 import_effect("ASplit", "llia.synths.asplit.asplit_proxy", "llia/synths/asplit/asplit_proxy.py")
 print()
+
 import_controller("LFO1", "llia.synths.lfo1.lfo1_proxy", "llia/synths/lfo1/lfo1_proxy.py")
 import_controller("LFO2", "llia.synths.lfo2.lfo2_proxy", "llia/synths/lfo2/lfo2_proxy.py")
 import_controller("LFO3", "llia.synths.lfo3.lfo3_proxy", "llia/synths/lfo3/lfo3_proxy.py")

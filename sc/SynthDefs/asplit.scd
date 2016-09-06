@@ -1,4 +1,9 @@
-
+/*
+** An audio signal splitter.
+** Splits source audio signal to up to 4 buses with 
+** gain and mute controls on each bus.
+**
+*/
 
 (SynthDef (\ASplit, {
 	|inbus = 0

@@ -58,7 +58,6 @@ mixer       : True
 panner      : True
 asplit      : True
 
-
 [CONTROL-SYNTH-IMPORTS]
 lfo1      : True             
 lfo2      : True             
@@ -66,7 +65,7 @@ lfo3      : True
 pulsegen  : True                 
 snh       : True            
 ghostbus  : True                 
-       
+
 [MIDI-CHANNELS]
 C01 : 
 C02 : 

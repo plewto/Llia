@@ -43,7 +43,7 @@ def asplit(slot, name,
     program_bank[slot] = p
     return p
 
-def pp(program, slot=1276):
+def pp(program, slot=127):
     pad = ' '*5
     acc = 'asplit(%d, "%s",\n' % (slot, program.name)
     for b in 'ABCD':
