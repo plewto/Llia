@@ -31,10 +31,12 @@ specs["constructor"] = CarnalProxy
 specs["is-efx"] = True
 specs["description"] = "An unclean delay"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = (("outbus", 1),)
-specs["audio-input-buses"] = (("inbus", 1),)
-specs["control-input-buses"] = ("efxbus", "dlybus")
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_program
 specs["help"] = "carnalDelay"
 specs["pallet"] = crnl_pallet
+
+
+specs["audio-output-buses"] = [["outbus", "out_0"]]
+specs["audio-input-buses"] = [["inbus", "in_0"]]
+specs["control-input-buses"] = [["efxbus","CBUS_B"],["dlybus", "CBUS_B"]]

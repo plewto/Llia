@@ -33,11 +33,13 @@ s3_pallet["SLIDER-TROUGH"] = "#1f2f40"
 specs["constructor"] = Saw3Proxy
 specs["description"] = "A 3 Oscillator Subtractive Synth"
 specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
-specs["audio-output-buses"] = (("outbus", 1),)
-specs["control-input-buses"] = ("xbus",)
+# specs["audio-output-buses"] = (("outbus", 1),)
+# specs["control-input-buses"] = ("xbus",)
 specs["pretty-printer"] = pp_saw3  
 specs["program-generator"] = s3gen
 specs["pallet"] = s3_pallet
 specs["help"] = "saw3"
 
 
+specs["audio-output-buses"] = [["outbus", "out_0"]]
+specs["control-input-buses"] = [["xbus", "CBUS_B"]]

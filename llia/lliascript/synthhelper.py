@@ -23,7 +23,13 @@ class SynthHelper(object):
         self._assignment_serial_number = 0
 
     def _init_namespace(self, ns):
-        ns["assign"] = self.assign_buffer_or_bus
+        #ns["assign"] = self.assign_buffer_or_bus  # DEPRECIATED
+        ns["assign_audio_output"] = self.assign_audio_output_bus
+        ns["assign_audio_input"] = self.assign_audio_input_bus
+
+        ns["assign_control_output"] = self.assign_control_output_bus
+        ns["assign_control_input"] = self.assign_control_input_bus
+        
         ns["bend"] = self.bend
         ns["efx"] = self.add_efx
         ns["input_channel"] = self.input_channel
@@ -123,67 +129,170 @@ class SynthHelper(object):
         else:
             head, tail = sid, ""
         return (head, tail)
-        
-    def assign_abus(self, param, busname, offset=0, sid=None):
+
+    # DEPRECIATED DEPRECIATED DEPRECIATED DEPRECIATED 
+    # def assign_abus(self, param, busname, offset=0, sid=None):
+    #     print("DEPRECIATED: synthhelper.assign_abus")
+    #     sid = sid or self.current_sid
+    #     sy = self.get_synth(sid)
+    #     lstype = self.what_is(busname)
+    #     if lstype == '':
+    #           msg = "Audio bus '%s' does not exists." % busname
+    #           self.warning(msg)
+    #           return False
+    #     if lstype == "abus":
+    #         stype, id_ = self.parse_sid(sid)
+    #         if self.proxy.audio_bus_exists(busname):
+    #             self.proxy.assign_synth_audio_bus(stype, id_, param, busname, offset)
+    #             ename = "assign-audio-bus-%d" % self._assignment_serial_number
+    #             etype = "audio-bus-assignment"
+    #             data = {"param" : param,
+    #                     "bus-name" : busname,
+    #                     "offset" : offset,
+    #                     "sid" : sid}
+    #             self.parser.register_entity(ename, etype, data)
+    #             self._assignment_serial_number += 1
+    #             return True
+    #         else:
+    #             msg = "Can not assign audio bus: '%s'." % busname
+    #             self.warning(msg)
+    #             return False
+    #     else:
+    #         msg = "Can not assign %s '%s' as audio bus." % (lstype, busname)
+    #         self.warning(msg)
+    #         return False
+
+    def assign_audio_output_bus(self, param, busname, sid=None):
         sid = sid or self.current_sid
         sy = self.get_synth(sid)
         lstype = self.what_is(busname)
-        if lstype == '':
-              msg = "Audio bus '%s' does not exists." % busname
-              self.warning(msg)
-              return False
-        if lstype == "abus":
+        if lstype == 'abus' and self.proxy.audio_bus_exists(busname):
             stype, id_ = self.parse_sid(sid)
-            if self.proxy.audio_bus_exists(busname):
-                self.proxy.assign_synth_audio_bus(stype, id_, param, busname, offset)
-                ename = "assign-audio-bus-%d" % self._assignment_serial_number
-                etype = "audio-bus-assignment"
-                data = {"param" : param,
-                        "bus-name" : busname,
-                        "offset" : offset,
-                        "sid" : sid}
-                self.parser.register_entity(ename, etype, data)
-                self._assignment_serial_number += 1
-                return True
-            else:
-                msg = "Can not assign audio bus: '%s'." % busname
-                self.warning(msg)
-                return False
+            self.proxy.assign_synth_audio_bus(stype, id_, param, busname, 0)
+            sy.assign_audio_output_bus(param, busname)
+            ename = "assign-audio-bus-%d" % self._assignment_serial_number
+            etype = "audio-bus-assignment"
+            data = {"param" : param,
+                    "bus-name" : busname,
+                    "offset" : 0,
+                    "sid" : sid}
+            self.parser.register_entity(ename, etype, data)
+            self._assignment_serial_number += 1
+            return True
         else:
-            msg = "Can not assign %s '%s' as audio bus." % (lstype, busname)
+            msg = "Can not assign audio output bus: " 
+            msg += "sid=%s, param=%s, busname=%s"
+            msg = msg % (sid, param, busname)
             self.warning(msg)
             return False
 
-    def assign_cbus(self, param, busname, offset=0, sid=None):
+    def assign_audio_input_bus(self, param, busname, sid=None):
         sid = sid or self.current_sid
-        self.get_synth(sid)
+        sy = self.get_synth(sid)
         lstype = self.what_is(busname)
-        if lstype == '':
-              msg = "Control bus '%s' does not exists." % busname
-              self.warning(msg)
-              return False
-        if lstype == "cbus":
+        if lstype == 'abus' and self.proxy.audio_bus_exists(busname):
             stype, id_ = self.parse_sid(sid)
-            if self.proxy.control_bus_exists(busname):
-                self.proxy.assign_synth_control_bus(stype, id_, param, busname, offset)
-                ename = "assign-control-bus-%d" % self._assignment_serial_number
-                etype = "control-bus-assignment"
-                data = {"param" : param,
-                        "bus-name" : busname,
-                        "offset" : offset,
-                        "sid" : sid}
-                self.parser.register_entity(ename, etype, data)
-                self._assignment_serial_number += 1
-                return True
-            else:
-                msg = "Can not assign control bus: '%s'.  (See BUG 0000)" % busname
-                self.warning(msg)
-                return False
+            self.proxy.assign_synth_audio_bus(stype, id_, param, busname, 0)
+            sy.assign_audio_input_bus(param, busname)
+            ename = "assign-audio-bus-%d" % self._assignment_serial_number
+            etype = "audio-bus-assignment"
+            data = {"param" : param,
+                    "bus-name" : busname,
+                    "offset" : 0,
+                    "sid" : sid}
+            self.parser.register_entity(ename, etype, data)
+            self._assignment_serial_number += 1
+            return True
         else:
-            msg = "Can not assign %s '%s' as control bus." % (lstype, busname)
+            msg = "Can not assign audio input bus:  "
+            msg += "sid=%s, param=%s, busname=%s"
+            msg = msg % (sid, param, busname)
+            self.warning(msg)
+            return False
+        
+
+    # DEPRECIATED DEPRECIATED DEPRECIATED DEPRECIATED DEPRECIATED DEPRECIATED 
+    # def assign_cbus(self, param, busname, offset=0, sid=None):
+    #     print("DEPRECIATED: synthhekper.assign_cbus")
+    #     sid = sid or self.current_sid
+    #     self.get_synth(sid)
+    #     lstype = self.what_is(busname)
+    #     if lstype == '':
+    #           msg = "Control bus '%s' does not exists." % busname
+    #           self.warning(msg)
+    #           return False
+    #     if lstype == "cbus":
+    #         stype, id_ = self.parse_sid(sid)
+    #         if self.proxy.control_bus_exists(busname):
+    #             self.proxy.assign_synth_control_bus(stype, id_, param, busname, offset)
+    #             ename = "assign-control-bus-%d" % self._assignment_serial_number
+    #             etype = "control-bus-assignment"
+    #             data = {"param" : param,
+    #                     "bus-name" : busname,
+    #                     "offset" : offset,
+    #                     "sid" : sid}
+    #             self.parser.register_entity(ename, etype, data)
+    #             self._assignment_serial_number += 1
+    #             return True
+    #         else:
+    #             msg = "Can not assign control bus: '%s'.  (See BUG 0000)" % busname
+    #             self.warning(msg)
+    #             return False
+    #     else:
+    #         msg = "Can not assign %s '%s' as control bus." % (lstype, busname)
+    #         self.warning(msg)
+    #         return False
+
+    def assign_control_output_bus(self, param, busname, sid=None):
+        sid = sid or self.current_sid
+        sy = self.get_synth(sid)
+        lstype = self.what_is(busname)
+        if lstype == 'cbus' and self.proxy.control_bus_exists(busname):
+            stype, id_ = self.parse_sid(sid)
+            self.proxy.assign_synth_control_bus(stype, id_, param, busname, 0)
+            sy.assign_control_output_bus(param, busname)
+            ename = "assign-control-bus-%d" % self._assignment_serial_number
+            etype = "control-bus-assignment"
+            data = {"param" : param,
+                    "bus-name" : busname,
+                    "offset" : 0,
+                    "sid" :sid}
+            self.parser.register_entity(ename,etype,data)
+            self._assignment_serial_number += 1
+            return True
+        else:
+            msg = "Can not assign control output bus: "
+            msg += "sid=%s, param=%s, busname=%s"
+            msg = msg % (sid,param,busname)
             self.warning(msg)
             return False
 
+    def assign_control_input_bus(self, param, busname, sid=None):
+        sid = sid or self.current_sid
+        sy = self.get_synth(sid)
+        lstype = self.what_is(busname)
+        if lstype == 'cbus' and self.proxy.control_bus_exists(busname):
+            stype, id_ = self.parse_sid(sid)
+            self.proxy.assign_synth_control_bus(stype, id_, param, busname, 0)
+            sy.assign_control_input_bus(param, busname)
+            ename = "assign-control-bus-%d" % self._assignment_serial_number
+            etype = "control-bus-assignment"
+            data = {"param" : param,
+                    "bus-name" : busname,
+                    "offset" : 0,
+                    "sid" :sid}
+            self.parser.register_entity(ename,etype,data)
+            self._assignment_serial_number += 1
+            return True
+        else:
+            msg = "Can not assign control input bus: "
+            msg += "sid=%s, param=%s, busname=%s"
+            msg = msg % (sid,param,busname)
+            self.warning(msg)
+            return False
+            
+        
+        
     def assign_buffer(self, param, name=None, sid=None):
         sid = sid or self.current_sid
         self.get_synth(sid)
@@ -208,6 +317,7 @@ class SynthHelper(object):
           
 
     def assign_buffer_or_bus(self, param, name="", offset=0, sid=None):
+        print("DEPRECIATED synthhelper.assign_buffer_or_bus")
         if not name:
             return self.assign_buffer(param, name, sid)
         lstype = self.what_is(name)
@@ -269,7 +379,9 @@ class SynthHelper(object):
             if rs:
                 self.current_sid = sid
                 bname,param,offset = self.fill_outbus_args(outbus)
-                self.assign_abus(param, bname, offset)
+                #self.assign_abus(param, bname, offset)
+                #self.assign_audio_output_bus(outbus[1], outbus[0], sid)
+                self.assign_audio_output_bus(param,bname,sid)
                 self.update_prompt()
             return rs
 
@@ -315,7 +427,6 @@ class SynthHelper(object):
             grp = mw.group_windows[grp_index]
             notebook = grp.notebook
             notebook.forget(swin)
-            
                 
     def add_efx(self, stype, id_, outbus=["out_0", "outbus", 0]):
         sid = "%s_%s" % (stype, id_)
@@ -336,7 +447,8 @@ class SynthHelper(object):
             if rs:
                 self.current_sid = sid
                 bname,param,offset = self.fill_outbus_args(outbus)
-                self.assign_abus(param, bname, offset)
+                #self.assign_abus(param, bname, offset)
+                self.assign_audio_output_bus(param,bname,sid)
                 self.update_prompt()
             return rs
 

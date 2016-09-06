@@ -6,7 +6,7 @@ import abc
 
 import llia.constants as con
 import llia.curves as curves
-from llia.llerrors import LliaPingError
+from llia.llerrors import LliaPingError, NoSuchBusOrParameterError
 from llia.generic import is_instrument, clone, dump
 from llia.osc_transmitter import OSCTransmitter
 
@@ -16,7 +16,6 @@ from llia.osc_transmitter import OSCTransmitter
 class SynthSpecs(dict):
 
     global_synth_type_registry = {}
-    # synth_counter = {}
 
     @staticmethod
     def available_synth_types():
@@ -28,13 +27,6 @@ class SynthSpecs(dict):
     def is_known_synth_type(stype):
         return SynthSpecs.global_synth_type_registry.has_key(stype)
     
-    # @staticmethod
-    # def create_id(ss):
-    #     format_ = ss["format"]
-    #     count = SynthSpecs.synth_counter.get(format_, 1)
-    #     SynthSpecs.synth_counter[format_] = count+1
-    #     return count
-
     @staticmethod
     def create_synth_proxy(app, stype, id_):
         try:
@@ -58,16 +50,16 @@ class SynthSpecs(dict):
         super(SynthSpecs, self).__setitem__("notes", None)
         super(SynthSpecs, self).__setitem__("is-efx", False)
         super(SynthSpecs, self).__setitem__("keymodes", [])
-        # buses [[param1, channels], [param2, channels] ...]
-        super(SynthSpecs, self).__setitem__("audio-output-buses", [])   
+        # audio buses [[param1, default], [param2, default] ...]
+        super(SynthSpecs, self).__setitem__("audio-output-buses", [])  
         super(SynthSpecs, self).__setitem__("audio-input-buses", [])
+        # audio buses [[param1, default], [param2, default] ...]
         super(SynthSpecs, self).__setitem__("control-output-buses", [])
         super(SynthSpecs, self).__setitem__("control-input-buses", [])
         # buffers [param1, param2, ...]
         super(SynthSpecs, self).__setitem__("buffers", [])
         super(SynthSpecs, self).__setitem__("pallet", None)
-        
-    
+
         SynthSpecs.global_synth_type_registry[format_] = self
         
     def __setitem__(self, key, item):
@@ -104,19 +96,29 @@ class SynthProxy(object):
         self._bank = bank.clone()
         self._midi_chan0 = 0
         self._key_table_name = "EQ12"
-        self.audio_buses = {}
-        self.control_buses = {}
-        self.buffers = {}
-        for b in specs["audio-input-buses"]:
-            self.audio_buses[b[0]] = None
-        for b in specs["audio-output-buses"]:
-            self.audio_buses[b[0]] = None
-        for b in specs["control-input-buses"]:
-            self.control_buses[b[0]] = None
-        for b in specs["control-output-buses"]:
-            self.control_buses[b[0]] = None
-        for b in specs["buffers"]:
-            self.buffers[b] = None
+     
+
+        self._audio_output_buses = {}
+        for bs in specs["audio-output-buses"]:
+            param, busname = bs
+            self._audio_output_buses[param] = busname
+            self.assign_audio_output_bus(param, busname)
+
+        self._audio_input_buses = {}
+        for bs in specs["audio-input-buses"]:
+            self._audio_input_buses[bs[0]] = bs[1]
+
+        self._control_output_buses = {}
+        for bs in specs["control-output-buses"]:
+            self._control_output_buses[bs[0]] = bs[1]
+
+        self._control_input_buses = {}
+        for bs in specs["control-input-buses"]:
+            self._control_input_buses[bs[0]] = bs[1]
+
+        self._buffers = {}
+
+        
         host_and_port = app.config.host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
         trace_osc = app.config.osc_transmission_trace_enabled()
@@ -142,11 +144,98 @@ class SynthProxy(object):
     @abc.abstractmethod
     def create_subeditors(self):
         pass
-    
+
+    def available_audio_output_parameters(self):
+        def fn(a): return a[0]
+        blist = sorted(self._audio_output_buses.keys())
+        blist = filter(fn, blist)
+        return blist
+
+    # Only modifies bus objects.
+    # does not transmit OSC message to change bus.
+    def assign_audio_output_bus(self, param, bname):
+        try:
+            proxy = self.app.proxy
+            current_bus_name = self._audio_output_buses[param]
+            current_bus = proxy.get_audio_bus(current_bus_name)
+            new_bus = proxy.get_audio_bus(bname)
+            current_bus.remove_source(self.sid, param)
+            new_bus.add_source(self.sid, param)
+            self._audio_output_buses[param] = bname
+        except KeyError:
+            msg = "Can not assign audio output bus.  sid=%s, param=%s, bus_name=%s"
+            msg = msg % (self.sid, param, bname)
+            raise NoSuchBusOrParameterError(msg)
+   
+    # Assigns audio input bus only
+    # Soes not transmit OSM message
+    def assign_audio_input_bus(self, param, bname):
+        try:
+            proxy = self.app.proxy
+            current_bus_name = self._audio_input_buses[param]
+            current_bus = proxy.get_audio_bus(current_bus_name)
+            new_bus = proxy.get_audio_bus(bname)
+            current_bus.remove_sink(self.sid, param)
+            new_bus.add_sink(self.sid, param)
+            self._audio_input_buses[param] = bname
+        except KeyError:
+            msg = "Can not assign audio input bus.  sid=%s, param=%s, bus_name=%s"
+            msg = msg % (self.sid, param, bname)
+            raise NoSuchBusOrParameterError(msg)   
+
+    def assign_control_output_bus(self, param, bname):
+        try:
+            proxy = self.app.proxy
+            current_bus_name = self._control_output_buses[param]
+            current_bus = proxy.get_control_bus(current_bus_name)
+            new_bus = proxy.get_control_bus(bname)
+            current_bus.remove_source(self.sid, param)
+            new_bus.add_source(self.sid, param)
+            self._control_output_buses[param] = bname
+        except KeyError:
+            msg = "Can not assign control output bus.  sid=%s, param=%s, bus_name=%s"
+            msg = msg % (self.sid, param, bname)
+            raise NoSuchBusOrParameterError(msg)
+
+    def assign_control_input_bus(self, param, bname):
+        try:
+            proxy = self.app.proxy
+            current_bus_name = self._control_input_buses[param]
+            current_bus = proxy.get_control_bus(current_bus_name)
+            new_bus = proxy.get_control_bus(bname)
+            current_bus.remove_sink(self.sid, param)
+            new_bus.add_sink(self.sid, param)
+            self._control_input_buses[param] = bname
+        except KeyError:
+            msg = "Can not assign control input bus.  sid=%s, param=%s, bus_name=%s"
+            msg = msg % (self.sid, param, bname)
+            raise NoSuchBusOrParameterError(msg)
+        
     # Free instrument
     # Return bool True if all goes well.
     #
     def free(self):   # ISSUE: FIX ME
+        proxy = self.app.proxy
+        for bn in self._audio_output_buses.keys():
+            bus = proxy.get_audio_bus(bn)
+            bus.remove_source(sid, None)
+            self._audio_output_buses[bn] = None
+        for bn in self._audio_input_buses.keys():
+            bus = proxy.get_audio_bus(bn)
+            bus.remove_sink(sid, None)
+            self._audio_input_buses[bn] = None
+        for bn in self._control_output_buses.keys():
+            bus = proxy.get_control_bus(bn)
+            bus.remove_source(sid, None)
+            self._control_output_buses[bn] = None
+        for bn in self._control_input_buses.keys():
+            bus = proxy.get_control_bus(bn)
+            bus.remove_sink(sid, None)
+            self._control_input_buses[bn] = None
+        return True
+            
+
+        
         return True
 
     def midi_input_channel(self, new_channel=None):

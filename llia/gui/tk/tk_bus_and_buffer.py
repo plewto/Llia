@@ -1,3 +1,5 @@
+# DEPRECIATED
+
 from __future__ import print_function
 import os.path
 
@@ -14,6 +16,7 @@ class TkBusAndBufferEditor(Frame):
 
 
     def __init__(self, master, parent_editor, synth):
+        print("DEPRECIATED: TkBusAndBufferEditor")
         Frame.__init__(self, master)
         self.parent_editor = parent_editor
         self.synth = synth
@@ -35,18 +38,19 @@ class TkBusAndBufferEditor(Frame):
         self.lab_buffers.pack()
 
     def sync(self, *_):
-        acc = ''
-        for param in sorted(self.synth.audio_buses.keys()):
-            bname = self.synth.audio_buses[param]
-            acc += "param %-12s : bus %s\n" % (param, bname)
-        self.lab_abus.config(text = acc)
-        acc = ''
-        for param in sorted(self.synth.control_buses.keys()):
-            bname = self.synth.control_buses[param]
-            acc += "param %-12s : bus %s\n" % (param, bname)
-        self.lab_cbus.config(text = acc)
-        acc = ''
-        for param in sorted(self.synth.buffers.keys()):
-            bname = self.synth.buffers[param]
-            acc += "param %-12s : buffer %s\n" % (param, bname)
-        self.lab_buffers.config(text = acc)
+        pass
+        # acc = ''
+        # for param in sorted(self.synth.audio_buses.keys()):
+        #     bname = self.synth.audio_buses[param]
+        #     acc += "param %-12s : bus %s\n" % (param, bname)
+        # self.lab_abus.config(text = acc)
+        # acc = ''
+        # for param in sorted(self.synth.control_buses.keys()):
+        #     bname = self.synth.control_buses[param]
+        #     acc += "param %-12s : bus %s\n" % (param, bname)
+        # self.lab_cbus.config(text = acc)
+        # acc = ''
+        # for param in sorted(self.synth.buffers.keys()):
+        #     bname = self.synth.buffers[param]
+        #     acc += "param %-12s : buffer %s\n" % (param, bname)
+        # self.lab_buffers.config(text = acc)

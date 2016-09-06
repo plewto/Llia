@@ -31,11 +31,12 @@ lfo1_pallet["SLIDER-OUTLINE"] = "#42033E"
 specs["constructor"] = Lfo1Proxy
 specs["description"] = "Simple sine LFO"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = []
-specs["audio-input-buses"] = []
-specs["control-output-buses"] = ("outbus",)
+
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_lfo1
 specs["is-efx"] = True
 specs["help"] = "LFO1"
 specs["pallet"] = lfo1_pallet
+
+
+specs["control-output-buses"] = [["outbus","CBUS_A"]]

@@ -25,7 +25,12 @@ class NoSuchBusError(LliascriptError):
 
     def __init__(self, msg=""):
         super(NoSuchBusError, self).__init__(msg)
-                        
+
+class NoSuchBusOrParameterError(LliascriptError):
+
+    def __init__(self, msg=""):
+        super(NoSuchBusOrParameterError, self).__init__(msg)
+        
 class NoSuchSynthError(LliascriptError):
 
     def __init__(self, msg=""):

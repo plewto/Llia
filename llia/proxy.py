@@ -299,6 +299,10 @@ class LliaProxy(object):
             self._audio_buses[bname] = abus
             return True
 
+    # Will raise KeyError
+    def get_audio_bus(self, bname):
+        return self._audio_buses[bname]
+        
     def remove_audio_bus(self, bname):
         if bname[:4] == "out_" or bname[:3] == "in_":
             msg = "Can not remove protected audio bus: '%s'." % bname
@@ -322,7 +326,10 @@ class LliaProxy(object):
             cbus = ControlBus(bname)
             self._control_buses[bname] = cbus
             return True
-    
+
+    def get_control_bus(self, bname):
+        return self._control_buses[bname]
+        
     def remove_control_bus(self, bname):
         try:
             del self._control_buses[bname]
@@ -499,27 +506,32 @@ class LliaProxy(object):
             self._send("free-synth", [sid])
         except KeyError:
             raise NoSuchSynthError(sid)
-            
+
+    # Only trnsmits bus assignment OSC mesaage
+    # Does not update synth object with new bus assignment
     def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-audio-bus", payload)
-        sid = "%s_%s" % (stype, id_)
-        sy = self.get_synth(sid)
-        sy.audio_buses[param] = bus_name
+        # sid = "%s_%s" % (stype, id_)
+        # sy = self.get_synth(sid)
+        # sy.audio_buses[param] = bus_name
 
+    # Only transmits bus assignment message,
+    # Does not update synbth object
     def assign_synth_control_bus(self, stype, id_, param, bus_name, offset):
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-control-bus", payload)
-        sid = "%s_%s" % (stype, id_)
-        sy = self.get_synth(sid)
-        sy.control_buses[param] = bus_name
+        # sid = "%s_%s" % (stype, id_)
+        # sy = self.get_synth(sid)
+        #sy.control_buses[param] = bus_name
 
     def assign_synth_buffer(self, stype, id_, param, buffer_name):
+        print("WARNING: proxy.assign_synth_buffer disabled")
         payload = [stype, id_, param, buffer_name]
         rs = self._send("assign-synth-buffer", payload)
         sid = "%s_%s" % (stype, id_)
         sy = self.get_synth(sid)
-        sy.buffers[params] = buffer_name
+        #sy.buffers[params] = buffer_name
 
     def plot_buffer(self, buffer_name):
         payload = [buffer_name]
@@ -527,7 +539,6 @@ class LliaProxy(object):
         
     # def sync_to_host(self):
     #     pass
-        # DEPRECIATE 
         #self._audio_buses = {}
         #self._control_buses = {}
         #self._buffers = {}

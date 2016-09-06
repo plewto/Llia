@@ -124,7 +124,7 @@ class Parser(object):
                 msg = "NameError: %s" % err.message
                 print(msg)
                 self._append_history(msg)
-            self.proxy.sync_to_host()
+            #self.proxy.sync_to_host()
                 
     def batch(self, pycode):
         try:
@@ -134,18 +134,30 @@ class Parser(object):
             self.warning(msg)
             self.warning(err.message)
 
-    def load_python(self, filename, sync=True):
+    # def load_python(self, filename, sync=True):
+    #     fname = os.path.expanduser(filename)
+    #     if os.path.exists(fname):
+    #         with open(fname, 'r') as input:
+    #             pycode = input.read()
+    #             self.batch(pycode)
+    #             if sync: self.proxy.sync_to_host()
+    #         return True
+    #     else:
+    #         msg = "Can not open python file '%s' for input" % fname
+    #         self.warning(msg)
+    #         if sync: self.proxy.sync_to_host()
+    #         return False
+
+    def load_python(self, filename):
         fname = os.path.expanduser(filename)
         if os.path.exists(fname):
             with open(fname, 'r') as input:
                 pycode = input.read()
                 self.batch(pycode)
-                if sync: self.proxy.sync_to_host()
             return True
         else:
             msg = "Can not open python file '%s' for input" % fname
             self.warning(msg)
-            if sync: self.proxy.sync_to_host()
             return False
         
     def _append_history(self, text, as_remark=True):

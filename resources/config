@@ -42,29 +42,29 @@ warn-on-exit : False
 enable-active-update : True     ; Enable MIDI controller changes to update GUI
 
 [SYNTH-IMPORTS]
-orgn      : True             
+orgn      : False             
 saw3      : True             
-klstr     : True              
-rdrum     : True              
-masa      : True             
-fm2       : True     
+klstr     : False              
+rdrum     : False              
+masa      : False             
+fm2       : False     
 
 [EFX-IMPORTS]
 carnaldelay : True               
-xover       : True              
-flngr       : True              
-tremolo     : True                
-mixer       : True              
-panner      : True
-asplit      : True
+xover       : False              
+flngr       : False              
+tremolo     : False                
+mixer       : False              
+panner      : False
+asplit      : False
 
 [CONTROL-SYNTH-IMPORTS]
-lfo1      : True             
-lfo2      : True             
-lfo3      : True             
-pulsegen  : True                 
-snh       : True            
-ghostbus  : True                 
+lfo1      : True            
+lfo2      : False            
+lfo3      : False             
+pulsegen  : False                 
+snh       : False            
+ghostbus  : False                 
 
 [MIDI-CHANNELS]
 C01 : 
