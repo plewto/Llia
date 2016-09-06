@@ -36,7 +36,7 @@ class TkControlbusEditor(Toplevel):
         button_bar = factory.frame(main, modal=True)
         b_remove = factory.delete_button(button_bar,ttip="Delete control bus",command=self.remove_bus)
         b_add = factory.add_button(button_bar, ttip="Add new control bus", command=self.add_bus)
-        b_refresh = factory.refresh_button(button_bar, ttip="Refresh bus list", command=self.refresh)
+        #b_refresh = factory.refresh_button(button_bar, ttip="Refresh bus list", command=self.refresh)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_help = factory.help_button(button_bar, command=self.display_help)
         lab_title.grid(row=0, column=0, columnspan=6, pady=8)
@@ -50,7 +50,7 @@ class TkControlbusEditor(Toplevel):
         button_bar.grid(row=9, column=0, columnspan=6, padx=8, pady=4)
         b_remove.grid(row=0, column=0)
         b_add.grid(row=0, column=1)
-        b_refresh.grid(row=0, column=2)
+        #b_refresh.grid(row=0, column=2)
         b_help.grid(row=0, column=3)
         #factory.label(button_bar, "").grid(row=0, column=4, padx=16)
         factory.padding_label(button_bar).grid(row=0, column=4, padx=16)
@@ -117,7 +117,7 @@ class TkControlbusEditor(Toplevel):
         bname = self._var_name.get().strip()
         exists = self.parser.what_is(bname)
         if exists == "cbus":
-            protected = len(bname) > 3 and (bname[:3] == "in_" or bname[:3] == "out")
+            protected = len(bname) > 5 and bname[:5] == "CBUS_"
             if protected:
                 msg = "Can not remove protected bus '%s'" % bname
                 self.warning(msg)
