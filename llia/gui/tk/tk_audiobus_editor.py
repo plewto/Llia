@@ -27,11 +27,11 @@ class TkAudiobusEditor(Toplevel):
         self.listbox.pack(expand=True, fill=BOTH)
         sb = factory.scrollbar(main, yclient=self.listbox)
         lab_name = factory.label(main, "Name")
-        lab_channels = factory.label(main, "Channels")
+        #lab_channels = factory.label(main, "Channels")
         self._var_name = StringVar()
         entry_name = factory.entry(main, self._var_name, ttip="Audio bus name")
-        self._var_chancount = StringVar()
-        spin_chancount = factory.int_spinbox(main, self._var_chancount, 1, 64)
+        #self._var_chancount = StringVar()
+        #spin_chancount = factory.int_spinbox(main, self._var_chancount, 1, 64)
         self.lab_warning = factory.warning_label(main)
         button_bar = factory.frame(main)
         b_remove = factory.delete_button(button_bar,ttip="Delete audio bus",command=self.remove_bus)
@@ -44,8 +44,8 @@ class TkAudiobusEditor(Toplevel):
         sb.grid(row=1, column=4, rowspan=5, sticky=NS, pady=8, padx=4)
         lab_name.grid(row=6, column=0, sticky=W, padx=4)
         entry_name.grid(row=6, column=1)
-        lab_channels.grid(row=7, column=0, sticky=W, padx=4, pady=8)
-        spin_chancount.grid(row=7, column=1)
+        #lab_channels.grid(row=7, column=0, sticky=W, padx=4, pady=8)
+        #spin_chancount.grid(row=7, column=1)
         self.lab_warning.grid(row=8, column=0, columnspan=6)
         button_bar.grid(row=9, column=0, columnspan=6, padx=8, pady=4)
         b_remove.grid(row=0, column=0)
@@ -84,9 +84,9 @@ class TkAudiobusEditor(Toplevel):
         index = self.listbox.curselection()[0]
         bname = self.listbox.get(index).strip()
         binfo = self.proxy.audio_bus_info(bname)
-        chancount = binfo[2]
+        #chancount = binfo[2]
         self._var_name.set(bname)
-        self._var_chancount.set(chancount)
+        #self._var_chancount.set(chancount)
         self._current_selection = index
 
     def add_bus(self, *_):
@@ -101,18 +101,18 @@ class TkAudiobusEditor(Toplevel):
             msg = "'%s' is already assigned as %s" % (bname, exists)
             self.warning(msg)
         else:
-            try:
-                chan_count = int(self._var_chancount.get())
-                rs = self.parser.abus(bname, chan_count)
-                self.refresh()
-                if rs:
-                    self.status("Added audio bus '%s' [%s]" % (bname, chan_count))
-                else:
-                    msg = "Can not add audio bus '%s'" % bname
-                    self.warning(msg)
-            except ValueError:
-                msg = "Invalid channel count: '%s'" % self._var_chancount.get()
+            #try:
+                #chan_count = int(self._var_chancount.get())
+            rs = self.parser.abus(bname, 1)
+            self.refresh()
+            if rs:
+                self.status("Added audio bus '%s'" % bname)
+            else:
+                msg = "Can not add audio bus '%s'" % bname
                 self.warning(msg)
+            # except ValueError:
+            #     msg = "Invalid channel count: '%s'" % self._var_chancount.get()
+            #     self.warning(msg)
 
     def remove_bus(self, *_):
         bname = self._var_name.get().strip()
