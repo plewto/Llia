@@ -1,5 +1,5 @@
 # llia.proxy
-# 2016.04.20
+# Client side representation of LliaHelper instance on SuperCollider
 #
 
 from __future__ import print_function
@@ -20,10 +20,18 @@ class LliaProxy(object):
     trace = False
     
     def __init__(self, config, app):
+        '''
+        Constructs new Proxy object.
+        
+        ARGS:
+          config - LliaConfig
+          app    - LliaApp
+        '''
         self.config = config
         self.app = app
         osc_trace = config.osc_transmission_trace_enabled()
-        self.osc_transmitter = OSCTransmitter(self.global_osc_id(), self.osc_host(), osc_trace)
+        self.osc_transmitter = OSCTransmitter(self.global_osc_id(), 
+                                              self.osc_host(), osc_trace)
         caddress, cport  = config["client"], config["client_port"]
         self.osc_receiver = OSCReceiver(self.global_osc_id(), caddress, cport)
         self._synths = {}
@@ -43,9 +51,16 @@ class LliaProxy(object):
         
         self._buffers = {}
         self._callback_message = {}
-        for rmsg in ("ping-response", "booting-server", "client-address-change",
-                     "bus-stats", "bus-info", "get-bus-list", "get-buffer-list",
-                     "get-buffer-info", "get-buffer-info", "bus-added",
+        for rmsg in ("ping-response", 
+                     "booting-server", 
+                     "client-address-change",
+                     "bus-stats", 
+                     "bus-info", 
+                     "get-bus-list", 
+                     "get-buffer-list",
+                     "get-buffer-info", 
+                     "get-buffer-info", 
+                     "bus-added",
                      "buffer-added"):
             self.osc_receiver.add_handler(rmsg, self._expect_response)
         self.restart()
@@ -58,15 +73,24 @@ class LliaProxy(object):
                                   "source" : source}
 
     def status(self, msg):
+        '''
+        Displays message on status line.
+        '''
         self.app.status(msg)
         
     def warning(self, msg):
+        '''
+        Displays warning on status line.
+        '''
         self.app.warning(msg)
     
     def global_osc_id(self):
         return self.config.global_osc_id()
 
     def osc_host(self):
+        '''
+        Returns tuple (host-ip-address, port-number)
+        '''
         return self.config["host"], self.config["port"]
 
     # Returns dictionary from current callback
@@ -130,9 +154,19 @@ class LliaProxy(object):
         return rs
     
     def free(self):
+        '''
+        Transmit OSC 'free' message to server.
+        In response the server app should free all of it's resources.
+        '''
         self._send("free")
 
     def restart(self):
+        '''
+        Transmit 'restart' message to server.
+        In response the server app should revert to its startup condition.
+        All non-protected buses and buffers are freed. All synths are
+        freed. 
+        '''
         self._send("restart")
         rs = self.expect_osc_response("restarted")
         
@@ -143,7 +177,8 @@ class LliaProxy(object):
         print("Llia Proxy Dump")
         print("%soscID   : %s" % (pad1, self.global_osc_id()))
         print("%shost    : %s" % (pad1, self.osc_host()))
-        print("%sclient  : ('%s', %s)" % (pad1, self.config["client"], self.config["client_port"]))
+        print("%sclient  : ('%s', %s)" % (pad1, self.config["client"], 
+                                          self.config["client_port"]))
         print("%saudio buses:" % pad1)
         for k in sorted(self._audio_buses.keys()):
             b = str(self._audio_buses[k])
@@ -184,15 +219,34 @@ class LliaProxy(object):
         return False
 
     def panic(self):
+        '''
+        Transmits 'panic' message to server.
+        In response the server should silence all notes.
+        '''
         self._send("panic")
 
     def post(self, text):
+        '''
+        Post (SupperColliders term for print) text to SuperCollider's 
+        post window.  Does not include line feed.
+        '''
         self._send("post", [text])
 
     def postln(self, text):
+        '''
+        Same as post but includes line feed.
+        '''
         self._send("postln", [text])
         
     def get_bus_list(self, rate):
+        '''
+        Request server to send a list of all allocated buses.
+
+        ARGS:
+          rate - String, either 'audio' or 'control'
+
+        RETURNS: list
+        '''
         payload = [rate]
         raw = self._query_host("get-bus-list", payload)[0].strip().split(" ")
         acc = []
@@ -205,6 +259,18 @@ class LliaProxy(object):
         return acc
     
     def get_bus_info(self, rate, busName):
+        '''
+        Request information from server about a specific bus.
+        
+        ARGS:
+          rate    - String, either 'audio' or 'control'
+          busName - String
+        
+        RETURNS: dictionary with keys: 'name', 'rate', 'index' and 'channels'
+
+        Application may exit if more then one instance of Llia client with 
+        the same OSC credentials are running.
+        '''
         payload = [rate, busName]
         raw = self._query_host("get-bus-info", payload)[0].strip().split(" ")
         rs = {"name" : "DOES-NOT-EXISTS",
@@ -229,6 +295,11 @@ class LliaProxy(object):
         return rs
 
     def get_buffer_list(self):
+        '''
+        Requst server to send list of buffers.
+        
+        RETURNS: list
+        '''
         raw = self._query_host("get-buffer-list")[0].strip().split(" ")
         raw = raw[1:-1]
         acc = []
@@ -241,6 +312,19 @@ class LliaProxy(object):
         return acc
 
     def get_buffer_info(self, bname):
+        '''
+        Request server send information about specific buffer.
+
+        ARGS:
+          bname - String, the buffer name.
+
+        RETURNS: dictionary with following keys:
+                  "name", "index", "frames", "channels"
+                   "sample-rate" and "filename"
+
+        The filename property is used if the buffer contents have been 
+        loaded from a file.
+        '''
         raw = self._query_host("get-buffer-info", [bname])[0]
         raw = raw.split(" ")
         if raw[1] == "DOES-NOT-EXISTS":
@@ -276,21 +360,57 @@ class LliaProxy(object):
         return rs
 
 
-    def create_wavetable(self, name, maxharm=64, decay=0.5, skip=None, mode="",
-                          cutoff=None, depth=0.5, frames=1024):
+    def create_wavetable(self, name, maxharm=64, decay=0.5, skip=None,
+                         mode="", cutoff=None, depth=0.5, frames=1024):
+        '''
+        Creates new buffer on the server and fill it with a wave data.
+
+        ARGS:
+           name    - String, buffer name
+           maxharm - int, maximum harmonic
+           decay   - float, sets how partial amplitudes are determined 
+                     as a function of harmonic number.
+           skip    - int, sets number of harmonics to skip.
+                     2 -> odd only (1,3,5,...)
+                     3 -> every third (1,2,4,5,7,...)
+           mode    - String, simulated filter mode.
+                     ISSUE: FIXME determine valid values.
+           cutoff  - int, simulated filter cutoff in terms of harmonic 
+                     number
+           depth   - float, simulated filter 'depth'
+           frames  - int number of buffer frames, must be power of 2.
+
+        '''
         if self.buffer_exists(name):
             self.warning("Buffer %s already exists" % name)
             return False
         else:
             skip = skip or maxHarm+1
             if cutoff is None: cutoff = maxHarm/2
-            payload = [name, maxharm, decay, skip, mode, cutoff, depth, frames]
+            payload = [name, maxharm, decay, skip, mode, cutoff, depth,
+                       frames]
             rs = self._send("create-wavetable", payload)
     
     def audio_bus_exists(self, bname):
+        '''
+        Predicate, returns True if audio bus exists.
+        ARGS:
+          bname - String
+
+        RETURNS: bool
+        '''
         return self._audio_buses.has_key(bname)
     
     def add_audio_bus(self, bname):
+        '''
+        Add new audio bus.
+        If a bus with the same name already exist, do nothing.
+
+        ARGS:
+          bname - String
+
+        RETURNS: bool, True if new bus was added.
+        '''
         if self.audio_bus_exists(bname):
             return False
         else:
@@ -299,11 +419,36 @@ class LliaProxy(object):
             self._audio_buses[bname] = abus
             return True
 
-    # Will raise KeyError
     def get_audio_bus(self, bname):
+        '''
+        Retrieve Bus object
+
+        ARGS:
+          bname - String, the bus name
+
+        RETURNS: AudioBus object.
+
+        Raises KeyError if bus does not exits.
+        '''
         return self._audio_buses[bname]
         
     def remove_audio_bus(self, bname):
+        '''
+        Remove audio bus.
+        
+        NOTE: SynthProxy objects maintain a list of buses connected to them.
+        If a bus is removed and some Synth object still thinks it exists
+        there may be problems.  
+
+        ARGS:
+          bname - String
+
+        Raises LliaError if the bus is protected.  
+           The protected buses represent SuperCollider hardware buses and
+           have names "out_?" and "in_?"  where ? is a single digit integer.
+
+        Raises NoSuchBusError if matching bus does not exists.
+        '''
         if bname[:4] == "out_" or bname[:3] == "in_":
             msg = "Can not remove protected audio bus: '%s'." % bname
             raise LliaError(msg)
@@ -314,11 +459,65 @@ class LliaProxy(object):
                 return True
             except KeyError:
                 raise NoSuchBusError(bname)
+
+    # def audio_bus_keys(self):
+    #     return sorted(self._audio_buses.keys())
+
+    def audio_bus_count(self):
+        '''
+        Returns int, number of audio buses
+        '''
+        return len(self._audio_buses)
+    
+    # # Returns tuple (name, busnum, chancount)
+    # def audio_bus_info(self, bname):
+    #     try:
+    #         bi = self._audio_buses[bname]
+    #         return bi
+    #     except KeyError:
+    #         msg = "Audio bus '%s' does not exists" % bname
+    #         self.warning(msg)
+    #         return ("", -1, 0)
+
+    def audio_bus_names(self):
+        '''
+        Returns sorted list of audio bus names
+        '''
+        return sorted(self._audio_buses.keys())
         
+    def list_audio_buses(self):
+        '''
+        Prints names of all audio buses to terminal.
+        This is a convenience diagnostics method.
+        '''
+        keys = self.audio_bus_names()
+        print("Audio buses:")
+        for k in keys:
+            print("    ", k)
+        return keys
+    
+            
     def control_bus_exists(self, bname):
+        '''
+        Predicate, test if control bus exists.
+
+        ARGS:
+          bname - String
+
+        RETURNS: Bool
+        '''
         return self._control_buses.has_key(bname)
         
     def add_control_bus(self, bname):
+        '''
+        Add new control-bus.
+        If a bus with the same name already exists, do nothing.
+
+        ARGS:
+          bname - String
+
+        RETURNS: bool, True if bus added.
+        '''
         if self.control_bus_exists(bname):
             return False
         else:
@@ -328,29 +527,129 @@ class LliaProxy(object):
             return True
 
     def get_control_bus(self, bname):
+        '''
+        Get named control bus.
+
+        ARGS:
+          bname - String
+
+        RETURNS: ControlBus object.
+
+        Raises KeyError if bus does not exists.
+        '''
         return self._control_buses[bname]
         
     def remove_control_bus(self, bname):
+        '''
+        Removed named control bus.
+
+        NOTE 1: The same concerns with removing audio-buses apply to 
+                control buses.   Some synth object may still 'think'
+                it is connected to a bus which has been removed.
+
+        NOTE 2: There are also protected control buses which should 
+                not be removed and this method does not prevent their 
+                removal
+
+        Raises KeyError if the bus does not exists,
+        '''
         try:
             del self._control_buses[bname]
             self._send("free-bus", ["control", bname])
             return True
         except KeyError:
             raise NoSuchBusError(bname)
+
+    def control_bus_names(self):
+        '''
+        Returns sorted list of control bus names.
+        '''
+        return sorted(self._control_buses.keys())
+    
+    def list_control_buses(self):
+        '''
+        List control bus names on terminal.
+        This is a convenience diagnostics method.
+        '''
+        keys = sorted(self._control_buses.keys())
+        print("Control Buses:")
+        for k in keys:
+            print("    ", k)
+        return keys
+
+    # def control_bus_keys(self):
+    #     return sorted(self._control_buses.keys())
+
+    def control_bus_count(self):
+        '''
+        Returns number of control buses.
+        '''
+        return len(self._control_buses)
+    
+    # def control_bus_info(self, bname):
+    #     try:
+    #         bi = self._control_buses[bname]
+    #         return bi
+    #     except KeyError:
+    #         msg = "Control bus '%s' does not exists" % bname
+    #         self.warning(msg)
+    #         return ("", -1, 0)
+
         
     def buffer_exists(self, bname):
+        '''
+        Predicate test is named buffer exists.
+        '''
         return self._buffers.has_key(bname)
 
-    def buffer_info(self, bname):
-        return self._buffers[bname]
 
-    def buffer_keys(self):
+    def buffer_info(self, bname):
+        '''
+        Returns information about named buffer.
+
+        WARNING: buffer implementation may change in the future.
+                 The return type for this method should not be
+                 relied on. 
+
+        '''
+        print("WARNING: LliaProxy.buffer_info is an unsafe method")
+        return self._buffers[bname]
+    
+    def buffer_names(self):
+        '''
+        Returns list of buffer names.
+        '''
         return sorted(self._buffers.keys())
 
+    def list_buffers(self):
+        '''
+        Prints names of all buffers to terminal.
+        This is a convenience diagnostics method.
+        '''
+        keys = sorted(self._buffers.keys())
+        print("Buffers:")
+        for k in keys:
+            print("    ", k)
+        return keys
+    
     def buffer_count(self):
+        '''
+        Returns number of allocated buffers.
+        '''
         return len(self._buffers)
     
     def add_buffer(self, bname, frames=1024, channels=1):
+        '''
+        Add a new buffer.
+        If a buffer with the same name already exists, do nothing
+
+        ARGS:
+          bname  - String, buffer name
+          frames - int, must be power of 2 if buffer is used as a wave-table
+          channels - int 
+
+        RETURNS: bool, True if buffer was added.
+        '''
         if self.buffer_exists(bname):
             self.warning("Buffer %s already exists" % bname)
             return False
@@ -361,79 +660,53 @@ class LliaProxy(object):
             return rs
 
     def remove_buffer(self, bname):
+        '''
+        Remove named buffer.
+
+        ARGS: 
+          String - buffer name.
+
+        Raises NoSuchBufferError if buffer does not exists. 
+        '''
         if self.buffer_exists(bname):
             del self._buffers[bname]
             self._send("free-buffer", [bname])
         else:
             raise NoSuchBufferError(bname)
-
-    def audio_bus_keys(self):
-        return sorted(self._audio_buses.keys())
-
-    def audio_bus_count(self):
-        return len(self._audio_buses)
-    
-    # Returns tuple (name, busnum, chancount)
-    def audio_bus_info(self, bname):
-        try:
-            bi = self._audio_buses[bname]
-            return bi
-        except KeyError:
-            msg = "Audio bus '%s' does not exists" % bname
-            self.warning(msg)
-            return ("", -1, 0)
-
-    def audio_bus_names(self):
-        return sorted(self.audio_bus_keys())
-        
-    def list_audio_buses(self):
-        keys = self.audio_bus_names()
-        print("Audio buses:")
-        for k in keys:
-            print("    ", k)
-        return keys
-
-    def control_bus_names(self):
-        return sorted(self.control_bus_keys())
-    
-    def list_control_buses(self):
-        keys = sorted(self._control_buses.keys())
-        print("Control Buses:")
-        for k in keys:
-            print("    ", k)
-        return keys
-
-    def control_bus_keys(self):
-        return sorted(self._control_buses.keys())
-
-    def control_bus_count(self):
-        return len(self._control_buses)
-    
-    def control_bus_info(self, bname):
-        try:
-            bi = self._control_buses[bname]
-            return bi
-        except KeyError:
-            msg = "Control bus '%s' does not exists" % bname
-            self.warning(msg)
-            return ("", -1, 0)
-            
-    def list_buffers(self):
-        keys = sorted(self._buffers.keys())
-        print("Buffers:")
-        for k in keys:
-            print("    ", k)
-        return keys
             
     def synth_exists(self, stype, id_, sid=None):
+        '''
+        Predicate returns True if synth exists.
+
+        ARGS:
+          stype - String
+          id_   - int
+          sid   - optional String
+
+        The synth may be specified either by its type and id, or by its sid
+        If sid is specified stype and id_ are ignored.
+        
+        RETURNS: bool
+        '''
         sid = sid or "%s_%d" % (stype, int(id_))
         return self._synths.has_key(sid)
 
     def get_synth(self, sid):
+        '''
+        Get synth object.
+
+        ARGS:
+          sid - String
+
+        RETURNS: SynthProxy
+        '''
         rs = self._synths[sid]
         return rs
 
     def get_all_synths(self):
+        '''
+        Returns list of all SynthProxy objects.
+        '''
         return self._synths.values()
     
     @staticmethod
@@ -446,6 +719,9 @@ class LliaProxy(object):
         return sid
     
     def list_synths(self):
+        '''
+        Diagnostic method, print names of all (non-efx) synths.
+        '''
         acc = []
         print("Synths:")
         for k in sorted(self._synths.keys()):
@@ -455,6 +731,9 @@ class LliaProxy(object):
         return acc
 
     def list_efx(self):
+        '''
+        Diagnostic method, print names of all efx synths
+        '''
         acc = []
         print("EFX Synths:")
         for k in sorted(self._synths.keys()):
@@ -464,6 +743,23 @@ class LliaProxy(object):
         return acc
 
     def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
+        '''
+        Adds new synth
+
+        ARGS:
+          stype - String, the synth type, MUST be one of the values found
+                  in constants.SYNTH_TYPES
+          id_   - int, synth serial number.  id_ MUST be unique for any 
+                  given stype.
+          keymode     - String, the keymode, MUST be a value found in 
+                        constants.KEY_MODES.  NOTE: Most synths do not 
+                        support all possible key modes.
+          voice_count - int, number of allocated voices.
+                        voice_count is only used if keymode has a finite
+                        voice allocation, otherwise it is ignored.
+        RETURNS: SynthProxy if the synth was added,
+                 None if the synth could not be added.
+        '''
         sid = "%s_%d" % (stype, int(id_))
         if self.synth_exists(stype, id_):
             msg = "Synth %s already exists" % sid
@@ -482,6 +778,18 @@ class LliaProxy(object):
                 return sy
 
     def add_efx(self, stype, id_):
+        '''
+        Add effect synth.
+        
+        ARGS:
+          stype - String, the synth type, MUST match a value found in 
+                  constants.EFFECT_TYPES
+
+          id_  - int, synth serial number, MUST be unique for any given stype
+
+        RETURNS: SynthProxy if synth was added.
+                 None is synth could not be added.
+        '''
         sid = "%s_%d" % (stype, id_)
         if self.synth_exists(stype, id_):
             msg = "EFX Synth %s already exists" % sid
@@ -500,6 +808,27 @@ class LliaProxy(object):
                 return sy
 
     def free_synth(self, stype, id_):
+        '''
+        Free indicated synth.
+
+        WARNING: This method alone does not completely clean up
+                 after a synth has been removed.  Specifically
+                 prior to a synth being removed from the application,
+                 it must first be removed from any AudioBus or ControlBus
+                 sink/source list it may be connected to.
+
+                 Additionally any GUI editor for the synth should be 
+                 destroyed before the synth is removed.
+        
+        free_synth is used for both 'normal' synths ad 'efx' synths.
+        
+
+        ARGS:
+          stype - String, the synth type
+          id_   - int, the synth id.
+
+        Raises KeyError if indicated synth does not exists.
+        '''
         sid = "%s_%s" % (stype, id_)
         try:
             del self._synths[sid]
@@ -507,35 +836,53 @@ class LliaProxy(object):
         except KeyError:
             raise NoSuchSynthError(sid)
 
-    # Only trnsmits bus assignment OSC mesaage
-    # Does not update synth object with new bus assignment
-    def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset):
+    def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset=0):
+        '''
+        Assign server-side audio bus to synth parameter.
+        This method only applies to the server application and does not 
+        make any modifications to client-side synth and bus objects.
+
+        ARGS:
+          stype    - String, the synth type
+          id_      - int, the synth serial id.
+          param    - String, the synth parameter used to connect to the bus.
+          bus_name - String.
+          offset   - int, legacy argument, sets the bus number offset,
+                     should always be 0.
+        '''
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-audio-bus", payload)
-        # sid = "%s_%s" % (stype, id_)
-        # sy = self.get_synth(sid)
-        # sy.audio_buses[param] = bus_name
 
-    # Only transmits bus assignment message,
-    # Does not update synbth object
-    def assign_synth_control_bus(self, stype, id_, param, bus_name, offset):
+
+    def assign_synth_control_bus(self, stype, id_, param, bus_name, offset=0):
+        '''
+        Assign server-side control bus to synth parameter.
+        This method only applies to the server application and does not 
+        make any modifications to client-side synth and bus objects.
+
+        ARGS:
+          stype    - String, the synth type
+          id_      - int, the synth serial id.
+          param    - String, the synth parameter used to connect to the bus.
+          bus_name - String.
+          offset   - int, legacy argument, sets the bus number offset,
+                     should always be 0.
+        '''
         payload = [stype, id_, param, bus_name, offset]
         rs = self._send("assign-synth-control-bus", payload)
-        # sid = "%s_%s" % (stype, id_)
-        # sy = self.get_synth(sid)
-        #sy.control_buses[param] = bus_name
 
-    def assign_synth_buffer(self, stype, id_, param, buffer_name):
-        print("WARNING: proxy.assign_synth_buffer disabled")
-        payload = [stype, id_, param, buffer_name]
-        rs = self._send("assign-synth-buffer", payload)
-        sid = "%s_%s" % (stype, id_)
-        sy = self.get_synth(sid)
-        #sy.buffers[params] = buffer_name
 
-    def plot_buffer(self, buffer_name):
-        payload = [buffer_name]
-        rs = self._send("plot-buffer", payload)
+    # def assign_synth_buffer(self, stype, id_, param, buffer_name):
+    #     print("WARNING: proxy.assign_synth_buffer disabled")
+    #     payload = [stype, id_, param, buffer_name]
+    #     rs = self._send("assign-synth-buffer", payload)
+    #     sid = "%s_%s" % (stype, id_)
+    #     sy = self.get_synth(sid)
+    #     #sy.buffers[params] = buffer_name
+
+    # def plot_buffer(self, buffer_name):
+    #     payload = [buffer_name]
+    #     rs = self._send("plot-buffer", payload)
         
     # def sync_to_host(self):
     #     pass

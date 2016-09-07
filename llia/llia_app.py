@@ -1,6 +1,5 @@
 # llia.llia_app
-# 2016.04.23
-#
+# Defines top-level client application
 
 from __future__ import (print_function)
 import abc, sys, threading
@@ -16,6 +15,15 @@ import llia.constants as con
 class LliaApp(object):
 
     def __init__(self, config, skip_mainloop=False):
+        '''
+        Constructs top-level client application.
+        
+        ARGS:
+          config - an instance of LliaConfig
+          skip_mainloop - flag, if True do not enter main application loop.
+                          intended for testing.
+
+        '''
         super(LliaApp, self).__init__()
         self.config = config
         self.pp_enabled = config.program_pp_enabled()
@@ -49,7 +57,6 @@ class LliaApp(object):
             self.ls_parser.load_python(ss)
         if not skip_mainloop:
             self.start_main_loop()
-       
         
     def global_osc_id(self):
         return self.config.global_osc_id()
@@ -64,15 +71,30 @@ class LliaApp(object):
         sys.exit(xcode)
 
     def main_window(self):
+        '''
+        Returns the application's main window. 
+        The exact object type is dependent on the GUI system in use.
+        In the case where no GUI has been enabled, the return object is 
+        a dummy 'window' 
+        '''
         return self._main_window
         
     def status(self, msg):
+        '''
+        Displays message to application status line.
+        '''
         self._main_window.status(msg)
             
     def warning(self, msg):
+        '''
+        Displays warning to application status line.
+        '''
         self._main_window.warning(msg)
     
     def error(self, errnum, msg, exception=None):
+        '''
+        Print error message and terminate application.
+        '''
         acc = "ERROR: errnum = %s\n" % errnum
         acc += "ERROR: global OSC ID is '%s'\n" % self.global_osc_id()
         for line in msg.split("\n"):
@@ -90,7 +112,7 @@ class LliaApp(object):
             print("REPL disabled")
         self._main_window.start_gui_loop()
 
-    # ISSUE: FIX ME  update all GUI windows.
-    def sync_all(self):
-        self.proxy.sync_to_host()
-        # print("LliaApp.sync_all is not completely implemented")
+    # # ISSUE: FIX ME  update all GUI windows.
+    # def sync_all(self):
+    #     self.proxy.sync_to_host()
+    #     # print("LliaApp.sync_all is not completely implemented")
