@@ -1,5 +1,8 @@
 # llia.synth_proxy
-# 2016.04.23
+#
+# Defines two classes:
+#   SynthSpecs - holds global information about all synths of a given type
+#   SynthProxy - a client side representation of an active synth.
 
 from __future__ import print_function
 import abc
@@ -19,29 +22,106 @@ class SynthSpecs(dict):
 
     @staticmethod
     def available_synth_types():
+        '''
+        Returns a sorted list of available synth types.
+        '''
         k = SynthSpecs.global_synth_type_registry.keys()
         k.sort()
         return k
 
     @staticmethod
     def is_known_synth_type(stype):
+        '''
+        Predicate returns True is argument is a known synth type.
+        '''
         return SynthSpecs.global_synth_type_registry.has_key(stype)
     
     @staticmethod
     def create_synth_proxy(app, stype, id_):
+        '''
+        Creates an instance of SynthProxy.
+
+        ARGS:
+         
+            app   - an instance of LliaApp
+            stype - String, the synth type.
+                    is_know_synth_type(stype) must be True
+            id_   - int, serial number for the new SynthProxy.
+                    id_ must be unique for any given synth type.
+            
+        RETURNS: SynthProxy
+        '''
         try:
             specs = SynthSpecs.global_synth_type_registry[stype]
-            
-            # id_ = id_ or SynthSpecs.create_id(stype)
             cfn = specs["constructor"]
             syproxy = cfn(app, id_)
             return syproxy
         except KeyError:
             return None
     
-    def __init__(self, format_):
+    def __init__(self, stype):
+        '''
+        Construct new instance of SynthSpecs.  
+        This constructor should only be called one for any given stype.
+
+        SynthSpecs is a dictionary like object with a pre-defined set of 
+        keys.  All keys are strings:
+        
+            format            - String, same as stype
+            constructor       - Function to create SynthProxy fn(app, id_)
+                                app - instance of LliaApp
+                                id_ - int synth serial number.
+            description       - String, short (one-line) description of Synth
+            program-generator - Optional function to generate random patches.
+                                fn(slot, *args)
+                                   slot - int program number (0..127)
+                                   args - optional arguments, 
+                                          currently not used.                   
+            pretty-printer    - Optional function to "pretty-print" program.
+                                fn(program, slot=127)
+                                     program - an instance of Program
+                                     returns: String
+                                     The resulting string should be valid 
+                                     Python code which may be used to recreate
+                                     the program. 
+            help              - String, help-topic
+            notes             - String, optional remarks about this synth.
+            is-efx            - Boolean.  Synths come in three flavors:
+                                 'synth', 'efx' and 'controller'.
+  
+                                  A regular 'synth' is a playable instrument.
+                                  
+                                  An 'efx' is an effects synth used to process
+                                  audio signals.
+
+                                  A 'controller' is a synth object which 
+                                  generates control signals.  
+
+                                  is-efx should be True for efx and controller
+                                  synths.
+            keymodes          - A list of supported key-modes.
+            buffers           - A list of synth parameters used for indicating
+                                SuperCollider buffers.
+            pallet            - An instance of Pallet.
+            audio-output-buses   - A nested list of synth parameters for audio
+                                   output.  The list format ha the form:
+                                   [[param1, default],[param2,default],...]
+            audio-input-buses    - A nested list of audio input parameters,
+                                   has then same format as audio-output-buses
+            control-output-buses - A nested list of control bus output 
+                                   parameters.
+            control-input-buses  - A nested list of control bus input
+                                   parameters.
+
+        ARGS:
+           stype - String, the synth type.
+                   Once constructed the stype is added to a global 
+                   registry of known synth types.
+
+        RETURNS: SynthSpecs.
+        '''
         super(SynthSpecs, self).__init__()
-        super(SynthSpecs, self).__setitem__("format", format_)
+        super(SynthSpecs, self).__setitem__("format", stype)
         super(SynthSpecs, self).__setitem__("constructor", None)
         super(SynthSpecs, self).__setitem__("description", None)
         super(SynthSpecs, self).__setitem__("program-generator", None)
@@ -60,9 +140,14 @@ class SynthSpecs(dict):
         super(SynthSpecs, self).__setitem__("buffers", [])
         super(SynthSpecs, self).__setitem__("pallet", None)
 
-        SynthSpecs.global_synth_type_registry[format_] = self
+        SynthSpecs.global_synth_type_registry[stype] = self
         
     def __setitem__(self, key, item):
+        '''
+        Set spec value.
+        Raises KeyError if key was not established at object 
+        construction time.
+        '''
         if self.has_key(key):
             super(SynthSpecs, self).__setitem__(key, item)
         else:
@@ -70,6 +155,15 @@ class SynthSpecs(dict):
             raise KeyError(msg)
 
     def create_proxy_synth(self, app):
+        '''
+        Creates instance of SynthProxy.
+        The synth serial id is generated automatically.
+
+        ARGS:
+           app - an instance of LliaApp
+
+        RETURNS: SynthProxy
+        '''
         cfn = self["constructor"]
         id_ = SynthSpecs.create_id(self)
         return cfn(app, id_)
@@ -82,48 +176,72 @@ BEND_SCALE, BEND_BIAS = curves.linear_coefficients(con.PITCHWHEEL_DOMAIN,
         
 class SynthProxy(object):
 
+    '''
+    SynthProxy is a client side representation of an active synth(s).
+    '''
+    
     def __init__(self, app, specs, id_, bank):
+        '''
+        Constructs new SynthProxy
+
+        ARGS:
+           
+          app   - an instance of LliaApp
+          specs - an instance of SynthSpecs
+          id_   - int, serial number id.
+                  id_ MUST be unique for any given synth type
+          bank  - an instance of ProgramBank
+
+        RETURNS: SynthProxy
+        '''
         super(SynthProxy, self).__init__()
         self.is_efx = False
         self.id_ = id_
         self.app = app
         self.specs = specs
-        self.synth_format = specs["format"]
-        self.sid = "%s_%d" % (self.synth_format, self.id_)
-        self.synth_editor = None
+        self.synth_format = specs["format"]  # format is synonyms with
+                                             # "synth type"
+        self.sid = "%s_%d" % (self.synth_format, # sid is a combination of
+                              self.id_)          # synth-type and id_
+        self.synth_editor = None            # under Tk, an instance of
+                                            # TkSynthWindow
         global_oscid = app.proxy.global_osc_id()
         self.oscID = "%s/%s/%s" % (global_oscid,self.synth_format, id_)
         self._bank = bank.clone()
-        self._midi_chan0 = 0
+        self._midi_chan0 = 0         # MIDI channel is "zero-indexed" (0..15)
         self._key_table_name = "EQ12"
-     
 
+        # _audio_output_buses
+        # _audio_input_buses
+        # _control_output_buses
+        # _control_input_buses
+        # Each dictionary maps synth parameter(s) to the names of the buses
+        # connected to that parameter.  The actual Bus objects are maintained
+        # by app.proxy (an instance of LliaProxy)
         self._audio_output_buses = {}
         for bs in specs["audio-output-buses"]:
             param, busname = bs
             self._audio_output_buses[param] = busname
             self.assign_audio_output_bus(param, busname)
-
         self._audio_input_buses = {}
         for bs in specs["audio-input-buses"]:
             self._audio_input_buses[bs[0]] = bs[1]
-
         self._control_output_buses = {}
         for bs in specs["control-output-buses"]:
             self._control_output_buses[bs[0]] = bs[1]
-
         self._control_input_buses = {}
         for bs in specs["control-input-buses"]:
             self._control_input_buses[bs[0]] = bs[1]
-
+            
         self._buffers = {}
 
         
         host_and_port = app.config.host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
         trace_osc = app.config.osc_transmission_trace_enabled()
-        self.osc_transmitter = OSCTransmitter(self.oscID, host_and_port, trace_osc)
-        #self._osc_transmitter = OSCTransmitter(self.oscID, host_and_port, trace_os)c
+        self.osc_transmitter = OSCTransmitter(self.oscID, 
+                                              host_and_port,
+                                              trace_osc)
         def register_midi_handler(event, hfn, fid=""):
             fid = "%s%s.%s" % (fid, self.oscID, event)
             app.midi_receiver.register_handler(event, fid, hfn)
@@ -136,24 +254,49 @@ class SynthProxy(object):
         if app.config.keyswitch_enabled():
             self._keyswitch_chan0 = app.config.keyswitch_channel()-1
             self._keyswitch_transpose = app.config.keyswitch_transpose()
-            register_midi_handler("note_on", self._keyswitch_handler, "keyswitch.")
+            register_midi_handler("note_on", 
+                                  self._keyswitch_handler, 
+                                  "keyswitch.")
 
     def status(self, msg):
+        '''
+        Display status message on main app window.
+        '''
         self.app.main_window().status(msg)
 
     @abc.abstractmethod
     def create_subeditors(self):
+        '''
+        An abstract method used to build GUI editor for self.
+        Subclasses must implement if they are to create editors.
+
+        The exact editor is dependent on the GUI system in use.
+        If no GUI system is being used this method should do 
+        nothing.
+        '''
         pass
 
     def available_audio_output_parameters(self):
+        '''
+        Returns sorted list of available audio output bus parameters.
+        '''
         def fn(a): return a[0]
         blist = sorted(self._audio_output_buses.keys())
         blist = filter(fn, blist)
         return blist
 
-    # Only modifies bus objects.
-    # does not transmit OSC message to change bus.
     def assign_audio_output_bus(self, param, bname):
+        '''
+        Assigns audio output-bus to a synth parameter.
+        NOTE: This method only modifies the internal state of self.
+              It does not transmit any OSC messages to actually establish
+              the bus/parameter connection.  
+              (use LliaProxy.assign_synth_audio_bus)
+        
+        ARGS:
+          param - String, the synth parameter
+          bname - String, the bus name.
+        '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._audio_output_buses[param]
@@ -163,13 +306,23 @@ class SynthProxy(object):
             new_bus.add_source(self.sid, param)
             self._audio_output_buses[param] = bname
         except KeyError:
-            msg = "Can not assign audio output bus.  sid=%s, param=%s, bus_name=%s"
+            msg = "Can not assign audio output bus.  "
+            msg += "sid=%s, param=%s, bus_name=%s"
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
    
-    # Assigns audio input bus only
-    # Soes not transmit OSM message
     def assign_audio_input_bus(self, param, bname):
+        '''
+        Assigns audio input-bus to a synth parameter.
+        NOTE: This method only modifies the internal state of self.
+              It does not transmit any OSC messages to actually establish
+              the bus/parameter connection.  
+              (use LliaProxy.assign_synth_audio_bus)
+        
+        ARGS:
+          param - String, the synth parameter
+          bname - String, the bus name.
+        '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._audio_input_buses[param]
@@ -179,11 +332,23 @@ class SynthProxy(object):
             new_bus.add_sink(self.sid, param)
             self._audio_input_buses[param] = bname
         except KeyError:
-            msg = "Can not assign audio input bus.  sid=%s, param=%s, bus_name=%s"
+            msg = "Can not assign audio input bus.  "
+            msg += "sid=%s, param=%s, bus_name=%s"
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)   
 
     def assign_control_output_bus(self, param, bname):
+        '''
+        Assigns control output-bus to a synth parameter.
+        NOTE: This method only modifies the internal state of self.
+              It does not transmit any OSC messages to actually establish
+              the bus/parameter connection.  
+              (use LliaProxy.assign_synth_control_bus)
+        
+        ARGS:
+          param - String, the synth parameter
+          bname - String, the bus name.
+        '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._control_output_buses[param]
@@ -193,11 +358,23 @@ class SynthProxy(object):
             new_bus.add_source(self.sid, param)
             self._control_output_buses[param] = bname
         except KeyError:
-            msg = "Can not assign control output bus.  sid=%s, param=%s, bus_name=%s"
+            msg = "Can not assign control output bus.  "
+            msg += "sid=%s, param=%s, bus_name=%s"
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
 
     def assign_control_input_bus(self, param, bname):
+        '''
+        Assigns control input-bus to a synth parameter.
+        NOTE: This method only modifies the internal state of self.
+              It does not transmit any OSC messages to actually establish
+              the bus/parameter connection.  
+              (use LliaProxy.assign_synth_control_bus)
+        
+        ARGS:
+          param - String, the synth parameter
+          bname - String, the bus name.
+        '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._control_input_buses[param]
@@ -207,11 +384,19 @@ class SynthProxy(object):
             new_bus.add_sink(self.sid, param)
             self._control_input_buses[param] = bname
         except KeyError:
-            msg = "Can not assign control input bus.  sid=%s, param=%s, bus_name=%s"
+            msg = "Can not assign control input bus.  "
+            msg += "sid=%s, param=%s, bus_name=%s"
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
         
     def disconnect_from_buses(self):
+        '''
+        Notifies all buses connected to self that they are to disconnect
+        from self.
+
+        This method is called in preparation of removing self.  Once
+        executed the synth should no longer be used.
+        '''
         proxy = self.app.proxy
         sid = self.sid
         for bn in self._audio_output_buses.values():
@@ -233,28 +418,64 @@ class SynthProxy(object):
         return True
 
     def midi_input_channel(self, new_channel=None):
+        '''
+        Retrieve/change MIDI channel number.
+
+        ARGS:
+          new_channel - optional int.  If specified change input channel
+                        Channel numbers are specified indexed from 1 (1..16)
+                        but are saved internally indexed from 0 (0..15).
+        RETURNS: MIDI channel number (1..16)
+        '''
         if new_channel is not None:
             c = int(new_channel)-1
             self._midi_chan0 = min(max(c, 0), 15)
         return self._midi_chan0+1
 
     def bank(self):
+        '''
+        RETURNS: ProgramBank
+        '''
         return self._bank
     
     def current_program(self):
+        '''
+        RETURNS: Program, the current program.
+        '''
         return self._bank[None]
 
     def current_performance(self):
+        '''
+        RETURNS: Performance, the performance portion of the current program.
+        '''
         prog = self.current_program()
         return prog.performance
 
     def transpose(self, n=None):
+        '''
+        Retrieve/change transposition amount.
+
+        ARGS:
+          n - optional int, transposition in MIDI key numbers.
+              If specified the transposition amount is changed.
+
+        RETURNS: int
+        '''
         prf = self.current_performance()
         if n is not None:
             prf.transpose = n
         return prf.transpose
 
     def key_range(self, range_=None):
+        '''
+        Retrieve/change key-range
+
+        ARGS:
+          range_ - optional tuple (low,high) where low and high are MIDI 
+                   key-numbers  0 <= low < high <= 127.
+
+        RETURNS: tuple (or list?) 
+        '''
         prf = self.current_performance()
         if range_ is not None:
             lower, upper = range_
@@ -265,6 +486,14 @@ class SynthProxy(object):
         return rs
 
     def bend_range(self, range_=None):
+        '''
+        Retrieve/change bend range in cents
+        
+        ARGS:
+          range_ - optional int (cents).  0 <= range_ <= 2400 (2-octaves)
+
+        RETURNS: bend range in cents.
+        '''
         prf = self.current_performance()
         if range_ is not None:
             c = abs(int(range_))
@@ -272,17 +501,52 @@ class SynthProxy(object):
         return prf.bend_range
 
     def bend_parameter(self, new_param=None):
+        '''
+        Retrieve/change synth parameter used for MIDI pitch bend.
+        Normally this parameter is 'detune'
+
+        ARGS:
+          new_parameter - optional String
+
+        RETURNS: String
+        '''
         prf = self.current_performance()
         if new_param is not None:
             prf.bend_parameter = new_param
         return prf.bend_parameter
 
     def keytable(self, tabname=None):
+        '''
+        Retrieve/change the key-table.   key tables maps MIDI key numbers
+        to frequency and are used for alternate scales.
+        (See LliaApp.keytables for list of available tables)
+
+        ARGS:
+          tabname - optional String, the key-table name.  If the name is 
+                    invalid the default 12-note equal tempered table "EQ12"
+                    is used.
+
+        RETURNS: String
+        '''
         if tabname:
             self._key_table_name = tabname
         return self._key_table_name
 
     def use_program(self, slot):
+        '''
+        Recall indicated program.
+        The following events take place:
+             1) Recall the program from the program bank.
+             2) Transmit OSC parameter changes to the server.
+             3) If a GUI editor is present, update it.
+             4) If a pretty-printer is defined and enabled, call it.
+
+        ARGS:
+          slot - int, MIDI program number, 0 <= slot <= 127
+                 (If slot is 127 and a program-generator is active,
+                  generate a new random program -- ISSUE: check validity 
+                  of this statement)
+        '''
         cp = self._bank.use(slot)
         self.x_program(cp)
         if self.synth_editor:
@@ -295,12 +559,29 @@ class SynthProxy(object):
                 pass
 
     def store_program(self, slot=None):
+        '''
+        Stores current program to program bank.
+        
+        ARGS:
+          slot - optional MIDI program number. If not specified
+                 use the 'current' slot.
+
+        '''
         if slot == None:
             slot = self._bank.current_slot
         prog = self.current_program()
         self._bank[slot] = prog
             
     def _get_source_mapper (self, source):
+        '''
+        Returns indicated SourceMapper object
+
+        ARGS:
+          source - String, one of "velocity", "aftertouch", "pitchwheel", or
+                   "keynumber"
+
+        RETURNS: SourceMapper
+        '''
         perf = self.current_performance()
         try:
             sm ={"velocity" : perf.velocity_maps,
@@ -312,41 +593,108 @@ class SynthProxy(object):
             msg = "Invalid parameter map source: '%s'" % source
             raise KeyError(msg)
 
-    def add_source_map(self, source, param, curve=None, modifier=None, range_=None, limits=None):
+    def add_source_map(self, source, param, curve=None, modifier=None, 
+                       range_=None, limits=None):
+        '''
+        Adds/changes source mapping.
+        See also add_controller_amp
+
+        ARGS:
+
+           source   - String, one of "velocity", "aftertouch", pitchwheel",
+                      or "keynumber"
+           param    - String, the synth parameter to map source to.
+           curve    - String, the mapping transfer function, one of 
+                      'linear', 'exp', 's' or 'step'. Default linear
+           modifier - optional value used to modify curve shape.
+                      Exact usage is dependent on curve.  See llia.curves
+           range_   - tuple (a,b).  Range over which to map source to.
+                      if b<a, use an inverted curve.
+           limits   - tuple (mn,mx) clip mapped value v to mn<=v<=max
+        '''
         sm = self._get_source_mapper(source)
         if source.lower() == "keynumber":
             range_ = range_ or self.key_range()
         sm.add_parameter(param,curve,modifier, range_,limits)
 
     def remove_source_map(self, source, param="ALL"):
+        '''
+        Remove indicated source map
+
+        ARGS:
+           source - String, one of "velocity", "aftertouch", pitchwheel",
+                    or "keynumber"
+           param  - String, the synth parameter to unmap.  If param is "ALL"
+                    remove all mappings from source.
+        '''
         sm = self._get_source_mapper(source)
         sm.remove_parameter(param)
 
-    def add_controller_map(self, ctrl, param, curve=None, modifier=None, range_=None, limits=None):
+    def add_controller_map(self, ctrl, param, curve=None, modifier=None, 
+                           range_=None, limits=None):
+        '''
+        Adds MIDI cc mapping.
+
+        ARGS:
+          ctrl - String or int,  either MIDI controller number or assigned
+                 controller name (See app.config.controller_assignments)
+          param    - Same usage as with add_source_map.
+          curve    - Same usage as with add_source_map.
+          modifier - Same usage as with add_source_map.
+          range_   - Same usage as with add_source_map.
+          limits   - Same usage as with add_source_map.
+        '''
         cm = self.current_performance().controller_maps
         cm.add_parameter(ctrl, param, curve, modifier, range_, limits)
 
     def remove_controller_map(self, ctrl, param="ALL"):
+        '''
+        Remove MIDI cc mapping.
+
+        ARGS:
+          
+          ctrl  - MIDI controller number or assigned controller name.
+          param - String, synth parameter.  If param is "All", remove all
+                  mappings from ctrl. 
+        '''
         cm = self.current_performance().controller_maps
         cm.remove_parameter(ctrl, param)
         
     def x_ping(self):
+        '''
+        Transmit ping message to server and wait for response.
+        If no response is received raise LliaPoingError
+        '''
         self.osc_transmitter.x_ping()
         rs = self.app.proxy.expect_osc_response("ping-response")
         if not rs:
-            #sid = "%s_%d" % (self.synth_format, self.id_)
-            msg = "Did not receive expected ping responce from '/Llia/%s/%s'"
+            msg = "Did not receive expected ping response from '/Llia/%s/%s'"
             msg = msg % (self.app.global_osc_id(), self.sid)
             raise LliaPingError(msg)
         return rs
 
     def x_dump(self):
+        '''
+        Transmit dump request to server.
+        '''
         self.osc_transmitter.x_dump()
     
     def x_param_change(self, param, value):
+        '''
+        Transmit synth parameter change to server.
+        ARGS:
+          param - String
+          value - number 
+        '''
         self.osc_transmitter.x_synth_param(param, value)
 
     def x_program(self, program):
+        '''
+        Transmit program change to server.
+        
+        ARGS:
+          program - an instance of Program.
+        '''
         for param, val in program.items():
             if param[0] != "_":
                 self.x_param_change(param, val)
@@ -422,6 +770,17 @@ class SynthProxy(object):
         return acc
         
     def random_program(self, slot=127, *args):
+        '''
+        Generate random program if a generator is defined.
+        Store results to indicated slot of the program bank.
+
+        ARGS:
+          slot  - int MIDI program number, 
+          *args - optional arguments to pass to random-generator, 
+                  currently not used.
+
+        RETURNS: Program or None
+        '''
         genfn = self.specs["program-generator"]
         if genfn:
             args = [slot] + list(args)
@@ -431,9 +790,3 @@ class SynthProxy(object):
             msg = "No generator defined for %s" % self.specs["format"]
             self.status(msg)
             return None
-        
-            
-            
-    
-        
-            
