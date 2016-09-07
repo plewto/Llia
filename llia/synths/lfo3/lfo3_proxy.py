@@ -34,9 +34,13 @@ specs["description"] = "A 3 LFO block with cross modulation"
 specs["keymodes"] = ("EFX", )
 specs["audio-output-buses"] = []
 specs["audio-input-buses"] = []
-specs["control-output-buses"] = ("outbusA","outbusB","outbusC")
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_lfo3
 specs["is-efx"] = True
 specs["help"] = "LFO3"
 specs["pallet"] = lfo3_pallet
+
+#specs["control-output-buses"] = ("outbusA","outbusB","outbusC")
+specs["control-output-buses"] = [["outbusA","CBUS_A"],
+                                 ["outbusB","CBUS_A"],
+                                 ["outbusC","CBUS_A"]]

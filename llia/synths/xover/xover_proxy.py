@@ -32,13 +32,16 @@ xover_pallet["SLIDER-OUTLINE"] = "#3d1e29"
 specs["constructor"] = XOverProxy
 specs["description"] = "Crossover Filter Effect"
 specs["keymodes"] = ("EFX",)
-specs["audio-output-buses"] = (("lpOutbus",1),("hpOutbus",1),("dryOutbus",1))
-specs["audio-input-buses"] = (("inbus", 1),)
-specs["control-input-buses"] = ("xbus",)
-specs["control-output-buses"] = ("xoverLfoOutbus","lpModLfoOutbus","hpModLfoOutbus")
 specs["program-generator"] = random_xover
 specs["is-efx"] = True
 specs["pretty-printer"] = pp
 specs["pallet"] = xover_pallet
 specs["help"] = "xover"
-
+specs["audio-output-buses"] = [["lpOutbus","out_0"],
+                               ["hpOutbus","out_0"],
+                               ["dryOutbus","out_0"]]
+specs["audio-input-buses"] = [["inbus", "in_0"]]
+specs["control-input-buses"] = [["xbus", "CBUS_B"]]
+specs["control-output-buses"] = [["xoverLfoOutbus", "CBUS_A"],
+                                 ["lpModLfoOutbus", "CBUS_A"],
+                                 ["hpModLfoOutbus", "CBUS_A"]]

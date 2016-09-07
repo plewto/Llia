@@ -30,13 +30,13 @@ asplit_pallet["SLIDER-OUTLINE"] = "#42033E"
 specs["constructor"] = ASplitProxy
 specs["description"] = "Split audio signal to 4 separate buses"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = (("outbusA", 1),("outbusB", 1),
-                               ("outbusC", 1),("outbusD", 1))
-specs["audio-input-buses"] = (("inbus", 1),)
-specs["control-input-buses"] = tuple()
-specs["control-output-buses"] = tuple()
 specs["pretty-printer"] = pp
 specs["program-generator"] = None
 specs["is-efx"] = True
 specs["help"] = "ASplit"
 specs["pallet"] = asplit_pallet
+specs["audio-output-buses"] = [["outbusA", "out_0"],
+                               ["outbusB", "out_1"],
+                               ["outbusC", "out_2"],
+                               ["outbusD", "out_3"]]
+specs["audio-input-buses"] = [["inbus", "in_1"]]

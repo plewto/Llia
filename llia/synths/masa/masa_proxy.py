@@ -32,9 +32,10 @@ masa_pallet["SLIDER-TROUGH"] = "#1f181a"
 specs["constructor"] = MasaProxy
 specs["description"] = "Tonewheel Organ"
 specs["keymodes"] = ("Poly1", "PolyRoate", "Mono1")
-specs["audio-output-buses"] = (("outbus", 1),)
-specs["control-input-buses"] = ("xbus",)
 specs["pretty-printer"] = pp_masa  
 # specs["program-generator"] = masa_gen
 specs["pallet"] = masa_pallet
 specs["help"] = "masa"
+
+specs["audio-output-buses"] = [["outbus","out_0"]]
+specs["control-input-buses"] = [["xbus","CBUS_B"]]

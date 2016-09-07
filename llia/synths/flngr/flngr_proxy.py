@@ -30,11 +30,12 @@ specs["is-efx"] = True
 specs["constructor"] = FlngrProxy
 specs["description"] = "Flanger (Mono)"
 specs["keymodes"] = ("EFX",)
-specs["audio-output-buses"] = (("outbus", 1),)
-specs["audio-input-buses"] = (("inbus", 1),)
-specs["control-input-buses"] = ("delaybus","mixbus")
-specs["control-output-buses"] = ("lfoOutbus",)
 specs["program-generator"] = random_flanger
 specs["pretty-printer"] = pp
 specs["pallet"] = flngr_pallet
 specs["help"] = "flngr"
+
+specs["audio-output-buses"] = [["outbus", "out_0"]]
+specs["audio-input-buses"] = [["inbus", "in_1"]]
+specs["control-input-buses"] = [["delaybus","CBUS_B"],["mixbus","CBUS_B"]]
+specs["control-output-buses"] = [["lfoOutbus", "CBUS_A"]]

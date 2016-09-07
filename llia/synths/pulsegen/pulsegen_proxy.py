@@ -31,11 +31,12 @@ pulsegen_pallet["SLIDER-OUTLINE"] = "#42033E"
 specs["constructor"] = PulsegenProxy
 specs["description"] = "Complex Pulse generator"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = []
-specs["audio-input-buses"] = []
-specs["control-output-buses"] = ("outbusY", "outbusZ")
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_pulsegen
 specs["is-efx"] = True
 specs["help"] = "PULSEGEN"
 specs["pallet"] = pulsegen_pallet
+
+specs["control-output-buses"] = [["outbusY", "CBUS_A"],
+                                 ["outbusZ", "CBUS_B"]]
+

@@ -32,12 +32,9 @@ lfo2_pallet["SLIDER-OUTLINE"] = "#42033E"
 specs["constructor"] = Lfo2Proxy
 specs["description"] = "Multi wave LFO"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = []
-specs["audio-input-buses"] = []
-specs["control-output-buses"] = ("outbusSaw", "outbusPulse")
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_lfo2
 specs["is-efx"] = True
 specs["help"] = "LFO2"
 specs["pallet"] = lfo2_pallet
-
+specs["control-output-buses"] = [["outbusSaw","CBUS_A"],["outbusPulse","CBUS_B"]]

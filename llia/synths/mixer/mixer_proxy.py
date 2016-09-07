@@ -32,9 +32,15 @@ mixer_pallet["SLIDER-OUTLINE"] = "#42033E"
 specs["constructor"] = MixerProxy
 specs["description"] = "4 x 2 Mixer with Reverb"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = (("outbusA", 1),("outbusB", 1))
-specs["audio-input-buses"] = (("inbus1", 1),("inbus2",1),("inbus3",1),("inbus4",1))
 specs["pretty-printer"] = pp
 specs["is-efx"] = True
 specs["help"] = "Mixer"
 specs["pallet"] = mixer_pallet
+
+
+specs["audio-output-buses"] = [["outbusA","out_0"],
+                               ["outbusB","out_1"]]
+specs["audio-input-buses"] = [["inbus1", "in_0"],
+                              ["inbus2", "in_1"],
+                              ["inbus3", "in_2"],
+                              ["inbus4", "in_3"]]

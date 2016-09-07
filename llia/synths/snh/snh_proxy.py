@@ -32,10 +32,9 @@ specs["constructor"] = SnhProxy
 specs["is-efx"] = True
 specs["description"] = "Sample and Hold"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = []
-specs["audio-input-buses"] = []
-specs["control-output-buses"] = ("outbus",)
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_snh
 specs["help"] = "SnH"
 specs["pallet"] = snh_pallet
+
+specs["control-output-buses"] = [["outbus", "CBUS_A"]]

@@ -30,12 +30,15 @@ panner_pallet["SLIDER-OUTLINE"] = "#42033E"
 specs["constructor"] = PannerProxy
 specs["description"] = "Audio signal panner"
 specs["keymodes"] = ("EFX", )
-specs["audio-output-buses"] = (("outbusA", 1),("outbusB", 1))
-specs["audio-input-buses"] = (("inbus", 1),)
-specs["control-input-buses"] = ("xbus",)
-specs["control-output-buses"] = ("lfoOutbus",)
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_panner
 specs["is-efx"] = True
 specs["help"] = "Panner"
 specs["pallet"] = panner_pallet
+
+specs["audio-output-buses"] = [["outbusA","out_0"],
+                               ["outbusB","out_1"]]
+specs["audio-input-buses"] = [["inbus", "in_0"]]
+specs["control-input-buses"] = [["xbus","CBUS_B"]]
+specs["control-output-buses"] = [["lfoOutbus","CBUS_A"]]
+
