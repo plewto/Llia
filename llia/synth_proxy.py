@@ -211,31 +211,25 @@ class SynthProxy(object):
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
         
-    # Free instrument
-    # Return bool True if all goes well.
-    #
-    def free(self):   # ISSUE: FIX ME
+    def disconnect_from_buses(self):
         proxy = self.app.proxy
-        for bn in self._audio_output_buses.keys():
+        sid = self.sid
+        for bn in self._audio_output_buses.values():
             bus = proxy.get_audio_bus(bn)
             bus.remove_source(sid, None)
             self._audio_output_buses[bn] = None
-        for bn in self._audio_input_buses.keys():
+        for bn in self._audio_input_buses.values():
             bus = proxy.get_audio_bus(bn)
             bus.remove_sink(sid, None)
             self._audio_input_buses[bn] = None
-        for bn in self._control_output_buses.keys():
+        for bn in self._control_output_buses.values():
             bus = proxy.get_control_bus(bn)
             bus.remove_source(sid, None)
             self._control_output_buses[bn] = None
-        for bn in self._control_input_buses.keys():
+        for bn in self._control_input_buses.values():
             bus = proxy.get_control_bus(bn)
             bus.remove_sink(sid, None)
             self._control_input_buses[bn] = None
-        return True
-            
-
-        
         return True
 
     def midi_input_channel(self, new_channel=None):

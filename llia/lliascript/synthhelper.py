@@ -598,7 +598,8 @@ class SynthHelper(object):
         if sid == self.current_sid and not force:
             msg = "Can not free current synth: '%s'" % self.current_sid
             raise LliascriptError(msg)
-        self.get_synth(sid)
+        sy = self.get_synth(sid)
+        sy.disconnect_from_buses()
         stype, id_ = self.parse_sid(sid)
         self.proxy.free_synth(stype, id_)
         self.parser.forget(sid)
