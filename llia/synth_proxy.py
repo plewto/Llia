@@ -50,6 +50,8 @@ class SynthSpecs(dict):
                     id_ must be unique for any given synth type.
             
         RETURNS: SynthProxy
+
+        Raises KeyError if stype is unknown.
         '''
         try:
             specs = SynthSpecs.global_synth_type_registry[stype]
@@ -62,7 +64,7 @@ class SynthSpecs(dict):
     def __init__(self, stype):
         '''
         Construct new instance of SynthSpecs.  
-        This constructor should only be called one for any given stype.
+        This constructor should only be called once for any given stype.
 
         SynthSpecs is a dictionary like object with a pre-defined set of 
         keys.  All keys are strings:
@@ -104,10 +106,10 @@ class SynthSpecs(dict):
                                 SuperCollider buffers.
             pallet            - An instance of Pallet.
             audio-output-buses   - A nested list of synth parameters for audio
-                                   output.  The list format ha the form:
+                                   output.  The list format has the form:
                                    [[param1, default],[param2,default],...]
             audio-input-buses    - A nested list of audio input parameters,
-                                   has then same format as audio-output-buses
+                                   with same format as audio-output-buses
             control-output-buses - A nested list of control bus output 
                                    parameters.
             control-input-buses  - A nested list of control bus input
@@ -115,7 +117,7 @@ class SynthSpecs(dict):
 
         ARGS:
            stype - String, the synth type.
-                   Once constructed the stype is added to a global 
+                   Once constructed the SynthSpecs is added to a global 
                    registry of known synth types.
 
         RETURNS: SynthSpecs.
@@ -168,6 +170,7 @@ class SynthSpecs(dict):
         id_ = SynthSpecs.create_id(self)
         return cfn(app, id_)
 
+    
 #  ---------------------------------------------------------------------- 
 #                              SynthProxy class
     
@@ -186,13 +189,13 @@ class SynthProxy(object):
 
         ARGS:
            
-          app   - an instance of LliaApp
-          specs - an instance of SynthSpecs
+          app   - an instance of LliaApp.
+          specs - an instance of SynthSpecs.
           id_   - int, serial number id.
-                  id_ MUST be unique for any given synth type
-          bank  - an instance of ProgramBank
+                  id_ MUST be unique for any given synth type.
+          bank  - an instance of ProgramBank.
 
-        RETURNS: SynthProxy
+        RETURNS: SynthProxy.
         '''
         super(SynthProxy, self).__init__()
         self.is_efx = False
@@ -234,8 +237,6 @@ class SynthProxy(object):
             self._control_input_buses[bs[0]] = bs[1]
             
         self._buffers = {}
-
-        
         host_and_port = app.config.host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
         trace_osc = app.config.osc_transmission_trace_enabled()
@@ -287,7 +288,7 @@ class SynthProxy(object):
 
     def assign_audio_output_bus(self, param, bname):
         '''
-        Assigns audio output-bus to a synth parameter.
+        Assigns audio output bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
               It does not transmit any OSC messages to actually establish
               the bus/parameter connection.  
@@ -313,7 +314,7 @@ class SynthProxy(object):
    
     def assign_audio_input_bus(self, param, bname):
         '''
-        Assigns audio input-bus to a synth parameter.
+        Assigns audio input bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
               It does not transmit any OSC messages to actually establish
               the bus/parameter connection.  
@@ -339,7 +340,7 @@ class SynthProxy(object):
 
     def assign_control_output_bus(self, param, bname):
         '''
-        Assigns control output-bus to a synth parameter.
+        Assigns control output bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
               It does not transmit any OSC messages to actually establish
               the bus/parameter connection.  
@@ -365,7 +366,7 @@ class SynthProxy(object):
 
     def assign_control_input_bus(self, param, bname):
         '''
-        Assigns control input-bus to a synth parameter.
+        Assigns control input bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
               It does not transmit any OSC messages to actually establish
               the bus/parameter connection.  
@@ -468,7 +469,8 @@ class SynthProxy(object):
 
     def key_range(self, range_=None):
         '''
-        Retrieve/change key-range
+        Retrieve/change active key-range.  Notes outside the key range 
+        are ignored.
 
         ARGS:
           range_ - optional tuple (low,high) where low and high are MIDI 
@@ -487,7 +489,7 @@ class SynthProxy(object):
 
     def bend_range(self, range_=None):
         '''
-        Retrieve/change bend range in cents
+        Retrieve/change bend range
         
         ARGS:
           range_ - optional int (cents).  0 <= range_ <= 2400 (2-octaves)
@@ -517,7 +519,7 @@ class SynthProxy(object):
 
     def keytable(self, tabname=None):
         '''
-        Retrieve/change the key-table.   key tables maps MIDI key numbers
+        Retrieve/change the key-table.   key tables map MIDI key numbers
         to frequency and are used for alternate scales.
         (See LliaApp.keytables for list of available tables)
 
@@ -597,7 +599,7 @@ class SynthProxy(object):
                        range_=None, limits=None):
         '''
         Adds/changes source mapping.
-        See also add_controller_amp
+        See also add_controller_map.
 
         ARGS:
 
@@ -619,7 +621,7 @@ class SynthProxy(object):
 
     def remove_source_map(self, source, param="ALL"):
         '''
-        Remove indicated source map
+        Remove indicated source map.
 
         ARGS:
            source - String, one of "velocity", "aftertouch", pitchwheel",
@@ -637,7 +639,7 @@ class SynthProxy(object):
 
         ARGS:
           ctrl - String or int,  either MIDI controller number or assigned
-                 controller name (See app.config.controller_assignments)
+                 controller name (See app.config.controller_assignments).
           param    - Same usage as with add_source_map.
           curve    - Same usage as with add_source_map.
           modifier - Same usage as with add_source_map.
@@ -649,7 +651,7 @@ class SynthProxy(object):
 
     def remove_controller_map(self, ctrl, param="ALL"):
         '''
-        Remove MIDI cc mapping.
+        Remove MIDI cc map.
 
         ARGS:
           
@@ -663,7 +665,7 @@ class SynthProxy(object):
     def x_ping(self):
         '''
         Transmit ping message to server and wait for response.
-        If no response is received raise LliaPoingError
+        If no response is received in a reasonable time raise LliaPingError.
         '''
         self.osc_transmitter.x_ping()
         rs = self.app.proxy.expect_osc_response("ping-response")
