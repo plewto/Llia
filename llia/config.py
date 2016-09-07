@@ -379,8 +379,15 @@ class LliaConfig(dict):
     # section, one of "SYNTH-IMPORTS", "EFX-IMPORTS" or "CONTROL-SYNTH-IMPORTS"
     # 
     def import_synth(self, section, stype):
-        flag = self.get_option(section,stype)
-        return str(flag).upper() == "TRUE"
+        try:
+            flag = self.get_option(section,stype)
+            return str(flag).upper() == "TRUE"
+        except(NoOptionError, NoSectionError) as err:
+            msg = "WARNING: config import_synth option or section missing.\n"
+            msg += "WARNING: section = '%s', option = '%s'.\n" % (section, stype)
+            msg += "WARNING: Aborting import of synth: %s" % stype
+            print(msg)
+            return False
 
     def startup_script(self):
         ss = self.get_option("GENERAL", "startup-script")

@@ -42,7 +42,7 @@ warn-on-exit : False
 enable-active-update : True     ; Enable MIDI controller changes to update GUI
 
 [SYNTH-IMPORTS]
-orgn      : True             
+Orgn      : True
 saw3      : True             
 klstr     : True              
 rdrum     : True              
