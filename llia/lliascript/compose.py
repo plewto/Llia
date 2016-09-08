@@ -86,7 +86,7 @@ class Composer(object):
     def _build_synths(self):
         acc = []
         for e in self.parser.entities.values():
-            print("DEBUG parse, e.lstype = ", e.lstype)
+            #print("DEBUG parse, e.lstype = ", e.lstype)
             if e.lstype == "synth" or e.lstype == "group":
                 acc.append(e)
         acc.sort(key=lambda x: x.data["serial-number"])
