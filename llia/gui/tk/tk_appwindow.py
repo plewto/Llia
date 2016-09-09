@@ -97,21 +97,21 @@ class TkApplicationWindow(AbstractApplicationWindow):
         osc_menu = self.menu(main_menu)
         midi_menu = self.menu(main_menu)
         bus_menu = self.menu(main_menu)
-        buffer_menu = self.menu(main_menu)
+        #buffer_menu = self.menu(main_menu)
         tune_menu = self.menu(main_menu)
         help_menu = self.menu(main_menu)
         main_menu.add_cascade(label="File", menu=file_menu)
         main_menu.add_cascade(label="OSC", menu=osc_menu)
         main_menu.add_cascade(label="MIDI", menu=midi_menu)
         main_menu.add_cascade(label="Buses", menu=bus_menu)
-        main_menu.add_cascade(label="Buffers", menu=buffer_menu)
+        #main_menu.add_cascade(label="Buffers", menu=buffer_menu)
         main_menu.add_cascade(label="Tune", menu=tune_menu)
         main_menu.add_cascade(label="Help", menu=help_menu)
         self._init_file_menu(file_menu)
         self._init_osc_menu(osc_menu)
         self._init_midi_menu(midi_menu)
         self._init_bus_menu(bus_menu)
-        self._init_buffer_menu(buffer_menu)
+        #self._init_buffer_menu(buffer_menu)
         self._init_tune_menu(tune_menu)
         self._init_help_menu(help_menu)
 
@@ -141,8 +141,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         bmenu.add_command(label="Audio", command=self.show_audiobus_dialog)
         bmenu.add_command(label="Control", command=self.show_controlbus_dialog)
         
-    def _init_buffer_menu(self, bmenu):
-        bmenu.add_command(label="View Buffers", command=self.show_bufferlist_dialog)
+    # def _init_buffer_menu(self, bmenu):
+    #     bmenu.add_command(label="View Buffers", command=self.show_bufferlist_dialog)
 
     def _init_tune_menu(self, tmenu):
         tmenu.add_command(label = "FIX ME: Nothing to see here")
@@ -233,7 +233,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         else:
             self.status("Pretty printer disabled")
         
-        
     def show_audiobus_dialog(self):
         from llia.gui.tk.tk_audiobus_editor import TkAudiobusEditor
         dialog = TkAudiobusEditor(self.root, self.app)
@@ -244,10 +243,10 @@ class TkApplicationWindow(AbstractApplicationWindow):
         dialog = TkControlbusEditor(self.root, self.app)
         self.root.wait_window(dialog)
 
-    def show_bufferlist_dialog(self):
-        from llia.gui.tk.tk_buffer_info import TkBufferListDialog
-        dialog = TkBufferListDialog(self.root, self.app)
-        self.root.wait_window(dialog)
+    # def show_bufferlist_dialog(self):
+    #     from llia.gui.tk.tk_buffer_info import TkBufferListDialog
+    #     dialog = TkBufferListDialog(self.root, self.app)
+    #     self.root.wait_window(dialog)
 
     def _show_add_synth_dialog(self, event):
         w = event.widget

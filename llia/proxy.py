@@ -13,7 +13,7 @@ from llia.osc_receiver import OSCReceiver
 from llia.synth_proxy import SynthSpecs
 from llia.generic import is_int
 from llia.bus import AudioBus, ControlBus
-from llia.llia_buffer import BufferProxy
+#from llia.llia_buffer import BufferProxy
 import llia.constants as con
 
 class LliaProxy(object):
@@ -50,17 +50,17 @@ class LliaProxy(object):
             bname = "CBUS_%s" % i
             self._control_buses[bname] = ControlBus(bname)
         
-        self._buffers = {}
-        for bname in con.PROTECTED_BUFFERS:
-            bobj = BufferProxy(bname)
-            bobj["frames"] = con.DEFAULT_BUFFER_FRAME_COUNT
-            bobj["channels"] = 1
-            bobj["is-wavetable"] = True
-            bobj["is-protected"] = True
-            bobj["sample-rate"] = con.DEFAULT_SAMPLE_RATE
-            bobj["filename"] = ""
-            bobj["index"] = -1
-            self._buffers[bname] = bobj
+        # self._buffers = {}
+        # for bname in con.PROTECTED_BUFFERS:
+        #     bobj = BufferProxy(bname)
+        #     bobj["frames"] = con.DEFAULT_BUFFER_FRAME_COUNT
+        #     bobj["channels"] = 1
+        #     bobj["is-wavetable"] = True
+        #     bobj["is-protected"] = True
+        #     bobj["sample-rate"] = con.DEFAULT_SAMPLE_RATE
+        #     bobj["filename"] = ""
+        #     bobj["index"] = -1
+        #     self._buffers[bname] = bobj
             
             
         self._callback_message = {}
@@ -177,7 +177,7 @@ class LliaProxy(object):
         '''
         Transmit 'restart' message to server.
         In response the server app should revert to its startup condition.
-        All non-protected buses and buffers are freed. All synths are
+        All non-protected buses and <strike buffers> are freed. All synths are
         freed. 
         '''
         self._send("restart")
@@ -200,27 +200,14 @@ class LliaProxy(object):
         for k in sorted(self._control_buses.keys()):
             b = str(self._control_buses[k])
             print("%s%s" % (pad2, b))
-        
-        # print("%sbuffers:" % pad1)
-        # frmt = "%sindex: %3s, name: '%-12s', frames: %4s, channels: %2s, "
-        # frmt = frmt + "sr: %s,  filename: '%s'"
-        # for b in sorted(self._buffers.keys()):
-        #     binfo = self._buffers[b]
-        #     index = binfo["index"]
-        #     bname = binfo["name"]
-        #     frames = binfo["frames"]
-        #     chans = binfo["channels"]
-        #     sr = binfo["sample-rate"]
-        #     filename = binfo["filename"]
-        #     print(frmt % (pad2, index, bname, frames, chans, sr, filename))
 
-        print("%sbuffers:" % pad1)
-        frmt = "%sname: %-8s, index: %s"
-        for b in sorted(self._buffers.keys()):
-            bobj = self._buffers[b]
-            index = bobj["index"]
-            name = bobj["name"]
-            print(frmt % (pad2, name, index))
+        # print("%sbuffers:" % pad1)
+        # frmt = "%sname: %-8s, index: %s"
+        # for b in sorted(self._buffers.keys()):
+        #     bobj = self._buffers[b]
+        #     index = bobj["index"]
+        #     name = bobj["name"]
+        #     print(frmt % (pad2, name, index))
 
             
         print("%sSynths:" % pad1)
@@ -316,118 +303,6 @@ class LliaProxy(object):
                 print(msg)
                 sys.exit(1)
         return rs
-
-    # FIXME: has bug
-    # def get_buffer_list(self):
-    #     '''
-    #     Requst server to send list of buffers.
-    #    
-    #     RETURNS: list
-    #     '''
-    #     raw = self._query_host("get-buffer-list")[0].strip().split(" ")
-    #     raw = raw[1:-1]
-    #     acc = []
-    #     for r in raw:
-    #         if r and r[-1] == ",":
-    #             acc.append(r[:-1])
-    #         else:
-    #             acc.append(r)
-    #     if acc == ['']: acc = []        
-    #     return acc
-
-    def get_buffer(self, bname):
-        return self._buffers[bname]
-
-    
-    def get_buffer_info(self, bname):
-        '''
-        Request server send information about specific buffer.
-
-        ARGS:
-          bname - String, the buffer name.
-
-        RETURNS: dictionary with following keys:
-                  "name", "index", "frames", "channels"
-                   "sample-rate" and "filename"
-
-        The filename property is used if the buffer contents have been 
-        loaded from a file.
-        '''
-        raw = self._query_host("get-buffer-info", [bname])[0]
-        raw = raw.split(" ")
-        if raw[1] == "DOES-NOT-EXISTS":
-            return None
-        raw_filename = raw[5:]
-        if raw_filename == ['nil']:
-            fname = None
-        else:
-            # Attempt to reconstruct pathological filenames with embedded
-            # spaces.  If the filename contains more then 1 consecutive
-            # spaces, it will not be reconstructed properly.
-            # 
-            fname = ""
-            for p in raw_filename:
-                fname = fname + p + " "
-            fname = fname.strip()
-        bname, index, frames, channels, sr = raw[:5]
-        def asInt(key, value, default):
-            try:
-                v = int(value)
-                return v
-            except ValueError:
-                msg = "WARNING: LliaProxy.get_buffer_info %s = %s" % (key, value)
-                print(msg)
-                return default
-        bname = str(bname)
-        rs = {"name" : bname,
-              "index" : asInt("index", index, 0),
-              "frames" : asInt("frames", frames, 1024),
-              "channels" : asInt("channels", channels, 1),
-              "sample-rate" : asInt("sample-rate", sr, 44100),
-              "filename" : fname}
-        return rs
-
-
-    def create_wavetable(self, name, maxharm=64, decay=0.5, skip=None,
-                         mode="", cutoff=None, depth=0.5, frames=1024):
-        '''
-        Creates new buffer on the server and fill it with a wave data.
-
-        ARGS:
-           name    - String, buffer name
-           maxharm - int, maximum harmonic
-           decay   - float, sets how partial amplitudes are determined 
-                     as a function of harmonic number.
-           skip    - int, sets number of harmonics to skip.
-                     2 -> odd only (1,3,5,...)
-                     3 -> every third (1,2,4,5,7,...)
-           mode    - String, simulated filter mode.
-                     ISSUE: FIXME determine valid values.
-           cutoff  - int, simulated filter cutoff in terms of harmonic 
-                     number
-           depth   - float, simulated filter 'depth'
-           frames  - int number of buffer frames, must be power of 2.
-
-        '''
-        if self.buffer_exists(name):
-            self.warning("Buffer %s already exists" % name)
-            return False
-        else:
-            skip = skip or maxHarm+1
-            if cutoff is None: cutoff = maxHarm/2
-            payload = [name, maxharm, decay, skip, mode, cutoff, depth,
-                       frames]
-            rs = self._send("create-wavetable", payload)
-            bobj = BufferProxy(name)
-            bobj["frames"] = frames
-            bobj["channels"] = 1
-            bobj["is-wavetable"] = True
-            bobj["is-protected"] = False
-            bobj["sample-rate"] = 44100 # ISSUE: assumend value for sr
-            bobj["filename"] = ""
-            bobj["index"] = None
-            self._buffers[name] = bobj
-            return bobj
     
     def audio_bus_exists(self, bname):
         '''
@@ -498,24 +373,11 @@ class LliaProxy(object):
             except KeyError:
                 raise NoSuchBusError(bname)
 
-    # def audio_bus_keys(self):
-    #     return sorted(self._audio_buses.keys())
-
     def audio_bus_count(self):
         '''
         Returns int, number of audio buses
         '''
         return len(self._audio_buses)
-    
-    # # Returns tuple (name, busnum, chancount)
-    # def audio_bus_info(self, bname):
-    #     try:
-    #         bi = self._audio_buses[bname]
-    #         return bi
-    #     except KeyError:
-    #         msg = "Audio bus '%s' does not exists" % bname
-    #         self.warning(msg)
-    #         return ("", -1, 0)
 
     def audio_bus_names(self):
         '''
@@ -533,7 +395,6 @@ class LliaProxy(object):
         for k in keys:
             print("    ", k)
         return keys
-    
             
     def control_bus_exists(self, bname):
         '''
@@ -615,112 +476,195 @@ class LliaProxy(object):
             print("    ", k)
         return keys
 
-    # def control_bus_keys(self):
-    #     return sorted(self._control_buses.keys())
-
     def control_bus_count(self):
         '''
         Returns number of control buses.
         '''
         return len(self._control_buses)
     
-    # def control_bus_info(self, bname):
-    #     try:
-    #         bi = self._control_buses[bname]
-    #         return bi
-    #     except KeyError:
-    #         msg = "Control bus '%s' does not exists" % bname
-    #         self.warning(msg)
-    #         return ("", -1, 0)
+ 
 
+    # def get_buffer(self, bname):
+    #     return self._buffers[bname]
+    
+    # def get_buffer_info(self, bname):
+    #     '''
+    #     Request server send information about specific buffer.
+    #
+    #     ARGS:
+    #       bname - String, the buffer name.
+    #
+    #     RETURNS: dictionary with following keys:
+    #               "name", "index", "frames", "channels"
+    #                "sample-rate" and "filename"
+    #
+    #     The filename property is used if the buffer contents have been 
+    #     loaded from a file.
+    #     '''
+    #     raw = self._query_host("get-buffer-info", [bname])[0]
+    #     raw = raw.split(" ")
+    #     if raw[1] == "DOES-NOT-EXISTS":
+    #         return None
+    #     raw_filename = raw[5:]
+    #     if raw_filename == ['nil']:
+    #         fname = None
+    #     else:
+    #         # Attempt to reconstruct pathological filenames with embedded
+    #         # spaces.  If the filename contains more then 1 consecutive
+    #         # spaces, it will not be reconstructed properly.
+    #         # 
+    #         fname = ""
+    #         for p in raw_filename:
+    #             fname = fname + p + " "
+    #         fname = fname.strip()
+    #     bname, index, frames, channels, sr = raw[:5]
+    #     def asInt(key, value, default):
+    #         try:
+    #             v = int(value)
+    #             return v
+    #         except ValueError:
+    #             msg = "WARNING: LliaProxy.get_buffer_info %s = %s" % (key, value)
+    #             print(msg)
+    #             return default
+    #     bname = str(bname)
+    #     rs = {"name" : bname,
+    #           "index" : asInt("index", index, 0),
+    #           "frames" : asInt("frames", frames, 1024),
+    #           "channels" : asInt("channels", channels, 1),
+    #           "sample-rate" : asInt("sample-rate", sr, 44100),
+    #           "filename" : fname}
+    #     return rs
+
+
+    # def create_wavetable(self, name, maxharm=64, decay=0.5, skip=None,
+    #                      mode="", cutoff=None, depth=0.5, frames=1024):
+    #     '''
+    #     Creates new buffer on the server and fill it with a wave data.
+    #
+    #     ARGS:
+    #        name    - String, buffer name
+    #        maxharm - int, maximum harmonic
+    #        decay   - float, sets how partial amplitudes are determined 
+    #                  as a function of harmonic number.
+    #        skip    - int, sets number of harmonics to skip.
+    #                  2 -> odd only (1,3,5,...)
+    #                  3 -> every third (1,2,4,5,7,...)
+    #        mode    - String, simulated filter mode.
+    #                  ISSUE: FIXME determine valid values.
+    #        cutoff  - int, simulated filter cutoff in terms of harmonic 
+    #                  number
+    #        depth   - float, simulated filter 'depth'
+    #        frames  - int number of buffer frames, must be power of 2.
+    #
+    #     '''
+    #     if self.buffer_exists(name):
+    #         self.warning("Buffer %s already exists" % name)
+    #         return False
+    #     else:
+    #         skip = skip or maxHarm+1
+    #         if cutoff is None: cutoff = maxHarm/2
+    #         payload = [name, maxharm, decay, skip, mode, cutoff, depth,
+    #                    frames]
+    #         rs = self._send("create-wavetable", payload)
+    #         bobj = BufferProxy(name)
+    #         bobj["frames"] = frames
+    #         bobj["channels"] = 1
+    #         bobj["is-wavetable"] = True
+    #         bobj["is-protected"] = False
+    #         bobj["sample-rate"] = 44100 # ISSUE: assumend value for sr
+    #         bobj["filename"] = ""
+    #         bobj["index"] = None
+    #         self._buffers[name] = bobj
+    #         return bobj
+    
         
-    def buffer_exists(self, bname):
-        '''
-        Predicate test is named buffer exists.
-        '''
-        return self._buffers.has_key(bname)
+    # def buffer_exists(self, bname):
+    #     '''
+    #     Predicate test is named buffer exists.
+    #     '''
+    #     return self._buffers.has_key(bname)
 
 
-    def buffer_info(self, bname):
-        '''
-        Returns information about named buffer.
+    # def buffer_info(self, bname):
+    #     '''
+    #     Returns information about named buffer.
 
-        WARNING: buffer implementation may change in the future.
-                 The return type for this method should not be
-                 relied on. 
+    #     WARNING: buffer implementation may change in the future.
+    #              The return type for this method should not be
+    #              relied on. 
 
-        '''
-        print("WARNING: LliaProxy.buffer_info is an unsafe method")
-        return self._buffers[bname]
+    #     '''
+    #     print("WARNING: LliaProxy.buffer_info is an unsafe method")
+    #     return self._buffers[bname]
     
-    def buffer_names(self):
-        '''
-        Returns list of buffer names.
-        '''
-        return sorted(self._buffers.keys())
+    # def buffer_names(self):
+    #     '''
+    #     Returns list of buffer names.
+    #     '''
+    #     return sorted(self._buffers.keys())
 
-    def list_buffers(self):
-        '''
-        Prints names of all buffers to terminal.
-        This is a convenience diagnostics method.
-        '''
-        keys = sorted(self._buffers.keys())
-        print("Buffers:")
-        for k in keys:
-            print("    ", k)
-        return keys
+    # def list_buffers(self):
+    #     '''
+    #     Prints names of all buffers to terminal.
+    #     This is a convenience diagnostics method.
+    #     '''
+    #     keys = sorted(self._buffers.keys())
+    #     print("Buffers:")
+    #     for k in keys:
+    #         print("    ", k)
+    #     return keys
     
-    def buffer_count(self):
-        '''
-        Returns number of allocated buffers.
-        '''
-        return len(self._buffers)
+    # def buffer_count(self):
+    #     '''
+    #     Returns number of allocated buffers.
+    #     '''
+    #     return len(self._buffers)
     
-    def add_buffer(self, bname, frames=1024, channels=1):
-        '''
-        Add a new buffer.
-        If a buffer with the same name already exists, do nothing
+    # def add_buffer(self, bname, frames=1024, channels=1):
+    #     '''
+    #     Add a new buffer.
+    #     If a buffer with the same name already exists, do nothing
+    #
+    #     ARGS:
+    #       bname  - String, buffer name
+    #       frames - int, must be power of 2 if buffer is used as a wave-table
+    #       channels - int 
+    #
+    #     RETURNS: BufferProxy if buffer added, False otherwise
+    #
+    #     Raises LliaError if bname already exixts and is not a buffer
+    #     '''
+    #     if self.buffer_exists(bname):
+    #         self.warning("Buffer %s already exists" % bname)
+    #         return False
+    #     else:
+    #         self._send("add-buffer", [bname, frames, channels])
+    #         rs = self.expect_osc_response("buffer-added")
+    #         if rs:
+    #             bobj = BufferProxy(bname)
+    #             bobj['frames'] = frames
+    #             bobj['channels'] = channels
+    #             self._buffers[bname] = bobj
+    #             return bobj
+    #         else:
+    #             msg = "Can not add buffer: '%s'" % bname
+    #             raise LliaError(msg)
+    #         return rFalse
 
-        ARGS:
-          bname  - String, buffer name
-          frames - int, must be power of 2 if buffer is used as a wave-table
-          channels - int 
-
-        RETURNS: BufferProxy if buffer added, False otherwise
-
-        Raises LliaError if bname already exixts and is not a buffer
-        '''
-        if self.buffer_exists(bname):
-            self.warning("Buffer %s already exists" % bname)
-            return False
-        else:
-            self._send("add-buffer", [bname, frames, channels])
-            rs = self.expect_osc_response("buffer-added")
-            if rs:
-                bobj = BufferProxy(bname)
-                bobj['frames'] = frames
-                bobj['channels'] = channels
-                self._buffers[bname] = bobj
-                return bobj
-            else:
-                msg = "Can not add buffer: '%s'" % bname
-                raise LliaError(msg)
-            return rFalse
-
-    def remove_buffer(self, bname):
-        '''
-        Remove named buffer.
-
-        ARGS: 
-          String - buffer name.
-
-        Raises NoSuchBufferError if buffer does not exists. 
-        '''
-        if self.buffer_exists(bname):
-            self._buffers[bname].pop(bname)
-            self._send("free-buffer", [bname])
-        else:
-            raise NoSuchBufferError(bname)
+    # def remove_buffer(self, bname):
+    #     '''
+    #     Remove named buffer.
+    #
+    #     ARGS: 
+    #       String - buffer name.
+    #
+    #     Raises NoSuchBufferError if buffer does not exists. 
+    #     '''
+    #     if self.buffer_exists(bname):
+    #         self._buffers[bname].pop(bname)
+    #         self._send("free-buffer", [bname])
+    #     else:
+    #         raise NoSuchBufferError(bname)
             
     def synth_exists(self, stype, id_, sid=None):
         '''

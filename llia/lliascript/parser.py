@@ -9,7 +9,7 @@ from llia.llerrors import (LliaPingError, LliascriptParseError, LliascriptError,
                            NoSuchBusError)
 from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
-from llia.lliascript.bufferhelper import BufferHelper
+#from llia.lliascript.bufferhelper import BufferHelper
 #from llia.gui.llhelp import help_topics, print_topic
 from llia.util.help import help_topics, open_help
 
@@ -54,7 +54,7 @@ class Parser(object):
         self._local_namespace = {}
         self._lsCommand = LsCommand(self)
         self.synthhelper = SynthHelper(self, self._local_namespace)
-        self.bufferhelper = BufferHelper(self, self._local_namespace)
+        #self.bufferhelper = BufferHelper(self, self._local_namespace)
         self._init_namespace(self._local_namespace)
 
 
@@ -64,7 +64,7 @@ class Parser(object):
             ns["proxy"] = self.proxy
             ns["ABUS"] = ABUS
             ns["CBUS"] = CBUS
-            ns["BUFFER"] = BUFFER
+            #ns["BUFFER"] = BUFFER
             ns["SYNTH"] = SYNTH
             ns["EFX"] = EFX
             ns["CHAN"] = CHAN
@@ -134,20 +134,6 @@ class Parser(object):
             self.warning(msg)
             self.warning(err.message)
 
-    # def load_python(self, filename, sync=True):
-    #     fname = os.path.expanduser(filename)
-    #     if os.path.exists(fname):
-    #         with open(fname, 'r') as input:
-    #             pycode = input.read()
-    #             self.batch(pycode)
-    #             if sync: self.proxy.sync_to_host()
-    #         return True
-    #     else:
-    #         msg = "Can not open python file '%s' for input" % fname
-    #         self.warning(msg)
-    #         if sync: self.proxy.sync_to_host()
-    #         return False
-
     def load_python(self, filename):
         fname = os.path.expanduser(filename)
         if os.path.exists(fname):
@@ -208,9 +194,9 @@ class Parser(object):
         ent = self.entities.get(name, None)
         return ent and ent.lstype == "cbus"
 
-    def is_buffer(self, name):
-        ent = self.entities.get(name, None)
-        return ent and ent.lstype == "buffer"
+    # def is_buffer(self, name):
+    #     ent = self.entities.get(name, None)
+    #     return ent and ent.lstype == "buffer"
 
     def is_synth(self, name):
         ent = self.entities.get(name, None)
@@ -280,17 +266,6 @@ class Parser(object):
             ent.data = data
             self.entities[name] = ent
             return True
-        
-    # def abus(self, name):
-    #     lstype = self.register_entity(name, "abus", {"channels" : 1})
-    #     if lstype:
-    #         if lstype != 'abus':
-    #             return False
-    #         rs = self.proxy.add_audio_bus(name)
-    #         return rs
-    #     else:
-    #         print("Using existing audio bus '%s'" % name)
-    #         return self.proxy.get_audio_bus(name)
 
     def abus(self, name):
         lstype = self.register_entity(name, "abus", {"channels" : 1})
@@ -315,26 +290,6 @@ class Parser(object):
             return self.proxy.get_control_bus(name)
         else:
             return False
-
-    
-    # def cbus(self, name, channels=1):
-    #     lstype = self.register_entity(name, "cbus", {"channels" : channels})
-    #     if lstype:
-    #         rs = self.proxy.add_control_bus(name, channels)
-    #         return rs
-    #     else:
-    #         return lstype == "cbus"
-
-    # def cbus(self, name):
-    #     lstype = self.register_entity(name, "cbus", {"channels" : 1})
-    #     if lstype:
-    #         if lstype != 'cbus':
-    #             return False
-    #         rs = self.proxy.add_control_bus(name)
-    #         return rs
-    #     else:
-    #         print("Using existing control bus '%s'" % name)
-    #         return self.proxy.get_control_bus(name)
 
     def _set_channel_name(self, channel, new_name):
         new_name.replace(' ','_')
@@ -490,13 +445,13 @@ class Parser(object):
         else:
             raise NoSuchBusError(name)
 
-    # Universal remove  (bus, buffer, synth, map)
+    # Universal remove  (bus, synth, map)
     def rm(self, name, param=ALL, sid=None, force=False):
         lstype = self.what_is(name)
         if lstype == "abus" or lstype == "cbus":
             self.remove_bus(name)
-        elif lstype == "buffer":
-            self.bufferhelper.remove_buffer(name)
+        # elif lstype == "buffer":
+        #     self.bufferhelper.remove_buffer(name)
         elif lstype == "synth" or lstype == "efx":
             self.synthhelper.remove_synth(name, force)
         elif "controller" in lstype:
