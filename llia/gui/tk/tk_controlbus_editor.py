@@ -82,10 +82,7 @@ class TkControlbusEditor(Toplevel):
     def select_bus(self, *_):
         index = self.listbox.curselection()[0]
         bname = self.listbox.get(index).strip()
-        binfo = self.proxy.control_bus_info(bname)
-        #chancount = binfo[2]
         self._var_name.set(bname)
-        #self._var_chancount.set(chancount)
         self._current_selection = index
 
     def add_bus(self, *_):

@@ -75,7 +75,6 @@ class TkAudiobusEditor(Toplevel):
     def select_bus(self, *_):
         index = self.listbox.curselection()[0]
         bname = self.listbox.get(index).strip()
-        binfo = self.proxy.audio_bus_info(bname)
         self._var_name.set(bname)
         self._current_selection = index
 
