@@ -13,6 +13,7 @@ from llia.osc_receiver import OSCReceiver
 from llia.synth_proxy import SynthSpecs
 from llia.generic import is_int
 from llia.bus import AudioBus, ControlBus
+from llia.llia_buffer import BufferProxy
 import llia.constants as con
 
 class LliaProxy(object):
@@ -50,6 +51,18 @@ class LliaProxy(object):
             self._control_buses[bname] = ControlBus(bname)
         
         self._buffers = {}
+        for bname in con.PROTECTED_BUFFERS:
+            bobj = BufferProxy(bname)
+            bobj["frames"] = con.DEFAULT_BUFFER_FRAME_COUNT
+            bobj["channels"] = 1
+            bobj["is-wavetable"] = True
+            bobj["is-protected"] = True
+            bobj["sample-rate"] = con.DEFAULT_SAMPLE_RATE
+            bobj["filename"] = ""
+            bobj["index"] = -1
+            self._buffers[bname] = bobj
+            
+            
         self._callback_message = {}
         for rmsg in ("ping-response", 
                      "booting-server", 
@@ -188,18 +201,28 @@ class LliaProxy(object):
             b = str(self._control_buses[k])
             print("%s%s" % (pad2, b))
         
+        # print("%sbuffers:" % pad1)
+        # frmt = "%sindex: %3s, name: '%-12s', frames: %4s, channels: %2s, "
+        # frmt = frmt + "sr: %s,  filename: '%s'"
+        # for b in sorted(self._buffers.keys()):
+        #     binfo = self._buffers[b]
+        #     index = binfo["index"]
+        #     bname = binfo["name"]
+        #     frames = binfo["frames"]
+        #     chans = binfo["channels"]
+        #     sr = binfo["sample-rate"]
+        #     filename = binfo["filename"]
+        #     print(frmt % (pad2, index, bname, frames, chans, sr, filename))
+
         print("%sbuffers:" % pad1)
-        frmt = "%sindex: %3d, name: '%-12s', frames: %4d, channels: %2d, "
-        frmt = frmt + "sr: %d,  filename: '%s'"
+        frmt = "%sname: %-8s, index: %s"
         for b in sorted(self._buffers.keys()):
-            binfo = self._buffers[b]
-            index = binfo["index"]
-            bname = binfo["name"]
-            frames = binfo["frames"]
-            chans = binfo["channels"]
-            sr = binfo["sample-rate"]
-            filename = binfo["filename"]
-            print(frmt % (pad2, index, bname, frames, chans, sr, filename))
+            bobj = self._buffers[b]
+            index = bobj["index"]
+            name = bobj["name"]
+            print(frmt % (pad2, name, index))
+
+            
         print("%sSynths:" % pad1)
         for s in sorted(self._synths.keys()):
             print("%s%s" % (pad2, s))
@@ -294,23 +317,28 @@ class LliaProxy(object):
                 sys.exit(1)
         return rs
 
-    def get_buffer_list(self):
-        '''
-        Requst server to send list of buffers.
-        
-        RETURNS: list
-        '''
-        raw = self._query_host("get-buffer-list")[0].strip().split(" ")
-        raw = raw[1:-1]
-        acc = []
-        for r in raw:
-            if r and r[-1] == ",":
-                acc.append(r[:-1])
-            else:
-                acc.append(r)
-        if acc == ['']: acc = []        
-        return acc
+    # FIXME: has bug
+    # def get_buffer_list(self):
+    #     '''
+    #     Requst server to send list of buffers.
+    #    
+    #     RETURNS: list
+    #     '''
+    #     raw = self._query_host("get-buffer-list")[0].strip().split(" ")
+    #     raw = raw[1:-1]
+    #     acc = []
+    #     for r in raw:
+    #         if r and r[-1] == ",":
+    #             acc.append(r[:-1])
+    #         else:
+    #             acc.append(r)
+    #     if acc == ['']: acc = []        
+    #     return acc
 
+    def get_buffer(self, bname):
+        return self._buffers[bname]
+
+    
     def get_buffer_info(self, bname):
         '''
         Request server send information about specific buffer.
@@ -390,6 +418,16 @@ class LliaProxy(object):
             payload = [name, maxharm, decay, skip, mode, cutoff, depth,
                        frames]
             rs = self._send("create-wavetable", payload)
+            bobj = BufferProxy(name)
+            bobj["frames"] = frames
+            bobj["channels"] = 1
+            bobj["is-wavetable"] = True
+            bobj["is-protected"] = False
+            bobj["sample-rate"] = 44100 # ISSUE: assumend value for sr
+            bobj["filename"] = ""
+            bobj["index"] = None
+            self._buffers[name] = bobj
+            return bobj
     
     def audio_bus_exists(self, bname):
         '''
@@ -648,7 +686,9 @@ class LliaProxy(object):
           frames - int, must be power of 2 if buffer is used as a wave-table
           channels - int 
 
-        RETURNS: bool, True if buffer was added.
+        RETURNS: BufferProxy if buffer added, False otherwise
+
+        Raises LliaError if bname already exixts and is not a buffer
         '''
         if self.buffer_exists(bname):
             self.warning("Buffer %s already exists" % bname)
@@ -656,8 +696,16 @@ class LliaProxy(object):
         else:
             self._send("add-buffer", [bname, frames, channels])
             rs = self.expect_osc_response("buffer-added")
-            #self.sync_to_host()
-            return rs
+            if rs:
+                bobj = BufferProxy(bname)
+                bobj['frames'] = frames
+                bobj['channels'] = channels
+                self._buffers[bname] = bobj
+                return bobj
+            else:
+                msg = "Can not add buffer: '%s'" % bname
+                raise LliaError(msg)
+            return rFalse
 
     def remove_buffer(self, bname):
         '''
@@ -669,7 +717,7 @@ class LliaProxy(object):
         Raises NoSuchBufferError if buffer does not exists. 
         '''
         if self.buffer_exists(bname):
-            del self._buffers[bname]
+            self._buffers[bname].pop(bname)
             self._send("free-buffer", [bname])
         else:
             raise NoSuchBufferError(bname)
@@ -880,10 +928,7 @@ class LliaProxy(object):
     #     sy = self.get_synth(sid)
     #     #sy.buffers[params] = buffer_name
 
-    # def plot_buffer(self, buffer_name):
-    #     payload = [buffer_name]
-    #     rs = self._send("plot-buffer", payload)
-        
+  
     # def sync_to_host(self):
     #     pass
         #self._audio_buses = {}

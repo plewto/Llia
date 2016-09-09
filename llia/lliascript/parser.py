@@ -281,14 +281,42 @@ class Parser(object):
             self.entities[name] = ent
             return True
         
+    # def abus(self, name):
+    #     lstype = self.register_entity(name, "abus", {"channels" : 1})
+    #     if lstype:
+    #         if lstype != 'abus':
+    #             return False
+    #         rs = self.proxy.add_audio_bus(name)
+    #         return rs
+    #     else:
+    #         print("Using existing audio bus '%s'" % name)
+    #         return self.proxy.get_audio_bus(name)
+
     def abus(self, name):
         lstype = self.register_entity(name, "abus", {"channels" : 1})
         if lstype:
-            rs = self.proxy.add_audio_bus(name)
-            return rs
+            if self.proxy.audio_bus_exists(name):
+                msg = "Reusing existing audio bus '%s'" % name
+                print(msg)
+            else:
+                self.proxy.add_audio_bus(name)
+            return self.proxy.get_audio_bus(name)
         else:
-            return lstype == "abus"
+            return False
 
+    def cbus(self, name):
+        lstype = self.register_entity(name, "cbus", {"channels" : 1})
+        if lstype:
+            if self.proxy.control_bus_exists(name):
+                msg = "Reusing existing control bus '%s'" % name
+                print(msg)
+            else:
+                self.proxy.add_control_bus(name)
+            return self.proxy.get_control_bus(name)
+        else:
+            return False
+
+    
     # def cbus(self, name, channels=1):
     #     lstype = self.register_entity(name, "cbus", {"channels" : channels})
     #     if lstype:
@@ -297,13 +325,16 @@ class Parser(object):
     #     else:
     #         return lstype == "cbus"
 
-    def cbus(self, name):
-        lstype = self.register_entity(name, "cbus", {"channels" : 1})
-        if lstype:
-            rs = self.proxy.add_control_bus(name)
-            return rs
-        else:
-            return lstype == "cbus"
+    # def cbus(self, name):
+    #     lstype = self.register_entity(name, "cbus", {"channels" : 1})
+    #     if lstype:
+    #         if lstype != 'cbus':
+    #             return False
+    #         rs = self.proxy.add_control_bus(name)
+    #         return rs
+    #     else:
+    #         print("Using existing control bus '%s'" % name)
+    #         return self.proxy.get_control_bus(name)
 
     def _set_channel_name(self, channel, new_name):
         new_name.replace(' ','_')

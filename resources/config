@@ -34,8 +34,8 @@ client-port : 58000
 trace-osc-transmission : False
 
 [GUI]
-gui : Tk
-no-splash : False
+gui : None
+no-splash : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
 warn-on-exit : False

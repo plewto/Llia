@@ -12,7 +12,7 @@ class LockedDictionary(dict):
 
     def __setitem__(self, key, value):
         if self.has_key(key):
-            super(LockedDictinary, self).__setitem__(key, value)
+            super(LockedDictionary, self).__setitem__(key, value)
         else:
             msg = "Can not ad key to LockedDictionary: %s" % key
             raise KeyError(msg)

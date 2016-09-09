@@ -8,25 +8,50 @@ LliaBuffers : Object {
 
 	var sopts;							// ServerOptions
 	var buffers;						// Dictionary
+	var protectedBuffers;               // static arracy of protectede buffers 
+		
 
 	*bufferDoesNotExistsException {|name|
 		var msg = "Buffer '" ++ name.asString ++ "' does not exists.";
 		Error(msg).throw;
 	}
 
+
+	
 	*new {
+		
 		^super.new.init();
 	}
 
 	init {|app|
+		var buf;
+		protectedBuffers = ["SINE1", "TRIANGLE", "SAW128", "PULSE20"];
 		sopts = ServerOptions.new;
 		buffers = Dictionary.new(8);
+		// this.addBuffer("SINE");
+		// this.addBuffer("TRIANGLE");
+		// this.addBuffer("SAWTOOTH");
+		// this.addBuffer("PULSE");
+		// buffers.getBuffer("SINE").sine1([1.0], True, True, True);
+		this.sine1("SINE1", [1.0]);
+		this.wave("TRIANGLE", 128, 2.0, 2);
+		this.wave("SAW128");
+		this.wave("PULSE20", 128, 1.0, 5);
 	}
 
 	size {
 		^buffers.size;
 	}
-	
+
+	isProtectedBuffer {|name|
+		protectedBuffers.do({|pname|
+			if( pname == name,
+				{
+					^true;
+				})})
+		^false;
+	}
+
 	bufferCount {
 		^sopts.numBuffers;
 	}
@@ -94,6 +119,16 @@ LliaBuffers : Object {
 			this.free(name)});
 	}
 
+	restart {
+		this.bufferList.do({|name|
+			if( not(this.isProtectedBuffer(name)),
+				{
+					this.free(name);
+				});
+		});
+	}
+
+	
 	*lowpass {|ary, cutoff, depth|
 		var acc;
 		acc = Array.new;

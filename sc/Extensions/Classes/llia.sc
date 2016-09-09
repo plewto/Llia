@@ -72,7 +72,7 @@ LliaHandler : Object {
 	restart {
 		audioBuses.restart;
 		controlBuses.restart;
-		buffers.freeAll;
+		buffers.restart;
 		synths.values.do({|sy| sy.free});
 		postf("*** Llia restarted ***\n");
 	}
@@ -606,8 +606,7 @@ LliaHandler : Object {
 				rs = buffers.wave(bufferName, maxHarm, decay, skip, mode, cutoff, depth, frames)},
 				this.path("create-wavetable")),
 
-			// cmd buffer-name
-			// 
+			//cmd plot-buffer
 			// OSCFunc ({|msg|
 			// 	var bufferName, rs;
 			// 	bufferName = msg[1];
