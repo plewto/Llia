@@ -101,13 +101,14 @@ def _is_sink(obj):
     
 
                    
-class Bus(object):
+class BusProxy(object):
     '''
     An abstract super class for audio or control buses.
     Each bus has a name, a list of sources and a list of sinks.
     '''
-    def __init__(self, name):
-        super(Bus, self).__init__()
+    def __init__(self, name, app):
+        super(BusProxy, self).__init__()
+        self.app = app
         self.name = name
         self._sources = []
         self._sinks = []
@@ -185,10 +186,10 @@ class Bus(object):
         acc += frmt % (len(self._sources),len(self._sinks))
         return acc
         
-class AudioBus(Bus):
+class AudioBus(BusProxy):
 
-    def __init__(self, name):
-        super(AudioBus, self).__init__(name)
+    def __init__(self, name, app):
+        super(AudioBus, self).__init__(name, app)
 
     @staticmethod
     def rate():
@@ -198,10 +199,10 @@ class AudioBus(Bus):
         return self.name.startswith("out_") or self.name.startswith("in_")
 
 
-class ControlBus(Bus):
+class ControlBus(BusProxy):
 
-    def __init__(self, name):
-        super(ControlBus, self).__init__(name)
+    def __init__(self, name, app):
+        super(ControlBus, self).__init__(name, app)
 
     @staticmethod
     def rate():

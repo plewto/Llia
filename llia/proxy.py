@@ -40,15 +40,15 @@ class LliaProxy(object):
         self._audio_buses = {}
         for i in range(con.PROTECTED_AUDIO_OUTPUT_BUS_COUNT):
             bname = "out_%s" % i
-            self._audio_buses[bname] = AudioBus(bname)
+            self._audio_buses[bname] = AudioBus(bname, self.app)
         for i in range(con.PROTECTED_AUDIO_INPUT_BUS_COUNT):
             bname = "in_%s" % i
-            self._audio_buses[bname] = AudioBus(bname)
+            self._audio_buses[bname] = AudioBus(bname, self.app)
         # initialize protected control buses
         self._control_buses = {}
         for i in "AB":
             bname = "CBUS_%s" % i
-            self._control_buses[bname] = ControlBus(bname)
+            self._control_buses[bname] = ControlBus(bname, self.app)
         
         # self._buffers = {}
         # for bname in con.PROTECTED_BUFFERS:
@@ -328,7 +328,7 @@ class LliaProxy(object):
             return False
         else:
             self._send("add-bus", ["audio", bname, 1])
-            abus = AudioBus(bname)
+            abus = AudioBus(bname, self.app)
             self._audio_buses[bname] = abus
             return True
 
@@ -421,7 +421,7 @@ class LliaProxy(object):
             return False
         else:
             self._send("add-bus", ["control", bname, 1])
-            cbus = ControlBus(bname)
+            cbus = ControlBus(bname, self.app)
             self._control_buses[bname] = cbus
             return True
 

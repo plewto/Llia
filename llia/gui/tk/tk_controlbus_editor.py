@@ -76,7 +76,7 @@ class TkControlbusEditor(Toplevel):
     def refresh(self):
         self.lab_warning.config(text="")
         self.listbox.delete(0, END)
-        for k in self.proxy.control_bus_keys():
+        for k in self.proxy.control_bus_names():
             self.listbox.insert(END, k)
         
     def select_bus(self, *_):
