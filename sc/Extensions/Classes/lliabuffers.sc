@@ -28,15 +28,10 @@ LliaBuffers : Object {
 		protectedBuffers = ["SINE1", "TRIANGLE", "SAW128", "PULSE20"];
 		sopts = ServerOptions.new;
 		buffers = Dictionary.new(8);
-		// this.addBuffer("SINE");
-		// this.addBuffer("TRIANGLE");
-		// this.addBuffer("SAWTOOTH");
-		// this.addBuffer("PULSE");
-		// buffers.getBuffer("SINE").sine1([1.0], True, True, True);
-		this.sine1("SINE1", [1.0]);
-		this.wave("TRIANGLE", 128, 2.0, 2);
-		this.wave("SAW128");
-		this.wave("PULSE20", 128, 1.0, 5);
+		// this.sine1("SINE1", [1.0]);
+		// this.wave("TRIANGLE", 128, 2.0, 2);
+		// this.wave("SAW128");
+		// this.wave("PULSE20", 128, 1.0, 5);
 	}
 
 	size {
