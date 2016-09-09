@@ -122,7 +122,7 @@ class BusProxy(object):
         return None
 
     # Update editor of bus connection change
-    def _sync_editor(self):
+    def sync_editor(self):
         pass
         # ISSUE: place holder method, not implemented
     
@@ -142,14 +142,14 @@ class BusProxy(object):
         if not self.has_source(sid, param):
             bs = BusSource(sid, param)
             self._sources.append(bs)
-            if sync: self._sync_editor()
+            if sync: self.sync_editor()
 
     def remove_source(self,sid, param='', sync=True):
         bs = BusSource(sid, param)
         def fn(a):
             return not(a == bs)
         self._sources = filter(fn, self._sources)
-        if sync: self._sync_editor()
+        if sync: self.sync_editor()
 
     def has_sink(self, sid, param=''):
         bs = BusSink(sid, param)
@@ -161,14 +161,14 @@ class BusProxy(object):
         if not self.has_sink(sid, param):
             bs = BusSink(sid, param)
             self._sinks.append(bs)
-            if sync: self._sink_editor()
+            if sync: self.sync_editor()
 
     def remove_sink(self,sid, param='', sync=True):
         bs = BusSink(sid, param)
         def fn(a):
             return not(a == bs)
         self._sinks = filter(fn, self._sinks)
-        if sync: self._sync_editor()
+        if sync: self.sync_editor()
             
     def dump(self, depth=0, silent=False):
         pad1 = ' '*4*depth
