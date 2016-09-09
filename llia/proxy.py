@@ -828,39 +828,70 @@ class LliaProxy(object):
         except KeyError:
             raise NoSuchSynthError(sid)
 
-    def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset=0):
+    # def assign_synth_audio_bus(self, stype, id_, param, bus_name, offset=0):
+    #     '''
+    #     Assign server-side audio bus to synth parameter.
+    #     This method only applies to the server application and does not 
+    #     make any modifications to client-side synth and bus objects.
+    #
+    #     ARGS:
+    #       stype    - String, the synth type
+    #       id_      - int, the synth serial id.
+    #       param    - String, the synth parameter used to connect to the bus.
+    #       bus_name - String.
+    #       offset   - int, legacy argument, sets the bus number offset,
+    #                  should always be 0.
+    #     '''
+    #     payload = [stype, id_, param, bus_name, offset]
+    #     rs = self._send("assign-synth-audio-bus", payload)
+
+
+    def assign_synth_audio_bus(self, stype, id_, param, bus_name):
         '''
         Assign server-side audio bus to synth parameter.
         This method only applies to the server application and does not 
         make any modifications to client-side synth and bus objects.
-
+    
         ARGS:
           stype    - String, the synth type
           id_      - int, the synth serial id.
           param    - String, the synth parameter used to connect to the bus.
           bus_name - String.
-          offset   - int, legacy argument, sets the bus number offset,
-                     should always be 0.
         '''
-        payload = [stype, id_, param, bus_name, offset]
+        payload = [stype, id_, param, bus_name, 0]
         rs = self._send("assign-synth-audio-bus", payload)
 
 
-    def assign_synth_control_bus(self, stype, id_, param, bus_name, offset=0):
+    # def assign_synth_control_bus(self, stype, id_, param, bus_name, offset=0):
+    #     '''
+    #     Assign server-side control bus to synth parameter.
+    #     This method only applies to the server application and does not 
+    #     make any modifications to client-side synth and bus objects.
+    #
+    #     ARGS:
+    #       stype    - String, the synth type
+    #       id_      - int, the synth serial id.
+    #       param    - String, the synth parameter used to connect to the bus.
+    #       bus_name - String.
+    #       offset   - int, legacy argument, sets the bus number offset,
+    #                  should always be 0.
+    #     '''
+    #     payload = [stype, id_, param, bus_name, offset]
+    #     rs = self._send("assign-synth-control-bus", payload)
+
+    def assign_synth_control_bus(self, stype, id_, param, bus_name):
         '''
         Assign server-side control bus to synth parameter.
         This method only applies to the server application and does not 
         make any modifications to client-side synth and bus objects.
-
+    
         ARGS:
           stype    - String, the synth type
           id_      - int, the synth serial id.
           param    - String, the synth parameter used to connect to the bus.
           bus_name - String.
-          offset   - int, legacy argument, sets the bus number offset,
-                     should always be 0.
         '''
-        payload = [stype, id_, param, bus_name, offset]
+        payload = [stype, id_, param, bus_name, 0]
         rs = self._send("assign-synth-control-bus", payload)
 
 

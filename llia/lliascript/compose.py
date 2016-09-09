@@ -4,10 +4,11 @@
 from llia.lliascript.synthhelper import SynthHelper
 
 
-fill_outbus_args = SynthHelper.fill_outbus_args
+#fill_outbus_args = SynthHelper.fill_outbus_args
 
 class Composer(object):
 
+    
     def __init__(self, parser):
         self.parser = parser
 
@@ -84,44 +85,45 @@ class Composer(object):
         return code
 
     def _build_synths(self):
-        acc = []
-        for e in self.parser.entities.values():
-            #print("DEBUG parse, e.lstype = ", e.lstype)
-            if e.lstype == "synth" or e.lstype == "group":
-                acc.append(e)
-        acc.sort(key=lambda x: x.data["serial-number"])
-        code = "# Synths\n"
-        for e in acc:
-            if e.data["is-efx"]:
-                code += 'efx("%s", ' % e.data["stype"]
-                code += '%d, ' % int(e.data["id"])
-                outbus,param,offset = fill_outbus_args(e.data["outbus"])
-                code += '["%s","%s",%d])\n' % (outbus,param,offset)
-            elif e.data["is-group"]:
-                name = e.data["name"]
-                code += 'group("%s")\n' % name
-            else:
-                # Assume an instrumental synth
-                code += 'synth("%s", ' % e.data["stype"]
-                code += '%d, ' % int(e.data["id"])
-                code += '"%s", ' % e.data["keymode"]
-                code += '%d, ' % int(e.data["voice-count"])
-                outbus,param,offset = fill_outbus_args(e.data["outbus"])
-                code += '["%s", "%s", %d])\n' % (outbus,param,offset)
-            code += "create_editor()\n"
-            # Load bank
-            sy = self.parser.synthhelper.get_synth()
-            bnk = sy.bank()
-            fname = bnk.filename
-            if fname:
-                code += 'try:\n'
-                code += '    load_bank("%s")\n' % fname
-                code += 'except Error as err:\n'
-                code += '    print(\'ERROR: can not load bank file "%s"\' % fname)\n'
-                code += '    print(type(err))\n'
-                code += '    print(err.message)\n'
-        code += "\n"
-        return code
+        # acc = []
+        # for e in self.parser.entities.values():
+        #     #print("DEBUG parse, e.lstype = ", e.lstype)
+        #     if e.lstype == "synth" or e.lstype == "group":
+        #         acc.append(e)
+        # acc.sort(key=lambda x: x.data["serial-number"])
+        # code = "# Synths\n"
+        # for e in acc:
+        #     if e.data["is-efx"]:
+        #         code += 'efx("%s", ' % e.data["stype"]
+        #         code += '%d, ' % int(e.data["id"])
+        #         outbus,param,offset = fill_outbus_args(e.data["outbus"])
+        #         code += '["%s","%s",%d])\n' % (outbus,param,offset)
+        #     elif e.data["is-group"]:
+        #         name = e.data["name"]
+        #         code += 'group("%s")\n' % name
+        #     else:
+        #         # Assume an instrumental synth
+        #         code += 'synth("%s", ' % e.data["stype"]
+        #         code += '%d, ' % int(e.data["id"])
+        #         code += '"%s", ' % e.data["keymode"]
+        #         code += '%d, ' % int(e.data["voice-count"])
+        #         outbus,param,offset = fill_outbus_args(e.data["outbus"])
+        #         code += '["%s", "%s", %d])\n' % (outbus,param,offset)
+        #     code += "create_editor()\n"
+        #     # Load bank
+        #     sy = self.parser.synthhelper.get_synth()
+        #     bnk = sy.bank()
+        #     fname = bnk.filename
+        #     if fname:
+        #         code += 'try:\n'
+        #         code += '    load_bank("%s")\n' % fname
+        #         code += 'except Error as err:\n'
+        #         code += '    print(\'ERROR: can not load bank file "%s"\' % fname)\n'
+        #         code += '    print(type(err))\n'
+        #         code += '    print(err.message)\n'
+        # code += "\n"
+        # return code
+        return ""
     
     def _build_buffer_assignments(self):
         code = "# Buffer Assignments\n"

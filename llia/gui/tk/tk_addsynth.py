@@ -35,13 +35,10 @@ class TkAddSynthDialog(Toplevel):
         self.id_ = select_synth_id(self.app, synth_type)
         self.sid = "%s_%d" % (synth_type, self.id_)
         specs = SynthSpecs.global_synth_type_registry[synth_type]
-        #self._busname_map = {}   # Maps synth parameters to bus name Comboboxes   DEPRECIATE
-        
         self._combo_audio_in = {}    # Maps synth parameter to combo box
         self._combo_audio_out = {}
         self._combo_control_in = {}
         self._combo_control_out = {}
-        
         self._buffername_map = {}
         title = "Add %s " % synth_type
         if is_efx:
@@ -58,7 +55,6 @@ class TkAddSynthDialog(Toplevel):
         lab_id = factory.dialog_title_label(frame_north, title)
         lab_logo.grid(row=0, column=0, padx=8)
         lab_id.grid(row=0, column=1)
-
         # Audio Input Buses
         frame_audio_in = factory.label_frame(main, "Audio Input Buses")
         row = 0
@@ -70,7 +66,6 @@ class TkAddSynthDialog(Toplevel):
                 combo = factory.audio_bus_combobox(frame_audio_in, self.app)
                 combo.set(b[1])
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
-                #self._busname_map[param] = combo
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
                 self._combo_audio_in[param] = combo
             except IndexError:
@@ -79,7 +74,6 @@ class TkAddSynthDialog(Toplevel):
             row += 1
         factory.padding_label(frame_audio_in).grid(row=row, column=0)
         frame_audio_in.grid(row=1, column=0, padx=4, pady=4, sticky='ew')
-        
         # Audio Output Buses
         frame_audio_out = factory.label_frame(main, "Audio Output Buses")
         row = 0
@@ -91,7 +85,6 @@ class TkAddSynthDialog(Toplevel):
                 combo = factory.audio_bus_combobox(frame_audio_out, self.app)
                 combo.set(b[1])
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
-                #self._busname_map[param] = combo
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
                 self._combo_audio_out[param] = combo
             except IndexError:
@@ -100,7 +93,6 @@ class TkAddSynthDialog(Toplevel):
             row += 1
         factory.padding_label(frame_audio_out).grid(row=row, column=0)
         frame_audio_out.grid(row=5, column=0, padx=4, pady=4, sticky='ew')
-        
         # Control Input Buses
         frame_control_in = factory.label_frame(main, "Control Input Buses")
         row = 0
@@ -112,7 +104,6 @@ class TkAddSynthDialog(Toplevel):
                 combo = factory.control_bus_combobox(frame_control_in, self.app)
                 combo.set(b[1])
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
-                #self._busname_map[param] = combo
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
                 self._combo_control_in[param] = combo
             except IndexError:
@@ -121,7 +112,6 @@ class TkAddSynthDialog(Toplevel):
             row += 1
         factory.padding_label(frame_control_in).grid(row=row, column=0)
         frame_control_in.grid(row=1, column=3, padx=4, pady=4, sticky='ew')
-
         # Control Output Buses
         frame_control_out = factory.label_frame(main, "Control Output Buses")
         row = 0
@@ -133,7 +123,6 @@ class TkAddSynthDialog(Toplevel):
                 combo = factory.control_bus_combobox(frame_control_out, self.app)
                 combo.set(b[1])
                 lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
-                #self._busname_map[param] = combo
                 combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
                 self._combo_control_out[param] = combo
             except IndexError:
@@ -142,22 +131,21 @@ class TkAddSynthDialog(Toplevel):
             row += 1
         factory.padding_label(frame_control_out).grid(row=row, column=0)
         frame_control_out.grid(row=5, column=3, padx=4, pady=4, sticky='ew')
-
-        # # Buffers
-        if specs["buffers"]:
-            frame_buffers = factory.label_frame(main, "Buffers")
-            row = 0
-            for param in specs["buffers"]:
-                lab_name = factory.label(frame_buffers, param)
-                combo = factory.buffer_combobox(frame_buffers, self.app)
-                lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
-                combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
-                self._buffername_map[param] = combo
-                row += 1
-            factory.padding_label(frame_buffers).grid(row=row, column=0, sticky='ew')
-            frame_buffers.grid(row=9, column=3, padx=4, pady=4)
-
-        # # Keymode
+        # Buffers
+        # if specs["buffers"]:
+        #     frame_buffers = factory.label_frame(main, "Buffers")
+        #     row = 0
+        #     for param in specs["buffers"]:
+        #         lab_name = factory.label(frame_buffers, param)
+        #         combo = factory.buffer_combobox(frame_buffers, self.app)
+        #         lab_name.grid(row=row, column=0, sticky="w", padx=4, pady=4)
+        #         combo.grid(row=row, column=1, sticky="w", padx=4, pady=4)
+        #         self._buffername_map[param] = combo
+        #         row += 1
+        #     factory.padding_label(frame_buffers).grid(row=row, column=0, sticky='ew')
+        #     frame_buffers.grid(row=9, column=3, padx=4, pady=4)
+        
+        # Keymode
         self.var_keymode = StringVar()
         self.var_voice_count = StringVar()
         self.var_voice_count.set(8)
@@ -168,7 +156,6 @@ class TkAddSynthDialog(Toplevel):
             rb.grid(row=0, column=col, sticky="w", padx=4, pady=4)
             col += 1
         self.var_keymode.set(specs["keymodes"][0])  # Set default keymode
-       
         lab_vc = factory.label(frame_keymode, "Voice count")
         spin_vc = factory.int_spinbox(frame_keymode, self.var_voice_count, from_=1, to=128)
         # voice count spin_vc is place hoder for future.
@@ -199,40 +186,27 @@ class TkAddSynthDialog(Toplevel):
     def accept(self):
         shelper = self.app.ls_parser.synthhelper
         if self.is_efx:
-            sy = shelper.add_efx(self.stype, self.id_, outbus=None)
+            sy = shelper.add_efx(self.stype, self.id_)
         elif self.is_controller:
             sy = shelper.add_control_synth(self.stype, self.id_)
         else:
             km = self.var_keymode.get()
             vc = int(self.var_voice_count.get())
-            sy = shelper.add_synth(self.stype, self.id_, km, vc, outbus=None)
-
-        # for p in self._busname_map.keys():
-        #     busname = self._busname_map[p].get()
-        #     offset = 0 
-        #     shelper.assign_buffer_or_bus(p, busname, offset)
-
+            sy = shelper.add_synth(self.stype, self.id_, km, vc)
         for param,combo in self._combo_audio_in.items():
             busname = combo.get()
             shelper.assign_audio_input_bus(param,busname,self.sid)
-
         for param,combo in self._combo_audio_out.items():
             busname = combo.get()
             shelper.assign_audio_output_bus(param,busname,self.sid)
-
         for param,combo in self._combo_control_in.items():
             busname = combo.get()
             shelper.assign_control_input_bus(param,busname,self.sid)
-
         for param,combo in self._combo_control_out.items():
             busname = combo.get()
             shelper.assign_control_output_bus(param,busname,self.sid)
-
-        
-        
         for p,bname in self._buffername_map.items():
             shelper.assign_buffer(p, bname)
-            
         mw = self.app.main_window()
         group = mw.group_windows[-1]
         swin = TkSynthWindow(group.notebook, sy)

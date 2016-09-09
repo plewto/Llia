@@ -98,7 +98,6 @@ class BusSink(object):
 @is_bus_sink.when_type(BusSink)
 def _is_sink(obj):
     return True
-    
 
                    
 class BusProxy(object):
@@ -106,12 +105,13 @@ class BusProxy(object):
     An abstract super class for audio or control buses.
     Each bus has a name, a list of sources and a list of sinks.
     '''
-    def __init__(self, name, app):
+    def __init__(self, name, app, sync=False):
         super(BusProxy, self).__init__()
         self.app = app
         self.name = name
         self._sources = []
         self._sinks = []
+        if sync: self.sync_editor()
 
     @abc.abstractmethod
     def is_protected(self):
@@ -197,8 +197,8 @@ class BusProxy(object):
         
 class AudioBus(BusProxy):
 
-    def __init__(self, name, app):
-        super(AudioBus, self).__init__(name, app)
+    def __init__(self, name, app, sync=False):
+        super(AudioBus, self).__init__(name, app, sync)
 
     @staticmethod
     def rate():
@@ -210,8 +210,8 @@ class AudioBus(BusProxy):
 
 class ControlBus(BusProxy):
 
-    def __init__(self, name, app):
-        super(ControlBus, self).__init__(name, app)
+    def __init__(self, name, app, sync=False):
+        super(ControlBus, self).__init__(name, app, sync)
 
     @staticmethod
     def rate():

@@ -286,7 +286,7 @@ class SynthProxy(object):
         blist = filter(fn, blist)
         return blist
 
-    def assign_audio_output_bus(self, param, bname):
+    def assign_audio_output_bus(self, param, bname, sync=False):
         '''
         Assigns audio output bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
@@ -297,14 +297,15 @@ class SynthProxy(object):
         ARGS:
           param - String, the synth parameter
           bname - String, the bus name.
+          sync  - optional bool, if True notify synth editor of change
         '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._audio_output_buses[param]
             current_bus = proxy.get_audio_bus(current_bus_name)
             new_bus = proxy.get_audio_bus(bname)
-            current_bus.remove_source(self.sid, param)
-            new_bus.add_source(self.sid, param)
+            current_bus.remove_source(self.sid, param, sync=False)
+            new_bus.add_source(self.sid, param, sync=sync)
             self._audio_output_buses[param] = bname
         except KeyError:
             msg = "Can not assign audio output bus.  "
@@ -312,7 +313,7 @@ class SynthProxy(object):
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
    
-    def assign_audio_input_bus(self, param, bname):
+    def assign_audio_input_bus(self, param, bname, sync=False):
         '''
         Assigns audio input bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
@@ -323,14 +324,15 @@ class SynthProxy(object):
         ARGS:
           param - String, the synth parameter
           bname - String, the bus name.
+          sync  - optional bool, if True notify synth editor of change
         '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._audio_input_buses[param]
             current_bus = proxy.get_audio_bus(current_bus_name)
             new_bus = proxy.get_audio_bus(bname)
-            current_bus.remove_sink(self.sid, param)
-            new_bus.add_sink(self.sid, param)
+            current_bus.remove_sink(self.sid, param, sync=False)
+            new_bus.add_sink(self.sid, param, sync=sync)
             self._audio_input_buses[param] = bname
         except KeyError:
             msg = "Can not assign audio input bus.  "
@@ -338,7 +340,7 @@ class SynthProxy(object):
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)   
 
-    def assign_control_output_bus(self, param, bname):
+    def assign_control_output_bus(self, param, bname, sync=False):
         '''
         Assigns control output bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
@@ -349,14 +351,15 @@ class SynthProxy(object):
         ARGS:
           param - String, the synth parameter
           bname - String, the bus name.
+          sync  - optional bool, if True notify synth editor of change
         '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._control_output_buses[param]
             current_bus = proxy.get_control_bus(current_bus_name)
             new_bus = proxy.get_control_bus(bname)
-            current_bus.remove_source(self.sid, param)
-            new_bus.add_source(self.sid, param)
+            current_bus.remove_source(self.sid, param, sync=False)
+            new_bus.add_source(self.sid, param, sync=sync)
             self._control_output_buses[param] = bname
         except KeyError:
             msg = "Can not assign control output bus.  "
@@ -364,7 +367,7 @@ class SynthProxy(object):
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
 
-    def assign_control_input_bus(self, param, bname):
+    def assign_control_input_bus(self, param, bname, sync=False):
         '''
         Assigns control input bus to a synth parameter.
         NOTE: This method only modifies the internal state of self.
@@ -375,14 +378,15 @@ class SynthProxy(object):
         ARGS:
           param - String, the synth parameter
           bname - String, the bus name.
+          sync  - optional bool, if True notify synth editor of change
         '''
         try:
             proxy = self.app.proxy
             current_bus_name = self._control_input_buses[param]
             current_bus = proxy.get_control_bus(current_bus_name)
             new_bus = proxy.get_control_bus(bname)
-            current_bus.remove_sink(self.sid, param)
-            new_bus.add_sink(self.sid, param)
+            current_bus.remove_sink(self.sid, param, sync=False)
+            new_bus.add_sink(self.sid, param, sync=sync)
             self._control_input_buses[param] = bname
         except KeyError:
             msg = "Can not assign control input bus.  "
@@ -390,7 +394,7 @@ class SynthProxy(object):
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
         
-    def disconnect_from_buses(self):
+    def disconnect_from_buses(self, sync=False):
         '''
         Notifies all buses connected to self that they are to disconnect
         from self.
@@ -402,20 +406,21 @@ class SynthProxy(object):
         sid = self.sid
         for bn in self._audio_output_buses.values():
             bus = proxy.get_audio_bus(bn)
-            bus.remove_source(sid, None)
+            bus.remove_source(sid, None, sync=False)
             self._audio_output_buses[bn] = None
         for bn in self._audio_input_buses.values():
             bus = proxy.get_audio_bus(bn)
-            bus.remove_sink(sid, None)
+            bus.remove_sink(sid, None, sync=False)
             self._audio_input_buses[bn] = None
         for bn in self._control_output_buses.values():
             bus = proxy.get_control_bus(bn)
-            bus.remove_source(sid, None)
+            bus.remove_source(sid, None, sync=False)
             self._control_output_buses[bn] = None
         for bn in self._control_input_buses.values():
             bus = proxy.get_control_bus(bn)
-            bus.remove_sink(sid, None)
+            bus.remove_sink(sid, None, sync=False)
             self._control_input_buses[bn] = None
+        self._audio_output_buses.values()[0].sync_editor()
         return True
 
     def midi_input_channel(self, new_channel=None):
