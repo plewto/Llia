@@ -1,6 +1,4 @@
 # llia.gui.tk.tk_synthwindow
-# 2016.06.11
-
 
 from __future__ import print_function
 from Tkinter import Frame, StringVar
@@ -48,7 +46,7 @@ class TkSynthWindow(Frame):
         self.var_keyrange_low = StringVar()
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
-        self._init_program_tab(self.notebook)
+        self._init_info_tab(self.notebook)
         self._init_bus_and_buffer_tab(self.notebook)
         self._init_performance_tab(self.notebook)
         self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
@@ -82,25 +80,31 @@ class TkSynthWindow(Frame):
         sh.remove_synth(sid, force=True)
         self.status("Removed synth: %s" % sid)
     
-    def _init_program_tab(self, master):
+    def _init_info_tab(self, master):
         frame = factory.frame(master)
         inner_frame = factory.frame(frame)
-        master.add(frame, text="Program")
+        master.add(frame, text="Info")
         text_widget = factory.text_widget(inner_frame)
-        text_widget.config(width=80, height=40)
+        text_widget.config(width=90, height=40)
         vsb = factory.scrollbar(inner_frame, orientation='vertical')
         vsb.config(command=text_widget.yview)
-        text_widget.config(yscrollcommand=vsb.set)
-        text_widget.pack(side='left', expand=True, fill='both')
-        vsb.pack(side='right', fill='y')
+        hsb = factory.scrollbar(inner_frame, orientation='horizontal')
+        hsb.config(command=text_widget.xview)
+        text_widget.config(yscrollcommand=vsb.set, xscrollcommand=hsb.set,
+                           wrap='word',)
+        text_widget.grid(row=0, column=0, rowspan=8, columnspan=8)
+        vsb.grid(row=0, column=9, rowspan=8, columnspan=1, sticky='ns')
+        hsb.grid(row=9, column=0, rowspan=1, columnspan=8, stick='we')
         inner_frame.grid(row=0, column=0, rowspan=8, columnspan=8)
         b_update = factory.button(frame, "Update",
                                   command=self.sync_program_tab)
-        b_update.grid(row=9, column=0)
+        b_update.grid(row=9, column=0, sticky='ew', pady=8)
         b_remove = factory.button(frame, "Remove Synth", command=self.remove_synth)
-        b_remove.grid(row=9, column=1)
+        b_remove.grid(row=9, column=1, sticky='ew', pady=8)
         self._info_text_widget = text_widget
+        # TODO: Add clipboard copy or save button.
 
+        
     def sync_program_tab(self):
         bnk = self.synth.bank()
         prog = bnk[None]
