@@ -27,6 +27,12 @@ MAX_UNDO = 10
 BANK_LENGTH = 128
 MAX_TRANSPOSE = 36
 MAX_PITCH_BEND = 2400 # In cents
+MAX_BUS_COUNT = 8   # maximum number of synth buses for -each- bus type
+                    # - audio-input
+                    # - audio-output
+                    # - control-input
+                    # - control-output
+
 
 CURVES = ("Linear", "Exp", "S", "Step")
 MIDI_7BIT_DOMAIN = (0, 127)

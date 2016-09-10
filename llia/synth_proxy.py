@@ -340,6 +340,23 @@ class SynthProxy(object):
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)   
 
+    # Returns bus name assigned to audio input parameter
+    # raises KeyError
+    def get_audio_input_bus(self, param):
+        return self._audio_input_buses[param]
+
+    def get_audio_output_bus(self, param):
+        return self._audio_output_buses[param]
+
+
+    def get_control_input_bus(self, param):
+        return self._control_input_buses[param]
+
+    def get_control_output_bus(self, param):
+        return self._control_output_buses[param]
+
+    
+        
     def assign_control_output_bus(self, param, bname, sync=False):
         '''
         Assigns control output bus to a synth parameter.
@@ -420,7 +437,6 @@ class SynthProxy(object):
             bus = proxy.get_control_bus(bn)
             bus.remove_sink(sid, None, sync=False)
             self._control_input_buses[bn] = None
-        self._audio_output_buses.values()[0].sync_editor()
         return True
 
     def midi_input_channel(self, new_channel=None):

@@ -7,11 +7,9 @@ import llia.constants as con
 import llia.gui.tk.tk_factory as factory
 from llia.synth_proxy import SynthSpecs
 from llia.gui.tk.tk_synthwindow import TkSynthWindow
-
+from llia.constants import MAX_BUS_COUNT
 
 HELP_TOPIC = "add_synth_dialog"
-MAX_BUS_COUNT = 8
-
 
 def select_synth_id(app, stype):
     n = 1

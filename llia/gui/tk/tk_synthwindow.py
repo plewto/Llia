@@ -7,7 +7,8 @@ from llia.generic import is_list
 import llia.gui.tk.tk_factory as factory
 import llia.gui.pallet
 from llia.gui.tk.tk_bankeditor import TkBankEditor
-from llia.gui.tk.tk_bus_and_buffer import TkBusAndBufferEditor
+#from llia.gui.tk.tk_bus_and_buffer import TkBusAndBufferEditor
+from llia.gui.tk.tk_busconnection_editor import TkBusConnectionEditor
 from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, delete_map_dialog
 
 
@@ -47,7 +48,8 @@ class TkSynthWindow(Frame):
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
         self._init_info_tab(self.notebook)
-        self._init_bus_and_buffer_tab(self.notebook)
+        #self._init_bus_and_buffer_tab(self.notebook)
+        self._init_busconnection_tab(self.notebook)
         self._init_performance_tab(self.notebook)
         self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
         self._init_map2_tab(self.notebook) # velocity, aftertouch, keynumber
@@ -117,14 +119,18 @@ class TkSynthWindow(Frame):
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
 
-    def _init_bus_and_buffer_tab(self, master):
-        bbe = TkBusAndBufferEditor(master, self, self.synth)
-        master.add(bbe, text = "Buses & Buffers")
-        self.bus_and_buffer_editor = bbe
+    # def _init_bus_and_buffer_tab(self, master):
+    #     bbe = TkBusAndBufferEditor(master, self, self.synth)
+    #     master.add(bbe, text = "Buses & Buffers")
+    #     self.bus_and_buffer_editor = bbe
 
-    def sync_bus_and_buffer_tab(self):
-        self.bus_and_buffer_editor.sync()
-
+    # def sync_bus_and_buffer_tab(self):
+    #     self.bus_and_buffer_editor.sync()
+    
+    def _init_busconnection_tab(self, master):
+        bct = TkBusConnectionEditor(master, self, self.synth)
+        master.add(bct, text = "Buses")
+        self.bus_connection_editor = bct
         
     def _init_performance_tab(self, master):
         frame = factory.frame(master)
@@ -437,7 +443,7 @@ class TkSynthWindow(Frame):
     
     def sync(self, *ignore):
         self.sync_program_tab()
-        self.sync_bus_and_buffer_tab()
+        self.bus_connection_editor.sync()
         self.sync_performance_tab()
         self.sync_map1_tab()
         self.sync_map2_tab()
