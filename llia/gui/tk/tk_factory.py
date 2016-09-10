@@ -12,6 +12,7 @@ from PIL import Image, ImageTk
 from llia.thirdparty.tk_tooltip import ToolTip
 import llia.constants as constants
 import llia.gui.pallet 
+from llia.gui.tk.buscombo import AudioBusCombobox, ControlBusCombobox
 
 _current_pallet = llia.gui.pallet.default_pallet
 _style = None
@@ -344,20 +345,30 @@ def combobox(master, values, ttip=""):
     tooltip(cb, ttip)
     return cb
 
+# def audio_bus_combobox(master, app):
+#     values = app.proxy.audio_bus_names()
+#     ttip = "Audio buses"
+#     return combobox(master, values, ttip)
+
+# def control_bus_combobox(master, app):
+#     values = app.proxy.control_bus_names()
+#     ttip = "Control buses"
+#     return combobox(master, values, ttip)
+
+# def buffer_combobox(master, app):
+#     values = app.proxy.buffer_keys()
+#     ttip = "Buffers"
+#     return combobox(master, values, ttip)
+
+
 def audio_bus_combobox(master, app):
-    values = app.proxy.audio_bus_names()
-    ttip = "Audio buses"
-    return combobox(master, values, ttip)
+    cb = AudioBusCombobox(master, app.proxy)
+    return cb
 
 def control_bus_combobox(master, app):
-    values = app.proxy.control_bus_names()
-    ttip = "Control buses"
-    return combobox(master, values, ttip)
+    cb = ControlBusCombobox(master, app.proxy)
+    return cb
 
-def buffer_combobox(master, app):
-    values = app.proxy.buffer_keys()
-    ttip = "Buffers"
-    return combobox(master, values, ttip)
 
 def controller_combobox(master, app):
     values = app.config.formatted_controller_names()
