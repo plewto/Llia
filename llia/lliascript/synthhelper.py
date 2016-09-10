@@ -21,7 +21,6 @@ class SynthHelper(object):
         self._assignment_serial_number = 0
 
     def _init_namespace(self, ns):
-        #ns["assign"] = self.assign_buffer_or_bus  # DEPRECIATED
         ns["assign_audio_output"] = self.assign_audio_output_bus
         ns["assign_audio_input"] = self.assign_audio_input_bus
         ns["assign_control_output"] = self.assign_control_output_bus
@@ -173,39 +172,6 @@ class SynthHelper(object):
             msg = msg % (sid, param, busname)
             self.warning(msg)
             return False
-        
-
-    # DEPRECIATED DEPRECIATED DEPRECIATED DEPRECIATED DEPRECIATED DEPRECIATED 
-    # def assign_cbus(self, param, busname, offset=0, sid=None):
-    #     print("DEPRECIATED: synthhekper.assign_cbus")
-    #     sid = sid or self.current_sid
-    #     self.get_synth(sid)
-    #     lstype = self.what_is(busname)
-    #     if lstype == '':
-    #           msg = "Control bus '%s' does not exists." % busname
-    #           self.warning(msg)
-    #           return False
-    #     if lstype == "cbus":
-    #         stype, id_ = self.parse_sid(sid)
-    #         if self.proxy.control_bus_exists(busname):
-    #             self.proxy.assign_synth_control_bus(stype, id_, param, busname, offset)
-    #             ename = "assign-control-bus-%d" % self._assignment_serial_number
-    #             etype = "control-bus-assignment"
-    #             data = {"param" : param,
-    #                     "bus-name" : busname,
-    #                     "offset" : offset,
-    #                     "sid" : sid}
-    #             self.parser.register_entity(ename, etype, data)
-    #             self._assignment_serial_number += 1
-    #             return True
-    #         else:
-    #             msg = "Can not assign control bus: '%s'.  (See BUG 0000)" % busname
-    #             self.warning(msg)
-    #             return False
-    #     else:
-    #         msg = "Can not assign %s '%s' as control bus." % (lstype, busname)
-    #         self.warning(msg)
-    #         return False
 
     def assign_control_output_bus(self, param, busname, sid=None):
         sid = sid or self.current_sid
@@ -254,8 +220,6 @@ class SynthHelper(object):
             msg = msg % (sid,param,busname)
             self.warning(msg)
             return False
-            
-        
         
     def assign_buffer(self, param, name=None, sid=None):
         sid = sid or self.current_sid
@@ -278,55 +242,6 @@ class SynthHelper(object):
                   "sid" : sid}
           self.parser.register_entity(ename, etype, data)
           self._assignment_serial_number += 1
-          
-
-    def assign_buffer_or_bus(self, param, name="", offset=0, sid=None):
-        print("DEPRECIATED synthhelper.assign_buffer_or_bus")
-        if not name:
-            return self.assign_buffer(param, name, sid)
-        lstype = self.what_is(name)
-        if lstype == "abus":
-            self.assign_abus(param, name, offset, sid)
-        elif lstype == "cbus":
-            self.assign_cbus(param, name, offset, sid)
-        elif lstype == "buffer":
-            self.assign_buffer(param, name, sid)
-        else:
-            msg = "Can not assign %s %s to %s %s"
-            msg = msg % (lstype, name, sid, param)
-            raise LliascriptError(msg)
-
-
- 
-
-    # def add_synth(self, stype, id_, keymode, voice_count=8):
-    #     sid = "%s_%s" % (stype, id_)
-    #     if self.synth_exists(sid):
-    #         self.use_synth(sid)
-    #         return True
-    #     else:
-    #         self.assert_synth_type(stype)
-    #         self.assert_keymode(keymode)
-    #         rs = self.proxy.add_synth(stype, id_, keymode, voice_count)
-    #         self.parser.register_entity(sid, "synth",
-    #                                     {"serial-number" : self._synth_serial_number,
-    #                                      "is-group" : False,
-    #                                      "stype" : stype,
-    #                                      "id" : id_,
-    #                                      "keymode" : keymode,
-    #                                      "voice-count" : voice_count,
-    #                                      #"outbus" : outbus,
-    #                                      "is-efx" : False})
-    #         self._synth_serial_number += 1
-    #         if rs:
-    #             self.current_sid = sid
-    #             #bname,param,offset = self.fill_outbus_args(outbus)
-    #             #self.assign_abus(param, bname, offset)
-    #             #self.assign_audio_output_bus(outbus[1], outbus[0], sid)
-    #             #self.assign_audio_output_bus(param,bname,sid)
-    #             self.update_prompt()
-    #         return rs
-
 
     def add_synth(self, stype, keymode="Poly1", voice_count=8):
         self.assert_synth_type(stype)
@@ -345,7 +260,35 @@ class SynthHelper(object):
             self.current_sid = sy.sid
             self.update_prompt()
         return sy
+
+    def add_efx(self, stype):
+        self.assert_efx_type(stype)
+        sy = self.proxy.add_efx(stype)
+        if sy:
+            self.parser.register_entity(sy.sid, "synth",
+                                        {"serial-number" : sy.id_,
+                                         "is-group" : False,
+                                         "stype" : stype,
+                                         "id" : sy.id_,
+                                         "is-efx" : True})
+            self.current_sid = sy.sid
+            self.update_prompt()
+        return sy
     
+    def add_control_synth(self, stype):
+        self.assert_control_synth_type(stype)
+        sy = self.proxy.add_efx(stype)
+        if sy:
+            self.parser.register_entity(sy.sid, "synth",
+                                        {"serial-number" : sy.id_,
+                                         "is-group" : False,
+                                         "is-efx" : False,
+                                         "is-control-synth" : True,
+                                         "stype" : sy.id_})
+            self.current_sid = sy.sid
+            self.update_prompt()
+            return sy
+
     # Creates editor for current synth.
     # Ignore if synth already has an editor or
     # GUI is not enabled.
@@ -388,78 +331,6 @@ class SynthHelper(object):
             grp = mw.group_windows[grp_index]
             notebook = grp.notebook
             notebook.forget(swin)
-
-    # def add_efx(self, stype, id_):
-    #     sid = "%s_%s" % (stype, id_)
-    #     if self.synth_exists(sid):
-    #         self.use_synth(sid)
-    #         return True
-    #     else:
-    #         self.assert_efx_type(stype)
-    #         rs = self.proxy.add_efx(stype, id_)
-    #         self.parser.register_entity(sid, "synth",
-    #                                     {"serial-number" : self._synth_serial_number,
-    #                                      "is-group" : False,
-    #                                      "stype" : stype,
-    #                                      "id" : id_,
-    #                                      #"outbus" : outbus,
-    #                                      "is-efx" : True})
-    #         self._synth_serial_number += 1
-    #         if rs:
-    #             self.current_sid = sid
-    #             #bname,param,offset = self.fill_outbus_args(outbus)
-    #             #self.assign_abus(param, bname, offset)
-    #             #self.assign_audio_output_bus(param,bname,sid)
-    #             self.update_prompt()
-    #         return rs
-
-    def add_efx(self, stype):
-        self.assert_efx_type(stype)
-        sy = self.proxy.add_efx(stype)
-        if sy:
-            self.parser.register_entity(sy.sid, "synth",
-                                        {"serial-number" : sy.id_,
-                                         "is-group" : False,
-                                         "stype" : stype,
-                                         "id" : sy.id_,
-                                         "is-efx" : True})
-            self.current_sid = sy.sid
-            self.update_prompt()
-        return sy
-    
-    # def add_control_synth(self, stype, id_):
-    #     sid = "%s_%s" % (stype, id_)
-    #     if self.synth_exists(sid):
-    #         self.use_synth(sid)
-    #         return True
-    #     else:
-    #         self.assert_control_synth_type(stype)
-    #         rs = self.proxy.add_efx(stype, id_)
-    #         self.parser.register_entity(sid, "synth",
-    #                                      {"serial-number" : self._synth_serial_number,
-    #                                       "is-group" : False,
-    #                                       "is-efx" : False,
-    #                                       "is-control-synth" : True,
-    #                                       "stype" : id_})
-    #         self._synth_serial_number += 1
-    #         if rs:
-    #             self.current_sid = sid
-    #             self.update_prompt()
-    #         return rs
-
-    def add_control_synth(self, stype):
-        self.assert_control_synth_type(stype)
-        sy = self.proxy.add_efx(stype)
-        if sy:
-            self.parser.register_entity(sy.sid, "synth",
-                                        {"serial-number" : sy.id_,
-                                         "is-group" : False,
-                                         "is-efx" : False,
-                                         "is-control-synth" : True,
-                                         "stype" : sy.id_})
-            self.current_sid = sy.sid
-            self.update_prompt()
-            return sy
         
     def input_channel(self, chan=None, sid=None):
         sy = self.get_synth(sid)
@@ -526,33 +397,39 @@ class SynthHelper(object):
         sy = self.get_synth(sid)
         return (curve, mod, range_, limits, sy)
 
-    def map_cc(self, ctrl, param, curve=linear, mod=None, range_=None, limits=None,sid=None):
+    def map_cc(self, ctrl, param, curve=linear, mod=None, 
+               range_=None, limits=None,sid=None):
         curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
         source = self.config.controller_assignments.get_controller_number(ctrl)
         sy.add_controller_map(source,param,curve,mod,range_,limits)
         return True
 
-    def map_velocity(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+    def map_velocity(self, param, curve=linear, mod=None, 
+                     range_=None, limits=None, sid=None):
         curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
         sy.add_source_map("velocity", param, curve, mod, range_, limits)
         return True
 
-    def map_aftertouch(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+    def map_aftertouch(self, param, curve=linear, mod=None, 
+                       range_=None, limits=None, sid=None):
         curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
         sy.add_source_map("aftertouch", param, curve, mod, range_, limits)
         return True
 
-    def map_pitchwheel(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+    def map_pitchwheel(self, param, curve=linear, mod=None, 
+                       range_=None, limits=None, sid=None):
         curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
         sy.add_source_map("pitchwheel", param, curve, mod, range_, limits)
         return True
 
-    def map_keynumber(self, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+    def map_keynumber(self, param, curve=linear, mod=None, 
+                      range_=None, limits=None, sid=None):
         curve,mod,range_,limits,sy = self._assert_map_args(curve,mod,range_,limits,sid)
         sy.add_source_map("keynumber", param, curve, mod, range_, limits)
         return True
 
-    def parameter_map(self, source, param, curve=linear, mod=None, range_=None, limits=None, sid=None):
+    def parameter_map(self, source, param, curve=linear, mod=None, 
+                      range_=None, limits=None, sid=None):
         lstype = self.what_is(source)
         if "controller" in lstype:
             self.map_cc(source, param, curve, mod, range_, limits, sid)
@@ -604,10 +481,6 @@ class SynthHelper(object):
         print(sy._bank.current_program.dump(1))
         stype, id_ = self.parse_sid(sid)
         self.proxy.free_synth(stype, id_)
-
-    # def use_program(self, slot, sid=None):
-    #     sy=self.get_synth(sid)
-    #     sy.use_program(slot)
 
     def _use_program(self, slot, sid):
         sy = self.get_synth(sid)
@@ -681,28 +554,6 @@ class SynthHelper(object):
         sy = self.get_synth(sid)
         bnk = sy.bank()
         bnk.copy_performance(slot)
-
-    # def paste_performance(self, slot=None, sid=None):
-    #     sy = self.get_synth(sid)
-    #     bnk = sy.bank()
-    #     try:
-    #         performance = bnk.clipboard["Performance"]
-    #         program = bnk[slot]
-    #         program.performance = clone(performance)
-    #         bnk[slot] = program
-    #     except KeyError:
-    #         msg = "Clipboard does not contain Performance"
-    #         raise KeyError(msg)
-
-    # def fill_performance(self, start, end, sid=None):
-    #     sy = self.get_synth(sid)
-    #     bnk = sy.bank()
-    #     performance = bnk[None].performance
-    #     print(performance.dump())
-    #     for i in range(start, end):
-    #         prog = bnk[i]
-    #         prog.performance = clone(performance)
-    #         bnk[i]=prog
 
     def paste_performance(self, sid=None):
         sy = self.get_synth(sid)

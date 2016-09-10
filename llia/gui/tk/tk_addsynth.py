@@ -11,15 +11,6 @@ from llia.constants import MAX_BUS_COUNT
 from llia.synth_proxy import SynthProxy
 
 HELP_TOPIC = "add_synth_dialog"
-
-# def select_synth_id(app, stype):
-#     n = 1
-#     while True:
-#         if not app.proxy.synth_exists(stype, n):
-#             return n
-#         else:
-#             n = n+1
-
         
 class TkAddSynthDialog(Toplevel):
 
@@ -31,7 +22,6 @@ class TkAddSynthDialog(Toplevel):
         self.stype = synth_type
         self.is_efx = is_efx
         self.is_controller = is_controller
-        #self.id_ = SynthProxy.current_synth_serial_number()
         sid = "%s_%d" % (synth_type, SynthProxy.current_synth_serial_number())
         specs = SynthSpecs.global_synth_type_registry[synth_type]
         self._combo_audio_in = {}    # Maps synth parameter to combo box
@@ -157,7 +147,6 @@ class TkAddSynthDialog(Toplevel):
         self.var_keymode.set(specs["keymodes"][0])  # Set default keymode
         lab_vc = factory.label(frame_keymode, "Voice count")
         spin_vc = factory.int_spinbox(frame_keymode, self.var_voice_count, from_=1, to=128)
-        # voice count spin_vc is place hoder for future.
         lab_vc.grid(row=1, column=0, padx=4)
         spin_vc.grid(row=1, column=1, columnspan=3, padx=4, pady=4)
         frame_keymode.grid(row=9, column=0, padx=4, pady=4, sticky='ew')
@@ -223,5 +212,3 @@ class TkAddSynthDialog(Toplevel):
             self.app.main_widnow().warning("Synth could not be added")    
         factory.restore_pallet()
         self.destroy()
-        
-

@@ -227,18 +227,17 @@ class SynthProxy(object):
         self.id_ = SynthProxy._assign_synth_serial_number()
         self.app = app
         self.specs = specs
-        self.synth_format = specs["format"]  # format is synonyms with
-                                             # "synth type"
+        self.synth_format = specs["format"]      # format is synonyms with
+                                                 # "synth type"
         self.sid = "%s_%d" % (self.synth_format, # sid is a combination of
                               self.id_)          # synth-type and id_
-        self.synth_editor = None            # under Tk, an instance of
-                                            # TkSynthWindow
+        self.synth_editor = None                 # under Tk, an instance of
+                                                 # TkSynthWindow
         global_oscid = app.proxy.global_osc_id()
         self.oscID = "%s/%s/%s" % (global_oscid,self.synth_format, self.id_)
         self._bank = bank.clone()
         self._midi_chan0 = 0         # MIDI channel is "zero-indexed" (0..15)
         self._key_table_name = "EQ12"
-
         # _audio_output_buses
         # _audio_input_buses
         # _control_output_buses
