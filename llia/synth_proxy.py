@@ -37,7 +37,7 @@ class SynthSpecs(dict):
         return SynthSpecs.global_synth_type_registry.has_key(stype)
     
     @staticmethod
-    def create_synth_proxy(app, stype, id_):
+    def create_synth_proxy(app, stype):
         '''
         Creates an instance of SynthProxy.
 
@@ -46,9 +46,6 @@ class SynthSpecs(dict):
             app   - an instance of LliaApp
             stype - String, the synth type.
                     is_know_synth_type(stype) must be True
-            id_   - int, serial number for the new SynthProxy.
-                    id_ must be unique for any given synth type.
-            
         RETURNS: SynthProxy
 
         Raises KeyError if stype is unknown.
@@ -56,7 +53,7 @@ class SynthSpecs(dict):
         try:
             specs = SynthSpecs.global_synth_type_registry[stype]
             cfn = specs["constructor"]
-            syproxy = cfn(app, id_)
+            syproxy = cfn(app)
             return syproxy
         except KeyError:
             return None
@@ -70,9 +67,8 @@ class SynthSpecs(dict):
         keys.  All keys are strings:
         
             format            - String, same as stype
-            constructor       - Function to create SynthProxy fn(app, id_)
+            constructor       - Function to create SynthProxy fn(app)
                                 app - instance of LliaApp
-                                id_ - int synth serial number.
             description       - String, short (one-line) description of Synth
             program-generator - Optional function to generate random patches.
                                 fn(slot, *args)
@@ -182,24 +178,53 @@ class SynthProxy(object):
     '''
     SynthProxy is a client side representation of an active synth(s).
     '''
+
+    _synth_serial_number = 0
+
+    @staticmethod
+    def current_synth_serial_number():
+        '''
+        Each synth is assigned a uniqe int identification when it is 
+        created.  This method returns the new value to be used without 
+        incrementing the internal counter.
+        
+        RETURNS: int
+        '''
+        return SynthProxy._synth_serial_number
+
+    @staticmethod
+    def _assign_synth_serial_number():
+        ''''
+        Rerturns the a unique synth identification number.
+        This method will never return the same number twice.
+        If you wish to inspect the serial current serial number without 
+        altering it, use current_synth_serial_number
+
+        RETURNS: int
+        '''
+        sn = SynthProxy._synth_serial_number
+        SynthProxy._synth_serial_number += 1
+        return sn
     
-    def __init__(self, app, specs, id_, bank):
+    def __init__(self, app, specs, bank):
         '''
         Constructs new SynthProxy
+
+        Do not call this constructor directly! 
+        Use SynthSpecs.create_synth_proxy to create a new SynthProxy.
 
         ARGS:
            
           app   - an instance of LliaApp.
           specs - an instance of SynthSpecs.
-          id_   - int, serial number id.
-                  id_ MUST be unique for any given synth type.
           bank  - an instance of ProgramBank.
 
         RETURNS: SynthProxy.
         '''
         super(SynthProxy, self).__init__()
         self.is_efx = False
-        self.id_ = id_
+        self.is_controller = False
+        self.id_ = SynthProxy._assign_synth_serial_number()
         self.app = app
         self.specs = specs
         self.synth_format = specs["format"]  # format is synonyms with
@@ -209,7 +234,7 @@ class SynthProxy(object):
         self.synth_editor = None            # under Tk, an instance of
                                             # TkSynthWindow
         global_oscid = app.proxy.global_osc_id()
-        self.oscID = "%s/%s/%s" % (global_oscid,self.synth_format, id_)
+        self.oscID = "%s/%s/%s" % (global_oscid,self.synth_format, self.id_)
         self._bank = bank.clone()
         self._midi_chan0 = 0         # MIDI channel is "zero-indexed" (0..15)
         self._key_table_name = "EQ12"
@@ -235,7 +260,6 @@ class SynthProxy(object):
         self._control_input_buses = {}
         for bs in specs["control-input-buses"]:
             self._control_input_buses[bs[0]] = bs[1]
-            
         self._buffers = {}
         host_and_port = app.config.host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
@@ -348,14 +372,11 @@ class SynthProxy(object):
     def get_audio_output_bus(self, param):
         return self._audio_output_buses[param]
 
-
     def get_control_input_bus(self, param):
         return self._control_input_buses[param]
 
     def get_control_output_bus(self, param):
         return self._control_output_buses[param]
-
-    
         
     def assign_control_output_bus(self, param, bname, sync=False):
         '''

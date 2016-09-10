@@ -5,14 +5,13 @@ from __future__ import print_function
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.flngr.flngr_data import program_bank, pp, random_flanger
-# from llia.synths.flngr.flngr_gen import gen_flngr_program
 
 specs = SynthSpecs("Flngr");
 
 class FlngrProxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(FlngrProxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(FlngrProxy, self).__init__(app, specs,program_bank)
         self._editor = None
 
     def create_subeditors(self):

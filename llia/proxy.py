@@ -734,15 +734,49 @@ class LliaProxy(object):
                 acc.append(self._list_synth(sy))
         return acc
 
-    def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
+    # def add_synth(self, stype, id_, keymode="Poly1", voice_count=8):
+    #     '''
+    #     Adds new synth
+    #
+    #     ARGS:
+    #       stype - String, the synth type, MUST be one of the values found
+    #               in constants.SYNTH_TYPES
+    #       id_   - int, synth serial number.  id_ MUST be unique for any 
+    #               given stype.
+    #       keymode     - String, the keymode, MUST be a value found in 
+    #                     constants.KEY_MODES.  NOTE: Most synths do not 
+    #                     support all possible key modes.
+    #       voice_count - int, number of allocated voices.
+    #                     voice_count is only used if keymode has a finite
+    #                     voice allocation, otherwise it is ignored.
+    #     RETURNS: SynthProxy if the synth was added,
+    #              None if the synth could not be added.
+    #     '''
+    #     sid = "%s_%d" % (stype, int(id_))
+    #     if self.synth_exists(stype, id_):
+    #         msg = "Synth %s already exists" % sid
+    #         self.warning(msg)
+    #         return False
+    #     else:
+    #         sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
+    #         if not sy:
+    #             msg = "Synth %s could not be created" % sid
+    #             self.warning(msg)
+    #             return False
+    #         else:
+    #             print("Creating synth: %s" % sid)
+    #             self._synths[sid] = sy
+    #             self._send("add-synth", [stype, id_, keymode, voice_count])
+    #             return sy
+
+
+    def add_synth(self, stype, keymode="Poly1", voice_count=8):
         '''
         Adds new synth
-
+    
         ARGS:
           stype - String, the synth type, MUST be one of the values found
                   in constants.SYNTH_TYPES
-          id_   - int, synth serial number.  id_ MUST be unique for any 
-                  given stype.
           keymode     - String, the keymode, MUST be a value found in 
                         constants.KEY_MODES.  NOTE: Most synths do not 
                         support all possible key modes.
@@ -752,53 +786,81 @@ class LliaProxy(object):
         RETURNS: SynthProxy if the synth was added,
                  None if the synth could not be added.
         '''
-        sid = "%s_%d" % (stype, int(id_))
-        if self.synth_exists(stype, id_):
-            msg = "Synth %s already exists" % sid
+        # sid = "%s_%d" % (stype, int(id_))
+        # if self.synth_exists(stype, id_):
+        #     msg = "Synth %s already exists" % sid
+        #     self.warning(msg)
+        #     return False
+        # else:
+        sy = SynthSpecs.create_synth_proxy(self.app, stype)
+        if not sy:
+            msg = "%s synth could not be created" % stype
             self.warning(msg)
-            return False
+            return None
         else:
-            sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
-            if not sy:
-                msg = "Synth %s could not be created" % sid
-                self.warning(msg)
-                return False
-            else:
-                print("Creating synth: %s" % sid)
-                self._synths[sid] = sy
-                self._send("add-synth", [stype, id_, keymode, voice_count])
-                return sy
+            sid = sy.sid
+            self._synths[sid] = sy
+            self._send("add-synth", [stype, sy.id_, keymode, voice_count])
+            return sy
 
-    def add_efx(self, stype, id_):
+    # def add_efx(self, stype, id_):
+    #     '''
+    #     Add effect synth.
+    #    
+    #     ARGS:
+    #       stype - String, the synth type, MUST match a value found in 
+    #               constants.EFFECT_TYPES
+    #
+    #       id_  - int, synth serial number, MUST be unique for any given stype
+    #
+    #     RETURNS: SynthProxy if synth was added.
+    #              None is synth could not be added.
+    #     '''
+    #     sid = "%s_%d" % (stype, id_)
+    #     if self.synth_exists(stype, id_):
+    #         msg = "EFX Synth %s already exists" % sid
+    #         self.warning(msg)
+    #         return False
+    #     else:
+    #         sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
+    #         if not sy:
+    #             msg ="EFX Synth %s could not be created" % sid
+    #             self.warning(msg)
+    #             return False
+    #         else:
+    #             sy.is_efx = True
+    #             self._synths[sid] = sy
+    #             self._send("add-efx", [stype, id_])
+    #             return sy
+
+
+    def add_efx(self, stype):
         '''
         Add effect synth.
-        
+       
         ARGS:
           stype - String, the synth type, MUST match a value found in 
                   constants.EFFECT_TYPES
-
-          id_  - int, synth serial number, MUST be unique for any given stype
-
+    
         RETURNS: SynthProxy if synth was added.
                  None is synth could not be added.
         '''
-        sid = "%s_%d" % (stype, id_)
-        if self.synth_exists(stype, id_):
-            msg = "EFX Synth %s already exists" % sid
+        sy = SynthSpecs.create_synth_proxy(self.app, stype)
+        if not sy:
+            msg ="EFX Synth %s could not be created" % stype
             self.warning(msg)
-            return False
+            return None
         else:
-            sy = SynthSpecs.create_synth_proxy(self.app, stype, id_)
-            if not sy:
-                msg ="EFX Synth %s could not be created" % sid
-                self.warning(msg)
-                return False
-            else:
-                sy.is_efx = True
-                self._synths[sid] = sy
-                self._send("add-efx", [stype, id_])
-                return sy
+            sy.is_efx = True
+            self._synths[sy.sid] = sy
+            self._send("add-efx", [stype, sy.id_])
+            return sy
 
+    def add_controller_synth(self, stype):
+        sy = self.add_efx(stype)
+        if sy: sy.is_controller = True
+        return sy
+    
     def free_synth(self, stype, id_):
         '''
         Free indicated synth.

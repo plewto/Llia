@@ -12,8 +12,8 @@ specs = SynthSpecs("Klstr")
 
 class KlstrProxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(KlstrProxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(KlstrProxy, self).__init__(app, specs, program_bank)
         self._editor = None
 
     def create_subeditors(self):

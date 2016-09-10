@@ -12,8 +12,8 @@ specs = SynthSpecs("FM2")
 
 class FM2Proxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(FM2Proxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(FM2Proxy, self).__init__(app, specs, program_bank)
         self._editor = None
 
     def create_subeditors(self):

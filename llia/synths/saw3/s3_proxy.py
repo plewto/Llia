@@ -13,8 +13,8 @@ specs = SynthSpecs("Saw3")
 
 class Saw3Proxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(Saw3Proxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(Saw3Proxy, self).__init__(app, specs, program_bank)
         self._editor = None
 
     def create_subeditors(self):

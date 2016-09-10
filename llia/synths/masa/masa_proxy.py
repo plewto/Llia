@@ -6,14 +6,13 @@ from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.masa.masa_data import program_bank
 from llia.synths.masa.masa_pp import pp_masa
-# from llia.synths.masa.s3_gen import masa_gen
 
 specs = SynthSpecs("MASA")
 
 class MasaProxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(MasaProxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app,):
+        super(MasaProxy, self).__init__(app, specs, program_bank)
         self._editor = None
 
     def create_subeditors(self):

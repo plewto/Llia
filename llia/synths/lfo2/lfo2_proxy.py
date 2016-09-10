@@ -11,8 +11,8 @@ specs = SynthSpecs("LFO2")
 
 class Lfo2Proxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(Lfo2Proxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(Lfo2Proxy, self).__init__(app, specs, program_bank)
         self.app = app
         
     def create_subeditors(self):

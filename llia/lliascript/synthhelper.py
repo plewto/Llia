@@ -13,7 +13,6 @@ from llia.lliascript.ls_constants import *
 class SynthHelper(object):
    
     def __init__(self,parser,local_namespace):
-        self._synth_serial_number = 0
         self.parser = parser
         self.proxy = parser.proxy
         self.config = self.proxy.config
@@ -298,31 +297,9 @@ class SynthHelper(object):
             raise LliascriptError(msg)
 
 
-    # # Fill in default values for synth outbus argument
-    # # obarg may be:  None
-    # #             :  A single String bus name
-    # #             :  list or tuple
-    # # The result is a list [bus-name, synth-parameter, bus-offset]
-    # #
-    # @staticmethod
-    # def fill_outbus_args(obarg):
-    #     if not obarg: obarg = ["out_0"]
-    #     if not is_list(obarg): obarg = [obarg]
-    #     obarg = list(obarg)
-    #     if len(obarg) == 0:
-    #         return ["out_0", "outbus", 0]
-    #     if len(obarg) == 1:
-    #         return obarg + ["outbus", 0]
-    #     if len(obarg) == 2:
-    #         return obarg + [0]
-    #     else:
-    #         return obarg
+ 
 
-    # # outbus as list [bus-name, param, offset]
-    # # Warning: There is no restriction on keymode selection.
-    # # Using Poly1 keymode with SynDrm may bring SupperCollider down.
-    # def add_synth(self, stype, id_, keymode, voice_count=8, outbus=["out_0", "outbus", 0]):
-
+    # def add_synth(self, stype, id_, keymode, voice_count=8):
     #     sid = "%s_%s" % (stype, id_)
     #     if self.synth_exists(sid):
     #         self.use_synth(sid)
@@ -338,46 +315,37 @@ class SynthHelper(object):
     #                                      "id" : id_,
     #                                      "keymode" : keymode,
     #                                      "voice-count" : voice_count,
-    #                                      "outbus" : outbus,
+    #                                      #"outbus" : outbus,
     #                                      "is-efx" : False})
     #         self._synth_serial_number += 1
     #         if rs:
     #             self.current_sid = sid
-    #             bname,param,offset = self.fill_outbus_args(outbus)
+    #             #bname,param,offset = self.fill_outbus_args(outbus)
     #             #self.assign_abus(param, bname, offset)
     #             #self.assign_audio_output_bus(outbus[1], outbus[0], sid)
-    #             self.assign_audio_output_bus(param,bname,sid)
+    #             #self.assign_audio_output_bus(param,bname,sid)
     #             self.update_prompt()
     #         return rs
 
-    def add_synth(self, stype, id_, keymode, voice_count=8):
-        sid = "%s_%s" % (stype, id_)
-        if self.synth_exists(sid):
-            self.use_synth(sid)
-            return True
-        else:
-            self.assert_synth_type(stype)
-            self.assert_keymode(keymode)
-            rs = self.proxy.add_synth(stype, id_, keymode, voice_count)
-            self.parser.register_entity(sid, "synth",
-                                        {"serial-number" : self._synth_serial_number,
+
+    def add_synth(self, stype, keymode="Poly1", voice_count=8):
+        self.assert_synth_type(stype)
+        self.assert_keymode(keymode)
+        sy = self.proxy.add_synth(stype, keymode, voice_count)
+        if sy:
+            self.parser.register_entity(sy.sid, "synth",
+                                        {"serial-number" : sy.id_,
                                          "is-group" : False,
                                          "stype" : stype,
-                                         "id" : id_,
+                                         "id" : sy.id_,
                                          "keymode" : keymode,
                                          "voice-count" : voice_count,
-                                         #"outbus" : outbus,
-                                         "is-efx" : False})
-            self._synth_serial_number += 1
-            if rs:
-                self.current_sid = sid
-                #bname,param,offset = self.fill_outbus_args(outbus)
-                #self.assign_abus(param, bname, offset)
-                #self.assign_audio_output_bus(outbus[1], outbus[0], sid)
-                #self.assign_audio_output_bus(param,bname,sid)
-                self.update_prompt()
-            return rs
-
+                                         "is-efx" : False,
+                                         "is-controller" : False})
+            self.current_sid = sy.sid
+            self.update_prompt()
+        return sy
+    
     # Creates editor for current synth.
     # Ignore if synth already has an editor or
     # GUI is not enabled.
@@ -420,8 +388,8 @@ class SynthHelper(object):
             grp = mw.group_windows[grp_index]
             notebook = grp.notebook
             notebook.forget(swin)
-                
-    # def add_efx(self, stype, id_, outbus=["out_0", "outbus", 0]):
+
+    # def add_efx(self, stype, id_):
     #     sid = "%s_%s" % (stype, id_)
     #     if self.synth_exists(sid):
     #         self.use_synth(sid)
@@ -434,60 +402,64 @@ class SynthHelper(object):
     #                                      "is-group" : False,
     #                                      "stype" : stype,
     #                                      "id" : id_,
-    #                                      "outbus" : outbus,
+    #                                      #"outbus" : outbus,
     #                                      "is-efx" : True})
     #         self._synth_serial_number += 1
     #         if rs:
     #             self.current_sid = sid
-    #             bname,param,offset = self.fill_outbus_args(outbus)
+    #             #bname,param,offset = self.fill_outbus_args(outbus)
     #             #self.assign_abus(param, bname, offset)
-    #             self.assign_audio_output_bus(param,bname,sid)
+    #             #self.assign_audio_output_bus(param,bname,sid)
     #             self.update_prompt()
     #         return rs
 
-    def add_efx(self, stype, id_):
-        sid = "%s_%s" % (stype, id_)
-        if self.synth_exists(sid):
-            self.use_synth(sid)
-            return True
-        else:
-            self.assert_efx_type(stype)
-            rs = self.proxy.add_efx(stype, id_)
-            self.parser.register_entity(sid, "synth",
-                                        {"serial-number" : self._synth_serial_number,
+    def add_efx(self, stype):
+        self.assert_efx_type(stype)
+        sy = self.proxy.add_efx(stype)
+        if sy:
+            self.parser.register_entity(sy.sid, "synth",
+                                        {"serial-number" : sy.id_,
                                          "is-group" : False,
                                          "stype" : stype,
-                                         "id" : id_,
-                                         #"outbus" : outbus,
+                                         "id" : sy.id_,
                                          "is-efx" : True})
-            self._synth_serial_number += 1
-            if rs:
-                self.current_sid = sid
-                #bname,param,offset = self.fill_outbus_args(outbus)
-                #self.assign_abus(param, bname, offset)
-                #self.assign_audio_output_bus(param,bname,sid)
-                self.update_prompt()
-            return rs
+            self.current_sid = sy.sid
+            self.update_prompt()
+        return sy
+    
+    # def add_control_synth(self, stype, id_):
+    #     sid = "%s_%s" % (stype, id_)
+    #     if self.synth_exists(sid):
+    #         self.use_synth(sid)
+    #         return True
+    #     else:
+    #         self.assert_control_synth_type(stype)
+    #         rs = self.proxy.add_efx(stype, id_)
+    #         self.parser.register_entity(sid, "synth",
+    #                                      {"serial-number" : self._synth_serial_number,
+    #                                       "is-group" : False,
+    #                                       "is-efx" : False,
+    #                                       "is-control-synth" : True,
+    #                                       "stype" : id_})
+    #         self._synth_serial_number += 1
+    #         if rs:
+    #             self.current_sid = sid
+    #             self.update_prompt()
+    #         return rs
 
-    def add_control_synth(self, stype, id_):
-        sid = "%s_%s" % (stype, id_)
-        if self.synth_exists(sid):
-            self.use_synth(sid)
-            return True
-        else:
-            self.assert_control_synth_type(stype)
-            rs = self.proxy.add_efx(stype, id_)
-            self.parser.register_entity(sid, "synth",
-                                         {"serial-number" : self._synth_serial_number,
-                                          "is-group" : False,
-                                          "is-efx" : False,
-                                          "is-control-synth" : True,
-                                          "stype" : id_})
-            self._synth_serial_number += 1
-            if rs:
-                self.current_sid = sid
-                self.update_prompt()
-            return rs
+    def add_control_synth(self, stype):
+        self.assert_control_synth_type(stype)
+        sy = self.proxy.add_efx(stype)
+        if sy:
+            self.parser.register_entity(sy.sid, "synth",
+                                        {"serial-number" : sy.id_,
+                                         "is-group" : False,
+                                         "is-efx" : False,
+                                         "is-control-synth" : True,
+                                         "stype" : sy.id_})
+            self.current_sid = sy.sid
+            self.update_prompt()
+            return sy
         
     def input_channel(self, chan=None, sid=None):
         sy = self.get_synth(sid)

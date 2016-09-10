@@ -11,8 +11,8 @@ specs = SynthSpecs("Tremolo");
 
 class TremoloProxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(TremoloProxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(TremoloProxy, self).__init__(app, specs, program_bank)
         self._editor = None
 
     def create_subeditors(self):

@@ -12,8 +12,8 @@ specs = SynthSpecs("RDrum")
 
 class RdrumProxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(RdrumProxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(RdrumProxy, self).__init__(app, specs, program_bank)
         self._editor = None
 
     def create_subeditors(self):

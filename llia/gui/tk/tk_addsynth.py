@@ -8,16 +8,17 @@ import llia.gui.tk.tk_factory as factory
 from llia.synth_proxy import SynthSpecs
 from llia.gui.tk.tk_synthwindow import TkSynthWindow
 from llia.constants import MAX_BUS_COUNT
+from llia.synth_proxy import SynthProxy
 
 HELP_TOPIC = "add_synth_dialog"
 
-def select_synth_id(app, stype):
-    n = 1
-    while True:
-        if not app.proxy.synth_exists(stype, n):
-            return n
-        else:
-            n = n+1
+# def select_synth_id(app, stype):
+#     n = 1
+#     while True:
+#         if not app.proxy.synth_exists(stype, n):
+#             return n
+#         else:
+#             n = n+1
 
         
 class TkAddSynthDialog(Toplevel):
@@ -30,8 +31,8 @@ class TkAddSynthDialog(Toplevel):
         self.stype = synth_type
         self.is_efx = is_efx
         self.is_controller = is_controller
-        self.id_ = select_synth_id(self.app, synth_type)
-        self.sid = "%s_%d" % (synth_type, self.id_)
+        #self.id_ = SynthProxy.current_synth_serial_number()
+        sid = "%s_%d" % (synth_type, SynthProxy.current_synth_serial_number())
         specs = SynthSpecs.global_synth_type_registry[synth_type]
         self._combo_audio_in = {}    # Maps synth parameter to combo box
         self._combo_audio_out = {}
@@ -45,7 +46,7 @@ class TkAddSynthDialog(Toplevel):
             title += "Controller Synth"
         else:
             title += "Synth"
-        title += "      sid = %s" % self.sid
+        title += "      sid = %s" % sid
         frame_north = factory.frame(main)
         frame_north.grid(row=0, column=0, columnspan=2, sticky='ew', padx=4, pady=8)
         logo_filename = os.path.join("resources", synth_type, "logo_small.png")
@@ -184,39 +185,43 @@ class TkAddSynthDialog(Toplevel):
     def accept(self):
         shelper = self.app.ls_parser.synthhelper
         if self.is_efx:
-            sy = shelper.add_efx(self.stype, self.id_)
+            sy = shelper.add_efx(self.stype)
         elif self.is_controller:
-            sy = shelper.add_control_synth(self.stype, self.id_)
+            sy = shelper.add_control_synth(self.stype)
         else:
             km = self.var_keymode.get()
             vc = int(self.var_voice_count.get())
-            sy = shelper.add_synth(self.stype, self.id_, km, vc)
-        for param,combo in self._combo_audio_in.items():
-            busname = combo.get()
-            shelper.assign_audio_input_bus(param,busname,self.sid)
-        for param,combo in self._combo_audio_out.items():
-            busname = combo.get()
-            shelper.assign_audio_output_bus(param,busname,self.sid)
-        for param,combo in self._combo_control_in.items():
-            busname = combo.get()
-            shelper.assign_control_input_bus(param,busname,self.sid)
-        for param,combo in self._combo_control_out.items():
-            busname = combo.get()
-            shelper.assign_control_output_bus(param,busname,self.sid)
-        for p,bname in self._buffername_map.items():
-            shelper.assign_buffer(p, bname)
-        mw = self.app.main_window()
-        group = mw.group_windows[-1]
-        swin = TkSynthWindow(group.notebook, sy)
-        grp_index = len(mw.group_windows)-1
-        group.notebook.add(swin, text=self.sid)
-        group.deiconify()
-        mw[self.sid] = swin
-        factory.set_pallet(sy.specs["pallet"])
-        sy.create_subeditors()
-        swin.group_index = grp_index
+            sy = shelper.add_synth(self.stype, km, vc)
+
+        if sy:
+            for param,combo in self._combo_audio_in.items():
+                busname = combo.get()
+                shelper.assign_audio_input_bus(param,busname,sy.sid)
+            for param,combo in self._combo_audio_out.items():
+                busname = combo.get()
+                shelper.assign_audio_output_bus(param,busname,sy.sid)
+            for param,combo in self._combo_control_in.items():
+                busname = combo.get()
+                shelper.assign_control_input_bus(param,busname,sy.sid)
+            for param,combo in self._combo_control_out.items():
+                busname = combo.get()
+                shelper.assign_control_output_bus(param,busname,sy.sid)
+            for p,bname in self._buffername_map.items():
+                shelper.assign_buffer(p, bname)
+            mw = self.app.main_window()
+            group = mw.group_windows[-1]
+            swin = TkSynthWindow(group.notebook, sy)
+            grp_index = len(mw.group_windows)-1
+            group.notebook.add(swin, text=sy.sid)
+            group.deiconify()
+            mw[sy.sid] = swin
+            factory.set_pallet(sy.specs["pallet"])
+            sy.create_subeditors()
+            swin.group_index = grp_index
+            self.app.main_window().status("Added %s" % sy.sid)
+        else:
+            self.app.main_widnow().warning("Synth could not be added")    
         factory.restore_pallet()
-        self.app.main_window().status("Added %s" % self.sid)
         self.destroy()
         
 

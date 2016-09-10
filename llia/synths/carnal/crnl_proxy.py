@@ -10,8 +10,8 @@ specs = SynthSpecs("CarnalDelay")
 
 class CarnalProxy(SynthProxy):
 
-    def __init__(self, app, id_):
-        super(CarnalProxy, self).__init__(app, specs, id_, program_bank)
+    def __init__(self, app):
+        super(CarnalProxy, self).__init__(app, specs,program_bank)
         self.app = app
         
     def create_subeditors(self):
