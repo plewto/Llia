@@ -20,7 +20,7 @@ class Saw3Proxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            from llia.synths.saw3.tk.s3ed import create_editor
+            from llia.synths.saw3.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
@@ -33,13 +33,9 @@ s3_pallet["SLIDER-TROUGH"] = "#1f2f40"
 specs["constructor"] = Saw3Proxy
 specs["description"] = "A 3 Oscillator Subtractive Synth"
 specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
-# specs["audio-output-buses"] = (("outbus", 1),)
-# specs["control-input-buses"] = ("xbus",)
 specs["pretty-printer"] = pp_saw3  
 specs["program-generator"] = s3gen
 specs["pallet"] = s3_pallet
 specs["help"] = "saw3"
-
-
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["control-input-buses"] = [["xbus", "CBUS_B"]]

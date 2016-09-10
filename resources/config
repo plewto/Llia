@@ -45,7 +45,7 @@ enable-active-update : True     ; Enable MIDI controller changes to update GUI
 [SYNTH-IMPORTS]
 Orgn      : True
 saw3      : True             
-klstr     : True              
+klstr     : True             
 rdrum     : True              
 masa      : True             
 fm2       : True     
