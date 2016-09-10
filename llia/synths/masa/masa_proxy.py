@@ -26,8 +26,8 @@ class MasaProxy(SynthProxy):
             create_editor(parent_editor)
 
 masa_pallet = Pallet(default_pallet)
-masa_pallet["BG"] = "#2b2b37"
-masa_pallet["SLIDER-TROUGH"] = "#1f181a"
+masa_pallet["SLIDER-TROUGH"] = "#4f3e46"
+masa_pallet["SLIDER-OUTLINE"] = "#3e4f46"
 
 specs["constructor"] = MasaProxy
 specs["description"] = "Tonewheel Organ"
