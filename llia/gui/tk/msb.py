@@ -399,6 +399,34 @@ class MSB(object):
         c.coords(self._text, xtxt, ytxt)
         c.coords(self._image, ximg, yimg)
 
+
+
+class ToggleButton(MSB):
+
+    # Special case 2-state button
+    
+    def __init__(self, canvas, param, editor, text=["Off", "On"], values=[0,1]):
+        super(ToggleButton, self).__init__(canvas, param, editor, 2)
+        aspect0 = MsbAspect(self._common)
+        aspect0['text'] = text[0]
+        aspect0['fill'] = 'black'
+        aspect0['foreground'] = '#808080'
+        aspect0['outline'] = '#808080'
+        aspect0['active-outline'] = 'yellow'
+        aspect0['active-foreground'] = 'yellow'
+        self.define_aspect(0, values[0], aspect0)              
+        aspect1 = MsbAspect(self._common)
+        aspect1['text'] = text[1]
+        aspect1['fill'] = '#808080'
+        aspect1['foreground'] = 'black'
+        aspect1['outline'] = 'blue'
+        aspect1['active-outline'] = 'yellow'
+        aspect1['active-foreground'] = 'yellow'
+        
+        self.define_aspect(1, values[1], aspect1)
+        
+    
+
         
 @is_synth_control.when_type(MSB)
 def _is_synth_control(obj):

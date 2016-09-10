@@ -6,7 +6,7 @@
 from __future__ import print_function
 from llia.generic import is_synth_control
 from llia.locked_dictionary import LockedDictionary
-from llia.gui.tk.msb import MSB
+from llia.gui.tk.msb import MSB, ToggleButton
 
 template = {'padx' : 16,
             'pady' : 64,
@@ -174,16 +174,27 @@ class ADDSREditor(EnvEditorSpecs):
             self.sync_ui()
         msb.client_callback = zoom_callback
         
+    # def _init_gate_button(self):
+    #     msb = MSB(self.canvas, self.params['gate-mode'], self.parent, 2)
+    #     a0 = self._msb_aspect("GATE")
+    #     a1 = self._msb_aspect("TRIG", {"foreground" : "green"})
+    #     msb.define_aspect(0, 0, a0)
+    #     msb.define_aspect(1, 1, a1)
+    #     x, y = self.xi0, self.y1-50
+    #     msb.layout((x,y))
+    #     msb.update_aspect()
+    #     self.msb_gate_mode = msb
+
     def _init_gate_button(self):
-        msb = MSB(self.canvas, self.params['gate-mode'], self.parent, 2)
-        a0 = self._msb_aspect("GATE")
-        a1 = self._msb_aspect("TRIG", {"foreground" : "green"})
-        msb.define_aspect(0, 0, a0)
-        msb.define_aspect(1, 1, a1)
+        msb = ToggleButton(self.canvas, self.params['gate-mode'],
+                           self.parent,
+                           text=["Gate", "Trig"],
+                           values=[0,1])
         x, y = self.xi0, self.y1-50
         msb.layout((x,y))
         msb.update_aspect()
         self.msb_gate_mode = msb
+    
             
     def _init_init_button(self):
         msb = MSB(self.canvas, '', None, 1)
