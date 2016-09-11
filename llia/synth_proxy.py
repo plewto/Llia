@@ -6,17 +6,40 @@
 
 from __future__ import print_function
 import abc
+from os.path import join
 
 import llia.constants as con
 import llia.curves as curves
 from llia.llerrors import LliaPingError, NoSuchBusOrParameterError
 from llia.generic import is_instrument, clone, dump
 from llia.osc_transmitter import OSCTransmitter
+from llia.locked_dictionary import LockedDictionary
+
 
 #  ---------------------------------------------------------------------- 
 #                               SynthSpecs class
 
-class SynthSpecs(dict):
+SPECS_TEMPLATE = {"format" : None,
+                  "constructor" : None,
+                  "description" : None,
+                  "program-generator" : None,
+                  "pretty-printer" : None,
+                  "help" : None,
+                  "notes" : None,
+                  "is-efx" : False,
+                  "is-controller" : False,
+                  "keymodes" : [],
+                  "audio-output-buses" : [],  
+                  "audio-input-buses" : [],
+                  "control-output-buses" : [],
+                  "control-input-buses" : [],
+                  "buffers" : [],
+                  "pallet" : None,
+                  "logo" : None,
+                  "small-logo" : None}
+
+
+class SynthSpecs(LockedDictionary):
 
     global_synth_type_registry = {}
 
@@ -118,27 +141,13 @@ class SynthSpecs(dict):
 
         RETURNS: SynthSpecs.
         '''
-        super(SynthSpecs, self).__init__()
-        super(SynthSpecs, self).__setitem__("format", stype)
-        super(SynthSpecs, self).__setitem__("constructor", None)
-        super(SynthSpecs, self).__setitem__("description", None)
-        super(SynthSpecs, self).__setitem__("program-generator", None)
-        super(SynthSpecs, self).__setitem__("pretty-printer", None)
-        super(SynthSpecs, self).__setitem__("help", None)
-        super(SynthSpecs, self).__setitem__("notes", None)
-        super(SynthSpecs, self).__setitem__("is-efx", False)
-        super(SynthSpecs, self).__setitem__("keymodes", [])
-        # audio buses [[param1, default], [param2, default] ...]
-        super(SynthSpecs, self).__setitem__("audio-output-buses", [])  
-        super(SynthSpecs, self).__setitem__("audio-input-buses", [])
-        # audio buses [[param1, default], [param2, default] ...]
-        super(SynthSpecs, self).__setitem__("control-output-buses", [])
-        super(SynthSpecs, self).__setitem__("control-input-buses", [])
-        # buffers [param1, param2, ...]
-        super(SynthSpecs, self).__setitem__("buffers", [])
-        super(SynthSpecs, self).__setitem__("pallet", None)
-
+        super(SynthSpecs, self).__init__(SPECS_TEMPLATE)
         SynthSpecs.global_synth_type_registry[stype] = self
+        self["format"] = stype
+        resource_path = join("resouerces", stype)
+        self["logo"] = join(resource_path, "logo.png")
+        self["small-logo"] = join(resource_path, "logo_small.png")
+        
         
     def __setitem__(self, key, item):
         '''

@@ -34,5 +34,6 @@ specs["control-output-buses"] = [["outbus","CBUS_A"]]
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_ghostbus
 specs["is-efx"] = True
+specs["is-controller"] = True
 specs["help"] = "Ghostbus"
 specs["pallet"] = ghostbus_pallet

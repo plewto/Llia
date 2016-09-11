@@ -35,6 +35,7 @@ specs["keymodes"] = ("EFX", )
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_lfo2
 specs["is-efx"] = True
+specs["is-controller"] = True
 specs["help"] = "LFO2"
 specs["pallet"] = lfo2_pallet
 specs["control-output-buses"] = [["outbusSaw","CBUS_A"],["outbusPulse","CBUS_B"]]

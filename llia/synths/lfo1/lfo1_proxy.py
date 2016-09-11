@@ -35,6 +35,7 @@ specs["keymodes"] = ("EFX", )
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_lfo1
 specs["is-efx"] = True
+specs["is-controller"] = True
 specs["help"] = "LFO1"
 specs["pallet"] = lfo1_pallet
 

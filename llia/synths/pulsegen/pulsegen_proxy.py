@@ -34,7 +34,8 @@ specs["keymodes"] = ("EFX", )
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_pulsegen
 specs["is-efx"] = True
-specs["help"] = "PULSEGEN"
+specs["is-controller"] = True
+specs["help"] = "Pulsegen"
 specs["pallet"] = pulsegen_pallet
 
 specs["control-output-buses"] = [["outbusY", "CBUS_A"],

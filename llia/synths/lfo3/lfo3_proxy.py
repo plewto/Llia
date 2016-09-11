@@ -37,6 +37,7 @@ specs["audio-input-buses"] = []
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_lfo3
 specs["is-efx"] = True
+specs["is-controller"] = True
 specs["help"] = "LFO3"
 specs["pallet"] = lfo3_pallet
 

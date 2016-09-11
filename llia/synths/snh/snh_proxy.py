@@ -30,6 +30,7 @@ snh_pallet["SLIDER-OUTLINE"] = "#42033E"
 
 specs["constructor"] = SnhProxy
 specs["is-efx"] = True
+specs["is-controller"] = True
 specs["description"] = "Sample and Hold"
 specs["keymodes"] = ("EFX", )
 specs["pretty-printer"] = pp
