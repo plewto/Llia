@@ -41,6 +41,6 @@ specs["is-controller"] = True
 specs["help"] = "LFO3"
 specs["pallet"] = lfo3_pallet
 
-specs["control-output-buses"] = [["outbusA","CBUS_A"],
-                                 ["outbusB","CBUS_A"],
-                                 ["outbusC","CBUS_A"]]
+specs["control-output-buses"] = [["outbusA","null_source"],
+                                 ["outbusB","null_source"],
+                                 ["outbusC","null_source"]]

@@ -39,4 +39,4 @@ specs["pallet"] = crnl_pallet
 
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = [["inbus", "in_0"]]
-specs["control-input-buses"] = [["efxbus","CBUS_B"],["dlybus", "CBUS_B"]]
+specs["control-input-buses"] = [["efxbus","null_sink"],["dlybus", "null_sink"]]

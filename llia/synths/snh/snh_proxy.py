@@ -38,4 +38,4 @@ specs["program-generator"] = random_snh
 specs["help"] = "SnH"
 specs["pallet"] = snh_pallet
 
-specs["control-output-buses"] = [["outbus", "CBUS_A"]]
+specs["control-output-buses"] = [["outbus", "null_source"]]

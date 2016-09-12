@@ -35,6 +35,5 @@ specs["pretty-printer"] = pp_masa
 # specs["program-generator"] = masa_gen
 specs["pallet"] = masa_pallet
 specs["help"] = "masa"
-
 specs["audio-output-buses"] = [["outbus","out_0"]]
-specs["control-input-buses"] = [["xbus","CBUS_B"]]
+specs["control-input-buses"] = [["xbus","null_sink"]]

@@ -39,6 +39,6 @@ specs["pallet"] = panner_pallet
 specs["audio-output-buses"] = [["outbusA","out_0"],
                                ["outbusB","out_1"]]
 specs["audio-input-buses"] = [["inbus", "in_0"]]
-specs["control-input-buses"] = [["xbus","CBUS_B"]]
-specs["control-output-buses"] = [["lfoOutbus","CBUS_A"]]
+specs["control-input-buses"] = [["xbus","null_sink"]]
+specs["control-output-buses"] = [["lfoOutbus","null_source"]]
 

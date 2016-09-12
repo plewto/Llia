@@ -218,4 +218,4 @@ class ControlBus(BusProxy):
         return "Control"
 
     def is_protected(self):
-        return self.name.startswith("CBUS")
+        return self.name.startswith("null_")

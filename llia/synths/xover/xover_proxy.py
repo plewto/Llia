@@ -41,7 +41,7 @@ specs["audio-output-buses"] = [["lpOutbus","out_0"],
                                ["hpOutbus","out_0"],
                                ["dryOutbus","out_0"]]
 specs["audio-input-buses"] = [["inbus", "in_0"]]
-specs["control-input-buses"] = [["xbus", "CBUS_B"]]
-specs["control-output-buses"] = [["xoverLfoOutbus", "CBUS_A"],
-                                 ["lpModLfoOutbus", "CBUS_A"],
-                                 ["hpModLfoOutbus", "CBUS_A"]]
+specs["control-input-buses"] = [["xbus", "null_sink"]]
+specs["control-output-buses"] = [["xoverLfoOutbus", "null_source"],
+                                 ["lpModLfoOutbus", "null_source"],
+                                 ["hpModLfoOutbus", "null_source"]]

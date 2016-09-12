@@ -42,10 +42,10 @@ class Parser(object):
                 self.entities[name] = e
         # Default control buses
         #
-        name = "CBUS_A"
+        name = "null_source"
         e = LsEntity(name, "cbus")
         self.entities[name] = e
-        name = "CBUS_B"
+        name = "nill_sink"
         e = LsEntity(name, "cbus")
         self.entities[name] = e
         

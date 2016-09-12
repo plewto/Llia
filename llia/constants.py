@@ -60,8 +60,8 @@ PROTECTED_AUDIO_BUSSES = tuple(__acc)
 
 
 __acc = []
-for i in "AB":
-    __acc.append("CBUS_%s" % i)
+for i in ("source", "sink"):
+    __acc.append("null_%s" % i)
 PROTECTED_CONTROL_BUSSES = tuple(__acc)
 PROTECTED_CONTROL_BUS_COUNT = len(PROTECTED_CONTROL_BUSSES)
 

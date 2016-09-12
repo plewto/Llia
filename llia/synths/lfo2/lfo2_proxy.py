@@ -38,4 +38,5 @@ specs["is-efx"] = True
 specs["is-controller"] = True
 specs["help"] = "LFO2"
 specs["pallet"] = lfo2_pallet
-specs["control-output-buses"] = [["outbusSaw","CBUS_A"],["outbusPulse","CBUS_B"]]
+specs["control-output-buses"] = [["outbusSaw","null_source"],
+                                 ["outbusPulse","null_source"]]

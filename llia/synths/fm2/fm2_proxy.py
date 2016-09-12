@@ -38,4 +38,4 @@ specs["help"] = "FM2"
 specs["pallet"] = fm2_pallet
 
 specs["audio-output-buses"] = [["outbus", "out_0"]]
-specs["control-input-buses"] = [["xbus", "CBUS_B"]]
+specs["control-input-buses"] = [["xbus", "null_sink"]]

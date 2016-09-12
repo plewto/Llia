@@ -38,8 +38,8 @@ specs["help"] = "tremolo"
 
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = [["inbus", "in_0"]]
-specs["control-input-buses"] = [["xbus","CBUS_B"]]
-specs["control-output-buses"] = [["lfoOutbus", "CBUS_A"]]
+specs["control-input-buses"] = [["xbus","null_sink"]]
+specs["control-output-buses"] = [["lfoOutbus", "null_source"]]
 
 
     

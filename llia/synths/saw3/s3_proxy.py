@@ -38,4 +38,4 @@ specs["program-generator"] = s3gen
 specs["pallet"] = s3_pallet
 specs["help"] = "saw3"
 specs["audio-output-buses"] = [["outbus", "out_0"]]
-specs["control-input-buses"] = [["xbus", "CBUS_B"]]
+specs["control-input-buses"] = [["xbus", "null_sink"]]

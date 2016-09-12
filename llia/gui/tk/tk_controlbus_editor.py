@@ -109,7 +109,7 @@ class TkControlbusEditor(Toplevel):
         bname = self._var_name.get().strip()
         exists = self.parser.what_is(bname)
         if exists == "cbus":
-            protected = len(bname) > 5 and bname[:5] == "CBUS_"
+            protected = len(bname) > 5 and bname[:5] == "null_"
             if protected:
                 msg = "Can not remove protected bus '%s'" % bname
                 self.warning(msg)

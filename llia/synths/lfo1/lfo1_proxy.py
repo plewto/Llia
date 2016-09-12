@@ -40,4 +40,4 @@ specs["help"] = "LFO1"
 specs["pallet"] = lfo1_pallet
 
 
-specs["control-output-buses"] = [["outbus","CBUS_A"]]
+specs["control-output-buses"] = [["outbus","null_source"]]

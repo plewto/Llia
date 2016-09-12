@@ -36,5 +36,6 @@ specs["help"] = "flngr"
 
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = [["inbus", "in_1"]]
-specs["control-input-buses"] = [["delaybus","CBUS_B"],["mixbus","CBUS_B"]]
-specs["control-output-buses"] = [["lfoOutbus", "CBUS_A"]]
+specs["control-input-buses"] = [["delaybus","null_sink"],
+                                ["mixbus","null_sink"]]
+specs["control-output-buses"] = [["lfoOutbus", "null_source"]]

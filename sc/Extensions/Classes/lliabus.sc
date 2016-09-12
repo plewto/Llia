@@ -65,10 +65,10 @@ LliaBuses : Object {
 					buses.add(name -> Bus.new(\audio, index, 1))});
 			},{
 				buses = Dictionary.new(8);
-				// buses.add("CBUS_A" -> Bus.new(\control, 0, 1));
-				// buses.add("CBUS_B" -> Bus.new(\control, 1, 1));
-				buses.add("CBUS_A" -> Bus.control());
-				buses.add("CBUS_B" -> Bus.control());
+				// buses.add("null_source" -> Bus.new(\control, 0, 1));
+				// buses.add("null_sink" -> Bus.new(\control, 1, 1));
+				buses.add("null_source" -> Bus.control());
+				buses.add("null_sink" -> Bus.control());
 					
 			});
 	} // end init

@@ -43,5 +43,5 @@ specs["help"] = "orgn"
 specs["pallet"] = orgn_pallet
 
 specs["audio-output-buses"] = [["outbus","out_0"]]
-specs["control-input-buses"] = [["xbus","CBUS_B"]]
+specs["control-input-buses"] = [["xbus","null_sink"]]
 

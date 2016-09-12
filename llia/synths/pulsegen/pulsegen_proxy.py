@@ -38,6 +38,6 @@ specs["is-controller"] = True
 specs["help"] = "Pulsegen"
 specs["pallet"] = pulsegen_pallet
 
-specs["control-output-buses"] = [["outbusY", "CBUS_A"],
-                                 ["outbusZ", "CBUS_B"]]
+specs["control-output-buses"] = [["outbusY", "null_source"],
+                                 ["outbusZ", "null_sink"]]
 
