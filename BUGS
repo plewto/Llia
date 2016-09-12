@@ -114,3 +114,9 @@ Control bus assignments are not being made properly.
 Removed "fixedParameters" array from SC keymode class and all sub-classes.
 All parameters, including bus and buffer assignments, are now stored as
 part of the current synth program.   This change also fixed BUG 0003
+
+---------------------------------------------------------------------- OPEN 0009
+BUG 0009 2016.09.11
+
+Main window menu option "new synth group"
+raise an AttributeError SythHelper._synth_serial_number
