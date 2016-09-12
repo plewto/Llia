@@ -16,7 +16,7 @@ import llia.constants as con
 from llia.gui.tk.tk_addsynth import TkAddSynthDialog
 from llia.synth_proxy import SynthSpecs
 from llia.gui.tk.group_window import GroupWindow
-
+from llia.gui.tk.graph.lliagraph import LliaGraph
 
 specs = SynthSpecs.global_synth_type_registry
 
@@ -42,6 +42,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.minsize(width=665, height=375)
         self.group_windows = []
         self.add_synth_group()
+        self.llia_graph = None
        
     def _init_status_panel(self):
         south = self._main.south
@@ -61,9 +62,12 @@ class TkApplicationWindow(AbstractApplicationWindow):
         frame_synths = layout.FlowGrid(nb, 6)
         frame_efx = layout.FlowGrid(nb, 6)
         frame_controllers = layout.FlowGrid(nb, 6)
+        self.llia_graph = LliaGraph(nb, self.app)
         nb.add(frame_synths, text = "Synths")
         nb.add(frame_efx, text = "Effects")
         nb.add(frame_controllers, text = "Controllers")
+        nb.add(self.llia_graph, text="Graph")
+     
         for st in con.SYNTH_TYPES:
             sp = specs[st]
             ttp = "Add %s Synthesizer (%s)" % (st, sp["description"])
@@ -276,3 +280,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.group_windows.append(gw)
         self.status("Added new Synth Group Window")
         return gw
+
+    def display_synth_editor(self, sid):
+        try:
+            swin = self[sid]
+            grpid = swin.group_index
+            grp = self.group_windows[grpid]
+            #grp.deiconify()
+            grp.show_synth_editor(sid)
+        except (KeyError, IndexError):
+            msg = "Can not find editor for %s" % sid
+            self.warning(msg)

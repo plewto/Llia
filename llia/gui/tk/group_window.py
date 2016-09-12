@@ -6,7 +6,7 @@
 #
 
 from __future__ import print_function
-from Tkinter import Toplevel
+from Tkinter import Toplevel, TclError
 
 import llia.gui.tk.tk_factory as factory
 
@@ -31,10 +31,16 @@ class GroupWindow(Toplevel):
         
     def on_closing(self, *args):
         pass
-        
-   
-        
-        
+
+    def show_synth_editor(self, sid):
+        try:
+            mw = self.app.main_window()
+            swin = mw[sid]
+            self.notebook.select(swin)
+            self.deiconify()  # ISSUE deiconify not working ?
+        except (TclError, KeyError):
+            msg = "Can not find %s editor" % sid
+            self.app.main_window().warning(msg)
         
         
         

@@ -132,6 +132,9 @@ class BusProxy(object):
     def is_control_bus(self):
         return self.rate() == "Control"
 
+    def source_count(self):
+        return len(self._sources())
+    
     def has_source(self, sid, param=''):
         bs = BusSource(sid, param)
         for q in self._sources:
@@ -143,7 +146,7 @@ class BusProxy(object):
             bs = BusSource(sid, param)
             self._sources.append(bs)
             if sync: self.sync_editor()
-
+            
     def remove_source(self,sid, param='', sync=True):
         bs = BusSource(sid, param)
         def fn(a):
@@ -151,6 +154,9 @@ class BusProxy(object):
         self._sources = filter(fn, self._sources)
         if sync: self.sync_editor()
 
+    def sink_count(self):
+        return len(self._sinks)
+        
     def has_sink(self, sid, param=''):
         bs = BusSink(sid, param)
         for q in self._sinks:

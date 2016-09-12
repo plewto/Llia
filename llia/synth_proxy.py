@@ -144,7 +144,7 @@ class SynthSpecs(LockedDictionary):
         super(SynthSpecs, self).__init__(SPECS_TEMPLATE)
         SynthSpecs.global_synth_type_registry[stype] = self
         self["format"] = stype
-        resource_path = join("resouerces", stype)
+        resource_path = join("resources", stype)
         self["logo"] = join(resource_path, "logo.png")
         self["small-logo"] = join(resource_path, "logo_small.png")
         
@@ -344,7 +344,16 @@ class SynthProxy(object):
             msg += "sid=%s, param=%s, bus_name=%s"
             msg = msg % (self.sid, param, bname)
             raise NoSuchBusOrParameterError(msg)
-   
+
+    def available_audio_input_parameters(self):
+        '''
+        Returns sorted list of available audio output bus parameters.
+        '''
+        def fn(a): return a[0]
+        blist = sorted(self._audio_input_buses.keys())
+        blist = filter(fn, blist)
+        return blist
+        
     def assign_audio_input_bus(self, param, bname, sync=False):
         '''
         Assigns audio input bus to a synth parameter.
@@ -385,7 +394,25 @@ class SynthProxy(object):
 
     def get_control_output_bus(self, param):
         return self._control_output_buses[param]
-        
+
+    def available_control_input_parameters(self):
+        '''
+        Returns sorted list of available control input bus parameters.
+        '''
+        def fn(a): return a[0]
+        blist = sorted(self._control_input_buses.keys())
+        blist = filter(fn, blist)
+        return blist
+
+    def available_control_output_parameters(self):
+        '''
+        Returns sorted list of available control output bus parameters.
+        '''
+        def fn(a): return a[0]
+        blist = sorted(self._control_output_buses.keys())
+        blist = filter(fn, blist)
+        return blist
+    
     def assign_control_output_bus(self, param, bname, sync=False):
         '''
         Assigns control output bus to a synth parameter.
