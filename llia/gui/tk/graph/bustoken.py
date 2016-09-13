@@ -46,8 +46,6 @@ class BusToken(Token):
         c = self["color"]
         self.canvas.itemconfig(self['pad'], outline=c)
         self.clear_info()
-        
-        
 
         
 class AudioBusToken(BusToken):
@@ -107,10 +105,10 @@ class AudioBusToken(BusToken):
                                      tags = ("text", "audio-bus", cid),
                                      fill = text_fill,
                                      font = gconfig["bus-name-font"])
-            port_radius = 4
-            xin0, xin1 = x0-port_radius, x0+port_radius
-            xout0, xout1 = x1-port_radius, x1+port_radius
-            yin0, yin1 = yc-port_radius, yc+port_radius
+            radius = 4 # io "port" radius
+            xin0, xin1 = x0-radius, x0+radius
+            xout0, xout1 = x1-radius, x1+radius
+            yin0, yin1 = yc-radius, yc+radius
             has_input = not(cid.startswith("in_"))
             has_output = not(cid.startswith("out_"))
             if has_input:
@@ -140,9 +138,55 @@ class ControlBusToken(BusToken):
     def is_control_bus(self):
         return True
 
+    # def keep_hidden(self):
+    #     c = self.client.source_count() + self.client.sink_count()
+    #     return self.is_protected() or c == 0
     def keep_hidden(self):
-        c = self.client.source_count() + self.client.sink_count()
-        return self.is_protected() or c == 0
+        return self.is_protected()
 
-    def render(self): # ISSUE: not implemented
-        pass 
+    def render(self):
+        if not(self.keep_hidden()):
+            cid = self.client_id()
+            x0, y0 = randint(30,500), randint(30,500)
+            x1, y1 = x0+self['width'], y0+self['height']
+            xc, yc = (x0+x1)/2, (y0+y1)/2
+            fill = 'black'
+            self["color"] = "green"  # isse generate serwies of colors
+            outline = self["color"]
+            activeoutline = gconfig["bus-activeoutline"]
+            text_fill = 'white'
+            canvas = self.canvas
+            pad = canvas.create_oval(x0,y0,x1,y1,
+                                     tags = ("pad", "control-bus", cid),
+                                     fill = fill,
+                                     outline = outline,
+                                     activeoutline = activeoutline)
+            txt = canvas.create_text(xc,yc,
+                                     text = cid,
+                                     tags = ("text", "control-bus", cid),
+                                     fill = text_fill,
+                                     font = gconfig["bus-name-font"])
+            radius = 4
+            xin0, xin1 = x0-radius, x0+radius
+            xout0, xout1 = x1-radius, x1+radius
+            yin0, yin1 = yc-radius, yc+radius
+            has_input = not(cid.startswith("in_"))
+            has_output = not(cid.startswith("out_"))
+            cin = canvas.create_oval(xin0, yin0, xin1, yin1,
+                                     tags = ("input-port", "control-bus", cid),
+                                     fill = 'green') # ISSUE
+
+
+            cout = canvas.create_oval(xout0, yin0, xout1, yin1,
+                                      tags = ("output-port", "control-bus", cid),
+                                      fill = 'green') # ISSUE
+            self["pad"] = pad
+            self["text"] = txt
+            self["output-port"] = cout
+            self["input-port"] = cin
+            canvas.tag_bind(cid,"<Enter>", self.highlight)
+            canvas.tag_bind(cid,"<Leave>", self.unhighlight)
+            canvas.tag_bind(cid, "<B1-Motion>", self.drag)
+            canvas.tag_bind(cid, "<ButtonPress-1>", self.pickup)
+            canvas.tag_bind(cid, "<ButtonRelease-1>", self.drop)
+

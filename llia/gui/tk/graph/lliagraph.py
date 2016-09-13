@@ -74,8 +74,9 @@ class LliaGraph(Frame):
         for cbname in self.proxy.control_bus_names():
             if not(self._tokens.has_key(cbname)):
                 bobj = self.proxy.get_control_bus(cbname)
-                cbtoken = ControlBusToken(self, self.app, cbname)
+                cbtoken = ControlBusToken(self, self.app, bobj)
                 self._tokens[bobj.name] = cbtoken
+                cbtoken.render()
         self._first_pass = False
         
             
