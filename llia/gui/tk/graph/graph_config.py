@@ -21,16 +21,30 @@ _template = {
     "info-y-delta" : 20,  # line spacing
     "info-font" : ("Mono", 9),
     "token-image-padding" : 2,
+
     "synth-token-width" : __SYNTH_TOKEN_WIDTH,
     "synth-token-height" : __SYNTH_TOKEN_HEIGHT,
+    "bus-token-width" : 64,
+    "bus-token-height" : 32,
+
+    
+    "audio-bus-width" : 64,
+    "audio-bus-height" : 32,
+    "bus-name-font" : ("Mono", 9),
+
     
     # pallet
     "graph-fill" : "#202029",
     "synth-fill" : "black",
     "synth-outline" : "#292920",
     "synth-activeoutline" : "#ffffcc",
+    "bus-activeoutline" : "yellow",
+    
+
     "info-header-fill" : "white",
     "info-data-fill" : "green"
+
+    
     }
     
     

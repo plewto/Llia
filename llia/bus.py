@@ -133,7 +133,7 @@ class BusProxy(object):
         return self.rate() == "Control"
 
     def source_count(self):
-        return len(self._sources())
+        return len(self._sources)
     
     def has_source(self, sid, param=''):
         bs = BusSource(sid, param)
@@ -210,10 +210,19 @@ class AudioBus(BusProxy):
     def rate():
         return "Audio"
 
+    # def is_protected(self):
+    #     return self.name.startswith("out_") or self.name.startswith("in_")
+
+    def is_hardware_output(self):
+        return self.name.startswith("out_")
+
+    def is_hardware_input(self):
+        return self.name.startswith("in_")
+
     def is_protected(self):
-        return self.name.startswith("out_") or self.name.startswith("in_")
-
-
+        return self.is_hardware_output() or self.is_hardware_input()
+    
+    
 class ControlBus(BusProxy):
 
     def __init__(self, name, app, sync=False):

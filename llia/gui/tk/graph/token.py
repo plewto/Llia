@@ -94,7 +94,6 @@ class Token(dict):
     def render_info(self, *_):
         msg = "warning: %s subclass of Token does not implement render_info()"
         msg = msg % self.__class__
-        #raise NotImplementedError(msg)
         print(msg)
 
     def clear_info(self, *_):

@@ -35,8 +35,8 @@ class LliaGraph(Frame):
         x0,y0= 15, 15
         b_sync.place(x=x0,y=y0)
         self._tokens = {}  # maps sid -> SynthToken
-        #self._drag_info = {"x" : 0, "y" : 0, "item" : None}
-    
+        self._first_pass = True
+        
     def status(self, msg):
         self.app.main_window().status(msg)
 
@@ -67,16 +67,16 @@ class LliaGraph(Frame):
         for abname in self.proxy.audio_bus_names():
             if not(self._tokens.has_key(abname)):
                 bobj = self.proxy.get_audio_bus(abname)
-                abtoken = AudioBusToken(self, self.app, bobj)
+                abtoken = AudioBusToken(self, self.app, bobj, self._first_pass)
                 self._tokens[bobj.name] = abtoken
+                abtoken.render()
         # Add new control buses
         for cbname in self.proxy.control_bus_names():
             if not(self._tokens.has_key(cbname)):
                 bobj = self.proxy.get_control_bus(cbname)
                 cbtoken = ControlBusToken(self, self.app, cbname)
                 self._tokens[bobj.name] = cbtoken
-        
-                
+        self._first_pass = False
         
             
             
