@@ -48,7 +48,28 @@ class Token(dict):
         self.app = app
         self.proxy = app.proxy
         self.client = client
+        self._drag_data = [0,0]
 
+    # Drag and drop
+    def pickup(self, event):
+        # initialize mouse drag
+        x, y = event.x, event.y
+        self._drag_data[0] = x
+        self._drag_data[1] = y
+
+    def drop(self, event):
+        # fianlized mouse drag
+        self._drag_data[0] = 0
+        self._drag_data[1] = 0
+        # ISSUE: sync buses here !!!!
+
+    def drag(self, event):
+        delta_x = event.x - self._drag_data[0]
+        delta_y = event.y - self._drag_data[1]
+        self.canvas.move(self.client_id(), delta_x, delta_y)
+        self._drag_data[0] = event.x
+        self._drag_data[1] = event.y
+        
     def is_synth(self):
         # True for synth/efx/controller
         # False for bus

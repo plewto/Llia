@@ -35,7 +35,7 @@ class SynthToken(Token):
         self["height"] = gconfig["synth-token-height"]
         self["pad"] = -1
         self["image"] = -1
-        self._drag_data = [0,0]
+        #self._drag_data = [0,0]
 
     def client_id(self):
         return self.client.sid
@@ -67,19 +67,14 @@ class SynthToken(Token):
             self["image"] = image
             canvas.tag_bind(image, "<Enter>", self.highlight)
             canvas.tag_bind(image, "<Leave>", self.unhighlight)
+            canvas.tag_bind(sid, "<B1-Motion>", self.drag)
+            canvas.tag_bind(sid, "<ButtonPress-1>", self.pickup)
+            canvas.tag_bind(sid, "<ButtonRelease-1>", self.drop)
+            canvas.tag_bind(sid, "<Double-Button-1>", self.display_editor)
 
-            canvas.tag_bind(image, "<B1-Motion>", self.drag)
-            canvas.tag_bind(image, "<ButtonPress-1>", self.press)
-            canvas.tag_bind(image, "<ButtonRelease-1>", self.drop)
-            canvas.tag_bind(image, "<Double-Button-1>", self.display_editor)
 
-
-    def debug_callback(self, event):
-        print("DEBUG CALLBACK")
-            
     def show_editor(self, *_):
         sid = self.client_id()
-        print("SyToken.show_editor  sid = %s" % sid)
         mw = self.app.main_window()
         mw.raise_synth_editor(sid)
             
@@ -106,25 +101,7 @@ class SynthToken(Token):
         c = gconfig["synth-outline"]
         self.canvas.itemconfig(self["pad"], outline=c)
         self.clear_info()
-
-    def press(self, event):
-        x, y = event.x, event.y
-        self._drag_data[0] = x
-        self._drag_data[1] = y
-
-    def drop(self, event):
-        self._drag_data[0] = 0
-        self._drag_data[1] = 0
-        
-    def drag(self, event):
-        delta_x = event.x - self._drag_data[0]
-        delta_y = event.y - self._drag_data[1]
-        self.canvas.move(self.client_id(), delta_x, delta_y)
-        self._drag_data[0] = event.x
-        self._drag_data[1] = event.y
-
-
-        
+ 
     def display_editor(self, *_):
         mw = self.app.main_window()
         sid = self.client_id()

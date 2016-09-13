@@ -22,7 +22,6 @@ class BusToken(Token):
         super(BusToken, self).__init__(graph, app, busobj)
         self["width"] = gconfig["bus-token-width"]
         self["height"] = gconfig["bus-token-height"]
-        
 
     def client_id(self):
         return self.client.name
@@ -128,7 +127,9 @@ class AudioBusToken(BusToken):
             self["text"] = txt
             canvas.tag_bind(cid,"<Enter>", self.highlight)
             canvas.tag_bind(cid,"<Leave>", self.unhighlight)
-            
+            canvas.tag_bind(cid, "<B1-Motion>", self.drag)
+            canvas.tag_bind(cid, "<ButtonPress-1>", self.pickup)
+            canvas.tag_bind(cid, "<ButtonRelease-1>", self.drop)
             
             
 class ControlBusToken(BusToken):
