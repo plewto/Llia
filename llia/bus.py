@@ -134,7 +134,10 @@ class BusProxy(object):
 
     def source_count(self):
         return len(self._sources)
-    
+
+    def sources(self):
+        return self._sources
+        
     def has_source(self, sid, param=''):
         bs = BusSource(sid, param)
         for q in self._sources:
@@ -156,6 +159,9 @@ class BusProxy(object):
 
     def sink_count(self):
         return len(self._sinks)
+
+    def sinks(self):
+        return self._sinks
         
     def has_sink(self, sid, param=''):
         bs = BusSink(sid, param)

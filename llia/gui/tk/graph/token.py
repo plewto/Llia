@@ -57,11 +57,12 @@ class Token(dict):
         self._drag_data[0] = x
         self._drag_data[1] = y
 
+
     def drop(self, event):
         # fianlized mouse drag
         self._drag_data[0] = 0
         self._drag_data[1] = 0
-        # ISSUE: sync buses here !!!!
+        self.graph.sync()
 
     def drag(self, event):
         delta_x = event.x - self._drag_data[0]
@@ -69,6 +70,7 @@ class Token(dict):
         self.canvas.move(self.client_id(), delta_x, delta_y)
         self._drag_data[0] = event.x
         self._drag_data[1] = event.y
+        self.canvas.delete("path")
         
     def is_synth(self):
         # True for synth/efx/controller
@@ -93,7 +95,7 @@ class Token(dict):
         return False
     
     def is_bus(self):
-        return self.is_audio_bus() or self.is_controller_bus()
+        return self.is_audio_bus() or self.is_control_bus()
 
     def keep_hidden(self):
         return False
@@ -108,15 +110,20 @@ class Token(dict):
     def render(self):
         msg = "WARNING: %s subclass of Token does not implement render()"
         msg = msg % self.__class__
-        #raise NotImplementedError(msg)
-        print(msg)
+        raise NotImplementedError(msg)
         
     @abc.abstractmethod
     def render_info(self, *_):
         msg = "warning: %s subclass of Token does not implement render_info()"
         msg = msg % self.__class__
-        print(msg)
+        raise NotImplementedError(msg)
 
+    @abc.abstractmethod
+    def render_paths(self):
+        # Used only by BusToken to draw lines between bus and synth nodes.
+        # SynthToken should not implement.
+        pass
+        
     def clear_info(self, *_):
         self.canvas.delete("info-text")
         
@@ -142,7 +149,22 @@ class Token(dict):
                                font = gconfig["info-font"])
         return tx
 
-        
+    @abc.abstractmethod
+    def audio_input_coords(self):
+        return None
+
+    @abc.abstractmethod
+    def audio_output_coords(self):
+        return None
+
+    @abc.abstractmethod
+    def control_input_coords(self):
+        return None
+
+    @abc.abstractmethod
+    def control_output_coords(self):
+        return None
+    
     @abc.abstractmethod
     def highlight(self, *_):
         pass
@@ -157,11 +179,8 @@ class Token(dict):
     def warning(self, msg):
         self.app.main_window().warning(msg)
 
-   
-                                     
-        
-    
-
-    
-        
+    def __str__(self):
+        cl = self.__class__.__name__
+        acc = "%s(id = '%s')" % (cl, self.client_id())
+        return acc
         

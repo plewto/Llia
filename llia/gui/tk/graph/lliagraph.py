@@ -43,6 +43,14 @@ class LliaGraph(Frame):
     def warning(self, msg):
         self.app.main_window().warning(msg)
 
+
+    def find_token(self, id_):
+        try:
+            rs = self._tokens[id_]
+        except KeyError:
+            rs = None
+        return rs
+            
         
     def collect_garbage(self):
         pass
@@ -77,7 +85,7 @@ class LliaGraph(Frame):
                 cbtoken = ControlBusToken(self, self.app, bobj)
                 self._tokens[bobj.name] = cbtoken
                 cbtoken.render()
+        for tk in self._tokens.values():
+            if tk.is_bus():
+                tk.render_paths()
         self._first_pass = False
-        
-            
-            

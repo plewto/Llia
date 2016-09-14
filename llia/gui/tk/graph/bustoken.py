@@ -47,6 +47,20 @@ class BusToken(Token):
         self.canvas.itemconfig(self['pad'], outline=c)
         self.clear_info()
 
+    def find_sink_tokens(self):
+        acc = []
+        for bs in self.client.sinks():
+            tk = self.graph.find_token(bs.sid)
+            if tk: acc.append(tk)
+        return acc
+
+    def find_source_tokens(self):
+        acc = []
+        for bs in self.client.sources():
+            tk = self.graph.find_token(bs.sid)
+            if tk: acc.append(tk)
+        return acc
+
         
 class AudioBusToken(BusToken):
 
@@ -62,17 +76,12 @@ class AudioBusToken(BusToken):
 
     def is_hardware_input(self):
         return self.client.is_hardware_input()
-    
-    # def keep_hiden(self):
-    #     cid = self.client_id()
-    #     c = self.client.source_count() + self.client.sink_count()
-    #     io = cid.startswith("in_") or cid.startswith("out_")
-    #     return not(io) or c == 0
 
     def keep_hiden(self):
         return False    
     
     def render(self):
+        x0, y0 = randint(30,500), randint(30,500)
         if not(self.keep_hiden()):
             cid = self.client_id()
             if self._first_pass:
@@ -88,9 +97,8 @@ class AudioBusToken(BusToken):
                 x0, y0 = randint(30, 500), randint(30, 300)
             x1, y1 = x0+self['width'], y0+self['height']
             xc, yc = (x0+x1)/2, (y0+y1)/2
-
             fill = "black"
-            self["color"] = 'blue' # ISSUE generate series of colors
+            self["color"] = gconfig.audio_bus_color()
             outline = self["color"]
             activeoutline = gconfig["bus-activeoutline"]
             text_fill = 'white'
@@ -114,12 +122,12 @@ class AudioBusToken(BusToken):
             if has_input:
                 cin = canvas.create_oval(xin0, yin0, xin1, yin1,
                                          tags = ("input-port", "audio-bus", cid),
-                                         fill = 'green') # ISSUE
+                                         fill = gconfig["io-node-fill"])
                 self["input-port"] = cin
             if has_output:
                 cin = canvas.create_oval(xout0, yin0, xout1, yin1,
                                          tags = ("output-port", "audio-bus", cid),
-                                         fill = 'green') # ISSUE
+                                         fill = gconfig["io-node-fill"]) 
                 self["output-port"] = cin
             self["pad"] = pad
             self["text"] = txt
@@ -128,7 +136,41 @@ class AudioBusToken(BusToken):
             canvas.tag_bind(cid, "<B1-Motion>", self.drag)
             canvas.tag_bind(cid, "<ButtonPress-1>", self.pickup)
             canvas.tag_bind(cid, "<ButtonRelease-1>", self.drop)
+
+    def audio_input_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        yc = (y0+y1)/2
+        return x0,yc
+
+    def audio_output_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        yc = (y0+y1)/2
+        return x1,yc
+
+    def render_paths(self):
+        x0,y0 = self.audio_input_coords()
+        color = self["color"]
+        dash = gconfig["audio-dash-pattern"]
+        for tk in self.find_source_tokens():
+            x1,y1 = tk.audio_output_coords()
+            ln = self.canvas.create_line(x0,y0,x1,y1,
+                                         fill = color,
+                                         dash = dash,
+                                         tags = ("path","audio",
+                                                 self.client_id(),
+                                                 tk.client_id()))
+        x0,y0 = self.audio_output_coords()
+        for tk in self.find_sink_tokens():
+            x1,y1 = tk.audio_input_coords()
+            ln = self.canvas.create_line(x0,y0,x1,y1,
+                                         fill = color,
+                                         dash = dash,
+                                         tags = ("path","audio",
+                                                 self.client_id(),
+                                                 tk.client_id()))
             
+            
+    
             
 class ControlBusToken(BusToken):
 
@@ -138,9 +180,6 @@ class ControlBusToken(BusToken):
     def is_control_bus(self):
         return True
 
-    # def keep_hidden(self):
-    #     c = self.client.source_count() + self.client.sink_count()
-    #     return self.is_protected() or c == 0
     def keep_hidden(self):
         return self.is_protected()
 
@@ -151,7 +190,7 @@ class ControlBusToken(BusToken):
             x1, y1 = x0+self['width'], y0+self['height']
             xc, yc = (x0+x1)/2, (y0+y1)/2
             fill = 'black'
-            self["color"] = "green"  # isse generate serwies of colors
+            self["color"] = gconfig.control_bus_color()
             outline = self["color"]
             activeoutline = gconfig["bus-activeoutline"]
             text_fill = 'white'
@@ -174,12 +213,10 @@ class ControlBusToken(BusToken):
             has_output = not(cid.startswith("out_"))
             cin = canvas.create_oval(xin0, yin0, xin1, yin1,
                                      tags = ("input-port", "control-bus", cid),
-                                     fill = 'green') # ISSUE
-
-
+                                     fill = gconfig['io-node-fill'])
             cout = canvas.create_oval(xout0, yin0, xout1, yin1,
                                       tags = ("output-port", "control-bus", cid),
-                                      fill = 'green') # ISSUE
+                                      fill = gconfig['io-node-fill'])
             self["pad"] = pad
             self["text"] = txt
             self["output-port"] = cout
@@ -190,3 +227,38 @@ class ControlBusToken(BusToken):
             canvas.tag_bind(cid, "<ButtonPress-1>", self.pickup)
             canvas.tag_bind(cid, "<ButtonRelease-1>", self.drop)
 
+    def control_input_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        yc = (y0+y1)/2
+        return x0,yc
+
+    def control_output_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        yc = (y0+y1)/2
+        return x1,yc
+            
+    def render_paths(self):
+        try:
+            x0,y0 = self.control_input_coords()
+            color = self["color"]
+            dash = gconfig["control-dash-pattern"]
+            for tk in self.find_source_tokens():
+                x1,y1 = tk.control_output_coords()
+                ln = self.canvas.create_line(x0,y0,x1,y1,
+                                             fill = color,
+                                             dash = dash,
+                                             tags = ("path","control",
+                                                     self.client_id(),
+                                                     tk.client_id()))
+            x0,y0 = self.control_output_coords()
+            for tk in self.find_sink_tokens():
+                x1,y1 = tk.control_input_coords()
+                ln = self.canvas.create_line(x0,y0,x1,y1,
+                                             fill = color,
+                                             dash = dash,
+                                             tags = ("path","control",
+                                                     self.client_id(),
+                                                     tk.client_id()))
+        except KeyError:   # ignore hidden buses
+            pass
+            

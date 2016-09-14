@@ -92,6 +92,34 @@ class SynthToken(Token):
             # DEBUG FPO
             self._info_data(line+1, "FPO DATA")
 
+    def audio_input_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        yc = (y0+y1)/2
+        return x0,yc
+
+    def audio_output_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        yc = (y0+y1)/2
+        return x1,yc
+
+    def control_input_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        xc = (x0+x1)/2
+        yc = (y0+y1)/2
+        if self.is_controller():
+            return x0,yc
+        else:
+            return xc,y1
+
+    def control_output_coords(self):
+        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        xc = (x0+x1)/2
+        yc = (y0+y1)/2
+        if self.is_controller():
+            return x1,yc
+        else:
+            return xc,y0
+            
     def highlight(self, *_):
         c = gconfig["synth-activeoutline"]
         self.canvas.itemconfig(self["pad"], outline=c)
