@@ -24,12 +24,12 @@ _template = {
 
     "synth-token-width" : __SYNTH_TOKEN_WIDTH,
     "synth-token-height" : __SYNTH_TOKEN_HEIGHT,
-    "bus-token-width" : 64,
-    "bus-token-height" : 32,
+    "bus-token-width" : 48,
+    "bus-token-height" : 16,
     
     "audio-bus-width" : 64,
-    "audio-bus-height" : 32,
-    "bus-name-font" : ("Mono", 9),
+    #"audio-bus-height" : 24,
+    "bus-name-font" : ("Mono", 8),
     
     "audio-dash-pattern" : (1,1),
     "control-dash-pattern" : (8,4),
@@ -40,7 +40,7 @@ _template = {
     "synth-outline" : "#292920",
     "synth-activeoutline" : "#ffffcc",
     "bus-activeoutline" : "yellow",
-    "io-node-fill" : "blue",               # DEPRECIATED
+    #"io-node-fill" : "blue",               # DEPRECIATED
     "io-audio-source" : "#8A1D1D",
     "io-audio-sink" : "#538A1D",
     "io-control-source" : "#1D8A8A",

@@ -103,19 +103,37 @@ class AudioBusToken(BusToken):
             activeoutline = gconfig["bus-activeoutline"]
             text_fill = 'white'
             canvas = self.canvas
-            pad = canvas.create_rectangle(x0,y0,x1,y1,
-                                          tags = ("pad", "audio-bus", cid),
-                                          fill = fill,
-                                          outline = outline,
-                                          activeoutline = activeoutline)
-            txt = canvas.create_text(xc,yc,
+            text_x_shift = 0
+            self._x_wedge = 20
+            xin, xout = x0+self._x_wedge, x1+self._x_wedge
+            if self.is_hardware_output():
+                pad = canvas.create_polygon([x0,y0,x1,y0,x1,y1,x0,y1,
+                                             xin,yc,x0,y0],
+                                            tags = ("pad", "audio-bus", cid),
+                                            fill = fill,
+                                            outline = outline)
+                text_x_shift = 10
+            elif self.is_hardware_input():
+                pad = canvas.create_polygon([x0,y0,x1,y0,xout,yc,x1,y1,
+                                             x0,y1,x0,y0],
+                                            tags = ("pad", "audio-bus", cid),
+                                            fill = fill,
+                                            outline = outline)
+                text_x_shift = -10
+            else:
+                pad = canvas.create_polygon([x0,y0,x1,y0,xout,yc,x1,y1,x0,y1,
+                                             xin,yc,x0,y0],
+                                            tags = ("pad", "audio-bus", cid),
+                                            fill = fill,
+                                            outline = outline)
+            txt = canvas.create_text(xc+text_x_shift,yc,
                                      text = cid,
                                      tags = ("text", "audio-bus", cid),
                                      fill = text_fill,
                                      font = gconfig["bus-name-font"])
             radius = 4 # io "port" radius
             xin0, xin1 = x0-radius, x0+radius
-            xout0, xout1 = x1-radius, x1+radius
+            xout0, xout1 = x1+self._x_wedge-radius, x1+self._x_wedge+radius
             yin0, yin1 = yc-radius, yc+radius
             has_input = not(cid.startswith("in_"))
             has_output = not(cid.startswith("out_"))
@@ -125,10 +143,10 @@ class AudioBusToken(BusToken):
                                          fill = gconfig["io-audio-sink"])
                 self["input-port"] = cin
             if has_output:
-                cin = canvas.create_oval(xout0, yin0, xout1, yin1,
+                cout = canvas.create_oval(xout0, yin0, xout1, yin1,
                                          tags = ("output-port", "audio-bus", cid),
                                          fill = gconfig["io-audio-source"]) 
-                self["output-port"] = cin
+                self["output-port"] = cout
             self["pad"] = pad
             self["text"] = txt
             canvas.tag_bind(cid,"<Enter>", self.highlight)
@@ -138,14 +156,16 @@ class AudioBusToken(BusToken):
             canvas.tag_bind(cid, "<ButtonRelease-1>", self.drop)
 
     def audio_input_coords(self):
-        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        x0,y0 = self.canvas.coords(self["pad"])[:2]
+        x1,y1 = x0+self['width'], y0+self['height']
         yc = (y0+y1)/2
         return x0,yc
 
     def audio_output_coords(self):
-        x0,y0,x1,y1 = self.canvas.coords(self["pad"])
+        x0,y0 = self.canvas.coords(self["pad"])[:2]
+        x1,y1 = x0+self['width'], y0+self['height']
         yc = (y0+y1)/2
-        return x1,yc
+        return x1+self._x_wedge,yc
 
     def render_paths(self):
         x0,y0 = self.audio_input_coords()
