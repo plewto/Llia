@@ -35,12 +35,16 @@ _template = {
     "control-dash-pattern" : (8,4),
     
     # pallet
-    "graph-fill" : "#202029",
-    "synth-fill" : "black",
+    "graph-fill" : "#202429",
+    "synth-fill" : "#202429",
     "synth-outline" : "#292920",
     "synth-activeoutline" : "#ffffcc",
     "bus-activeoutline" : "yellow",
-    "io-node-fill" : "blue",
+    "io-node-fill" : "blue",               # DEPRECIATED
+    "io-audio-source" : "#8A1D1D",
+    "io-audio-sink" : "#538A1D",
+    "io-control-source" : "#1D8A8A",
+    "io-control-sink" : "#531D8A",
 
     "info-header-fill" : "white",
     "info-data-fill" : "green"
@@ -50,10 +54,10 @@ _template = {
 
 _audio_bus_colors = ("#f41010",
                      "#645938",
-                     "#402626",
+                     "#691748",
                      "#ed8d8d",
                      "#4c27ed",
-                     "#140a40",
+                     "#0a70ff",  # 
                      "#7c7276",
                      "#9f8ded")
 

@@ -122,12 +122,12 @@ class AudioBusToken(BusToken):
             if has_input:
                 cin = canvas.create_oval(xin0, yin0, xin1, yin1,
                                          tags = ("input-port", "audio-bus", cid),
-                                         fill = gconfig["io-node-fill"])
+                                         fill = gconfig["io-audio-sink"])
                 self["input-port"] = cin
             if has_output:
                 cin = canvas.create_oval(xout0, yin0, xout1, yin1,
                                          tags = ("output-port", "audio-bus", cid),
-                                         fill = gconfig["io-node-fill"]) 
+                                         fill = gconfig["io-audio-source"]) 
                 self["output-port"] = cin
             self["pad"] = pad
             self["text"] = txt
@@ -213,10 +213,10 @@ class ControlBusToken(BusToken):
             has_output = not(cid.startswith("out_"))
             cin = canvas.create_oval(xin0, yin0, xin1, yin1,
                                      tags = ("input-port", "control-bus", cid),
-                                     fill = gconfig['io-node-fill'])
+                                     fill = gconfig['io-control-sink'])
             cout = canvas.create_oval(xout0, yin0, xout1, yin1,
                                       tags = ("output-port", "control-bus", cid),
-                                      fill = gconfig['io-node-fill'])
+                                      fill = gconfig['io-control-source'])
             self["pad"] = pad
             self["text"] = txt
             self["output-port"] = cout
