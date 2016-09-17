@@ -303,6 +303,15 @@ class LliaProxy(object):
                 print(msg)
                 sys.exit(1)
         return rs
+
+    def bus_exists(self, bname):
+        if self.audio_bus_exists(bname):
+            return "audio"
+        elif self.control_bus_exists(bname):
+            return "control"
+        else:
+            return False
+
     
     def audio_bus_exists(self, bname):
         '''

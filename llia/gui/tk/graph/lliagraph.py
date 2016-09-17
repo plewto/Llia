@@ -1,91 +1,142 @@
-# llia.gui.tk.graph.lliagraph
 
-from __future__ import print_function
+
 from Tkinter import Canvas, Frame
 
+from random import randint
 
 import llia.gui.tk.tk_factory as factory
-
-from llia.gui.tk.graph.graph_config import gconfig
+from llia.gui.tk.graph.gconfig import gconfig
 from llia.gui.tk.graph.sytoken import SynthToken, EfxToken, ControllerToken
-from llia.gui.tk.graph.bustoken import AudioBusToken, ControlBusToken
-from llia.gui.tk.graph.graph_config import gconfig
-
-#import llia.constants as con
-#from graph_config import pallet
-#pallet = gconfig.pallet
-
-
+from llia.gui.tk.graph.bustoken import AudiobusToken, ControlbusToken
 
 class LliaGraph(Frame):
-                
+
     def __init__(self, master, app):
         Frame.__init__(self, master)
+        self.app = app
+        self.proxy = app.proxy
         self.config(background=factory.bg())
         canvas = Canvas(self,
                         width=gconfig["graph-width"],
                         height=gconfig["graph-height"],
                         background=gconfig["graph-fill"])
         self.canvas = canvas
-        canvas.pack(anchor='nw', expand=True, fill='both')
-        self.canvas = canvas
-        self.app = app
-        self.proxy = app.proxy
-        b_sync = factory.button(canvas, "Sync", command=self.sync)
-        x0,y0= 15, 15
-        b_sync.place(x=x0,y=y0)
-        self._tokens = {}  # maps sid -> SynthToken
-        self._first_pass = True
+        info_canvas = Canvas(self,
+                             width=gconfig["info-area-width"],
+                             height=gconfig["graph-height"],
+                             background=gconfig["info-fill"])
+        self.info_canvas = info_canvas
+        toolbar = factory.frame(self)
+        info_canvas.grid(row=0,column=0,rowspan=1,columnspan=1, sticky='wns')
+        canvas.grid(row=0,column=1,rowspan=1,columnspan=1, sticky='nsew')
+        toolbar.grid(row=1,column=0, rowspan=1,columnspan=2, sticky='ew')
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=0)
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+        # toolbar buttons
+        def tbutton(col, text, command=None, ttip=''):
+            b = factory.button(toolbar, text, command=command)
+            b.grid(row=0, column=col, sticky='ew')
+            return b
+        tbutton(0, 'sync', self.sync)
+
+        self._tokens = {}  # map [id] -> Token
         
     def status(self, msg):
         self.app.main_window().status(msg)
 
     def warning(self, msg):
-        self.app.main_window().warning(msg)
+        self.app.mani_window().warning(msg)
 
+    @staticmethod
+    def _initial_audiobus_coords(token):
+        bid = token.client_id()
+        x,y = randint(90, 400), randint(150, 400)
+        y_space = 60
+        if bid.startswith("in_"):
+            try:
+                bnum = int(bid[3])
+                x = 30
+                y = (bnum+1)*y_space
+            except (ValueError,IndexError):
+                pass
+        elif bid.startswith("out_"):
+            try:
+                bnum = int(bid[4])
+                x = 600
+                y = (bnum+1)*y_space
+            except (ValueError,IndexError):
+                pass
+        return x,y
 
-    def find_token(self, id_):
-        try:
-            rs = self._tokens[id_]
-        except KeyError:
-            rs = None
-        return rs
-            
-        
+    @staticmethod
+    def _initial_controlbus_coords(token):
+        x,y = randint(90,400),randint(350, 550)
+        return x,y
+
+    @staticmethod
+    def _initial_synth_coords(token):
+        x,y = randint(90,500),randint(30,500)
+        if token.is_controller():
+            y = randint(400, 600)
+        elif token.is_efx():
+            y = randint(200, 400)
+        else:
+            y = randint(30, 200)
+        return x,y
+    
+    def suggest_initial_coords(self, token):
+        if token.is_audio_bus():
+            x,y = self._initial_audiobus_coords(token)
+        elif token.is_control_bus():
+            x,y = self._initial_controlbus_coords(token)
+        else:
+            x,y = self._initial_synth_coords(token)
+        return x,y
+    
     def collect_garbage(self):
-        pass
-        # self.tokens of deletaed synths/buses
-
-    def sync(self):
+        for key,tkn in self._tokens.items():
+            if tkn.is_synth():
+                sid = key
+                if not(self.proxy.synth_exists(None, None, sid)):
+                    self._tokens.pop(sid)
+                    self.canvas.delete(sid)
+            else:
+                busid = key
+                if not(self.proxy.bus_exists(busid)):
+                    self._tokens.pop(busid)
+                    self.canvas.delete(busid)
+        
+    def sync(self, *_):
         self.collect_garbage()
-        # Add any new synths
+        # Add new synths
         for sy in self.proxy.get_all_synths():
             sid = sy.sid
             specs = sy.specs
             if not(self._tokens.has_key(sid)):
                 if specs["is-controller"]:
-                    sytoken = ControllerToken(self, self.app, sy)
+                    tkn = ControllerToken(self,sy)
                 elif specs["is-efx"]:
-                    sytoken = EfxToken(self, self.app, sy)
+                    tkn = EfxToken(self,sy)
                 else:
-                    sytoken = SynthToken(self, self.app, sy)
-                self._tokens[sid] = sytoken
-                sytoken.render()
+                    tkn = SynthToken(self,sy)
+                self._tokens[sid] = tkn
+                tkn.render()
         # Add new audio buses
-        for abname in self.proxy.audio_bus_names():
-            if not(self._tokens.has_key(abname)):
-                bobj = self.proxy.get_audio_bus(abname)
-                abtoken = AudioBusToken(self, self.app, bobj, self._first_pass)
-                self._tokens[bobj.name] = abtoken
-                abtoken.render()
+        for bname in self.proxy.audio_bus_names():
+            if not(self._tokens.has_key(bname)):
+                bobj = self.proxy.get_audio_bus(bname)
+                btoken = AudiobusToken(self,bobj)
+                self._tokens[bname] = btoken
+                btoken.render()
         # Add new control buses
-        for cbname in self.proxy.control_bus_names():
-            if not(self._tokens.has_key(cbname)):
-                bobj = self.proxy.get_control_bus(cbname)
-                cbtoken = ControlBusToken(self, self.app, bobj)
-                self._tokens[bobj.name] = cbtoken
-                cbtoken.render()
-        for tk in self._tokens.values():
-            if tk.is_bus():
-                tk.render_paths()
-        self._first_pass = False
+        for bname in self.proxy.control_bus_names():
+            if not(self._tokens.has_key(bname)):
+                bobj = self.proxy.get_control_bus(bname)
+                btoken = ControlbusToken(self,bobj)
+                self._tokens[bname] = btoken
+                btoken.render()
+                    
+                
+    

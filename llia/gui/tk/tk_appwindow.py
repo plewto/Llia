@@ -63,10 +63,11 @@ class TkApplicationWindow(AbstractApplicationWindow):
         frame_efx = layout.FlowGrid(nb, 6)
         frame_controllers = layout.FlowGrid(nb, 6)
         self.llia_graph = LliaGraph(nb, self.app)
+        nb.add(self.llia_graph, text="Graph")
         nb.add(frame_synths, text = "Synths")
         nb.add(frame_efx, text = "Effects")
         nb.add(frame_controllers, text = "Controllers")
-        nb.add(self.llia_graph, text="Graph")
+
      
         for st in con.SYNTH_TYPES:
             sp = specs[st]
