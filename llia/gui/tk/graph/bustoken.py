@@ -21,23 +21,31 @@ class BusToken(Token):
         highlight = gconfig["highlight-color"]
         canvas.itemconfigure(self['pad'], outline=highlight)
         canvas.itemconfigure(self['text'], fill=highlight)
+        self.graph.display_info(self.info_text())
 
     def dehighlight(self, *_):
         canvas = self.canvas
         outline = self['outline']
         canvas.itemconfigure(self['pad'], outline=outline)
         canvas.itemconfigure(self['text'], fill=outline)
-            
+        self.graph.clear_info()
+ 
     def _init_event_bindings(self):
         canvas = self.canvas
-        itm = self['pad']
-        canvas.tag_bind(itm, '<Enter>', self.highlight)
-        canvas.tag_bind(itm, '<Leave>', self.dehighlight)
-        itm = self['text']
-        canvas.tag_bind(itm, '<Enter>', self.highlight)
-        canvas.tag_bind(itm, '<Leave>', self.dehighlight)
-        
+        for citem in (self['pad'],self['text']):
+            canvas.tag_bind(citem, '<Enter>', self.highlight)
+            canvas.tag_bind(citem, '<Leave>', self.dehighlight)
+            canvas.tag_bind(citem, '<B1-Motion>', self.drag_token)
+            canvas.tag_bind(citem, '<ButtonPress-1>', self.pickup_token)
+            canvas.tag_bind(citem, '<ButtonRelease-1>', self.drop_token)
     
+    def info_text(self):
+        bus = self.client
+        acc = bus.dump(depth=0, silent=True)
+        return acc
+
+
+        
 class AudiobusToken(BusToken):
 
     def __init__(self,graph,bus):
@@ -110,9 +118,10 @@ class AudiobusToken(BusToken):
         self['text'] = txt
         self['in-port'] = port_sink
         self['out-port'] = port_source
+        self["color"] = outline
         self._init_event_bindings()
-        
 
+    
 class ControlbusToken(BusToken):
 
     def __init__(self,graph,bus):
@@ -146,6 +155,7 @@ class ControlbusToken(BusToken):
             self['text'] = txt
             self['in-port'] = port_sink
             self['out-port'] = port_source
+            self['color'] = outline
             self._init_event_bindings()
         else:
             pad = None

@@ -14,10 +14,12 @@ class Port(dict):
     def highlight(self, *_):
         canvas = self.canvas
         canvas.itemconfig(self['pad'],fill=gconfig["port-highlight"])
-
+        self.graph.display_info(self.info_text())
+        
     def dehighlight(self, *_):
         canvas = self.canvas
         canvas.itemconfig(self['pad'],fill=self['fill'])
+        self.graph.clear_info()
 
     def _init_event_bindings(self):
         canvas = self.canvas
@@ -25,6 +27,13 @@ class Port(dict):
         canvas.tag_bind(pad, '<Enter>', self.highlight)
         canvas.tag_bind(pad, '<Leave>', self.dehighlight)
         
+    def _info_text(self, header):
+        acc = "%s:\n" % header
+        frmt = "id = '%s', param = '%s'"
+        acc += frmt % (self.parent_token.client_id(), self.param)
+        return acc
+                     
+
         
 class AudioSource(Port):
 
@@ -47,6 +56,9 @@ class AudioSource(Port):
         self['pad'] = c
         self._init_event_bindings()
 
+    def info_text(self):
+        return self._info_text("AudioSource")
+        
 
 class AudioSink(Port):
 
@@ -69,6 +81,8 @@ class AudioSink(Port):
         self['pad'] = c
         self._init_event_bindings()
 
+    def info_text(self):
+        return self._info_text("AudioSink")
         
 class ControlSource(Port):
 
@@ -91,6 +105,9 @@ class ControlSource(Port):
         self['pad'] = c
         self._init_event_bindings()
 
+    def info_text(self):
+        return self._info_text("ControlSource")
+        
 class ControlSink(Port):
 
     def __init__(self, graph, parent_token, position, param=''):
@@ -112,3 +129,5 @@ class ControlSink(Port):
         self['pad'] = c
         self._init_event_bindings()
 
+    def info_text(self):
+        return self._info_text("ControlSink")

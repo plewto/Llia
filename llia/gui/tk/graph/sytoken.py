@@ -13,11 +13,10 @@ class SynthToken(Token):
         self["height"] = 0
         self["pad"] = None
         self["image"] = None
-        self._audio_input_ports = {}    # map synth param to tuple
-        self._audio_output_ports = {}   # (param, Port, (x, y)).
-        self._control_input_ports = {}  # Where x and y are relative to
-        self._control_output_ports = {} # x0,y0.
-                                        
+        self.audio_input_ports = {}    # map synth param to tuple
+        self.audio_output_ports = {}   # (param, Port, (x, y)).
+        self.control_input_ports = {}  # Where x and y are relative to
+        self.control_output_ports = {} # x0,y0.
 
     def client_id(self):
         return self.client.sid
@@ -53,7 +52,7 @@ class SynthToken(Token):
             abs_position = x0+rel_position[0], y0+rel_position[1]
             port = AudioSource(self.graph, self, abs_position, param)
             t = (param, port, rel_position)
-            self._audio_output_ports[param] = t
+            self.audio_output_ports[param] = t
         ainparams = self.client.available_audio_input_parameters()
         for i,param in enumerate(ainparams):
             x = 0
@@ -62,7 +61,7 @@ class SynthToken(Token):
             abs_position = x0+rel_position[0], y0+rel_position[1]
             port = AudioSink(self.graph, self, abs_position, param)
             t = (param, port, rel_position)
-            self._audio_input_ports[param] = t
+            self.audio_input_ports[param] = t
         coutparams = self.client.available_control_output_parameters()
         for i,param in enumerate(coutparams):
             x = spacing*(i+1)
@@ -71,7 +70,7 @@ class SynthToken(Token):
             abs_position = x0+rel_position[0], y0+rel_position[1]
             port = ControlSource(self.graph, self, abs_position, param)
             t = (param, port, rel_position)
-            self._control_output_ports[param] = t
+            self.control_output_ports[param] = t
         cinparams = self.client.available_control_input_parameters()
         for i,param in enumerate(cinparams):
             x = spacing*(i+1)
@@ -80,11 +79,14 @@ class SynthToken(Token):
             abs_position = x0+rel_position[0], y0+rel_position[1]
             port = ControlSink(self.graph, self, abs_position, param)
             t = (param, port, rel_position)
-            self._control_input_ports[param] = t
+            self.control_input_ports[param] = t
         self['pad'] = pad
         self['image'] = img
         canvas.tag_bind(self['image'], '<Enter>', self.highlight)
         canvas.tag_bind(self['image'], '<Leave>', self.dehighlight)
+        canvas.tag_bind(self['image'], '<B1-Motion>', self.drag_token)
+        canvas.tag_bind(self['image'], '<ButtonPress-1>', self.pickup_token)
+        canvas.tag_bind(self['image'], '<ButtonRelease-1>', self.drop_token)
         
             
     def highlight(self, *_):
@@ -93,6 +95,7 @@ class SynthToken(Token):
         canvas.itemconfig(self['pad'],
                           fill = highlight,
                           outline = highlight)
+        self.graph.display_info(self.info_text())
 
     def dehighlight(self, *_):
         canvas = self.canvas
@@ -101,8 +104,40 @@ class SynthToken(Token):
         canvas.itemconfig(self['pad'],
                           fill = fill,
                           outline = outline)
-            
-        
+        self.graph.clear_info()
+
+    def info_text(self,head="Synth"):
+        sy = self.client
+        specs = sy.specs
+        acc = "%s %s\n" % (head, self.client_id())
+        pad = ' '*4
+        aip = sy.available_audio_input_parameters()
+        if aip:
+            acc += "Audio inputs:\n"
+            for p in aip:
+                bname = sy.get_audio_input_bus(p)
+                acc += '%s%-12s <-- %s\n' % (pad,p,bname)
+        aop = sy.available_audio_output_parameters()
+        if aop:
+            acc += "Audio outputs:\n"
+            for p in aop:
+                bname = sy.get_audio_output_bus(p)
+                acc += '%s%-12s --> %s\n' % (pad,p,bname)
+        cip = sy.available_control_input_parameters()
+        if cip:
+            acc += "Control inputs:\n"
+            for p in cip:
+                bname = sy.get_control_input_bus(p)
+                acc += '%s%-12s <-- %s\n' % (pad,p,bname)
+        cop = sy.available_control_output_parameters()
+        if cop:
+            acc += "Control outputs:\n"
+            for p in cop:
+                bname = sy.get_control_output_bus(p)
+                acc += '%s%-12s --> %s\n' % (pad,p,bname)
+        return acc
+
+                  
 class EfxToken(SynthToken):
 
     def __init__(self,graph,synth):
@@ -111,7 +146,10 @@ class EfxToken(SynthToken):
     def is_efx(self):
         return True
         
-        
+    def info_text(self):
+        return super(EfxToken, self).info_text("Effect")
+
+    
 class ControllerToken(SynthToken):
 
     def __init__(self,graph,synth):
@@ -122,3 +160,6 @@ class ControllerToken(SynthToken):
         
     def is_controller(self):
         return True
+
+    def info_text(self):
+        return super(ControllerToken, self).info_text("Controller")

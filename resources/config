@@ -36,7 +36,7 @@ trace-osc-transmission : False
 
 [GUI]
 gui : Tk
-no-splash : False
+no-splash : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
 warn-on-exit : False

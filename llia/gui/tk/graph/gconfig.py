@@ -22,20 +22,26 @@ _template = {
     "bus-name-font" : ("Mono", 10),
     
     # Audio buses
-    "audio-bus-width" : 80,
+    "audio-bus-width" : 65,
     "audio-bus-height" : 24,
     "audio-bus-chamfer" : 12,
+    "audio-path-dash" : (1,1),
+    "audio-path-width" : 1,
 
+    
     # Control buses
-    "control-bus-width" : 60,
-    "control-bus-height" : 60,
+    "control-bus-width" : 40,
+    "control-bus-height" : 40,
     #"control-bus-chamfer" : 12,
+    "control-path-dash" : (8,8),
+    "control-path-width" : 1,
+
     
     # Ports  (audio/control sources/sinks)
     "port-radius" : 4,
     
     # Pallet
-    "graph-fill" : "#343a42",
+    "graph-fill" : "#202429", # "#343a42",
     "info-fill" : "#292028",
     "highlight-color" : "yellow",
     "port-highlight" : "#ff00ff",
@@ -49,15 +55,15 @@ _template = {
                             "#608000","#600080","#008060","#003F80",
                             "#006080","#007E80","#3F0080","#218000",
                             "#80007E","#7E8000","#AA8000","#803F00"),
-                            
     
     "audio-source-fill" : "#590000",
     "audio-sink-fill" : "#2d5900",
     "control-source-fill" : "#500059", #"#005959",
     "control-sink-fill" : "#290059",
     "synth-fill" : '',
-    "synth-outline" : ''
-    
+    "synth-outline" : '',
+    "info-text-color" : "#6f8f80",
+    "info-font" : ("Mono", 10)
 
     
 }

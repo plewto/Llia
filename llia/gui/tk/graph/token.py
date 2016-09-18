@@ -32,6 +32,28 @@ class Token(dict):
         self.proxy = graph.app.proxy
         self.client = client
         self.selected = False
+        self._drag_data = [0,0]
+
+    # Token drag and drop
+    def pickup_token(self, event):
+        x,y = event.x, event.y
+        self._drag_data = [x,y]
+
+    def drop_token(self, event):
+        self.graph.sync()
+        self._drag_data = [0,0]
+
+    def drag_token(self, event):
+        
+        x,y = event.x, event.y
+        dx = x-self._drag_data[0]
+        dy = y-self._drag_data[1]
+        self._drag_data[0] = x
+        self._drag_data[1] = y
+        self.canvas.move(self.client_id(), dx,dy)
+        self.canvas.delete("path")  # Hid paths while moving toke
+
+
 
     @abc.abstractmethod
     def client_id(self):
@@ -76,3 +98,7 @@ class Token(dict):
     @abc.abstractmethod
     def dehighlight(self, *_):
         pass
+
+    @abc.abstractmethod
+    def info_text(self):
+        return self.client_id()
