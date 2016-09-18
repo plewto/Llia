@@ -87,7 +87,9 @@ class TkAudiobusEditor(Toplevel):
                 self.warning(msg)
                 break;
             else:
-                rs =self.parser.abus(bname)
+                busname = bname.strip()  # Ignore whitespace only
+                if busname:
+                    rs =self.parser.abus(busname)
         self._var_name.set('')
         self.refresh()
     

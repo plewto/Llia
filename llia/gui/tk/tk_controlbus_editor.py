@@ -95,7 +95,9 @@ class TkControlbusEditor(Toplevel):
                 self.warning(msg)
                 break
             else:
-                self.parser.cbus(bname)
+                busname = bname.strip() # ignore whitespace only
+                if busname:
+                    self.parser.cbus(busname)
         self.refresh()
         self._var_name.set('')
     
