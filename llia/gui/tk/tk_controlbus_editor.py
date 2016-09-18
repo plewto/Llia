@@ -86,24 +86,19 @@ class TkControlbusEditor(Toplevel):
         self._current_selection = index
 
     def add_bus(self, *_):
-        bname = self._var_name.get().strip().replace(' ','_')
-        exists = self.parser.what_is(bname)
-        if exists == "cbus":
-            self.warning("Control bus '%s' already exists" % bname)
-        elif len(bname) == 0:
-            msg = "Invalid bus name"
-            self.warning(msg)
-        elif exists != "":
-            msg = "'%s' is already assigned as %s" % (bname, exists)
-            self.warning(msg)
-        else:
-            rs = self.parser.cbus(bname)
-            self.refresh()
-            if rs:
-                self.status("Added control bus '%s'" % bname)
-            else:
-                msg = "Can not add control bus '%s'" % bname
+        for bname in self._var_name.get().split(' '):
+            exists = self.parser.what_is(bname)
+            if exists == 'cbus':
+                pass
+            elif exists != '':
+                msg = "'%s' already in use" % bname
                 self.warning(msg)
+                break
+            else:
+                self.parser.cbus(bname)
+        self.refresh()
+        self._var_name.set('')
+    
          
     def remove_bus(self, *_):
         bname = self._var_name.get().strip()

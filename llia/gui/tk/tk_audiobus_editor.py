@@ -46,7 +46,6 @@ class TkAudiobusEditor(Toplevel):
         b_help.grid(row=0, column=3)
         factory.label(button_bar, "").grid(row=0, column=4, padx=16)
         b_accept.grid(row=0, column=5)
-
         self._current_selection = 0
         entry_name.bind('<Down>', self.increment_selection)
         entry_name.bind('<Up>', self.decrement_selection)
@@ -79,25 +78,19 @@ class TkAudiobusEditor(Toplevel):
         self._current_selection = index
 
     def add_bus(self, *_):
-        bname = self._var_name.get().strip().replace(' ','_')
-        exists = self.parser.what_is(bname)
-        if exists == "abus":
-            self.warning("Audio bus '%s' already exists" % bname)
-        elif len(bname) == 0:
-            msg = "Invalid bus name"
-            self.warning(msg)
-        elif exists != "":
-            msg = "'%s' is already assigned as %s" % (bname, exists)
-            self.warning(msg)
-        else:
-            rs = self.parser.abus(bname)
-            self.refresh()
-            if rs:
-                self.status("Added audio bus '%s'" % bname)
-            else:
-                msg = "Can not add audio bus '%s'" % bname
+        for bname in self._var_name.get().split(" "):
+            exists = self.parser.what_is(bname)
+            if exists == 'abus':
+                pass
+            elif exists != '':
+                msg = "Invalid bus name: '%s'" % bname
                 self.warning(msg)
-
+                break;
+            else:
+                rs =self.parser.abus(bname)
+        self._var_name.set('')
+        self.refresh()
+    
     def remove_bus(self, *_):
         bname = self._var_name.get().strip()
         exists = self.parser.what_is(bname)
