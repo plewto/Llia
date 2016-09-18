@@ -1,5 +1,6 @@
 # llia.gui.tk.graph.port
 
+import abc
 from llia.gui.tk.graph.gconfig import gconfig
 
 class Port(dict):
@@ -11,6 +12,22 @@ class Port(dict):
         self.parent_token = parent_token
         self.param = param
 
+    @abc.abstractmethod
+    def is_audio(self):
+        return False
+    
+    @abc.abstractmethod
+    def is_control(self):
+        return not(self.is_audio())
+
+    @abc.abstractmethod
+    def is_sink(self):
+        return False
+
+    @abc.abstractmethod
+    def is_source(self):
+        return not(self.is_sink())
+        
     # Result is nested list
     # [[token, prt],[token, prt] ....]
     # The same token may appear more then once but will be paird with a
@@ -23,11 +40,14 @@ class Port(dict):
         canvas.itemconfig(self['pad'],fill=gconfig["port-highlight"])
         self.graph.display_info(self.info_text())
         allied_port_color = gconfig['allied-port-highlight']
-        for tkn,prt in self.find_allied_ports():
+        allied_ports = self.find_allied_ports()
+        for tkn,prt in allied_ports:
             try:
                 self.canvas.itemconfig(prt['pad'], fill=allied_port_color)
             except TypeError:
                 pass
+        self.graph.current_token_and_port = [self.parent_token, self]
+        self.graph.current_allied_ports = allied_ports
         
     def dehighlight(self, *_):
         canvas = self.canvas
@@ -36,9 +56,9 @@ class Port(dict):
         canvas.itemconfig("audio-sink", fill=gconfig["audio-sink-fill"])
         canvas.itemconfig("control-source", fill=gconfig["control-source-fill"])
         canvas.itemconfig("control-sink", fill=gconfig["control-sink-fill"])
-
-        self.graph.clear_info()
-        
+        # self.graph.clear_info()
+        # self.graph.current_token_and_port = None
+        # self.graph.current_allied_ports = None
 
     def _init_event_bindings(self):
         canvas = self.canvas
@@ -52,7 +72,14 @@ class Port(dict):
         acc += frmt % (self.parent_token.client_id(), self.param)
         return acc
                      
+    def __str__(self):
+        cname = self.__class__.__name__
+        s = "Port(%s '%s')" % (cname, self.parent_token.client_id())
+        return s
 
+    def __repr__(self):
+        return self.__str__()
+    
         
 class AudioSource(Port):
 
@@ -75,6 +102,12 @@ class AudioSource(Port):
         self['pad'] = c
         self._init_event_bindings()
 
+    def is_audio(self):
+        return True
+
+    def is_source(self):
+        return True
+        
     def info_text(self):
         return self._info_text("AudioSource")
 
@@ -114,6 +147,12 @@ class AudioSink(Port):
         self['pad'] = c
         self._init_event_bindings()
 
+    def is_audio(self):
+        return True
+
+    def is_sink(self):
+        return True
+
     def info_text(self):
         return self._info_text("AudioSink")
 
@@ -151,7 +190,7 @@ class ControlSource(Port):
         self['fill'] = fill
         self['pad'] = c
         self._init_event_bindings()
-
+        
     def info_text(self):
         return self._info_text("ControlSource")
 

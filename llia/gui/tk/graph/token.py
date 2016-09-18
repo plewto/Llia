@@ -44,17 +44,22 @@ class Token(dict):
         self._drag_data = [0,0]
 
     def drag_token(self, event):
-        
         x,y = event.x, event.y
         dx = x-self._drag_data[0]
         dy = y-self._drag_data[1]
         self._drag_data[0] = x
         self._drag_data[1] = y
         self.canvas.move(self.client_id(), dx,dy)
-        self.canvas.delete("path")  # Hid paths while moving toke
-
-
-
+        self.canvas.delete("path")  # Hide paths while moving token
+        # This s ugly:
+        # There are two types of drag-n-drop operations
+        # The one here is to move synth/buses around the screen
+        # The other is to connect ports to each other
+        # The call to graph.clear_drag_and_drop is to prevent
+        # the canvas event bindings from interpreting this action
+        # as the wrong type of drag and drop
+        self.graph.clear_drag_and_drop()
+        
     @abc.abstractmethod
     def client_id(self):
         msg = "%s subclass of Token does not implement client_id()"
@@ -102,3 +107,11 @@ class Token(dict):
     @abc.abstractmethod
     def info_text(self):
         return self.client_id()
+
+    def __str__(self):
+        cname = self.__class__.__name__
+        s = "%s('%s')" % (cname, self.client_id())
+        return s
+
+    def __repr__(self):
+        return self.__str__()

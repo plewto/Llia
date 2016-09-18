@@ -45,7 +45,7 @@ _template = {
     "info-fill" : "#292028",
     "highlight-color" : "yellow",
     "port-highlight" : "#ff00ff",
-    "allied-port-highlight" : 'yellow',
+    "allied-port-highlight" : "yellow",
     "audio-bus-fill" : "black",
     "audio-bus-colors" : ("#ff0000","#581195","#d6a100","#b69370",
                           "#00d6a1","#ff00bf","#00bfff","#8000ff",
@@ -61,12 +61,15 @@ _template = {
     "audio-sink-fill" : "#2d5900",
     "control-source-fill" : "#500059", #"#005959",
     "control-sink-fill" : "#290059",
-    "synth-fill" : '',
-    "synth-outline" : '',
+    "synth-fill" : "",
+    "synth-outline" : "",
     "info-text-color" : "#6f8f80",
-    "info-font" : ("Mono", 10)
+    "info-font" : ("Mono", 10),
 
-    
+    "rubberband-fill" : "yellow",
+    "rubberband-dash" : (1,1),
+
+    "drop-threshold" : 30    # drag n drop distance greater then threshold ignored
 }
 
 

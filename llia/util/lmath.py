@@ -104,3 +104,8 @@ def approx(n, range_ = 0.01):
 
 def pick(seq):
     return random.choice(seq)
+
+def distance(x0,y0,x1,y1):
+    dx = x1-x0
+    dy = y1-y0
+    return sqrt(dx*dx+dy*dy)

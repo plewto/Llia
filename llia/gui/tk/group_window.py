@@ -14,8 +14,9 @@ class GroupWindow(Toplevel):
 
     instance_counter = 0
     
-    def __init__(self, app, name=""):
-        Toplevel.__init__(self, None)
+    def __init__(self, app, root, name=""):
+        Toplevel.__init__(self, root)
+        self.root = root
         main = factory.frame(self)
         main.pack(expand=True, fill="both")
         self.app = app
@@ -41,6 +42,9 @@ class GroupWindow(Toplevel):
         except (TclError, KeyError):
             msg = "Can not find %s editor" % sid
             self.app.main_window().warning(msg)
-        
-        
-        
+
+    def lift(self):
+        Toplevel.lift(self, self.root)
+
+    def lower(self):
+        Toplevel.lower(self, self.root)

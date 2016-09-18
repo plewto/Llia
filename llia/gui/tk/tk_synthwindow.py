@@ -31,12 +31,25 @@ class TkSynthWindow(Frame):
         self.notebook.pack(anchor="nw", expand=True, fill="both")
         south = factory.frame(east)
         south.pack(after=self.notebook, anchor="w", expand=True, fill="x")
-        b_panic = factory.panic_button(south, command=self.panic, ttip="All notes off")
-        b_clear_status = factory.clear_button(south, command=self.clear_status, ttip="Clear stutus line")
+        # b_panic = factory.panic_button(south, command=self.panic)
+        # b_clear_status = factory.clear_button(south, command=self.clear_status)
+        # self._lab_status = factory.label(south, "<status>")
+        # b_panic.grid(row=0, column=0, sticky='w')
+        # b_clear_status.grid(row=0, column=1, sticky='w')
+        # self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
+
         self._lab_status = factory.label(south, "<status>")
-        b_panic.grid(row=0, column=0, sticky='w')
-        b_clear_status.grid(row=0, column=1, sticky='w')
+        b_panic = factory.panic_button(south, command=self.panic)
+        b_lower = factory.button(south, "-", command=self.lower_window)
+        b_lift = factory.button(south, "+", command=self.lift_window)
         self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
+        b_panic.grid(row=0, column=0)
+        b_lower.grid(row=0, column=1)
+        b_lift.grid(row=0, column=2)
+        self._lab_status.grid(row=0, column=3, sticky='w')
+
+        
+        
         south.config(background=factory.bg())
         main.add(self.bank_editor)
         main.add(east)
@@ -103,6 +116,18 @@ class TkSynthWindow(Frame):
         b_remove.grid(row=9, column=1, sticky='ew', pady=8)
         self._info_text_widget = text_widget
         # TODO: Add clipboard copy or save button.
+
+    def lift_window(self):
+        mw = self.app.main_window()
+        grp = mw.group_windows[self.group_index]
+        grp.lift()
+        self.status("Lift window")
+
+    def lower_window(self):
+        mw = self.app.main_window()
+        grp = mw.group_windows[self.group_index]
+        grp.lower()
+        self.status("Lowewr window")
 
         
     def sync_program_tab(self):

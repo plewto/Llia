@@ -4,6 +4,7 @@ from Tkinter import Canvas, Frame
 
 from random import randint
 
+from llia.util.lmath import distance
 import llia.gui.tk.tk_factory as factory
 from llia.gui.tk.graph.gconfig import gconfig
 from llia.gui.tk.graph.sytoken import SynthToken, EfxToken, ControllerToken
@@ -38,16 +39,160 @@ class LliaGraph(Frame):
             b.grid(row=0, column=col, sticky='ew')
             return b
         tbutton(0, 'sync', self.sync)
-
         self.synth_tokens = {}  # map [sid] -> SynthToken
-        self.audio_bus_tokens = {}    # map [bus-name] ->BusToken
+        self.audio_bus_tokens = {}    # map [bus-name] -> BusToken
         self.control_bus_tokens = {}
+        self.current_token_and_port = None # (token,port) dragdrop source
+        self.current_allied_ports = []
+        self._drag_data = {'x': 0,
+                           'y': 0,
+                           'anchor-x' : 0,
+                           'anchor-y' : 0,
+                           'port1' : None,
+                           #'port2' : None,
+                           'rubberband' : None}
+        canvas.bind("<B1-Motion>", self.bus_drag)
+        canvas.bind("<ButtonPress-1>", self.bus_drag_pickup)
+        canvas.bind("<ButtonRelease-1>", self.bus_drop)
+
+
+    def clear_drag_and_drop(self):
+        self.current_token_and_port = None
+        self._drag_data['port1'] = None
+        rb = self._drag_data['rubberband']
+        if rb: self.canvas.delete(rb)
+        self._drag_data['rubberband'] = None
+        self.status("")
+            
+        
+    # bus drag, drop and connect functions
+
+    def bus_drag_pickup(self, event):
+        if self.current_token_and_port:
+            x,y = event.x, event.y
+            rubber = self.canvas.create_line(x,y,x,y,
+                                             fill = gconfig['rubberband-fill'],
+                                             dash = gconfig['rubberband-dash'],
+                                             tags = "rubberband")
+            self._drag_data['port1'] = self.current_token_and_port
+            self._drag_data['x'] = x
+            self._drag_data['y'] = y
+            self._drag_data['anchor-x'] = x
+            self._drag_data['anchor-y'] = y
+            self._drag_data['rubberband'] = rubber
+            self.status(self.current_token_and_port)
+
+    def bus_drag(self, event):
+        rubber = self._drag_data['rubberband']
+        if rubber:
+            x0,y0 = self._drag_data['anchor-x'], self._drag_data['anchor-y']
+            x1,y1 = event.x, event.y
+            self.canvas.delete("rubberband")
+            rubber = self.canvas.create_line(x0,y0,x1,y1,
+                                             fill = gconfig["rubberband-fill"],
+                                             dash = gconfig["rubberband-dash"],
+                                             tags = "rubberband")
+            self._drag_data['x'] = x1
+            self._drag_data['y'] = y1
+            self._drag_data['rubberband'] = rubber
+            for tkn,prt in self.current_allied_ports:
+                try:
+                    self.canvas.itemconfig(prt['pad'],
+                                           fill = gconfig['allied-port-highlight'])
+                except TypeError:
+                    pass
+
+    def bus_drop(self, event):
+        self.canvas.delete("rubberband")
+        for tkn,prt in self.current_allied_ports:
+            try:
+                c = prt['fill']
+                self.canvas.itemconfig(prt['pad'], fill=c)
+            except TypeError:
+                pass
+        prt1 = self._drag_data['port1']
+        if prt1:
+            if prt1[0].is_synth():
+                self._locate_drop_destination_bus(event,prt1)
+            else:
+                self._locate_drop_destination_synth(event,prt1)
+
+    def _locate_drop_destination_bus(self, event, prt1):
+        # Used when drag operation begins with synth port
+        x,y = event.x, event.y
+        target = None
+        min_distance = 1e6
+        for tkn,prt in self.current_allied_ports:
+            try:
+                pos = self.canvas.coords(prt['pad'])
+                xc,yc = (pos[0]+pos[2])/2, (pos[1]+pos[3])/2
+                d = distance(x,y,xc,yc)
+                if d < min_distance:
+                    min_distance = d
+                    target = tkn,prt
+            except TypeError:
+                pass
+        if min_distance < gconfig["drop-threshold"]:
+            tkn1, port1 = self.current_token_and_port
+            sid, param = tkn1.client_id(), port1.param
+            busname = target[0].client_id()
+            shelper = self.app.ls_parser.synthhelper
+            if port1.is_audio():
+                if port1.is_source():
+                    shelper.assign_audio_output_bus(param,busname,sid)
+                else:
+                    shelper.assign_audio_input_bus(param,busname,sid)
+            else:
+                print("DEBUG CONTORL port")
+                if port1.is_source():
+                    pass
+                else:
+                    pass
+        else:
+            msg = "No Drag n Drop target located"
+            self.warning(msg)
+        self.clear_drag_and_drop()
+        self.sync()
+        
+
+    def _locate_drop_destination_synth(self, event, prt1):
+        # Used when drag operation begins from bus
+        x,y = event.x, event.y
+        target = None
+        min_distance = 1e6
+        for tkn,prt in self.current_allied_ports:
+            try:
+                pos = self.canvas.coords(prt['pad'])
+                xc,yc = (pos[0]+pos[2])/2, (pos[1]+pos[3])/2
+                d = distance(x,y,xc,yc)
+                if d < min_distance:
+                    min_distance = d
+                    target = tkn,prt
+            except TypeError:
+                pass
+        if min_distance < gconfig["drop-threshold"]:
+            tkn1,port1 = self.current_token_and_port
+            busname = tkn1.client_id()
+            shelper = self.app.ls_parser.synthhelper
+            sid,param = target[0].client_id(), target[1].param
+            if port1.is_audio():
+                if port1.is_source():
+                    shelper.assign_audio_input_bus(param,busname,sid)
+                else:
+                    shelper.assign_audio_output_bus(param,busname,sid)
+            else:
+                print("DEBUG A control bus then")
+        self.clear_drag_and_drop()
+        self.sync()
+                
+            
+        
         
     def status(self, msg):
         self.app.main_window().status(msg)
 
     def warning(self, msg):
-        self.app.mani_window().warning(msg)
+        self.app.main_window().warning(msg)
 
     def clear_info(self):
         self.info_canvas.clear_info()
@@ -100,16 +245,6 @@ class LliaGraph(Frame):
         else:
             x,y = self._initial_synth_coords(token)
         return x,y
-  
-    # def collect_garbage(self):
-    #     for sid,tkn in self.synth_tokens.items():
-    #         if not(self.proxy.synth_exists(None, None, sid)):
-    #             self.synth_tokens.pop(sid)
-    #             self.canvas.delete(sid)
-    #     for bname,tkn in self._bus_tokens.items():
-    #         if not(self.proxy.bus_exists(bname)):
-    #             self._bus_tokens.pop(bname)
-    #             self.canvas.delete(bname)
 
     def collect_garbage(self):
         for sid,tkn in self.synth_tokens.items():
@@ -216,3 +351,5 @@ class LliaGraph(Frame):
                                        width=lwidth,
                                        tags = (bname,sid,"path","control-path"))
         canvas.lower("path")
+
+    

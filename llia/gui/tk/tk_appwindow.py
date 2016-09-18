@@ -44,18 +44,40 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.add_synth_group()
         self.llia_graph = None
        
+    # def _init_status_panel(self):
+    #     south = self._main.south
+    #     south.configure(padx=4, pady=4)
+    #     self._lab_status = factory.label(south, "", modal=False)
+    #     b_panic = factory.panic_button(south)
+    #     ttip = "Clear status line"
+    #     b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
+    #     b_panic.grid(row=0, column=0, sticky="w")
+    #     b_clear_status.grid(row=0, column=1, sticky="w")
+    #     self._lab_status.grid(row=0,column=2, sticky="w", padx=8)
+    #     south.config(background=factory.bg())
+
+
     def _init_status_panel(self):
         south = self._main.south
         south.configure(padx=4, pady=4)
         self._lab_status = factory.label(south, "", modal=False)
         b_panic = factory.panic_button(south)
-        ttip = "Clear status line"
-        b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
-        b_panic.grid(row=0, column=0, sticky="w")
-        b_clear_status.grid(row=0, column=1, sticky="w")
-        self._lab_status.grid(row=0,column=2, sticky="w", padx=8)
+        b_down = factory.button(south, "-")
+        b_up = factory.button(south, "+")
+        b_panic.grid(row=0, column=0)
+        b_down.grid(row=0,column=1)
+        b_up.grid(row=0,column=2)
+        self._lab_status.grid(row=0,column=3, sticky='w')
         south.config(background=factory.bg())
+        b_down.configure(command=lambda: self.root.lower())
+        b_up.configure(command=lambda: self.root.lift())
+        # b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
+        # b_panic.grid(row=0, column=0, sticky="w")
+        # b_clear_status.grid(row=0, column=1, sticky="w")
+        # self._lab_status.grid(row=0,column=2, sticky="w", padx=8)
+        # south.config(background=factory.bg())
 
+    
     def _init_center_frame(self, master):
         nb = ttk.Notebook(master)
         nb.pack(expand=True, fill="both")
@@ -276,7 +298,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         sh.new_group()
         
     def add_synth_group(self, name=None):
-        gw = GroupWindow(self.app, name)
+        gw = GroupWindow(self.app, self.root, name)
         gw.transient(self.root)
         self.group_windows.append(gw)
         self.status("Added new Synth Group Window")
