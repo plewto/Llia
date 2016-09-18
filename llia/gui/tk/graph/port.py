@@ -105,9 +105,15 @@ class AudioSource(Port):
     def is_audio(self):
         return True
 
+    def is_control(self):
+        return False
+    
     def is_source(self):
         return True
-        
+
+    def is_sink(self):
+        return False
+    
     def info_text(self):
         return self._info_text("AudioSource")
 
@@ -150,9 +156,15 @@ class AudioSink(Port):
     def is_audio(self):
         return True
 
+    def is_control(self):
+        return False
+    
+    def is_source(self):
+        return False
+
     def is_sink(self):
         return True
-
+    
     def info_text(self):
         return self._info_text("AudioSink")
 
@@ -194,6 +206,19 @@ class ControlSource(Port):
     def info_text(self):
         return self._info_text("ControlSource")
 
+    def is_audio(self):
+        return False
+
+    def is_control(self):
+        return True
+    
+    def is_source(self):
+        return True
+
+    def is_sink(self):
+        return False
+
+    
     def find_allied_ports(self):
         acc =[]
         if self.param:
@@ -231,6 +256,18 @@ class ControlSink(Port):
         self['pad'] = c
         self._init_event_bindings()
 
+    def is_audio(self):
+        return False
+
+    def is_control(self):
+        return True
+    
+    def is_source(self):
+        return False
+
+    def is_sink(self):
+        return True
+    
     def info_text(self):
         return self._info_text("ControlSink")
 

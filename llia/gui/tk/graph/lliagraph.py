@@ -118,7 +118,7 @@ class LliaGraph(Frame):
                 self._locate_drop_destination_synth(event,prt1)
 
     def _locate_drop_destination_bus(self, event, prt1):
-        # Used when drag operation begins with synth port
+        # For use when drag operation begins with synth port
         x,y = event.x, event.y
         target = None
         min_distance = 1e6
@@ -143,11 +143,10 @@ class LliaGraph(Frame):
                 else:
                     shelper.assign_audio_input_bus(param,busname,sid)
             else:
-                print("DEBUG CONTORL port")
                 if port1.is_source():
-                    pass
+                    shelper.assign_control_output_bus(param,busname,sid)
                 else:
-                    pass
+                    shelper.assign_control_input_bus(param,busname,sid)
         else:
             msg = "No Drag n Drop target located"
             self.warning(msg)
@@ -156,7 +155,7 @@ class LliaGraph(Frame):
         
 
     def _locate_drop_destination_synth(self, event, prt1):
-        # Used when drag operation begins from bus
+        # For use when drag operation begins from bus
         x,y = event.x, event.y
         target = None
         min_distance = 1e6
@@ -181,7 +180,10 @@ class LliaGraph(Frame):
                 else:
                     shelper.assign_audio_output_bus(param,busname,sid)
             else:
-                print("DEBUG A control bus then")
+                if port1.is_source():
+                    shelper.assign_control_input_bus(param,busname,sid)
+                else:
+                    shelper.assign_control_output_bus(param,busname,sid)
         self.clear_drag_and_drop()
         self.sync()
                 
