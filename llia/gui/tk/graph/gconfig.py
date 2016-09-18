@@ -45,6 +45,7 @@ _template = {
     "info-fill" : "#292028",
     "highlight-color" : "yellow",
     "port-highlight" : "#ff00ff",
+    "allied-port-highlight" : 'yellow',
     "audio-bus-fill" : "black",
     "audio-bus-colors" : ("#ff0000","#581195","#d6a100","#b69370",
                           "#00d6a1","#ff00bf","#00bfff","#8000ff",
