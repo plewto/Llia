@@ -11,8 +11,19 @@ from llia.gui.tk.graph.sytoken import SynthToken, EfxToken, ControllerToken
 from llia.gui.tk.graph.bustoken import AudiobusToken, ControlbusToken
 from llia.gui.tk.graph.infocanvas import InfoCanvas
 
+BUS_WARNING = '''
+Effects must be connected in the correct order.
+Newer synths may not process previous synths.
+'''
+
+
+
 class LliaGraph(Frame):
 
+    control_bus_counter = 0
+    audio_bus_counter = 0
+    
+    
     def __init__(self, master, app):
         Frame.__init__(self, master)
         self.app = app
@@ -25,20 +36,29 @@ class LliaGraph(Frame):
         self.canvas = canvas
         info_canvas = InfoCanvas(self)
         self.info_canvas = info_canvas
-        toolbar = factory.frame(self)
+        #toolbar = factory.frame(self)
         info_canvas.grid(row=0,column=0,rowspan=1,columnspan=1, sticky='wns')
         canvas.grid(row=0,column=1,rowspan=1,columnspan=1, sticky='nsew')
-        toolbar.grid(row=1,column=0, rowspan=1,columnspan=2, sticky='ew')
+        #toolbar.grid(row=1,column=0, rowspan=1,columnspan=2, sticky='ew')
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=0)
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=1)
         # toolbar buttons
-        def tbutton(col, text, command=None, ttip=''):
-            b = factory.button(toolbar, text, command=command)
-            b.grid(row=0, column=col, sticky='ew')
-            return b
+        def tbutton(col, text, command=None):
+            # b = factory.button(toolbar, text, command=command)
+            # b.grid(row=0, column=col, sticky='ew')
+            # return b
+            bwidth=75
+            b = factory.button(self.canvas, text,command=command)
+            y0 = 15
+            x0 = 15
+            x = x0+col*bwidth
+            b.place(x=x,y=y0,width=bwidth)
+            
         tbutton(0, 'sync', self.sync)
+        tbutton(1, '+Audio', self.add_audio_bus)
+        tbutton(2, "+Control", self.add_control_bus)
         self.synth_tokens = {}  # map [sid] -> SynthToken
         self.audio_bus_tokens = {}    # map [bus-name] -> BusToken
         self.control_bus_tokens = {}
@@ -55,7 +75,36 @@ class LliaGraph(Frame):
         canvas.bind("<ButtonPress-1>", self.bus_drag_pickup)
         canvas.bind("<ButtonRelease-1>", self.bus_drop)
 
+    def add_audio_bus(self):
+        parser = self.app.ls_parser
+        while True:
+            bname = "A%d" % LliaGraph.audio_bus_counter
+            w = parser.what_is(bname)
+            if not w:
+                parser.abus(bname)
+                self.status("Added audio bus '%s'" % bname)
+                break
+            LliaGraph.audio_bus_counter += 1
+        self.sync()
 
+    def add_control_bus(self):
+        parser = self.app.ls_parser
+        while True:
+            bname = "C%d" % LliaGraph.control_bus_counter
+            w = parser.what_is(bname)
+            if not w:
+                parser.cbus(bname)
+                self.status("Added contol bus '%s'" % bname)
+                break
+            LliaGraph.control_bus_counter += 1
+        self.sync()
+
+    def _show_bus_warning(self):
+        self.info_canvas.display_warning(BUS_WARNING)
+
+    def _clear_bus_warning(self):
+        self.info_canvas.clear_warning()
+        
     def clear_drag_and_drop(self):
         self.current_token_and_port = None
         self._drag_data['port1'] = None
@@ -81,6 +130,8 @@ class LliaGraph(Frame):
             self._drag_data['anchor-y'] = y
             self._drag_data['rubberband'] = rubber
             self.status(self.current_token_and_port)
+            self._show_bus_warning()
+            
 
     def bus_drag(self, event):
         rubber = self._drag_data['rubberband']
@@ -116,7 +167,9 @@ class LliaGraph(Frame):
                 self._locate_drop_destination_bus(event,prt1)
             else:
                 self._locate_drop_destination_synth(event,prt1)
+        self._clear_bus_warning()
 
+                
     def _locate_drop_destination_bus(self, event, prt1):
         # For use when drag operation begins with synth port
         x,y = event.x, event.y
@@ -256,11 +309,11 @@ class LliaGraph(Frame):
         for bname,tkn in self.audio_bus_tokens.items():
             if not(self.proxy.bus_exists(bname)):
                 self.audio_bus_tokens.pop(bname)
-                self._canvas.delete(bname)
+                self.canvas.delete(bname)
         for bname,tkn in self.control_bus_tokens.items():
             if not(self.proxy.bus_exists(bname)):
                 self.control_bus_tokens.pop(bname)
-                self._canvas.delete(bname)
+                self.canvas.delete(bname)
 
     def sync(self, *_):
         self.collect_garbage()

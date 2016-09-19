@@ -478,21 +478,33 @@ class SynthProxy(object):
         proxy = self.app.proxy
         sid = self.sid
         for bn in self._audio_output_buses.values():
-            bus = proxy.get_audio_bus(bn)
-            bus.remove_source(sid, None, sync=False)
-            self._audio_output_buses[bn] = None
+            try:
+                bus = proxy.get_audio_bus(bn)
+                bus.remove_source(sid, None, sync=False)
+                self._audio_output_buses[bn] = None
+            except KeyError:
+                pass
         for bn in self._audio_input_buses.values():
-            bus = proxy.get_audio_bus(bn)
-            bus.remove_sink(sid, None, sync=False)
-            self._audio_input_buses[bn] = None
+            try:
+                bus = proxy.get_audio_bus(bn)
+                bus.remove_sink(sid, None, sync=False)
+                self._audio_input_buses[bn] = None
+            except KeyError:
+                pass
         for bn in self._control_output_buses.values():
-            bus = proxy.get_control_bus(bn)
-            bus.remove_source(sid, None, sync=False)
-            self._control_output_buses[bn] = None
+            try:
+                bus = proxy.get_control_bus(bn)
+                bus.remove_source(sid, None, sync=False)
+                self._control_output_buses[bn] = None
+            except KeyError:
+                pass
         for bn in self._control_input_buses.values():
-            bus = proxy.get_control_bus(bn)
-            bus.remove_sink(sid, None, sync=False)
-            self._control_input_buses[bn] = None
+            try:
+                bus = proxy.get_control_bus(bn)
+                bus.remove_sink(sid, None, sync=False)
+                self._control_input_buses[bn] = None
+            except KeyError:
+                pass
         return True
 
     def midi_input_channel(self, new_channel=None):

@@ -87,8 +87,30 @@ class SynthToken(Token):
         canvas.tag_bind(self['image'], '<B1-Motion>', self.drag_token)
         canvas.tag_bind(self['image'], '<ButtonPress-1>', self.pickup_token)
         canvas.tag_bind(self['image'], '<ButtonRelease-1>', self.drop_token)
+        canvas.tag_bind(self['image'], '<Double-Button-1>', self.show_editor)
+        canvas.tag_bind(self['image'], '<Double-Button-3>', self.delete_synth)
+
+    def show_editor(self, event):
+        sy = self.client
+        sid = sy.sid
+        sed = sy.synth_editor
+        grpid = sed.group_index
+        grp = self.app.main_window().group_windows[grpid]
+        grp.show_synth_editor(sid)
+
+    def delete_synth(self, event):
+        sy = self.client
+        sid = sy.sid
+        parser = self.app.ls_parser
+        shelper = parser.synthhelper
+        shelper.destroy_editor(sid)
+        parser.rm(sid, force=True)
+        self.graph.sync()
+        self.graph.status("Synth '%s' removed" % sid)
         
-            
+        
+        
+    
     def highlight(self, *_):
         canvas = self.canvas
         highlight = gconfig['highlight-color'] 
@@ -104,7 +126,6 @@ class SynthToken(Token):
         canvas.itemconfig(self['pad'],
                           fill = fill,
                           outline = outline)
-        self.graph.clear_info()
 
     def info_text(self,head="Synth"):
         sy = self.client

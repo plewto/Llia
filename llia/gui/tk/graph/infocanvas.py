@@ -3,6 +3,7 @@
 from Tkinter import Canvas
 
 from llia.gui.tk.graph.gconfig import gconfig
+import llia.gui.tk.tk_factory as factory
 
 class InfoCanvas(Canvas):
 
@@ -13,7 +14,9 @@ class InfoCanvas(Canvas):
                     height=gconfig["graph-height"],
                     background=gconfig["info-fill"])
         self._current_info_text = ''
-
+        lab_legend = factory.image_label(self, "resources/graph/legend.png")
+        lab_legend.place(x=0,y=200)
+        
     def clear_info(self):
         self.delete("info")
         self._current_info_text = ''
@@ -32,5 +35,18 @@ class InfoCanvas(Canvas):
         s = "%s\n%s" % (self._current_info_text, text)
         self.display_info(s)
         
-                                  
-            
+
+    def clear_warning(self):
+        self.delete("warning")
+        
+    def display_warning(self, text):
+        self.clear_warning()
+        xw = 10
+        yw = 100
+        txt = self.create_text(xw,yw,
+                               text=text,
+                               anchor='nw',
+                               tags='warning',
+                               fill=gconfig['info-warning-color'],
+                               font=gconfig['info-warning-font'])
+        

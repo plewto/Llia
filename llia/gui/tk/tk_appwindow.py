@@ -33,6 +33,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
             splash = TkSplashWindow(self.root, app)
         self.root.deiconify()
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)
+        self.llia_graph = None
         self._main = layout.BorderFrame(self.root)
         self._main.config(background=factory.bg())
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
@@ -42,8 +43,10 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.minsize(width=665, height=375)
         self.group_windows = []
         self.add_synth_group()
-        self.llia_graph = None
-       
+
+        
+
+        
     # def _init_status_panel(self):
     #     south = self._main.south
     #     south.configure(padx=4, pady=4)
@@ -65,8 +68,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         b_down = factory.button(south, "-")
         b_up = factory.button(south, "+")
         b_panic.grid(row=0, column=0)
-        b_down.grid(row=0,column=1)
-        b_up.grid(row=0,column=2)
+        # b_down.grid(row=0,column=1)
+        # b_up.grid(row=0,column=2)
         self._lab_status.grid(row=0,column=3, sticky='w')
         south.config(background=factory.bg())
         b_down.configure(command=lambda: self.root.lower())
@@ -77,6 +80,9 @@ class TkApplicationWindow(AbstractApplicationWindow):
         # self._lab_status.grid(row=0,column=2, sticky="w", padx=8)
         # south.config(background=factory.bg())
 
+
+    def _tab_change_callback(self, event):
+        self.llia_graph.sync()
     
     def _init_center_frame(self, master):
         nb = ttk.Notebook(master)
@@ -85,11 +91,11 @@ class TkApplicationWindow(AbstractApplicationWindow):
         frame_efx = layout.FlowGrid(nb, 6)
         frame_controllers = layout.FlowGrid(nb, 6)
         self.llia_graph = LliaGraph(nb, self.app)
-        nb.add(self.llia_graph, text="Graph")
         nb.add(frame_synths, text = "Synths")
         nb.add(frame_efx, text = "Effects")
         nb.add(frame_controllers, text = "Controllers")
-
+        nb.add(self.llia_graph, text="Graph")
+        nb.bind("<Button-1>", self._tab_change_callback)
      
         for st in con.SYNTH_TYPES:
             sp = specs[st]

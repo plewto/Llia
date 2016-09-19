@@ -43,6 +43,8 @@ _template = {
     # Pallet
     "graph-fill" : "#202429", # "#343a42",
     "info-fill" : "#292028",
+    "info-warning-color" : "red",
+    "info-warning-font" : ("Sans", 10),
     "highlight-color" : "yellow",
     "port-highlight" : "#ff00ff",
     "allied-port-highlight" : "yellow",

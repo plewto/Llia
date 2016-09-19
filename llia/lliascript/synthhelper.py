@@ -324,13 +324,17 @@ class SynthHelper(object):
         if gui == "NONE":
             return
         if gui == "TK":
+            from Tkinter import TclError
             sy = self.get_synth(sid)
             swin = sy.synth_editor
             grp_index = swin.group_index
             mw = self.parser.app.main_window()
             grp = mw.group_windows[grp_index]
             notebook = grp.notebook
-            notebook.forget(swin)
+            try:
+                notebook.forget(swin)
+            except TclError:
+                pass
         
     def input_channel(self, chan=None, sid=None):
         sy = self.get_synth(sid)

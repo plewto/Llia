@@ -44,8 +44,8 @@ class TkSynthWindow(Frame):
         b_lift = factory.button(south, "+", command=self.lift_window)
         self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
         b_panic.grid(row=0, column=0)
-        b_lower.grid(row=0, column=1)
-        b_lift.grid(row=0, column=2)
+        # b_lower.grid(row=0, column=1)
+        # b_lift.grid(row=0, column=2)
         self._lab_status.grid(row=0, column=3, sticky='w')
 
         
