@@ -23,6 +23,14 @@ class LsEntity(object):
         self.lstype = lstype
         self.data = {}
 
+    def __repr__(self):
+        acc = "LsEntity(lsid='%s', lstype='%s')\n" % (self.lsid, self.lstype)
+        for k in sorted(self.data.keys()):
+            v = self.data[k]
+            acc += "   [%-12s] : %s\n" % (k, v)
+        acc += '\n'
+        return acc
+        
 class Parser(object):
 
     def __init__(self, app):
@@ -45,7 +53,7 @@ class Parser(object):
         name = "null_source"
         e = LsEntity(name, "cbus")
         self.entities[name] = e
-        name = "nill_sink"
+        name = "null_sink"
         e = LsEntity(name, "cbus")
         self.entities[name] = e
         

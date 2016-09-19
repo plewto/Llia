@@ -20,14 +20,13 @@ class Composer(object):
         code += self._build_control_buses()
         code += self._build_buffers()
         code += self._build_synths()
-        code += self._build_audio_bus_assignments()
-        code += self._build_control_bus_assignments()
+        code += self._build_bus_assignments()
         code += self._build_buffer_assignments()
         code += 'show_group("ALL")\n'
         return code
 
     @staticmethod
-    def is_protected_bus(name):
+    def is_protected_audio_bus(name):
         return name[:4] == "out_" or name[:3] == "in_"
     
     def _build_audio_buses(self):
@@ -35,26 +34,23 @@ class Composer(object):
         for e in self.parser.entities.values():
             if e.lstype == "abus":
                 name = e.lsid
-                if not self.is_protected_bus(name):
-                    try:
-                        chan = int(e.data["channels"])
-                    except KeyError:
-                        chan = 1
-                    code += 'abus("%s", %d)\n' % (name, chan)
+                if not self.is_protected_audio_bus(name):
+                    code += 'abus("%s")\n' % name
         code += "\n"
         return code
 
+
+    @staticmethod
+    def is_protected_control_bus(name):
+        return name.startswith("null_")
     
     def _build_control_buses(self):
         code = "# Control buses\n"
         for e in self.parser.entities.values():
             if e.lstype == "cbus":
                 name = e.lsid
-                try:
-                    chan = int(e.data["channels"])
-                except KeyError:
-                    chan = 1
-                code += 'cbus("%s", %d)\n' % (name, chan)
+                if not self.is_protected_control_bus(name):
+                    code += 'cbus("%s")\n' % name
         code += "\n"
         return code
 
@@ -85,45 +81,26 @@ class Composer(object):
         return code
 
     def _build_synths(self):
-        # acc = []
-        # for e in self.parser.entities.values():
-        #     #print("DEBUG parse, e.lstype = ", e.lstype)
-        #     if e.lstype == "synth" or e.lstype == "group":
-        #         acc.append(e)
-        # acc.sort(key=lambda x: x.data["serial-number"])
-        # code = "# Synths\n"
-        # for e in acc:
-        #     if e.data["is-efx"]:
-        #         code += 'efx("%s", ' % e.data["stype"]
-        #         code += '%d, ' % int(e.data["id"])
-        #         outbus,param,offset = fill_outbus_args(e.data["outbus"])
-        #         code += '["%s","%s",%d])\n' % (outbus,param,offset)
-        #     elif e.data["is-group"]:
-        #         name = e.data["name"]
-        #         code += 'group("%s")\n' % name
-        #     else:
-        #         # Assume an instrumental synth
-        #         code += 'synth("%s", ' % e.data["stype"]
-        #         code += '%d, ' % int(e.data["id"])
-        #         code += '"%s", ' % e.data["keymode"]
-        #         code += '%d, ' % int(e.data["voice-count"])
-        #         outbus,param,offset = fill_outbus_args(e.data["outbus"])
-        #         code += '["%s", "%s", %d])\n' % (outbus,param,offset)
-        #     code += "create_editor()\n"
-        #     # Load bank
-        #     sy = self.parser.synthhelper.get_synth()
-        #     bnk = sy.bank()
-        #     fname = bnk.filename
-        #     if fname:
-        #         code += 'try:\n'
-        #         code += '    load_bank("%s")\n' % fname
-        #         code += 'except Error as err:\n'
-        #         code += '    print(\'ERROR: can not load bank file "%s"\' % fname)\n'
-        #         code += '    print(type(err))\n'
-        #         code += '    print(err.message)\n'
-        # code += "\n"
-        # return code
-        return ""
+        def predicate(obj):
+            return obj.lstype == 'synth' or obj.lstype == 'group'
+        acc = filter(predicate, self.parser.entities.values())
+        acc.sort(key=lambda x: x.data["serial-number"])
+        code = "# Synths\n"
+        for e in acc:
+            print("DEBUG e", e)
+            if e.data['is-group']:
+                code += 'group("%s")\n' % e.data['name']
+            elif e.data['is-control-synth']:
+                code += 'control_synth("%s")\n' % e.data['stype']
+            elif e.data['is-efx']:
+                code += 'efx("%s")\n' % e.data["stype"]
+            else:
+                stype = e.data['stype']
+                kmode = e.data['keymode']
+                vcount = e.data['voice-count']
+                code += 'synth("%s","%s",%s)\n' % (stype,kmode,vcount)
+            code += 'create_editor()\n'
+        return code
     
     def _build_buffer_assignments(self):
         code = "# Buffer Assignments\n"
@@ -135,31 +112,37 @@ class Composer(object):
                 code += 'assign("%s", "%s", sid="%s")\n' % (param,bname,sid)
         code += "\n"
         return code
+  
+    def _build_bus_assignments(self):
+        proxy = self.parser.app.proxy
+        aob = aib = cob = cib = ""
+        for sy in proxy.get_all_synths():
+            specs = sy.specs
+            sid = sy.sid
+            
+            for param,junk in specs["audio-output-buses"]:
+                bn = sy.get_audio_output_bus(param)
+                aob+='assign_audio_output("%s","%s","%s")\n'%(param,bn,sid)
 
-    def _build_audio_bus_assignments(self):
-        code = "# Audio bus assignments\n"
-        for e in self.parser.entities.values():
-            if e.lstype == "audio-bus-assignment":
-                param = e.data["param"]
-                bname = e.data["bus-name"]
-                offset = int(e.data["offset"])
-                sid = e.data["sid"]
-                code += 'assign("%s", "%s", %d, "%s")\n' % (param,bname,offset,sid)
-        code += "\n"
+            for param,junk in specs["audio-input-buses"]:
+                bn = sy.get_audio_input_bus(param)
+                aib+='assign_audio_input("%s","%s","%s")\n'%(param,bn,sid)
+
+            for param,junk in specs["control-output-buses"]:
+                bn = sy.get_control_output_bus(param)
+                cob+='assign_control_output("%s","%s","%s")\n'%(param,bn,sid)
+
+            for param,junk in specs["control-input-buses"]:
+                bn = sy.get_control_input_bus(param)
+                cib+='assign_control_input("%s","%s","%s")\n'%(param,bn,sid)
+        code = "\n# Audio bus assignments\n"
+        code += aob
+        code += aib
+        code += "\n# Control bus assignments\n"
+        code += cob
+        code += cib
         return code
-
-    def _build_control_bus_assignments(self):
-        code = "# Control bus assignments\n"
-        for e in self.parser.entities.values():
-            if e.lstype == "control-bus-assignment":
-                param = e.data["param"]
-                bname = e.data["bus-name"]
-                offset = int(e.data["offset"])
-                sid = e.data["sid"]
-                code += 'assign("%s", "%s", %d, "%s")\n' % (param,bname,offset,sid)
-        code += "\n"
-        return code
-
+    
     def _build_channel_assignments(self):
         code = "# MIDI Channel Assignments\n"
         config = self.parser.config

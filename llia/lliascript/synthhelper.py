@@ -136,6 +136,7 @@ class SynthHelper(object):
             ename = "assign-audio-bus-%d" % self._assignment_serial_number
             etype = "audio-bus-assignment"
             data = {"param" : param,
+                    "assignment-type" : "output-bus",
                     "bus-name" : busname,
                     "offset" : 0,
                     "sid" : sid}
@@ -161,6 +162,7 @@ class SynthHelper(object):
             etype = "audio-bus-assignment"
             data = {"param" : param,
                     "bus-name" : busname,
+                    "assignment-type" : "input-bus",
                     "offset" : 0,
                     "sid" : sid}
             self.parser.register_entity(ename, etype, data)
@@ -255,6 +257,7 @@ class SynthHelper(object):
                                          "id" : sy.id_,
                                          "keymode" : keymode,
                                          "voice-count" : voice_count,
+                                         "is-control-synth" : False,
                                          "is-efx" : False,
                                          "is-controller" : False})
             self.current_sid = sy.sid
@@ -270,6 +273,7 @@ class SynthHelper(object):
                                          "is-group" : False,
                                          "stype" : stype,
                                          "id" : sy.id_,
+                                         "is-control-synth" : False,
                                          "is-efx" : True})
             self.current_sid = sy.sid
             self.update_prompt()
@@ -284,7 +288,7 @@ class SynthHelper(object):
                                          "is-group" : False,
                                          "is-efx" : False,
                                          "is-control-synth" : True,
-                                         "stype" : sy.id_})
+                                         "stype" : stype})
             self.current_sid = sy.sid
             self.update_prompt()
             return sy
