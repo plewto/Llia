@@ -12,9 +12,20 @@ from llia.util.undostack import UndoRedoStack
 
 class ProgramBank(list):
 
+    '''
+    ProgramBank provides storage of 128 synth programs for immediate
+    recall, either manually or via MIDI program change.
+    '''
+
     clipboard = {}
     
     def __init__(self, template):
+        '''
+        Constructs new ProgramBank instance.
+        ARGS:
+           template - dict holding with synth parameter keys and default
+                      values.
+        '''
         list.__init__(self)
         self.template = template
         for i in range(BANK_LENGTH):
@@ -32,13 +43,24 @@ class ProgramBank(list):
         raise NotImplementedError(msg)
         
     def extension(self):
+        '''
+        Returns filename extension.
+        '''
         return self.template.data_format.lower()
 
     def push_undo(self, action):
+        '''
+        Pushes the current state of the bank to the undo stack.
+        The undo feature is not being used at this point.
+        '''
         if self.enable_undo:
             self.undostack.push_undo(action, clone(self))
 
     def undo(self):
+        '''
+        Restore state of self from undo stack.
+        The undo feature is not currently being used.
+        '''
         try:
             obj = self.undostack.pop_undo()
             self.undostack.push_redo(obj.action, clone(self))
@@ -48,6 +70,10 @@ class ProgramBank(list):
             raise IndexError(msg)
 
     def redo(self):
+        '''
+        Redo the previous undo.
+        Redo is not currently being used.
+        '''
         try:
             obj = self.undostack.pop_redo()
             self.undostack.push_undo(obj.action, clone(self))
@@ -57,12 +83,34 @@ class ProgramBank(list):
             raise IndexError(msg)
 
     def __getitem__(self, slot):
+        '''
+        Returns indicated Program
+
+        ARGS:
+          slot - int MIDI program number, 0 <= slot < 128.
+                 If slot is None, the 'current' slot is used.
+
+        RETURNS: Program
+
+        Raises IndexError
+        '''
         if slot is None:
             return self.current_program
         else:
             return clone(list.__getitem__(self, slot))
 
     def __setitem__(self, slot, obj):
+        '''
+        Sets indicated program slot.
+        
+        ARGS:
+          slot - int MIDI program number, 0 <= slot < 128.
+                 If slot is None, the 'current' slot is used.
+          obj  - an instance of Program.
+
+        Raises TypeError if obj is not a Program.
+        Raises ValueError if obj is a Program but has the wrong format.
+        '''
         slot = slot or self.current_slot
         if is_program(obj):
             if obj.data_format == self.template.data_format:
@@ -94,6 +142,16 @@ class ProgramBank(list):
         return s % (self.template.data_format, self.name)
         
     def use(self, slot, undo_action=None):
+        '''
+        Mark slot as the 'current' slot.
+        
+        ARGS:
+          slot - int, MIDI program number, 0 <= slot < 1
+          undo_action - optional Sting sets undo message text.
+
+        RETURNS:
+          int - the current program slot.
+        '''
         if not undo_action:
             undo_action = "Recall slot %d" % self.current_slot
         self.push_undo(undo_action)
@@ -102,11 +160,30 @@ class ProgramBank(list):
         return self.current_program
         
     def copy_to_clipboard(self, slot=None):
+        '''
+        Copy program to clipboard.  The clipboard is global and may 
+        contain multiple programs at once but will only store a 
+        a single Program of any one type.
+        
+        ARGS:
+          slot - optional int, MIDI program number, the source slot
+                 If not specified, the current slot is used.
+        '''
         prog = self[slot]
         frmt = self.template.data_format
         ProgramBank.clipboard[frmt] = prog
 
     def paste_clipboard(self, slot=None):
+        '''
+        Paste contents of clipboard into the bank.
+
+        ARGS:
+         slot - optional MIDI program number. If not specified
+                the current slot is used.
+         
+        Raises KeyError if the clipboard does not contain an
+        appropriate Program.
+        '''
         frmt = self.template.data_format
         try:
             prog = clone(ProgramBank.clipboard[frmt])
@@ -121,6 +198,15 @@ class ProgramBank(list):
             raise KeyError(msg)
 
     def copy_bank(self, other):
+        '''
+        Copies contents of bank into self.
+
+        ARGS:
+          other - The source bank
+
+        Raises TypeError if other is not a ProgramBank.
+        Raises ValueError if other is a ProgramBank but has the wrong format.
+        '''
         # DOES NOT SAVE UNDO STATE
         if is_bank(other):
             frmt1 = self.template.data_format
@@ -144,12 +230,25 @@ class ProgramBank(list):
             raise TypeError(msg)
 
     def create_program(self):
+        '''
+        Creates a new Program based using the template passed to self at
+        construction time.   The Program is not contained in the bank.
+
+        RETURNS: Program
+        '''
         df = self.template.data_format
         ks = self.template.keyset
         prog = Program("Init", df, ks)
         return prog
     
     def initialize_slot(self, slot=None):
+        '''
+        Creates a new initialized program an stores it in the bank.
+
+        ARGS:
+          slot - optional MIDI program number,the location to store
+                 the program.  If not specified use the current slot.
+        '''
         p = self.create_program()
         self.push_undo("Initialize slot [%s]" % slot)
         if slot == None:
@@ -158,12 +257,23 @@ class ProgramBank(list):
             list.__setitem__(self, slot, p)
 
     def initialize_slot_range(self, start, end=None):
+        '''
+        Initialize a range of bank slots .
+        
+        ARGS:
+          start - MIDI program number
+          end   - optional MIDI program number. If not 
+                  specified end = start+1
+        '''
         end = end or start + 1
         self.push_undo("Initialize slot range")
         for i in range(slot, end):
             list.__setitem__(self, i, self.create_program())
 
     def initialize(self):
+        '''
+        Initialize the bank by filling it with default programs.
+        '''
         self.push_undo("Initialize Bank")
         for i in range(len(self)):
             list.__setitem__(self, i, self.create_program())
@@ -173,6 +283,9 @@ class ProgramBank(list):
         self.current_program = clone(self[0])
 
     def clone(self):
+        '''
+        Returns an exact copy of self.
+        '''
         other = ProgramBank(self.template)
         other.name = self.name
         other.remarks = self.remarks
@@ -185,6 +298,9 @@ class ProgramBank(list):
         return other
     
     def serialize(self):
+        '''
+        Convert bank to serial data preparatory to saving it.
+        '''
         acc = ["Llia.ProgramBank",
                {"format" : self.template.data_format,
                 "name" : self.name,
@@ -198,6 +314,14 @@ class ProgramBank(list):
         return acc
 
     def save(self, filename):
+        '''
+        Save bank contents to file.
+        
+        ARGS:
+          filename
+
+        Raises IOError
+        '''
         s = self.serialize()
         with open(filename, 'w') as output:
             json.dump(s, output, indent=4)
@@ -205,6 +329,19 @@ class ProgramBank(list):
 
     @staticmethod
     def deserialize(s):
+        '''
+        Convert serialized data to an instance of Bank.  deserialize
+        is used as part of the bank read operation.
+        ARGS:
+          s - List, 
+
+        RETURNS: 
+          ProgramBank
+
+        Raise TypeError if s is not a list
+        Raises ValueError if s does not have the proper format.
+        Raises IndexError if s is too short.
+        '''
         try:
             if is_list(s):
                 id = s[0]
@@ -233,6 +370,17 @@ class ProgramBank(list):
 
     @staticmethod
     def read_bank(filename):
+        '''
+        Read bank file.
+        
+        ARGS:
+           filename - String
+
+        RETURNS:
+          ProgramBank
+
+        Raises IOError
+        '''
         try:
             with open(filename, 'r') as input:
                 obj = json.load(input)
@@ -243,6 +391,14 @@ class ProgramBank(list):
             raise IOError(msg)
 
     def load(self, filename):
+        '''
+        Load bank data from file into self.
+
+        ARGS:
+          filename - String
+
+        Raises IOError
+        '''
         try:
             self.push_undo("Load bank file '%s'" % filename)
             other = ProgramBank.read_bank(filename)
@@ -255,11 +411,26 @@ class ProgramBank(list):
             msg = "Error while reading ProgramBank file '%s'" % filename
             raise IOError(msg)
 
-    # Copy performance to clipboard.
     def copy_performance(self, slot=None):
+        '''
+        Copy performance portion of program to clipboard.
+
+        ARGS:
+          slot - optional MIDI program number.  If not specified use
+                 current slot.
+        '''
         ProgramBank.clipboard["Performance"] = self[slot].performance
         
     def paste_performance(self):
+        '''
+        Paste clipboard contents into performance portion of program.
+        
+        ARGS:
+          slot - optional MIDI program number.  If not specified use
+                 current slot.
+
+        Raises KeyError if clipboard does not contain performance data.
+        '''
         try:
             self[None].performance = ProgramBank.clipboard["Performance"]
         except KeyError:
@@ -269,6 +440,16 @@ class ProgramBank(list):
     # Copy clipboard performance to all program slots
     # in range(start, end)
     def fill_performance(self, start, end):
+        '''
+        Fill range of program slots with identical performance data from 
+        clipboard.
+
+        ARGS:
+          start - int MIDI program number.
+          end   - int MIDI program number, 0 <= start < end < 128.
+
+        Raises KeyError if clipboard does not contain performance.
+        '''
         try:
             p = ProgramBank.clipboard["Performance"]
             for i in range(start,end):
@@ -280,6 +461,11 @@ class ProgramBank(list):
             raise KeyError(msg)
         
     def dump(self, tab=0, verbosity=1):
+        '''
+        Produce diagnostic dump.
+
+        RETURNS:  String
+        '''
         pad = " "*4*tab
         pad2 = pad + " "*4
         pad3 = pad2 + " "*4
