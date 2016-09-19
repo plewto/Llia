@@ -164,5 +164,6 @@ class TkSplashWindow(Toplevel):
             self.warning(errmsg)
 
     def display_help(self, *_):
-        from llia.gui.tk.tk_help import display_help
-        display_help("splash")
+        # from llia.gui.tk.tk_help import display_help
+        # display_help("splash")
+        pass

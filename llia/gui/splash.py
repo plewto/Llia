@@ -6,7 +6,7 @@ from __future__ import print_function
 import sys
 import mido
 import llia.constants as con
-import llia.gui.llhelp as lliahelp
+#import llia.gui.llhelp as lliahelp
 
 
 
@@ -158,6 +158,7 @@ class TextSplashScreen(object):
                 print("ERROR")                
 
     def help_(self):
-        text = lliahelp.read_help_file("splash")
-        print(text)
+        pass
+        #text = lliahelp.read_help_file("splash")
+        #print(text)
         

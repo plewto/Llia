@@ -11,7 +11,7 @@ from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
 #from llia.lliascript.bufferhelper import BufferHelper
 #from llia.gui.llhelp import help_topics, print_topic
-from llia.util.help import help_topics, open_help
+#from llia.util.help import help_topics, open_help
 
 from llia.lliascript.compose import Composer
 
@@ -162,29 +162,31 @@ class Parser(object):
             self._append_history(line)
 
     def help_(self, topic=None):
-        if topic:
-            print("# Opening help topic: %s" % topic)
-            open_help(topic)
-        else:
-            topics = help_topics()
-            acc = "# "
-            counter = 4
-            for t in topics:
-                acc += "%-18s " % t
-                counter -= 1
-                if not counter:
-                    counter = 4
-                    acc += '\n# '
-            acc += "\n\n"
-            acc += "# Topics starting with 'ls_' are related to lliascript,\n"
-            acc += "# they may be entered without the leading 'ls_'.\n"
-            print(acc)
+        pass
+        # if topic:
+        #     print("# Opening help topic: %s" % topic)
+        #     open_help(topic)
+        # else:
+        #     topics = help_topics()
+        #     acc = "# "
+        #     counter = 4
+        #     for t in topics:
+        #         acc += "%-18s " % t
+        #         counter -= 1
+        #         if not counter:
+        #             counter = 4
+        #             acc += '\n# '
+        #     acc += "\n\n"
+        #     acc += "# Topics starting with 'ls_' are related to lliascript,\n"
+        #     acc += "# they may be entered without the leading 'ls_'.\n"
+        #     print(acc)
             
 
     def apropos(self, target):
-        topics = help_topics(target)
-        for t in topics:
-            print("# %s" % t)
+        pass
+        # topics = help_topics(target)
+        # for t in topics:
+        #     print("# %s" % t)
             
     def is_abus(self, name):
         ent = self.entities.get(name, None)

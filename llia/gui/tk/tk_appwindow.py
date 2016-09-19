@@ -6,7 +6,7 @@ from Tkinter import (Frame, Label, Menu, Tk, BOTH, Toplevel)
 import ttk
 import tkMessageBox
 from PIL import Image, ImageTk
-import llia.gui.tk.tk_help as help
+#import llia.gui.tk.tk_help as help
 from llia.gui.appwindow import AbstractApplicationWindow
 from llia.gui.tk.tk_splash import TkSplashWindow
 import llia.gui.tk.tk_factory as factory
@@ -146,7 +146,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._init_bus_menu(bus_menu)
         #self._init_buffer_menu(buffer_menu)
         self._init_tune_menu(tune_menu)
-        self._init_help_menu(help_menu)
+        #self._init_help_menu(help_menu)
 
     def _init_file_menu(self, fmenu):
         fmenu.add_command(label="Lliascript", command = self.show_history_editor)
@@ -180,9 +180,9 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def _init_tune_menu(self, tmenu):
         tmenu.add_command(label = "FIX ME: Nothing to see here")
 
-    def _init_help_menu(self, hmenu):
-        hmenu.add_command(label = "About", command = self.show_about_dialog)
-        hmenu.add_command(label = "Help", command = self.display_help)
+    # def _init_help_menu(self, hmenu):
+    #     hmenu.add_command(label = "About", command = self.show_about_dialog)
+    #     hmenu.add_command(label = "Help", command = self.display_help)
         
     def exit_gui(self):
         try:
@@ -216,7 +216,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.wait_window(dialog)
 
     def display_help(self, topic=None):
-        help.display_help(topic)
+        pass
+        # help.display_help(topic)
         
     def show_history_editor(self):
         from llia.gui.tk.tk_history import TkHistoryEditor
