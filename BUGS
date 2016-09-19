@@ -120,3 +120,9 @@ BUG 0009 2016.09.11
 
 Main window menu option "new synth group"
 raise an AttributeError SythHelper._synth_serial_number
+
+
+---------------------------------------------------------------------- OPEN 0010
+BUG 0010 2016.09.18
+
+LliaHandler.restart does not free synths
