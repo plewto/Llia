@@ -10,11 +10,34 @@ from llia.source_mapper import SourceMapper, CCMapper
 
 class Performance(object):
 
+    '''
+    A Performance defines parameters common to all Synth programs. 
+    Performance parameters include:
+      1) Transpose in MIDI key numbers
+      2) Active key range as key number pair
+      3) Pitch bend depth in cents.
+      4) Velocity mapping functions.
+      5) Aftertouch mapping functions.
+      6) Pitch wheel mapping functions (separate from simply pitch bend).
+      7) Kynumber mapping functions.
+      8) MIDI controller mapping functions.
+    There may be an arbitrary number of functions for each mapping source.
+    Velocity for example may map to filter cutoff and overall amplitude, or
+    any number of other parameters, simultaneously.
+    '''
+    
     def __init__(self):
+        '''
+        Construct new Performance object.
+        '''
         object.__init__(self)
         self.initialize()
 
     def initialize(self):
+        '''
+        Sets all values to defaults.
+        All mapping functions are removed.
+        '''
         self.transpose = 0
         self._key_range = (0, 127)
         self.bend_range = 200
@@ -26,6 +49,9 @@ class Performance(object):
         self.controller_maps = CCMapper()
 
     def clone(self):
+        '''
+        Returns a cloned copy of self.
+        '''
         other = Performance()
         other.transpose = self.transpose
         other._key_range = self._key_range
@@ -39,6 +65,12 @@ class Performance(object):
         return other
 
     def copy_performance(self, other):
+        '''
+        Copy all values from another Performance into self.
+
+        ARGS:
+          other - Performance, the source object.
+        '''
         self.transpose = other.transpose
         self._key_range = other._key_range
         self.bend_range = other.bend_range
@@ -62,6 +94,18 @@ class Performance(object):
         return not self.__eq__(other)
 
     def key_range(self, new_range=None):
+        '''
+        Retrieve/change key range.
+
+        ARGS:
+          new_range - optional tuple (low, high).
+                      If specified update the current key range.
+                      
+        RETURNS:
+             tuple (low, high) where low and high are MIDI keynumbers
+             0 <= low < high < 128. 
+             Reception of keynumbers outside this range are ignored.
+        '''
         if new_range is not None:
             self._key_range = new_range
             self.keynumber_maps.change_domain(self._key_range)
@@ -69,9 +113,16 @@ class Performance(object):
     
     @staticmethod
     def extension():
+        '''
+        Returns filename extension for saving Performance data.
+        '''
         return "aprf"
 
     def serialize(self):
+        '''
+        Convert self to serialized form.
+        Returns List
+        '''
         acc = ["llia.Performance",
                {"transpose" : self.transpose,
                 "key_range" : self._key_range,
@@ -86,6 +137,15 @@ class Performance(object):
 
     @staticmethod
     def deserialize(ser):
+        '''
+        Convert serial form back to Performance
+
+        ARGS:
+          ser - list, must have the same format as produced by serialize
+
+        RETURNS:
+          Performance
+        '''
         if is_list(ser):
             id = ser[0]
             if id == "llia.Performance":
@@ -110,14 +170,36 @@ class Performance(object):
             raise TypeError(msg)
                 
     def save(self, filename):
+        '''
+        Save self to file.
+        
+        ARGS:
+          filename - String
+
+        Raises: IOError
+        '''
         with open(filename, 'w') as output:
             s = self.serialize()
             json.dump(s, output, indent=4)
         
     def load(self, filename):   # ISSUE: Performance.load not implemented
+        '''
+        Load performance from file.
+        ISSUE Performance load is not implemented!
+        '''
         pass
 
     def dump(self, tab=0, verbosity=1):
+        '''
+        Produce diagnostic data.
+
+        ARGS:
+          tab  - optional int, sets indentation depth 
+          verbosity - optional int, higher values produce more detail
+
+        RETURNS:
+            String
+        '''
         pad = ' '*4*tab
         pad1 = pad+' '*4
         pad2 = pad1+' '*4
@@ -155,22 +237,22 @@ def _hash_perf(obj):
 #  ---------------------------------------------------------------------- 
 #                                    Test
 
-def test():
-    p1 = Performance()
-    dump(p1)
-
-    p1.velocity_maps.add_parameter("filterFreq", "exp", codomain=(1000, 9999))
-    p1.velocity_maps.add_parameter("volume", "exp")
-    p1.controller_maps.add_parameter(1, "vibrato")
-    p1.controller_maps.add_parameter(4, "attack")
-    dump(p1)
-
-    p2 = clone(p1)
-    dump(p2)
-    print("p1 == p2", p1 == p2, "  p1 is p2", p1 is p2)
-
-    print("\n*** serilization ***")
-    s = p1.serialize()
-    p3 = Performance.deserialize(s)
-    dump(p3)
-    print("p1 == p3", p1 == p3, "  p1 is p3", p1 is p3)
+# def test():
+#     p1 = Performance()
+#     dump(p1)
+#
+#     p1.velocity_maps.add_parameter("filterFreq", "exp", codomain=(1000, 9999))
+#     p1.velocity_maps.add_parameter("volume", "exp")
+#     p1.controller_maps.add_parameter(1, "vibrato")
+#     p1.controller_maps.add_parameter(4, "attack")
+#     dump(p1)
+#
+#     p2 = clone(p1)
+#     dump(p2)
+#     print("p1 == p2", p1 == p2, "  p1 is p2", p1 is p2)
+#
+#     print("\n*** serilization ***")
+#     s = p1.serialize()
+#     p3 = Performance.deserialize(s)
+#     dump(p3)
+#     print("p1 == p3", p1 == p3, "  p1 is p3", p1 is p3)

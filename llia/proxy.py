@@ -18,6 +18,11 @@ import llia.constants as con
 
 class LliaProxy(object):
 
+    '''
+    Client side representation of LliaHelper instance on 
+    SuperCollider.
+    '''
+    
     trace = False
     
     def __init__(self, config, app):

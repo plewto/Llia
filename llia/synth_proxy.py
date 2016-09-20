@@ -41,6 +41,12 @@ SPECS_TEMPLATE = {"format" : None,
 
 class SynthSpecs(LockedDictionary):
 
+    '''
+    SynthSpecs is a dictionary like object which defines the features and 
+    structure of a class of synths.   All synths of the same type share
+    a common SynthSpecs.
+    '''
+    
     global_synth_type_registry = {}
 
     @staticmethod
@@ -193,7 +199,7 @@ class SynthProxy(object):
     @staticmethod
     def current_synth_serial_number():
         '''
-        Each synth is assigned a uniqe int identification when it is 
+        Each synth is assigned a unique int identification when it is 
         created.  This method returns the new value to be used without 
         incrementing the internal counter.
         
@@ -204,9 +210,9 @@ class SynthProxy(object):
     @staticmethod
     def _assign_synth_serial_number():
         ''''
-        Rerturns the a unique synth identification number.
+        Returns a unique synth identification number.
         This method will never return the same number twice.
-        If you wish to inspect the serial current serial number without 
+        If you wish to inspect the current serial number without 
         altering it, use current_synth_serial_number
 
         RETURNS: int
@@ -384,15 +390,47 @@ class SynthProxy(object):
     # Returns bus name assigned to audio input parameter
     # raises KeyError
     def get_audio_input_bus(self, param):
+        '''
+        Return name of bus assigned to audio input parameter.
+
+        ARGS:
+          param - String
+
+        RETURNS: String
+        '''
         return self._audio_input_buses[param]
 
     def get_audio_output_bus(self, param):
+        '''
+        Return name of bus assigned to audio output parameter.
+        
+        ARGS:
+           param - String
+        
+        RETURNS: String
+        '''
         return self._audio_output_buses[param]
 
     def get_control_input_bus(self, param):
+         '''
+         Return name of bus assigned to control input parameter.
+
+        ARGS:
+          param - String
+
+        RETURNS: String
+        '''
         return self._control_input_buses[param]
 
     def get_control_output_bus(self, param):
+         '''
+         Return name of bus assigned to control output parameter.
+
+         ARGS:
+          param - String
+
+        RETURNS: String
+        '''
         return self._control_output_buses[param]
 
     def available_control_input_parameters(self):
@@ -425,6 +463,8 @@ class SynthProxy(object):
           param - String, the synth parameter
           bname - String, the bus name.
           sync  - optional bool, if True notify synth editor of change
+
+        Raises llerrors.NoSuchBusOrParameterError
         '''
         try:
             proxy = self.app.proxy
@@ -452,6 +492,8 @@ class SynthProxy(object):
           param - String, the synth parameter
           bname - String, the bus name.
           sync  - optional bool, if True notify synth editor of change
+
+        Raises llerrors.NoSuchBusOrParameterError
         '''
         try:
             proxy = self.app.proxy

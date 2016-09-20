@@ -22,7 +22,6 @@ class LliaApp(object):
           config - an instance of LliaConfig
           skip_mainloop - flag, if True do not enter main application loop.
                           intended for testing.
-
         '''
         super(LliaApp, self).__init__()
         self.config = config
@@ -59,9 +58,19 @@ class LliaApp(object):
             self.start_main_loop()
         
     def global_osc_id(self):
+        '''
+        Returns String, thr global OSC id.   
+        The OSC id MUST match between the client and server applications.
+        '''
         return self.config.global_osc_id()
     
     def exit_(self, xcode=0):
+        '''
+        Exit client application.
+
+        ARGS:
+          xcode - int exit code, non-zero indicates an error.
+        '''
         if xcode != 0:
             self.status("Llia exits with code %s" % xcode)
         else:

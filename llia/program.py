@@ -20,7 +20,21 @@ from llia.performance import Performance
 
 class Program(dict):
 
+    '''
+    Program is a dictionary like object which defines a single synth 'patch'
+    '''
+    
     def __init__(self, name, data_format, keyset):
+        '''
+        Constructs new Program object.
+
+        ARGS:
+          name         - String, the program name.
+          data_format  - String, indicates the data format and should be 
+                         identical to the synth type ("Orgn", "Saw3", ,,,).
+          keyset       - A dictionary of parameter/value pairs used to define 
+                         the data format and default values.
+        '''
         dict.__init__(self)
         self.name = str(name)
         self.data_format = str(data_format)
@@ -31,23 +45,46 @@ class Program(dict):
         self.initialize()
 
     def initialize(self):
+        '''
+        Set all parameters to default values and initialize the Performance
+        values.
+        '''
         for p,v in self.keyset.items():
             dict.__setitem__(self, p, v)
         self.performance.initialize()
 
     def __setitem__(self, param, value):
+        '''
+        Sets parameter value.
+        Ignore if param is not in the keyset established at construction 
+        time.
+        '''
         if self.keyset.has_key(param):
             dict.__setitem__(self, param, value)
 
     def add_parameter(self, param, default_value):
+        '''
+        Add a new parameter to keyset.
+        '''
         self.keyset[param] = defalut_value
         self[param] = default_value
 
     @staticmethod
     def is_virtual_param(param):
+        '''
+        Predicate test if parameter name is a "virtual" parameter.
+        A virtual parameter is one that is saved in the Program but is 
+        not an actual synth parameter.  They are used for storing extra
+        information about a Program.
+
+        ISSUE: Are virtual parameters actually being used?
+        '''
         return param[0] == "_"
         
     def clone(self):
+        '''
+        Return cloned copy of self.
+        '''
         other = Program(self.name, self.data_format, self.keyset)
         for p,v in self.items():
             dict.__setitem__(other, p, v)
@@ -56,6 +93,16 @@ class Program(dict):
         return other
 
     def copy_program(self, other):
+        '''
+        Copy all values of another program into self.
+
+        ARGS:
+           other - Program, the source program must have the same 
+                   format as self.
+
+        Raises TypeError if other is not a Program.
+        Raises ValueError if other is a Program but has the wrong format. 
+        '''
         if is_program(other):
             if other.data_format == self.data_format:
                 self.name = other.name
@@ -85,9 +132,16 @@ class Program(dict):
         return not self.__eq__(other)
 
     def extension(self):
+        '''
+        Returns filename extension.
+        '''
         return self.data_format.lower()
 
     def serialize(self):
+        '''
+        Convert self to serialized form.
+        Returns tuple
+        '''
         acc = ["llia.Program",
                self.data_format,
                self.name,
@@ -103,6 +157,18 @@ class Program(dict):
 
     @staticmethod
     def deserialize(ser):
+        '''
+        Convert serialized data to new Program object.
+        
+        ARGS:
+          ser - tuple, must have same format as produced by 
+                serialize method.
+
+        RETURNS: Program
+
+        Raises TypeError if argument is not a list or tuple.
+        Raises ValueError if argument does not have the proper format.
+        '''
         if is_list(ser) and len(ser) == 2:
             prg, prf = ser
             id = prg[0]
@@ -126,6 +192,15 @@ class Program(dict):
             raise TypeError(msg)
     
     def save(self, filename):
+        '''
+        Save self to file.
+        
+        ARGS:
+           filename - String
+
+        Raise IOError
+
+        '''
         with open(filename, 'w') as output:
             s = self.serialize()
             json.dump(s, output, indent=4)
@@ -133,6 +208,17 @@ class Program(dict):
 
     @staticmethod
     def read_program(filename):
+        '''
+        Read Program data from file.
+
+        ARGS:
+           filename - String
+
+        RETURNS: 
+           Program
+
+        Raises IOError
+        '''
         try:
             with open(filename, 'r') as input:
                 obj = json.load(input)
@@ -143,6 +229,14 @@ class Program(dict):
             raise IOError(msg)
             
     def load(self, filename):
+        '''
+        Read program data from file into self.
+        
+        ARGS:
+           filename - String
+
+        Raises IOError
+        '''
         other = Program.read_program(filename)
         self.copy_program(other)
         self.filename = filename
@@ -188,47 +282,47 @@ def _dmp_prog(obj):
 def _hash_prog(obj):
     return prog.hash_()
     
-def test():
-    keyset = {"Alpha": 1,
-              "Beta" : 2,
-              "Gamma" : 3}
-    p1 = Program("Test", "Test", keyset)
-    p1.remarks = "These are remarks\nAnd so are these."
-    dump(p1)
-
-    # Set parameter values
-    p1.name = "Primes"
-    p1["Alpha"] = 2
-    p1["Beta"] = 3
-    p1["Gamma"] = 5
-    p1["Delta"] = 7  # Ignore, Delta is not a recognized parameter.
-    dump(p1)
-    
-    # Create clone
-    print("\nCreate clone")
-    p2 = clone(p1)
-    dump(p2)
-
-    print("\nequality test")
-    print(p1 == p1)
-    print(p1 == p2)
-    p2["Alpha"] = 13
-    print(p1 == p2)
-
-    print("\nextension = '%s'" % p1.extension())
-    print("\nSerilization")
-    s = p1.serialize()
-    p2 = Program.deserialize(s)
-    print(p1 == p2, p1 is p2)
-    dump(p2)
-
-    print("\nsave and load")
-    filename = "/tmp/test_program"
-    p1.save(filename)
-    p2.initialize()
-    p2.load(filename)
-    dump(p1)
-    dump(p2)
+# def test():
+#     keyset = {"Alpha": 1,
+#               "Beta" : 2,
+#               "Gamma" : 3}
+#     p1 = Program("Test", "Test", keyset)
+#     p1.remarks = "These are remarks\nAnd so are these."
+#     dump(p1)
+#
+#     # Set parameter values
+#     p1.name = "Primes"
+#     p1["Alpha"] = 2
+#     p1["Beta"] = 3
+#     p1["Gamma"] = 5
+#     p1["Delta"] = 7  # Ignore, Delta is not a recognized parameter.
+#     dump(p1)
+#    
+#     # Create clone
+#     print("\nCreate clone")
+#     p2 = clone(p1)
+#     dump(p2)
+#
+#     print("\nequality test")
+#     print(p1 == p1)
+#     print(p1 == p2)
+#     p2["Alpha"] = 13
+#     print(p1 == p2)
+#
+#     print("\nextension = '%s'" % p1.extension())
+#     print("\nSerilization")
+#     s = p1.serialize()
+#     p2 = Program.deserialize(s)
+#     print(p1 == p2, p1 is p2)
+#     dump(p2)
+#
+#     print("\nsave and load")
+#     filename = "/tmp/test_program"
+#     p1.save(filename)
+#     p2.initialize()
+#     p2.load(filename)
+#     dump(p1)
+#     dump(p2)
     
    
 

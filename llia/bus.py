@@ -42,6 +42,9 @@ class BusSource(object):
         return not self.__eq__(other)
 
     def as_tuple(self):
+        '''
+        Returns tuple (id, param)
+        '''
         return tuple([self.sid, self.param])
     
     def __str__(self):
@@ -115,10 +118,17 @@ class BusProxy(object):
 
     @abc.abstractmethod
     def is_protected(self):
+        '''
+        Predicate which is True for protected buses.
+        Protected buses may not be removed.  
+        '''
         return False
 
     @abc.abstractmethod
     def rate(self):
+        '''
+        Returns sample rate, either "Audio" or "Control"
+        '''
         return None
 
     # Update editor of bus connection change
@@ -133,24 +143,60 @@ class BusProxy(object):
         return self.rate() == "Control"
 
     def source_count(self):
+        '''
+        Returns number of source signals sending data to this bus.
+        '''
         return len(self._sources)
 
     def sources(self):
+        '''
+        Returns list of BusSource objects
+        '''
         return self._sources
         
     def has_source(self, sid, param=''):
+        '''
+        Predicate test if receives data from specific synth
+
+        ARGS:
+          sid   - String, synth identification.
+          param - optional String, a synth parameter. If param is not 
+                  specified then -any- input from sid is considered True
+
+        RETURNS: Bool
+        '''
         bs = BusSource(sid, param)
         for q in self._sources:
             if q == bs: return True
         return False
         
     def add_source(self, sid, param, sync=True):
+        '''
+        Add new source signal.  If an identical source already exists 
+        do nothing.
+
+        ARGS:
+           sid   - String, synth id
+           param - String, synth param used for output
+           sync  - boolean, if True re synchronize the GUI editor.
+                   ISSUE: sync argument is not used and should be removed.
+        '''
         if not self.has_source(sid, param):
             bs = BusSource(sid, param)
             self._sources.append(bs)
             if sync: self.sync_editor()
             
     def remove_source(self,sid, param='', sync=True):
+        '''
+        Remove source signal, it is not an error if the bus does not have the 
+        indicated source.
+
+        ARGS:
+           sid   - String, synth id
+           param - String, synth param used for output
+           sync  - boolean, if True re synchronize the GUI editor.
+                   ISSUE: sync argument is not used and should be removed.
+        '''
         bs = BusSource(sid, param)
         def fn(a):
             return not(a == bs)
@@ -158,24 +204,61 @@ class BusProxy(object):
         if sync: self.sync_editor()
 
     def sink_count(self):
+        '''
+        Returns count of outputs this bus transmits to.
+        '''
         return len(self._sinks)
 
     def sinks(self):
+        '''
+        Returns list of BusSink objects.
+        '''
         return self._sinks
         
     def has_sink(self, sid, param=''):
+        '''
+        Predicate test for specific sink.
+
+        ARGS:
+           sid   - String, synth id
+           param - optional String, synth parameter.  If param is not
+                   specified then -any- connection to sid is considered 
+                   true.
+
+        RETURNS: Bool
+        '''
         bs = BusSink(sid, param)
         for q in self._sinks:
             if q == bs: return True
         return False
         
     def add_sink(self, sid, param, sync=True):
+        '''
+        Add new output connection.  It is not an error if the specified
+        sink already exits.
+
+        ARGS:
+          sid   - String, synth id.
+          param - String, synth parameter used for input.
+          sync  - optional Bool, 
+                  ISSUE: sync flag is not used and should be removed.
+        '''
         if not self.has_sink(sid, param):
             bs = BusSink(sid, param)
             self._sinks.append(bs)
             if sync: self.sync_editor()
 
     def remove_sink(self,sid, param='', sync=True):
+        '''
+        Remove output connection.  It is not an error if the specified
+        connection does not exists.
+
+        ARGS:
+           sid   - String, synth id.
+           param - String, synth parameter used for input.
+           sync  - optional Bool, 
+                   ISSUE: sync flag is not used and should be removed.
+        '''
         bs = BusSink(sid, param)
         def fn(a):
             return not(a == bs)
@@ -183,6 +266,16 @@ class BusProxy(object):
         if sync: self.sync_editor()
             
     def dump(self, depth=0, silent=False):
+        '''
+        Produce diagnostic dump of bus state.
+
+        ARGS:
+          depth  - optional int, sets indentation amount.
+          silent - optional flag, if True does not produce screen
+                   output as side effect.
+
+        RETURNS: String
+        '''
         pad1 = ' '*4*depth
         pad2 = pad1 + ' '*4
         pad3 = pad2 + ' '*4
@@ -215,9 +308,6 @@ class AudioBus(BusProxy):
     @staticmethod
     def rate():
         return "Audio"
-
-    # def is_protected(self):
-    #     return self.name.startswith("out_") or self.name.startswith("in_")
 
     def is_hardware_output(self):
         return self.name.startswith("out_")
