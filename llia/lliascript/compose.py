@@ -87,7 +87,6 @@ class Composer(object):
         acc.sort(key=lambda x: x.data["serial-number"])
         code = "# Synths\n"
         for e in acc:
-            print("DEBUG e", e)
             if e.data['is-group']:
                 code += 'group("%s")\n' % e.data['name']
             elif e.data['is-control-synth']:

@@ -9,9 +9,12 @@ import os.path
 from llia.generic import is_list, clone
 from llia.llerrors import LliascriptError, NoSuchSynthError, NoSuchBufferError
 from llia.lliascript.ls_constants import *
+from llia.synth_proxy import SynthProxy
 
 class SynthHelper(object):
-   
+
+    _synth_and_group_serial_number = 0
+    
     def __init__(self,parser,local_namespace):
         self.parser = parser
         self.proxy = parser.proxy
@@ -250,16 +253,18 @@ class SynthHelper(object):
         self.assert_keymode(keymode)
         sy = self.proxy.add_synth(stype, keymode, voice_count)
         if sy:
-            self.parser.register_entity(sy.sid, "synth",
-                                        {"serial-number" : sy.id_,
-                                         "is-group" : False,
-                                         "stype" : stype,
-                                         "id" : sy.id_,
-                                         "keymode" : keymode,
-                                         "voice-count" : voice_count,
-                                         "is-control-synth" : False,
-                                         "is-efx" : False,
-                                         "is-controller" : False})
+            data =  {
+                "serial-number" : self._synth_and_group_serial_number,
+                "is-group" : False,
+                "stype" : stype,
+                "id" : sy.id_,
+                "keymode" : keymode,
+                "voice-count" : voice_count,
+                "is-control-synth" : False,
+                "is-efx" : False,
+                "is-controller" : False}
+            self.parser.register_entity(sy.sid,"synth",data)
+            self._synth_and_group_serial_number+=1
             self.current_sid = sy.sid
             self.update_prompt()
         return sy
@@ -268,13 +273,15 @@ class SynthHelper(object):
         self.assert_efx_type(stype)
         sy = self.proxy.add_efx(stype)
         if sy:
-            self.parser.register_entity(sy.sid, "synth",
-                                        {"serial-number" : sy.id_,
-                                         "is-group" : False,
-                                         "stype" : stype,
-                                         "id" : sy.id_,
-                                         "is-control-synth" : False,
-                                         "is-efx" : True})
+            data =  {
+                "serial-number" : self._synth_and_group_serial_number,
+                "is-group" : False,
+                "stype" : stype,
+                "id" : sy.id_,
+                "is-control-synth" : False,
+                "is-efx" : True}
+            self.parser.register_entity(sy.sid,"synth",data)
+            self._synth_and_group_serial_number+=1
             self.current_sid = sy.sid
             self.update_prompt()
         return sy
@@ -283,12 +290,14 @@ class SynthHelper(object):
         self.assert_control_synth_type(stype)
         sy = self.proxy.add_efx(stype)
         if sy:
-            self.parser.register_entity(sy.sid, "synth",
-                                        {"serial-number" : sy.id_,
-                                         "is-group" : False,
-                                         "is-efx" : False,
-                                         "is-control-synth" : True,
-                                         "stype" : stype})
+            data =   {
+                "serial-number" : self._synth_and_group_serial_number,
+                "is-group" : False,
+                "is-efx" : False,
+                "is-control-synth" : True,
+                "stype" : stype}
+            self.parser.register_entity(sy.sid, "synth",data)
+            self._synth_and_group_serial_number+=1
             self.current_sid = sy.sid
             self.update_prompt()
             return sy
@@ -617,9 +626,9 @@ class SynthHelper(object):
         data = {"name" : grp.name,
                 "is-efx" : False,
                 "is-group" : True,
-                "serial-number" : self._synth_serial_number}
+                "serial-number" : self._synth_and_group_serial_number}
         self.parser.register_entity(grp.name, "group", data)
-        self._synth_serial_number += 1
+        self._synth_and_group_serial_number+=1
 
     # deiconify group window(s)
     # index may be either int, the windows index 

@@ -208,7 +208,7 @@ class SynthProxy(object):
         return SynthProxy._synth_serial_number
 
     @staticmethod
-    def _assign_synth_serial_number():
+    def assign_synth_serial_number():
         ''''
         Returns a unique synth identification number.
         This method will never return the same number twice.
@@ -239,7 +239,7 @@ class SynthProxy(object):
         super(SynthProxy, self).__init__()
         self.is_efx = False
         self.is_controller = False
-        self.id_ = SynthProxy._assign_synth_serial_number()
+        self.id_ = SynthProxy.assign_synth_serial_number()
         self.app = app
         self.specs = specs
         self.synth_format = specs["format"]      # format is synonyms with
@@ -412,9 +412,9 @@ class SynthProxy(object):
         return self._audio_output_buses[param]
 
     def get_control_input_bus(self, param):
-         '''
-         Return name of bus assigned to control input parameter.
-
+        '''
+        Return name of bus assigned to control input parameter.
+        
         ARGS:
           param - String
 
@@ -423,10 +423,10 @@ class SynthProxy(object):
         return self._control_input_buses[param]
 
     def get_control_output_bus(self, param):
-         '''
-         Return name of bus assigned to control output parameter.
+        '''
+        Return name of bus assigned to control output parameter.
 
-         ARGS:
+        ARGS:
           param - String
 
         RETURNS: String

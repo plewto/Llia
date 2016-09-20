@@ -115,12 +115,18 @@ Removed "fixedParameters" array from SC keymode class and all sub-classes.
 All parameters, including bus and buffer assignments, are now stored as
 part of the current synth program.   This change also fixed BUG 0003
 
----------------------------------------------------------------------- OPEN 0009
+---------------------------------------------------------------------- CLOSED
 BUG 0009 2016.09.11
+CLOSED 2016.09.20
 
 Main window menu option "new synth group"
 raise an AttributeError SythHelper._synth_serial_number
 
+
+This bug was introduced with the swtich to application wide synth serial
+numbers.  The fix was to reintroduce separate serial numbers for synthhelper.
+This new series of numbers keeps track of the relative creation times of all
+synths and groups.
 
 ---------------------------------------------------------------------- OPEN 0010
 BUG 0010 2016.09.18
