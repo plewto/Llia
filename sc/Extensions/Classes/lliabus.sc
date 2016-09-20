@@ -64,14 +64,33 @@ LliaBuses : Object {
 					var name = "in_" ++ n.asString;
 					buses.add(name -> Bus.new(\audio, index, 1))});
 			},{
-				buses = Dictionary.new(8);
-				// buses.add("null_source" -> Bus.new(\control, 0, 1));
-				// buses.add("null_sink" -> Bus.new(\control, 1, 1));
-				buses.add("null_source" -> Bus.control());
-				buses.add("null_sink" -> Bus.control());
-					
-			});
-	} // end init
+                /*
+                **  Defines set of "protected" control buses.
+                **  These buses either provide default control input/output
+                **  or they provide a constant value.
+                **
+                **  null_source -> A default control input bus, 
+                **                 values on this bus should be ignored.
+                **  null_zero   -> A bus with constant value 0, 
+                **                 values should never be placed on this bus.
+                **  null_one    -> A bus with constant value 1, 
+                **                 values should never be placed on this bus.
+                **  null_sink   -> A default control output bus.
+                **                 values may freely be placed on this bus
+                **                 but it should never be used for control input.
+                */
+                var zeroBus, oneBus;
+                zeroBus = Bus.control(); 
+                zeroBus.value = 0;
+                oneBus = Bus.control();
+                oneBus.value = 1;
+                buses = Dictionary.new(8);
+                buses.add("null_source" -> Bus.control());
+                buses.add("null_sink" -> Bus.control());
+                buses.add("null_source_zero" -> zeroBus);
+                buses.add("null_source_one" -> oneBus);
+            });
+    } // end init
 
 	size {
 		^buses.size;

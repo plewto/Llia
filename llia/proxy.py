@@ -51,7 +51,7 @@ class LliaProxy(object):
             self._audio_buses[bname] = AudioBus(bname, self.app)
         # initialize protected control buses
         self._control_buses = {}
-        for i in ("source", "sink"):
+        for i in ("source", "sink", "zero", "one"):
             bname = "null_%s" % i
             self._control_buses[bname] = ControlBus(bname, self.app)
         
