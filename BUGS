@@ -132,3 +132,13 @@ synths and groups.
 BUG 0010 2016.09.18
 
 LliaHandler.restart does not free synths
+
+
+---------------------------------------------------------------------- OPEN 0011
+BUG 0011 2016.09.21
+
+There are two parts:
+
+1) At times double clicking a lliagraph token causes it to move.
+2) At times a lliagraph token moves outside the canvas making it
+imposible to access.
