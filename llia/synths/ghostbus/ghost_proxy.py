@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
-from llia.synths.ghostbus.ghost_data import program_bank, pp, random_ghostbus
+from llia.synths.ghostbus.ghost_data import program_bank, pp
 
 specs = SynthSpecs("Ghostbus")
 
@@ -25,15 +25,20 @@ class GhostbusProxy(SynthProxy):
             
 
 ghostbus_pallet = Pallet(default_pallet)
+ghostbus_pallet["SLIDER-TROUGH"] = "#432703"
+ghostbus_pallet["SLIDER-OUTLINE"] = "#42033E"
 
 specs["constructor"] = GhostbusProxy
 specs["description"] = "Reads and modifies control bus values"
 specs["keymodes"] = ("EFX", )
-specs["control-input-buses"] = [["inbus","null_sink"]]
-specs["control-output-buses"] = [["outbus","null_source"]]
 specs["pretty-printer"] = pp
-specs["program-generator"] = random_ghostbus
+#specs["program-generator"] = 
 specs["is-efx"] = True
 specs["is-controller"] = True
 specs["help"] = "Ghostbus"
 specs["pallet"] = ghostbus_pallet
+specs["control-input-buses"] = [["inbusA","null_sink"],
+                                ["inbusB","null_sink"],
+                                ["inbusC","null_sink"],
+                                ["inbusD","null_sink"]]
+specs["control-output-buses"] = [["outbus","null_source"]]
