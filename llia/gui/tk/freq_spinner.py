@@ -45,9 +45,12 @@ class FrequencySpinnerControl(AbstractControl):
 
     def reset(self):
         self.var_value.set(1.000)
+        self._current_value = float(self.var_value.get())
 
     def enter_callback(self, *_):
-        msg = "[%s] -> %s" % (self.param, self.var_value.get())
+        v = float(self.var_value.get())
+        msg = "[%s] -> %s" % (self.param, v)
+        self._current_value = v
         self.editor.status(msg)
         
     def callback(self, *_):

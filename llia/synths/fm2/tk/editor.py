@@ -8,6 +8,7 @@ import llia.gui.tk.control_factory as cf
 from llia.gui.tk.msb import MSB
 from llia.gui.tk.addsr_editor import ADDSREditor
 from llia.gui.tk.freq_spinner import FrequencySpinnerControl
+from llia.gui.tk.nudge import IncrementNudgeTool
 from llia.synths.fm2.tk.editor2 import TkFm2Panel2
 
 
@@ -46,9 +47,9 @@ class TkFm2Panel1(TkSubEditor):
                       'active-foreground' : 'yellow',
                       'active-outline' : 'yellow',
                       'font' : ('Times', 12)}
-        # OP2 carrier
-        self.spinner('op2Ratio', xfreq, y0+yfreq_offset)
-        self.spinner('op2Bias', xbias, y0+ybias_offset, from_=0, to=9999)
+        # OP2 Modulator
+        spin_mratio = self.spinner('op2Ratio', xfreq, y0+yfreq_offset)
+        spin_mbias = self.spinner('op2Bias', xbias, y0+ybias_offset, from_=0, to=9999)
         self.linear_slider('op2Amp', (0,10), xamp, y0, height=110)
         msb_2amp = MSB(self.canvas, "op2AmpRange", editor, 5)
         self.add_control("op2AmpRange", msb_2amp)
@@ -135,11 +136,25 @@ class TkFm2Panel1(TkSubEditor):
                            editor)
         self.add_child_editor("OP2ENV", env2)
         env2.sync()
-
+        # modulator nudge tools
+        yn1 = y0+yfreq_offset+30
+        yn2 = yn1+16
+        int1 = IncrementNudgeTool(canvas,spin_mratio,self.editor, 0.1)
+        int2 = IncrementNudgeTool(canvas,spin_mratio,self.editor, 0.01)
+        int3 = IncrementNudgeTool(canvas,spin_mratio,self.editor, 0.001)
+        dec1 = IncrementNudgeTool(canvas,spin_mratio,self.editor, -0.1)
+        dec2 = IncrementNudgeTool(canvas,spin_mratio,self.editor, -0.01)
+        dec3 = IncrementNudgeTool(canvas,spin_mratio,self.editor, -0.001)
+        int1.render(offset=(xfreq+13,yn1))
+        int2.render(offset=(xfreq+29,yn1))
+        int3.render(offset=(xfreq+45,yn1))
+        dec1.render(offset=(xfreq+13,yn2))
+        dec2.render(offset=(xfreq+29,yn2))
+        dec3.render(offset=(xfreq+45,yn2))
 
         # OP1 Carrier
-        self.spinner('op1Ratio', xfreq, y1+yfreq_offset)
-        self.spinner('op1Bias', xbias, y1+ybias_offset, from_=0, to=9999)
+        spin_cratio = self.spinner('op1Ratio', xfreq, y1+yfreq_offset)
+        spin_cbias = self.spinner('op1Bias', xbias, y1+ybias_offset, from_=0, to=9999)
         s_amp1 = cf.volume_slider(canvas, "op1Amp", editor)
         self.add_control("op1Amp", s_amp1)
         s_amp1.widget().place(x=xamp, y=y1)
@@ -195,6 +210,21 @@ class TkFm2Panel1(TkSubEditor):
                            editor)
         self.add_child_editor("OP1ENV", env1)
         env1.sync()
+        # carrier nudge tools
+        yn1 = y1+yfreq_offset+30
+        yn2 = yn1+16
+        int1 = IncrementNudgeTool(canvas,spin_cratio,self.editor, 0.1)
+        int2 = IncrementNudgeTool(canvas,spin_cratio,self.editor, 0.01)
+        int3 = IncrementNudgeTool(canvas,spin_cratio,self.editor, 0.001)
+        dec1 = IncrementNudgeTool(canvas,spin_cratio,self.editor, -0.1)
+        dec2 = IncrementNudgeTool(canvas,spin_cratio,self.editor, -0.01)
+        dec3 = IncrementNudgeTool(canvas,spin_cratio,self.editor, -0.001)
+        int1.render(offset=(xfreq+13,yn1))
+        int2.render(offset=(xfreq+29,yn1))
+        int3.render(offset=(xfreq+45,yn1))
+        dec1.render(offset=(xfreq+13,yn2))
+        dec2.render(offset=(xfreq+29,yn2))
+        dec3.render(offset=(xfreq+45,yn2))
         
     def spinner(self, param, x, y, from_=0, to=32): 
         s = FrequencySpinnerControl(self.canvas,param,self.editor,from_, to)
