@@ -17,8 +17,16 @@
 
 from __future__ import print_function
 import Tkinter as tk
-from llia.gui.abstract_control import AbstractControl
+
+import llia.constants as con
 import llia.gui.tk.tk_factory as factory
+from llia.gui.abstract_control import AbstractControl
+from llia.gui.tk.nudgetool import (BasicNudgeTool,
+                                   ScaleNudgeTool,
+                                   ConstantNudgeTool) 
+
+
+
 
 class FrequencySpinnerControl(AbstractControl):
 
@@ -90,9 +98,26 @@ class FrequencySpinnerControl(AbstractControl):
     def layout(self, offset=(0,0), width=75, height=24):
         x,y = offset
         self.spinner.place(x=x, y=y, width=width, height=height)
-        
     
-    
-        
-        
-        
+    def create_nudgetools(self,
+                          canvas,
+                          offset = (0,0),
+                          deltas = (1.0,0.1,0.01,0.001),
+                          scalers = ((2,"Octave"),
+                                     (con.RHALFSTEP, "halfstep"),
+                                     (con.RCENT, "cent")),
+                          constant = 1):
+        x0,y0 = offset
+        xd,yd = BasicNudgeTool.WIDTH*1.5, BasicNudgeTool.HEIGHT*1.5
+        y1 = y0+yd
+        for i,d in enumerate(deltas):
+            bwt = BasicNudgeTool(canvas,self,self.editor,d)
+            x = x0+(i*xd)
+            bwt.render(x,y0)
+        cnt = ConstantNudgeTool(canvas,self,self.editor,constant)
+        cnt.render(x0,y1)
+        for i,s in enumerate(scalers):
+            ratio,rollover = s
+            swt = ScaleNudgeTool(canvas,self,self.editor,ratio,rollover)
+            x = x0+((i+1)*xd)
+            swt.render(x,y1)
