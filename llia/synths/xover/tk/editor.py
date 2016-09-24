@@ -4,7 +4,8 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.decade_control import DecadeControl
+#from llia.gui.tk.decade_control import DecadeControl
+from llia.gui.tk.freq_spinner import FrequencySpinnerControl
 from llia.synths.xover.xover_data import LF_RATIOS, CROSSOVER_FREQUENCIES
 
 
@@ -19,10 +20,12 @@ class TkXOverPanel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        TkSubEditor.__init__(self, frame, editor, self.NAME)
+        canvas = factory.canvas(frame,868,514,self.IMAGE_FILE)
+        canvas.pack()
+        TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        lab_panel = factory.image_label(frame, self.IMAGE_FILE)
-        lab_panel.pack(anchor="nw", expand=False)
+        # lab_panel = factory.image_label(frame, self.IMAGE_FILE)
+        # lab_panel.pack(anchor="nw", expand=False)
         y0,y1 = 60, 300
         x0 = 60
         x_crossover = x0 + 150
@@ -34,34 +37,38 @@ class TkXOverPanel(TkSubEditor):
         x_res = x_external + 60
         
         def discrete_slider(param, x, y, values):
-            s = cf.discrete_slider(frame, param, editor, values=values)
+            s = cf.discrete_slider(canvas, param, editor, values=values)
             self.add_control(param, s)
             s.widget().place(x=x, y=y)
             return s
 
         def norm_slider(param, x, y):
-            s = cf.normalized_slider(frame, param, editor)
+            s = cf.normalized_slider(canvas, param, editor)
             self.add_control(param, s)
             s.widget().place(x=x, y=y)
             return s
 
         def amp_slider(param, x, y):
-            s = cf.volume_slider(frame, param, editor)
+            s = cf.volume_slider(canvas, param, editor)
             self.add_control(param, s)
             s.widget().place(x=x,y=y)
             return s
 
         def linear_slider(param, x, y, range_):
-            s = cf.linear_slider(frame, param, editor, range_=range_)
+            s = cf.linear_slider(canvas, param, editor, range_=range_)
             self.add_control(param, s)
             s.widget().place(x=x,y=y)
             return s
-        
-        dc_lfo_freq = DecadeControl(frame, "lfoFreq", editor,
-                                      coarse = (0.01, 10),
-                                      limit = (0.01, 100))
-        self.add_control("lfoFreq", dc_lfo_freq)
-        dc_lfo_freq.layout(offset=(x0,y0), label_offset=(0, 100))
+
+        spin_freq = FrequencySpinnerControl(canvas,"lfoFreq",editor,
+                                            from_=0,to=1000)
+        self.add_control("lfoFreq", spin_freq)
+        spin_freq.layout(offset=(x0,y0))
+        spin_freq.create_nudgetools(canvas,offset=(x0+13,y0+30),
+                                    deltas = (10,1,0.1,0.01),
+                                    constant = 1,
+                                    fill='#131313',
+                                    outline='#a5a08a')
         discrete_slider("crossover",x_crossover, y0, CROSSOVER_FREQUENCIES)
         discrete_slider("minCrossover",x_minx, y0, CROSSOVER_FREQUENCIES)
         discrete_slider("maxCrossover",x_maxx, y0, CROSSOVER_FREQUENCIES)
