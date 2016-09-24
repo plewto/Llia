@@ -32,7 +32,7 @@ class TkSaw3Panel1(TkSubEditor):
         y0 = 60
         y1 = 300
         yfreq_offset = 0
-        ybias_offset = 75
+        ybias_offset = 100
         x0, xosc_offset = 50, 225
         x_wave_offset = 105
         x_amp_offset = x_wave_offset+60
@@ -41,14 +41,23 @@ class TkSaw3Panel1(TkSubEditor):
         x_env1_amp_offset = x_amp_offset
         for i, osc in enumerate(("osc1", "osc2", "osc3")):
             x = x0 + (i * xosc_offset)
-            self.spinner(osc+"Freq", x, y0+yfreq_offset)
+            spinner = self.spinner(osc+"Freq", x, y0+yfreq_offset)
+            spinner.create_nudgetools(canvas,
+                                      (x+13,y0+yfreq_offset+30),
+                                      fill = '#131313',
+                                      outline='#c37978')
             self.norm_slider(osc+"Wave", x+x_wave_offset, y0)
             self.volume_slider(osc+"Amp", x+x_amp_offset, y0)
             self.exp_slider(osc+"Wave_env1", x+x_env1_wave_offset, y1)
             self.exp_slider(osc+"Wave_lfo", x+x_lfo_wave_offset, y1)
             self.exp_slider(osc+"Amp_env1", x+x_env1_amp_offset, y1)
             xosc3 = x
-        self.spinner("osc3Bias", xosc3, y0+ybias_offset, (0,9999))
+        spin_bias = self.spinner("osc3Bias", xosc3, y0+ybias_offset, (0,9999))
+        spin_bias.create_nudgetools(canvas,(xosc3+9,y0+ybias_offset+30),
+                                   deltas =(100,10,1,0.1,0.01),
+                                   constant = 0,
+                                   fill='#131313',
+                                   outline='#c37978')
         self.norm_slider("osc3WaveLag", xosc3+x_wave_offset+25, y0, width=10, height=75)
         xnoise = xosc3 + xosc_offset + 30
         self.linear_slider("noiseFreq", xnoise, y0)

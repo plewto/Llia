@@ -106,18 +106,30 @@ class FrequencySpinnerControl(AbstractControl):
                           scalers = ((2,"Octave"),
                                      (con.RHALFSTEP, "halfstep"),
                                      (con.RCENT, "cent")),
-                          constant = 1):
+                          constant = 1,
+                          fill='black',
+                          outline='blue',
+                          active='yellow'):
         x0,y0 = offset
         xd,yd = BasicNudgeTool.WIDTH*1.5, BasicNudgeTool.HEIGHT*1.5
         y1 = y0+yd
         for i,d in enumerate(deltas):
             bwt = BasicNudgeTool(canvas,self,self.editor,d)
+            bwt.fill = fill
+            bwt.outline = outline
+            bwt.active_outline = active
             x = x0+(i*xd)
             bwt.render(x,y0)
         cnt = ConstantNudgeTool(canvas,self,self.editor,constant)
+        cnt.fill = fill
+        cnt.outline = outline
+        cnt.active_outline = active
         cnt.render(x0,y1)
         for i,s in enumerate(scalers):
             ratio,rollover = s
             swt = ScaleNudgeTool(canvas,self,self.editor,ratio,rollover)
+            swt.fill = fill
+            swt.outline = outline
+            swt.active_outline = active
             x = x0+((i+1)*xd)
             swt.render(x,y1)
