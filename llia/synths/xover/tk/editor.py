@@ -4,7 +4,6 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-#from llia.gui.tk.decade_control import DecadeControl
 from llia.gui.tk.freq_spinner import FrequencySpinnerControl
 from llia.synths.xover.xover_data import LF_RATIOS, CROSSOVER_FREQUENCIES
 
@@ -24,8 +23,6 @@ class TkXOverPanel(TkSubEditor):
         canvas.pack()
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        # lab_panel = factory.image_label(frame, self.IMAGE_FILE)
-        # lab_panel.pack(anchor="nw", expand=False)
         y0,y1 = 60, 300
         x0 = 60
         x_crossover = x0 + 150

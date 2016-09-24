@@ -4,7 +4,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.decade_control import DecadeControl
+from llia.gui.tk.freq_spinner import FrequencySpinnerControl
 from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 from llia.synths.lfo3.lfo3_data import HARMONICS
 
@@ -20,31 +20,30 @@ class TkLfo3Panel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        TkSubEditor.__init__(self, frame, editor, self.NAME)
+        canvas = factory.canvas(frame,1000,600,self.IMAGE_FILE)
+        canvas.pack()
+        TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        lab_panel = factory.image_label(frame, self.IMAGE_FILE)
-        lab_panel.pack(anchor="nw", expand=False)
-        dc_freq = DecadeControl(frame, "lfoFreq", editor,
-                                coarse = (0.01, 10),
-                                limit = (0.01, 100))
-        s_scale = cf.linear_slider(frame, "lfoScale", editor, range_=(0,4))
-        s_bias = cf.linear_slider(frame, "lfoBias", editor, range_=(-4,4))
-        s_mod_freq = cf.discrete_slider(frame, "lfoModFreq", editor, values=HARMONICS)
-        s_fm = cf.linear_slider(frame, "lfoFM", editor, range_=(0, 8))
-        s_am = cf.normalized_slider(frame, "lfoAM", editor)
-        s_delay = ExpSlider(frame, "lfoDelay", editor, range_=8)
-        s_attack = ExpSlider(frame, "lfoAttack", editor, range_=8)
-        s_hold = ExpSlider(frame, "lfoHold", editor, range_=8)
-        s_release = ExpSlider(frame, "lfoRelease", editor, range_=8)
-        s_env_fm = cf.linear_slider(frame, "lfoEnvToFreq", editor, range_=(0,8))
-        s_env_bleed = cf.normalized_slider(frame, "lfoBleed", editor)
-        s_ratio_a = cf.discrete_slider(frame, "lfoRatioA", editor, values=HARMONICS)
-        s_ratio_b = cf.discrete_slider(frame, "lfoRatioB", editor, values=HARMONICS)
-        s_ratio_c = cf.discrete_slider(frame, "lfoRatioC", editor, values=HARMONICS)
-        s_amp_a = cf.normalized_slider(frame, "lfoAmpA", editor)
-        s_amp_b = cf.normalized_slider(frame, "lfoAmpB", editor)
-        s_amp_c = cf.normalized_slider(frame, "lfoAmpC", editor)
-        self.add_control("lfoFreq", dc_freq)
+        spin_freq = FrequencySpinnerControl(canvas,"lfoFreq",editor,
+                                            from_=0,to=100)
+        s_scale = cf.linear_slider(canvas, "lfoScale", editor, range_=(0,4))
+        s_bias = cf.linear_slider(canvas, "lfoBias", editor, range_=(-4,4))
+        s_mod_freq = cf.discrete_slider(canvas, "lfoModFreq", editor, values=HARMONICS)
+        s_fm = cf.linear_slider(canvas, "lfoFM", editor, range_=(0, 8))
+        s_am = cf.normalized_slider(canvas, "lfoAM", editor)
+        s_delay = ExpSlider(canvas, "lfoDelay", editor, range_=8)
+        s_attack = ExpSlider(canvas, "lfoAttack", editor, range_=8)
+        s_hold = ExpSlider(canvas, "lfoHold", editor, range_=8)
+        s_release = ExpSlider(canvas, "lfoRelease", editor, range_=8)
+        s_env_fm = cf.linear_slider(canvas, "lfoEnvToFreq", editor, range_=(0,8))
+        s_env_bleed = cf.normalized_slider(canvas, "lfoBleed", editor)
+        s_ratio_a = cf.discrete_slider(canvas, "lfoRatioA", editor, values=HARMONICS)
+        s_ratio_b = cf.discrete_slider(canvas, "lfoRatioB", editor, values=HARMONICS)
+        s_ratio_c = cf.discrete_slider(canvas, "lfoRatioC", editor, values=HARMONICS)
+        s_amp_a = cf.normalized_slider(canvas, "lfoAmpA", editor)
+        s_amp_b = cf.normalized_slider(canvas, "lfoAmpB", editor)
+        s_amp_c = cf.normalized_slider(canvas, "lfoAmpC", editor)
+        self.add_control("lfoFreq", spin_freq)
         self.add_control("lfoScale", s_scale)
         self.add_control("lfoBias", s_bias)
         self.add_control("lfoModFreq", s_mod_freq)
@@ -78,7 +77,12 @@ class TkLfo3Panel(TkSubEditor):
         x_a = x0
         x_b = x_a + 120
         x_c = x_b + 120
-        dc_freq.layout(offset=(x0,y0), label_offset=(10,100))
+        spin_freq.layout((x0,y0))
+        spin_freq.create_nudgetools(canvas,(x0+13,y0+30),
+                                    deltas=(10,1,0.1,0.01),
+                                    constant=1,
+                                    fill='#131313',
+                                    outline='#a5a08a')
         s_scale.widget().place(x=x1, y=y0)
         s_bias.widget().place(x=x2, y=y0)
         s_mod_freq.widget().place(x=x_mod, y=y0)

@@ -4,7 +4,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.decade_control import DecadeControl
+from llia.gui.tk.freq_spinner import FrequencySpinnerControl
 from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 
 
@@ -20,22 +20,21 @@ class TkLfo1Panel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        TkSubEditor.__init__(self, frame, editor, self.NAME)
+        canvas = factory.canvas(frame,852,550,self.IMAGE_FILE)
+        canvas.pack()
+        TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        lab_panel = factory.image_label(frame, self.IMAGE_FILE)
-        lab_panel.pack(anchor="nw", expand=False)
-        dc_freq = DecadeControl(frame, "lfoFreq", editor,
-                                coarse = (0.01, 10),
-                                limit = (0.01, 100))
-        s_feedback = cf.normalized_slider(frame, "lfoFeedback", editor)
-        s_delay = ExpSlider(frame, "lfoDelay", editor, range_=8)
-        s_attack = ExpSlider(frame, "lfoAttack", editor, range_=8)
-        s_hold = ExpSlider(frame, "lfoHold", editor, range_=8)
-        s_release = ExpSlider(frame, "lfoRelease", editor, range_=8)
-        s_bleed = cf.normalized_slider(frame, "lfoBleed", editor)
-        sr_scale = ReciprocalSlider(frame, "lfoScale", editor, range_=4, degree=1)
-        s_bias = cf.linear_slider(frame, "lfoBias", editor, range_=(-4,4))
-        self.add_control("lfoFreq",dc_freq)
+        spin_freq = FrequencySpinnerControl(canvas,"lfoFreq",editor,
+                                            from_=0,to=1000)
+        s_feedback = cf.normalized_slider(canvas, "lfoFeedback", editor)
+        s_delay = ExpSlider(canvas, "lfoDelay", editor, range_=8)
+        s_attack = ExpSlider(canvas, "lfoAttack", editor, range_=8)
+        s_hold = ExpSlider(canvas, "lfoHold", editor, range_=8)
+        s_release = ExpSlider(canvas, "lfoRelease", editor, range_=8)
+        s_bleed = cf.normalized_slider(canvas, "lfoBleed", editor)
+        sr_scale = ReciprocalSlider(canvas, "lfoScale", editor, range_=4, degree=1)
+        s_bias = cf.linear_slider(canvas, "lfoBias", editor, range_=(-4,4))
+        self.add_control("lfoFreq",spin_freq)
         self.add_control("lfoFeedback",s_feedback)
         self.add_control("lfoDelay",s_delay)
         self.add_control("lfoAttack",s_attack)
@@ -56,9 +55,13 @@ class TkLfo1Panel(TkSubEditor):
         x_bleed = x_release + 90
         x_scale = x_bleed + 60
         x_bias = x_scale + 60
-        dc_freq.layout(offset=(x_freq,y0),
-                       slider_offset=(80,0,14,200),
-                       label_offset = (10, 150))
+        spin_freq.layout(offset=(x_freq,y0))
+        spin_freq.create_nudgetools(canvas,
+                                    offset=(x_freq+9,y0+30),
+                                    deltas=(100,10,1,0.1,0.01),
+                                    constant=1,
+                                    fill='#131313',
+                                    outline='#a5a08a')
         s_feedback.widget().place(x=x_fb,y=y0, height=200)
         s_delay.layout(offset=(x_delay,y0),height=200,checkbutton_offset=None)
         s_attack.layout(offset=(x_attack,y0),height=200,checkbutton_offset=None)

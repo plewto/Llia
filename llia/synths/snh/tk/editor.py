@@ -4,7 +4,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.decade_control import DecadeControl
+from llia.gui.tk.freq_spinner import FrequencySpinnerControl
 from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 
 def create_editor(parent):
@@ -18,26 +18,32 @@ class TkSnHPanel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        TkSubEditor.__init__(self, frame, editor, self.NAME)
+        canvas=factory.canvas(frame,1039,600,self.IMAGE_FILE)
+        canvas.pack()
+        TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        lab_panel = factory.image_label(frame, self.IMAGE_FILE)
-        lab_panel.pack(anchor="nw", expand=False)
+        # lab_panel = factory.image_label(canvas, self.IMAGE_FILE)
+        # lab_panel.pack(anchor="nw", expand=False)
 
-        dc_rate = DecadeControl(frame, "shRate", editor,
-                                coarse = (0.01, 10), limit = (0.01,99))
-        dc_srcfreq = DecadeControl(frame, "srcFreq", editor,
-                                   coarse = (0.01, 10), limit = (0.01,99))
-        s_src = cf.normalized_slider(frame, "srcSelect", editor)
-        s_lag = cf.normalized_slider(frame, "shLag", editor)
-        s_bleed = cf.normalized_slider(frame, "shBleed", editor)
-        sx_delay = ExpSlider(frame, "shDelay", editor, range_=4)
-        sx_attack = ExpSlider(frame, "shAtack", editor, range_=4)
-        sx_hold = ExpSlider(frame, "shHold", editor, range_=4)
-        sx_release = ExpSlider(frame, "shRelease", editor, range_=4)
-        sr_scale = ReciprocalSlider(frame, "shScale", editor, range_=4, degree=1)
-        s_bias = cf.linear_slider(frame, "shBias", editor, range_=(-4,4))
-        self.add_control("shRate", dc_rate)
-        self.add_control("srcFreq", dc_srcfreq)
+        # dc_rate = DecadeControl(canvas, "shRate", editor,
+        #                         coarse = (0.01, 10), limit = (0.01,99))
+        # dc_srcfreq = DecadeControl(canvas, "srcFreq", editor,
+        #                            coarse = (0.01, 10), limit = (0.01,99))
+        spin_rate = FrequencySpinnerControl(canvas,"shRate",editor,
+                                            from_=0,to=100)
+        spin_srcfreq = FrequencySpinnerControl(canvas,"srcFreq",editor,
+                                               from_=0,to=100)
+        s_src = cf.normalized_slider(canvas, "srcSelect", editor)
+        s_lag = cf.normalized_slider(canvas, "shLag", editor)
+        s_bleed = cf.normalized_slider(canvas, "shBleed", editor)
+        sx_delay = ExpSlider(canvas, "shDelay", editor, range_=4)
+        sx_attack = ExpSlider(canvas, "shAtack", editor, range_=4)
+        sx_hold = ExpSlider(canvas, "shHold", editor, range_=4)
+        sx_release = ExpSlider(canvas, "shRelease", editor, range_=4)
+        sr_scale = ReciprocalSlider(canvas, "shScale", editor, range_=4, degree=1)
+        s_bias = cf.linear_slider(canvas, "shBias", editor, range_=(-4,4))
+        self.add_control("shRate", spin_rate)
+        self.add_control("srcFreq", spin_srcfreq)
         self.add_control("srcSelect", s_src)
         self.add_control("shLag", s_lag)
         self.add_control("shBleed", s_bleed)
@@ -60,10 +66,23 @@ class TkSnHPanel(TkSubEditor):
         x_bleed = x_release + 60
         x_scale = x_bleed + 90
         x_bias = x_scale + 75
-        dc_rate.layout(offset=(x_rate, y0), label_offset=(0, 100),
-                       slider_offset = (80, 0, 14, 200))
-        dc_srcfreq.layout(offset=(x_srcfreq, y0), label_offset=(0,100),
-                          slider_offset = (80, 0, 14, 200))
+        # dc_rate.layout(offset=(x_rate, y0), label_offset=(0, 100),
+        #                slider_offset = (80, 0, 14, 200))
+        # dc_srcfreq.layout(offset=(x_srcfreq, y0), label_offset=(0,100),
+        #                   slider_offset = (80, 0, 14, 200))
+        spin_rate.layout((x_rate,y0))
+        spin_rate.create_nudgetools(canvas,(x_rate+13,y0+30),
+                                    deltas=(10,1,0.1,0.01),
+                                    constant=1,
+                                    fill='#131313',
+                                    outline='#a5a08a')
+        #spin_srcfreq.layout((x_srcfreq,y0))
+        spin_srcfreq.layout((x_srcfreq,y0))
+        spin_srcfreq.create_nudgetools(canvas,(x_srcfreq+13,y0+30),
+                                       deltas=(10,1,0.1,0.01),
+                                       constant=1,
+                                       fill='#131313',
+                                       outline='#a5a08a')
         s_src.widget().place(x=x_src, y=y0, height=200)
         s_lag.widget().place(x=x_lag, y=y0, height=200)
         sx_delay.layout(offset=(x_delay, y0), height=200, checkbutton_offset=None)

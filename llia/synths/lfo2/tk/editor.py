@@ -4,7 +4,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.decade_control import DecadeControl
+from llia.gui.tk.freq_spinner import FrequencySpinnerControl
 from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 from llia.synths.lfo2.lfo2_data import RATIOS
 
@@ -40,31 +40,27 @@ class TkLfo2Panel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        TkSubEditor.__init__(self, frame, editor, self.NAME)
+        canvas = factory.canvas(frame,1000,600,self.IMAGE_FILE)
+        canvas.pack()
+        TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        lab_panel = factory.image_label(frame, self.IMAGE_FILE)
-        lab_panel.pack(anchor="nw", expand=False)
-
-        dc_clk_freq = DecadeControl(frame, "clkFreq", editor,
-                                    coarse = (0.01, 10),
-                                    limit = (0.01, 100))
-        s_clk_pw = cf.normalized_slider(frame, "clkPw", editor)
-        s_saw_ratio = cf.discrete_slider(frame, "sawRatio", editor,
+        spin_freq = FrequencySpinnerControl(canvas,"clkFreq",editor,
+                                           from_=0,to=1000)
+        s_clk_pw = cf.normalized_slider(canvas, "clkPw", editor)
+        s_saw_ratio = cf.discrete_slider(canvas, "sawRatio", editor,
                                          values = RATIOS)
-        s_saw_slew = cf.normalized_slider(frame, "sawSlew", editor)
-        s_saw_amp = cf.linear_slider(frame, "sawAmp", editor, range_=(0,4))
-        s_saw_bleed = cf.normalized_slider(frame, "sawBleed", editor)
-        s_saw_bias = cf.linear_slider(frame, "sawBias", editor, range_=(-4,4))
-
-        s_pulse_ratio = cf.discrete_slider(frame, "pulseRatio", editor,
+        s_saw_slew = cf.normalized_slider(canvas, "sawSlew", editor)
+        s_saw_amp = cf.linear_slider(canvas, "sawAmp", editor, range_=(0,4))
+        s_saw_bleed = cf.normalized_slider(canvas, "sawBleed", editor)
+        s_saw_bias = cf.linear_slider(canvas, "sawBias", editor, range_=(-4,4))
+        s_pulse_ratio = cf.discrete_slider(canvas, "pulseRatio", editor,
                                            values = RATIOS)
-        s_pulse_width = cf.normalized_slider(frame, "pulseWidth", editor)
-        s_pulse_amp = cf.linear_slider(frame, "pulseAmp", editor, range_=(0,4))
-        s_pulse_bleed = cf.normalized_slider(frame, "pulseBleed", editor)
-        s_pulse_bias = cf.linear_slider(frame, "pulseBias", editor, range_=(-4,4))
-        s_lag = cf.normalized_slider(frame, "lag", editor)
-        
-        self.add_control("clkFreq", dc_clk_freq)
+        s_pulse_width = cf.normalized_slider(canvas, "pulseWidth", editor)
+        s_pulse_amp = cf.linear_slider(canvas, "pulseAmp", editor, range_=(0,4))
+        s_pulse_bleed = cf.normalized_slider(canvas, "pulseBleed", editor)
+        s_pulse_bias = cf.linear_slider(canvas, "pulseBias", editor, range_=(-4,4))
+        s_lag = cf.normalized_slider(canvas, "lag", editor)
+        self.add_control("clkFreq", spin_freq)
         self.add_control("clkPw", s_clk_pw)
         self.add_control("sawRatio", s_saw_ratio)
         self.add_control("sawSlew", s_saw_slew)
@@ -77,29 +73,29 @@ class TkLfo2Panel(TkSubEditor):
         self.add_control("pulseBleed", s_pulse_amp)
         self.add_control("pulseBias", s_pulse_bias)
         self.add_control("lag", s_lag)
-
-        
         y0 = 90
         x0 = 90
         x1 = x0 + 120
-
         xsaw = x1 + 90
         x2 = xsaw
         x3 = x2 + 60
         x4 = x3 + 60
         x5 = x4 + 60
         x6 = x5 + 60
-        
         xpulse = x6 + 75
         x7 = xpulse
         x8 = x7 + 60
         x9 = x8 + 60
         x10 = x9 + 60
         x11 = x10 + 60
-
         xlag = x11 + 75
-        
-        dc_clk_freq.layout(offset=(x0,y0), slider_offset=(80, 0, 14, 200))
+        spin_freq.layout((x0,y0))
+        spin_freq.create_nudgetools(canvas,
+                                    (x0+13,y0+30),
+                                    deltas = (10,0.1,0.01),
+                                    constant =1,
+                                    fill='#131313',
+                                    outline='#a5a08a')
         s_clk_pw.widget().place(x=x1, y=y0, height=200)
         s_saw_ratio.widget().place(x=x2, y=y0, height=200)
         s_saw_slew.widget().place(x=x3, y=y0, height=200)
