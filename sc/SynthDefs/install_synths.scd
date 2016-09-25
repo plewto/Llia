@@ -20,6 +20,7 @@
 	"rdrum.scd",
 	"saw3.scd",
 	"snh.scd",
+	"rumklang.scd",
 	"testtones.scd",
 	"tremolo.scd",
 	"xover.scd"];
