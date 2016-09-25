@@ -38,9 +38,12 @@ specs["help"] = "Mixer"
 specs["pallet"] = mixer_pallet
 
 
-specs["audio-output-buses"] = [["outbusA","out_0"],
-                               ["outbusB","out_1"]]
-specs["audio-input-buses"] = [["inbus1", "in_0"],
-                              ["inbus2", "in_1"],
-                              ["inbus3", "in_2"],
-                              ["inbus4", "in_3"]]
+specs["audio-output-buses"] = [["outbus1","out_0"],
+                               ["outbus2","out_1"]]
+
+specs["audio-input-buses"] = [["inbusA", "in_0"],
+                              ["inbusB", "in_1"],
+                              ["inbusC", "in_2"],
+                              ["inbusD", "in_3"]]
+
+specs["control-input-buses"] = [["xbus","null_sink"]]

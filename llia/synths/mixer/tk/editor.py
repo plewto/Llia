@@ -4,6 +4,7 @@
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
+from llia.gui.tk.msb import MSB
 
 def create_editor(parent):
     TkMixerPanel(parent)
@@ -17,68 +18,63 @@ class TkMixerPanel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        TkSubEditor.__init__(self, frame, editor, self.NAME)
+        canvas = factory.canvas(frame, 811,700,self.IMAGE_FILE)
+        canvas.pack()
+        TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        lab_panel = factory.image_label(frame, self.IMAGE_FILE)
-        lab_panel.pack(anchor="nw", expand=False)
+        #lab_panel = factory.image_label(canvas, self.IMAGE_FILE)
+        #lab_panel.pack(anchor="nw", expand=False)
 
         y0 = 60
-        ypan = y0 + 260
-        yrev = ypan + 120
+        ypan = y0 + 350
+        ymod = ypan
+        ymute = ymod + 150
         x0 = 120
-
+        xmain = x0+500
+        
         def fader(chan, x):
             param = "gain%s" % chan
-            s = cf.volume_slider(frame, param, editor)
+            s = cf.volume_slider(canvas, param, editor)
             self.add_control(param,s)
-            s.widget().place(x=x, y=y0, height=200)
+            s.widget().place(x=x, y=y0, height=300)
 
         def panner(chan, x):
             param = "pan%s" % chan
-            s = cf.bipolar_slider(frame,param,editor)
+            s = cf.bipolar_slider(canvas,param,editor)
             self.add_control(param,s)
-            s.widget().place(x=x, y=ypan, height=75)
+            s.widget().place(x=x, y=ypan, height=100)
 
-        def reverb_send(chan, x):
-            param = "reverb%s" % chan
-            s = cf.normalized_slider(frame, param, editor)
+        def mod_depth(chan, x):
+            param = "mod%s" % chan
+            s = cf.normalized_slider(canvas, param, editor)
             self.add_control(param, s)
-            s.widget().place(x=x, y=yrev-19, height=75)
+            s.widget().place(x=x, y=ymod, height=100)
 
-        for i in range(4):
-            chan = "%s" % (i+1,)
-            x = x0 + i * 60
-            fader(chan, x)
-            panner(chan, x)
-            reverb_send(chan, x)
+        for i,prefix in enumerate("ABCD"):
+            chan = "%s" % prefix
+            x = x0 + i * 120
+            x_pan = x
+            x_mod = x+60
+            fader(chan, x+30)
+            panner(chan, x_pan)
+            mod_depth(chan, x_mod)
+            aoff = {'fill' : 'black',
+                    'foreground' : 'gray',
+                    'outline' : 'gray',
+                    'text' : 'Mute'}
+            aon = {'fill' : '#002e00',
+                   'foreground' : 'white',
+                   'outline' : '#096c00',
+                   'text' : 'Mute'}
+            msb_mute = MSB(canvas,"mute%s"%prefix,editor,2)
+            self.add_control("mute%s"%prefix,msb_mute)
+            msb_mute.define_aspect(0,0,aoff)
+            msb_mute.define_aspect(1,1,aon)
+            msb_mute.layout((x+7,ymute))
+            msb_mute.update_aspect()
 
-        x_reverb = x0 + 300
 
-        s_reverb_size = cf.normalized_slider(frame, "reverbRoomSize", editor)
-        s_reverb_damp = cf.normalized_slider(frame, "reverbDamp", editor)
-        s_reverb_lowpass = cf.third_octave_slider(frame, "reverbLowpass", editor)
-        s_reverb_highpass = cf.third_octave_slider(frame, "reverbHighpass", editor)
-        s_reverb_balance = cf.bipolar_slider(frame, "reverbBalance", editor)
-        s_reverb_return = cf.volume_slider(frame, "reverbReturn", editor)
-
-        self.add_control("reverbRoomSize", s_reverb_size)
-        self.add_control("reverbDamp", s_reverb_damp)
-        self.add_control("reverbLowpass", s_reverb_lowpass)
-        self.add_control("reverbHighpass", s_reverb_highpass)
-        self.add_control("reverbReturn", s_reverb_return)
-        self.add_control("reverbBalance", s_reverb_balance)
-
-        s_reverb_size.widget().place(x=x_reverb, y=ypan, height=175)
-        s_reverb_damp.widget().place(x=x_reverb+60, y=ypan, height=175)
-        s_reverb_lowpass.widget().place(x=x_reverb+120, y=ypan, height=175)
-        s_reverb_highpass.widget().place(x=x_reverb+180, y=ypan, height=175)
-        s_reverb_balance.widget().place(x=x_reverb+240, y=ypan, height=175)
-        s_reverb_return.widget().place(x=x_reverb+300, y=ypan, height=175)
-
-        x_main = x_reverb
-        s_main1 = cf.volume_slider(frame,"mainAmpA", editor)
-        s_main2 = cf.volume_slider(frame,"mainAmpB", editor)
-        self.add_control("mainAmpA", s_main1)
-        self.add_control("mainAmpB", s_main2)
-        s_main1.widget().place(x=x_main, y=y0, height=200)
-        s_main2.widget().place(x=x_main+60, y=y0, height=200)
+        for i in range(2):
+            x = xmain + i*60
+            fader(str(i+1), x)
+            
