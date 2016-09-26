@@ -29,7 +29,7 @@ class TkPulseGenPanel(TkSubEditor):
         x0 = 90
         x1 = x0+200
         spin_freq = FrequencySpinnerControl(canvas,"clockFreq",editor,
-                                            from_=0,to=100)
+                                            from_=0,to=32)
         self.add_control("clockFreq",spin_freq)
         spin_freq.layout((x0,y0+100))
         spin_freq.create_nudgetools(canvas,(x0+13,y0+130),

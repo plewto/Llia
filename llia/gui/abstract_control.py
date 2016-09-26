@@ -42,7 +42,9 @@ class AbstractControl(object):
         self.value_to_aspect_transform = identity
         self._current_aspect = None
         self._current_value = None
+        self.range_ = [-1e6,1e6]   # [min max]
 
+        
     def widget(self, key=None):
         if not key:
             return self._widgets["primary"]
@@ -72,6 +74,8 @@ class AbstractControl(object):
 
     def value(self, new_value=None):
         if new_value is not None:
+            mn,mx = self.range_
+            new_value = float(min(max(new_value,mn),mx))
             self._current_aspect = self.value_to_aspect_transform(new_value)
             self._current_value = new_value
             self.update_aspect()

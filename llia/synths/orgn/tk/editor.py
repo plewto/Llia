@@ -8,7 +8,6 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.freq_spinner import FrequencySpinnerControl
-
 from llia.gui.tk.expslider import ExpSlider
 
 
@@ -86,7 +85,7 @@ class TkOrgnPanel1(TkSubEditor):
         self.add_control(param,s)
         s.widget().place(x=x,y=y,width=width, height=height)
         return s
-
+        
     def linear_slider(self, param, range_, x, y, width=14, height=150):
         s = cf.linear_slider(self.canvas, param, self.editor,
                              range_=range_)
@@ -94,6 +93,7 @@ class TkOrgnPanel1(TkSubEditor):
         s.widget().place(x=x,y=y,width=width, height=height)
         return s
 
+        
     def volume_slider(self, param, x, y):
         s = cf.volume_slider(self.canvas, param, self.editor)
         self.add_control(param, s)
@@ -107,3 +107,4 @@ class TkOrgnPanel1(TkSubEditor):
         s.layout((x,y), width=14, height=150,
                  checkbutton_offset=None)
         return s
+

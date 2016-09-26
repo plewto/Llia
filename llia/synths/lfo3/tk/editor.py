@@ -25,7 +25,7 @@ class TkLfo3Panel(TkSubEditor):
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
         spin_freq = FrequencySpinnerControl(canvas,"lfoFreq",editor,
-                                            from_=0,to=100)
+                                            from_=0,to=32)
         s_scale = cf.linear_slider(canvas, "lfoScale", editor, range_=(0,4))
         s_bias = cf.linear_slider(canvas, "lfoBias", editor, range_=(-4,4))
         s_mod_freq = cf.discrete_slider(canvas, "lfoModFreq", editor, values=HARMONICS)

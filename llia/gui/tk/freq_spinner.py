@@ -33,8 +33,7 @@ class FrequencySpinnerControl(AbstractControl):
     def __init__(self, master, param, editor,
                  from_=0, to=32):
         super(FrequencySpinnerControl, self).__init__(param, editor, master)
-        self.minval = min(from_, to)
-        self.maxval = max(from_, to)
+        self.range_ = [min(from_,to),max(from_,to)]
         self.var_value = tk.StringVar()
         self.spinner = factory.float_spinbox(master, self.var_value,
                                              from_ = from_, to = to,
@@ -77,7 +76,6 @@ class FrequencySpinnerControl(AbstractControl):
     def bump_value(self, n):
         try:
             v = float(self.var_value.get()) + n
-            v = min(max(v,self.minval),self.maxval)
             self.value(v)
             self.callback()
         except TypeError:
@@ -88,7 +86,6 @@ class FrequencySpinnerControl(AbstractControl):
     def scale_value(self, s):
         try:
             v = float(self.var_value.get())
-            v = min(max(v*s,self.minval),self.maxval)
             self.value(v)
             self.callback()
         except TypeError:

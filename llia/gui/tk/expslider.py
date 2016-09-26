@@ -50,7 +50,7 @@ class ExpSlider(AbstractControl):
         self.var_sign = tk.IntVar()
         self.var_aspect.set(0.0)
         self.var_sign.set(0)
-        self.range_ = range_
+        self.range_ = [0,range_]
         ttip = ttip or "%s" % param
         s = factory.scale(master,
                           from_ = 1.0, to=0.0, resolution = 0.005,
@@ -75,7 +75,7 @@ class ExpSlider(AbstractControl):
     def aspect_to_value(self, a):
         mn, mx = self._clip
         n = float(a)**self.degree
-        v = n*self.range_
+        v = n*self.range_[1]
         v = max(min(v, mx), mn)
         if self.qinvert(): v = -1 * v
         return v
@@ -84,7 +84,7 @@ class ExpSlider(AbstractControl):
         mn, mx = self._clip
         v = abs(v)
         v = max(min(v, mx), mn)
-        d = float(v)/self.range_
+        d = float(v)/self.range_[1]
         a = d**self.inv_degree
         return a
     
