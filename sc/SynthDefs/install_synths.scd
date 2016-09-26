@@ -5,6 +5,7 @@
 (
 ~manifesat = [ "asplit.scd",
 	"carnal.scd",
+	"chronos.scd",
 	"flngr.scd",
 	"fm2.scd",
 	"ghostbus.scd",
