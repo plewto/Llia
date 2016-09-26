@@ -1,8 +1,8 @@
 /*
  * A Complex pulse generator.
- * 6 (non-negative) pulse waves with variable frequencies are 
+ * 6 (non-negative) pulse waves with variable frequencies are
  * selectivly sent to one of two control output channels.
- * 
+ *
  * outbusZ   - Output control bus for Z channel
  * outbusY   - Output control bus for Y channel
  * clockFreq - Reference frequency ibn Hertz
@@ -64,7 +64,7 @@
 	var farray = [ratioA, ratioB, ratioC, ratioD, ratioE, ratioF]*clockFreq;
 	var yarray = [yAmpA, yAmpB, yAmpC, yAmpD, yAmpE, yAmpF] * yScale + yBias;
 	var zarray = [zAmpA, zAmpB, zAmpC, zAmpD, zAmpE, zAmpF] * zScale + zBias;
-	var parray = LFPulse.kr(farray, 0, 0.5);
+	var parray = Pulse.kr(farray, 0.5);
 	var ysig = Lag3.kr(Mix.kr(parray * yarray * yScale + yBias), yLag.linlin(0,1,0,0.3));
 	var zsig = Lag3.kr(Mix.kr(parray * zarray * zScale + zBias), zLag.linlin(0,1,0,0.3));
 	Out.kr(outbusY, ysig);
