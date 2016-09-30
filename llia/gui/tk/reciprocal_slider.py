@@ -24,13 +24,14 @@ class ReciprocalSlider(AbstractControl):
                  degree = 2,
                  clip = None):
         super(ReciprocalSlider, self).__init__(param, editor, master)
+        r = (1.0/range_,range_)
         self.degree = degree
         self.inv_degree = 1.0/degree
-        self.range_ = range_
+        self.range_ = r
         if clip:
             self._clip = clip
         else:
-            self._clip = (1.0/range_, range_)
+            self._clip = self.range_
         self.var_aspect = tk.StringVar()
         self.var_sign = tk.IntVar()
         self.var_invert = tk.IntVar()
@@ -66,7 +67,7 @@ class ReciprocalSlider(AbstractControl):
     def aspect_to_value(self, a):
         a = float(a)
         a = a**self.degree
-        v = a*(self.range_-1) + 1
+        v = a*(self.range_[1]-1) + 1
         if self.q_sign(): v = -1*v
         if self.q_invert(): v = 1.0/v
         return v
@@ -74,7 +75,7 @@ class ReciprocalSlider(AbstractControl):
     def value_to_aspect(self, v):
         v = abs(v)
         if v < 1: v = 1.0/v
-        r = 1.0/(self.range_-1)
+        r = 1.0/(self.range_[1]-1)
         a = v*r-r
         a = a**self.inv_degree
         return a
