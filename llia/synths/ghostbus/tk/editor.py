@@ -5,10 +5,6 @@ import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.msb import MSB
 from llia.synths.ghostbus.ghost_data import MAX_DELAY
-#from llia.gui.tk.expslider import ExpSlider
-#from llia.gui.tk.decade_control import DecadeControl
-#from llia.gui.tk.reciprocal_slider import ReciprocalSlider
-
 
 def create_editor(parent):
     TkGhostbusPanel(parent)

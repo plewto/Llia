@@ -5,7 +5,6 @@ import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
 from llia.gui.tk.freq_spinner import FrequencySpinnerControl
-from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 from llia.gui.tk.msb import ToggleButton
 
 
