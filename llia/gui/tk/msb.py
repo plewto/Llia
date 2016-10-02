@@ -149,6 +149,16 @@ class MSB(object):
         self.canvas.tag_bind(self._text, '<Button-1>', self.next_state)
         self.canvas.tag_bind(self._text, '<Button-3>', self.previous_state)
         self.client_callback = null_callback
+
+    def tag_bind(self, binding, callback, add='+'):
+        self.canvas.tag_bind(self._pad, binding, callback, add)
+        self.canvas.tag_bind(self._outline, binding, callback, add)
+        self.canvas.tag_bind(self._text, binding, callback, add)
+
+    def tag_unbind(self, binding):
+        self.canvas.tag_unbind(self._pad, binding)
+        self.canvas.tag_unbind(self._outline, binding)
+        self.canvas.tag_unbind(self._text, binding)
         
     def __len__(self):
         '''Returns number of possible aspects.'''
@@ -182,7 +192,6 @@ class MSB(object):
        The 'active' colors are used to highlight the button when the mouse
        enters it.
         '''
-       
         a = self._aspects[n]
         self._current_aspect = n
         ck = self._common.keys()
@@ -399,34 +408,80 @@ class MSB(object):
         c.coords(self._text, xtxt, ytxt)
         c.coords(self._image, ximg, yimg)
 
+    @staticmethod
+    def digit_msb(canvas,param,editor,digits=range(10),scale=1.0,
+                  font=('Times',10),
+                  outline_width = 1,
+                  fill = 'black',
+                  foreground = 'white',
+                  outline = 'white',
+                  active_fill = 'black',
+                  active_foreground = 'yellow',
+                  active_outline = 'yellow'):
+        '''
+        Creates MSB with n digital states.
+        
+        ARGS:
+            canvas - An instance fo Tk Canvas
+            param  - String, synth paremter
+            editor - TkApplicationWindow or None
+            digits - List of states
+            scale  - Float, scaling factor applied to values in digits
+            font   - Tuple, Tk font specification
+            outline_width - int, 
+            fill          - String, Tk color
+            foreground    - String, Tk color
+            outline       - String, Tk color
+            active_fill   - String, Tk color
+            active_foreground - String, Tk color
+            active_outline    - String, Tk color
 
+        RETURNS: MSB
+        '''
+        naspects = len(digits)
+        adict = {"font" : font,
+                 "outline-width" : outline_width,
+                 "fill" : fill,
+                 "outline" : outline,
+                 "active-fill" : active_fill,
+                 "active-foreground" : active_foreground,
+                 "active-outline" : active_outline}
+        msb = MSB(canvas,param,editor,naspects)
+        for i,d in enumerate(digits):
+            value = d*scale
+            adict['text'] = str(d)
+            msb.define_aspect(i,value,adict)
+        return msb
+        
 
 class ToggleButton(MSB):
 
     # Special case 2-state button
     
-    def __init__(self, canvas, param, editor, text=["Off", "On"], values=[0,1]):
+    def __init__(self, canvas, param, editor, text=["Off", "On"], values=[0,1],
+                 fill = 'black',foreground='white', outline='white',
+                 active_color = 'yellow', font=('Times', 12),
+                 selected_fill = 'white', selected_foreground = 'black'):
         super(ToggleButton, self).__init__(canvas, param, editor, 2)
         aspect0 = MsbAspect(self._common)
         aspect0['text'] = text[0]
-        aspect0['fill'] = 'black'
-        aspect0['foreground'] = '#808080'
-        aspect0['outline'] = '#808080'
-        aspect0['active-outline'] = 'yellow'
-        aspect0['active-foreground'] = 'yellow'
-        self.define_aspect(0, values[0], aspect0)              
+        aspect0['fill'] = fill
+        aspect0['foreground'] = foreground
+        aspect0['outline'] = outline
+        aspect0['active-outline'] = active_color
+        aspect0['active-foreground'] = active_color
+        aspect0['font'] = font
+        self.define_aspect(0, values[0], aspect0)
         aspect1 = MsbAspect(self._common)
         aspect1['text'] = text[1]
-        aspect1['fill'] = '#808080'
-        aspect1['foreground'] = 'black'
-        aspect1['outline'] = 'blue'
-        aspect1['active-outline'] = 'yellow'
-        aspect1['active-foreground'] = 'yellow'
-        
+        aspect1['fill'] = selected_fill
+        aspect1['foreground'] = selected_foreground
+        aspect1['outline'] = outline
+        aspect1['active-outline'] = active_color
+        aspect1['active-foreground'] = active_color
+        aspect1['font'] = font
         self.define_aspect(1, values[1], aspect1)
         
-    
-
         
 @is_synth_control.when_type(MSB)
 def _is_synth_control(obj):
