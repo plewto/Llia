@@ -10,40 +10,36 @@ from llia.performance_edit import performance
 MAX_DELAY = 2
 
 prototype = {
-	"d1InMixDry1" : 1.0,    # dry 1 -> delay 1 mix
-	"d1InMixDry2" : 0.0,    # dry 2 -> delay 1 mix
-	"d1Feedback" : 0.0,     # delay 1 feedback
-	"d1XFeedback" : 0.0,    # delay 1 cross feedback from delay 2
-	"d1DelayTime" : 0.1,    # delay 1 delay time
-	"d1Lowpass" : 20000,    # delay 1 lowpass cutoff, Hz
-	"d1Highpass" : 20,      # delay 1 highpass cutoff, Hz
-	"d1LfoFreq" : 1,        # delay 1 LFO freq, Hz
-	"d1InternalMod" : 0,    # LFO -> delay 1 time
-	"d1ExternalMod" : 0,    # external -> delay 1 time
-	"d1Gatted" : 0,         # delay 1 gate mode, 0=disabled, 1=enabled
-	"d1WetAmp" : 1.0,       # delay 1 output mix
-	"d1Pan" : 0.75,         # delay 1 pan 
-	"d2InMixDry1" : 0.0,
-	"d2InMixDry2" : 1.0,
-	"d2Feedback" : 0.0,
-	"d2XFeedback" : 0.0,
-	"d2DelayTime" : 1,
-	"d2Lowpass" : 20000,
-	"d2Highpass" : 20,
-	"d2LfoFreq" : 1,
-	"d2LfoPhase" : 0,
-	"d2InternalMod" : 0,
-	"d2ExternalMod" : 0,
-	"d2Gatted" : 0,
-	"d2WetAmp" : 1.0,
-	"d2Pan" : -0.75,
-	"dry1Amp" : 1.0,        # dry 1 -> output mix
-	"dry1Pan" : 0.0,        # dry 1 -> output pan
-	"dry2Amp" : 1.0,
-	"dry2Pan" : 0.0,
-	"xScale" : 1.0,         # external control signal scale
-	"xBias" : 0.0           # external control signal bias
-    }
+    "lfoCommonFreq" : 1.0,      # tumbler 0..16
+    "d1Dry1In" : 1.0,           # vol slider
+    "d1Dry2In" : 0.0,           # vol slider
+    "d1DelayTime" : 0.1,        # tumbler 0..2000 ms
+    "d1LfoRatio" : 1.0,         # MSB
+    "d1LfoModDepth" : 0.0,      # norm slider  (exp slider ?)
+    "d1ExternalModDepth" : 0.0, # norm slider
+    "d1Feedback" : 0.0,         # bipolar slider
+    "d1Lowpass" : 20000,        # 3rd octave
+    "d1Highpass" : 40,          # 3rd octave
+    "d2Dry1In" : 0.0,           # vol slider
+    "d2Dry2In" : 1.0,           # vol slider
+    "d2Delay1In" : 0.0,         # vol slider
+    "d2DelayTime" : 0.2,        # tumbler
+    "d2LfoRatio" : 1.0,         # MSB
+    "d2LfoModDepth" : 0.0,      # norm slider
+    "d2ExternalModDepth" : 0.0, # norm slider
+    "d2Feedback" : 0.0,         # bipolar
+    "d2Lowpass" : 20000,        # 3rd octave
+    "d2Highpass" : 40,          # 3rd octave
+    "dry1Amp" : 1.0,            # vol slider
+    "dry2Amp" : 1.0,            # vol slider
+    "d1Amp" : 1.0,              # vol slider
+    "d2Amp" : 1.0,              # vol slider
+    "dry1Pan" : 0.0,            # bipolar
+    "dry2Pan" : 0.0,            # bipolar
+    "d1Pan" : 0.0,              # bipolar
+    "d2Pan" : 0.0}              # bipolar
+    
+    
 
 
 class Chronos(Program):
@@ -55,42 +51,32 @@ class Chronos(Program):
 program_bank = ProgramBank(Chronos("Init"))
 program_bank.enable_undo = False
 
-def chronos(slot, name,
-            delay1 = {"in1" : 0,             # db
-                      "in2" : -99,           # db
-                      "feedback" : 0.0,
-                      "xfeedback" : 0.0,
-                      "delay" : 0.1,         # seconds
-                      "lowpass" : 20000,     # Hz
-                      "highpass" : 20,       # Hz
-                      "lfoFreq"  : 1,        # Hz
-                      "internal" : 0.0,      # LFO -> mod depth
-                      "external" : 0.0,      # X -> mod depth
-                      "amp" : 0.0,           # output mix, db
-                      "pan" : -0.75},
-            delay2 = {"in1" : 0,             # db
-                      "in2" : -99,           # db
-                      "feedback" : 0.0,
-                      "xfeedback" : 0.0,
-                      "delay" : 0.1,         # seconds
-                      "lowpass" : 20000,     # Hz
-                      "highpass" : 20,       # Hz
-                      "lfoFreq"  : 1,        # Hz
-                      "lfoPhase" : 0.25,     # phase (0..1)
-                      "internal" : 0.0,      # LFO -> mod depth
-                      "external" : 0.0,      # X -> mod depth
-                      "amp" : 0.0,           # output mix, db
-                      "pan" : -0.75},
-            dry1_amp = 0,                    # db
-            dry1_pan = 0.0,
-            dry2_amp = 0,
-            dry2_pan = 0.0,
-            xscale = 1.0,
-            xbias = 0.0):
+def chronos(slot, name, **pmap):
     p = Chronos(name)
-
-
+    for param,dflt in prototype.items():
+        try:
+            value = pmap[param]
+        except KeyError:
+            value = dflt
+        p[param] = float(value)
     program_bank[slot] = p
     return p
 
-chronos(0,"Test")
+def pp(program, slot=127):
+    pad = ' '*8
+    acc = 'chronos(%d,"%s",\n' % (slot, program.name)
+    params = sorted(prototype.keys())
+    for p in params:
+        v = program[p]
+        acc += '%s%s = %s' % (pad,p,v)
+        if p != params[-1]:
+            acc += ',\n'
+        else:
+            acc += ')\n'
+    return acc
+
+
+chronos(0,"Bypass", d1Amp=0,d2Amp=0,dry1Amp=1,dry2Amp=1,
+        dry1Pan=0.0, dry2Pan=0.0,
+        d1Feedback=0, d2Feedback=0)
+
