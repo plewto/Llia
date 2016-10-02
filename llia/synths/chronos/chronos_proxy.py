@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
-from llia.synths.chronos.chronos_data import program_bank, pp# , random_program
+from llia.synths.chronos.chronos_data import program_bank, pp
 from llia.synths.chronos.chronos_random import random_program
 
 specs = SynthSpecs("Chronos")

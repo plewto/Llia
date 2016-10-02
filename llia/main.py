@@ -247,6 +247,7 @@ import_effect("Panner", "llia.synths.panner.panner_proxy", "llia/synths/panner/p
 import_effect("ASplit", "llia.synths.asplit.asplit_proxy", "llia/synths/asplit/asplit_proxy.py")
 import_effect("Rumklang", "llia.synths.rumklang.rumklang_proxy", "llia/synths/rumklang/rumklang_proxy.py")
 import_effect("Chronos", "llia.synths.chronos.chronos_proxy", "llia/synths/chronos/chronos_proxy.py")
+import_effect("PitchShifter", "llia.synths.pitchshifter.pitchshifter_proxy","llia/synths/pitchshifter/pitchshifter_proxy.py")
 print()
 
 import_controller("LFO1", "llia.synths.lfo1.lfo1_proxy", "llia/synths/lfo1/lfo1_proxy.py")

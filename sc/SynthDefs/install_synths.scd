@@ -17,6 +17,7 @@
 	"mixer.scd",
 	"orgn.scd",
 	"panner.scd",
+	"pitchshifter.scd",
 	"pulsegen.scd",
 	"rdrum.scd",
 	"saw3.scd",
