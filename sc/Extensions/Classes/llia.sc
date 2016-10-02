@@ -53,7 +53,7 @@ LliaHandler : Object {
 		lliaHost = NetAddr.new(ip, port);
 		oscID = oscid.asString;
 		serverOptions = ServerOptions.new;
-		synths = Dictionary.new(8);
+		synths = Dictionary.new(16);
 		audioBuses = LliaBuses.new(\audio);
 		controlBuses = LliaBuses.new(\control);
 		buffers = LliaBuffers.new;
@@ -67,6 +67,7 @@ LliaHandler : Object {
 		controlBuses.freeAll;
 		buffers.freeAll;
 		synths.values.do({|sy| sy.free});
+		synths = Dictionary.new(16);
 	}
 
 	restart {
@@ -74,6 +75,7 @@ LliaHandler : Object {
 		controlBuses.restart;
 		buffers.restart;
 		synths.values.do({|sy| sy.free});
+		synths = Dictionary.new(16);
 		postf("*** Llia restarted ***\n");
 	}
 

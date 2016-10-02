@@ -27,7 +27,7 @@ Effected files: llia.sc, proxy.py, parser.py
 Lliscript command id-this breaks communication between host and server
 Temporary fix: Disabled command
 
----------------------------------------------------------------------- OPEN 0002
+---------------------------------------------------------------------- CLOSED
 BUG 0002 2016.05.10
 Effected files: llia.sc, lliabuses.sc
 
@@ -128,14 +128,17 @@ numbers.  The fix was to reintroduce separate serial numbers for synthhelper.
 This new series of numbers keeps track of the relative creation times of all
 synths and groups.
 
----------------------------------------------------------------------- OPEN 0010
+---------------------------------------------------------------------- CLOSED
 BUG 0010 2016.09.18
+CLOSED 2016.10.02
 
 LliaHandler.restart does not free synths
+FIX:
+Added code to reinitialize synths dictionary in LliaHandler.
 
-
----------------------------------------------------------------------- OPEN 0011
+---------------------------------------------------------------------- OPEN 0011 *priority
 BUG 0011 2016.09.21
+
 
 There are two parts:
 
