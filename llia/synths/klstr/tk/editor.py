@@ -6,7 +6,6 @@ import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.tk_subeditor import TkSubEditor
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.reciprocal_slider import ReciprocalSlider
 from llia.synths.klstr.klstr_data import LFO_RATIOS
 
 
