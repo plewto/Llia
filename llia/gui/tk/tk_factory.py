@@ -39,8 +39,8 @@ def fg():
     return pallet("fg")
 
 
-_image_cachet = []
-
+# _image_cachet = []
+_image_cachet = {}
 
 def _init_theme():
     global _style
@@ -82,15 +82,30 @@ def tooltip(widget, text):
 #  ---------------------------------------------------------------------- 
 #                              Canvas and Image
 
+# def image(fname):
+#     try:
+#         img = Image.open(fname)
+#         photo = ImageTk.PhotoImage(img)
+#         _image_cachet.append(photo)
+#         return photo
+#     except IOError as err:
+#         msg = "Can not open image file '%s'" % fname
+#         raise IOError(msg)
+
 def image(fname):
     try:
-        img = Image.open(fname)
-        photo = ImageTk.PhotoImage(img)
-        _image_cachet.append(photo)
+        photo = _image_cachet[fname]
         return photo
-    except IOError as err:
-        msg = "Can not open image file '%s'" % fname
-        raise IOError(msg)
+    except KeyError:
+        try:
+            img = Image.open(fname)
+            photo = ImageTk.PhotoImage(img)
+            _image_cachet[fname] = photo
+            return photo
+        except IOError as err:
+            msg = "Can not open image file '%s'" % fname
+            raise IOError(msg)
+
 
 # Creates Canvas with optional background image
 #
@@ -146,9 +161,10 @@ def image_label(master, fname, alt=None):
     alt = alt or fname
     w = label(master, "")
     try:
-        img = Image.open(fname)
-        photo = ImageTk.PhotoImage(img)
-        _image_cachet.append(photo)
+        # img = Image.open(fname)
+        # photo = ImageTk.PhotoImage(img)
+        # _image_cachet.append(photo)
+        photo = image(fname)
         w.config(image=photo)
     except IOError as err:
         w.config(text=alt)
@@ -212,9 +228,10 @@ def logo_button(master, name, fname=None, command=None, ttip=""):
     if not fname:
         fname = os.path.join("resources", name, "logo.png")
     try:
-        img = Image.open(fname)
-        photo = ImageTk.PhotoImage(img)
-        _image_cachet.append(photo)
+        # img = Image.open(fname)
+        # photo = ImageTk.PhotoImage(img)
+        # _image_cachet.append(photo)
+        photo = image(fname)
         b = Button(master, text = name, image=photo)
         b.config(compound="top")
         tooltip(b, ttip)
