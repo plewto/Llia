@@ -153,10 +153,6 @@ def padding_label(master, n=4, modal=True):
     w = label(master, "", modal=modal)
     return w
 
-
-    
-
-
 def image_label(master, fname, alt=None):
     alt = alt or fname
     w = label(master, "")

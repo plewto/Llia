@@ -316,7 +316,10 @@ class SynthHelper(object):
                 return
             else:
                 from llia.gui.tk.tk_synthwindow import TkSynthWindow
+                import llia.gui.tk.tk_factory as factory
                 mw = self.parser.app.main_window()
+                icon_filename = "resources/%s/logo_32.png" % sy.specs["format"]
+                icon = factory.image(icon_filename)
                 group_index = len(mw.group_windows)-1
                 notebook = mw.group_windows[-1].notebook
                 swin = TkSynthWindow(notebook, sy)
@@ -324,7 +327,7 @@ class SynthHelper(object):
                 sy.synth_editor = swin
                 mw[sy.sid] = swin
                 sy.create_subeditors()
-                notebook.add(swin, text=sy.sid)
+                notebook.add(swin, text=sy.sid, image=icon, compound="top")
 
     # Destroy editor for indicated synth
     # NOTES:

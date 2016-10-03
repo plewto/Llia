@@ -181,7 +181,6 @@ class TkAddSynthDialog(Toplevel):
             km = self.var_keymode.get()
             vc = int(self.var_voice_count.get())
             sy = shelper.add_synth(self.stype, km, vc)
-
         if sy:
             for param,combo in self._combo_audio_in.items():
                 busname = combo.get()
@@ -201,7 +200,9 @@ class TkAddSynthDialog(Toplevel):
             group = mw.group_windows[-1]
             swin = TkSynthWindow(group.notebook, sy)
             grp_index = len(mw.group_windows)-1
-            group.notebook.add(swin, text=sy.sid)
+            icon_filename = "resources/%s/logo_32.png" % sy.specs["format"]
+            icon = factory.image(icon_filename)
+            group.notebook.add(swin, text=sy.sid, image=icon, compound="top")
             group.deiconify()
             mw[sy.sid] = swin
             factory.set_pallet(sy.specs["pallet"])
