@@ -33,6 +33,7 @@ class Token(dict):
         self.client = client
         self.selected = False
         self._drag_data = [0,0]
+        self._construction_points = {}
 
     # Token drag and drop
     def pickup_token(self, event):
@@ -50,6 +51,7 @@ class Token(dict):
         self._drag_data[0] = x
         self._drag_data[1] = y
         self.canvas.move(self.client_id(), dx,dy)
+        self._create_construction_points(x,y)
         self.canvas.delete("path")  # Hide paths while moving token
         # This s ugly:
         # There are two types of drag-n-drop operations
@@ -73,7 +75,7 @@ class Token(dict):
    
     @abc.abstractmethod
     def is_efx(self):
-        # True if self is an efx synth,efx includes controler synths.
+        # True if self is an efx synth,efx includes controller synths.
         return False
 
     @abc.abstractmethod
@@ -104,6 +106,10 @@ class Token(dict):
     def dehighlight(self, *_):
         pass
 
+    @abc.abstractmethod
+    def move_to(self, x, y):
+        pass
+    
     @abc.abstractmethod
     def info_text(self):
         return self.client_id()

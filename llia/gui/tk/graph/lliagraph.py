@@ -36,19 +36,14 @@ class LliaGraph(Frame):
         self.canvas = canvas
         info_canvas = InfoCanvas(self)
         self.info_canvas = info_canvas
-        #toolbar = factory.frame(self)
         info_canvas.grid(row=0,column=0,rowspan=1,columnspan=1, sticky='wns')
         canvas.grid(row=0,column=1,rowspan=1,columnspan=1, sticky='nsew')
-        #toolbar.grid(row=1,column=0, rowspan=1,columnspan=2, sticky='ew')
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=0)
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=1)
         # toolbar buttons
         def tbutton(col, text, command=None):
-            # b = factory.button(toolbar, text, command=command)
-            # b.grid(row=0, column=col, sticky='ew')
-            # return b
             bwidth=75
             b = factory.button(self.canvas, text,command=command)
             y0 = 15
@@ -59,6 +54,7 @@ class LliaGraph(Frame):
         tbutton(0, 'sync', self.sync)
         tbutton(1, '+Audio', self.add_audio_bus)
         tbutton(2, "+Control", self.add_control_bus)
+        tbutton(3, "Allign", self.allign_tokens)
         self.synth_tokens = {}  # map [sid] -> SynthToken
         self.audio_bus_tokens = {}    # map [bus-name] -> BusToken
         self.control_bus_tokens = {}
@@ -99,6 +95,84 @@ class LliaGraph(Frame):
             LliaGraph.control_bus_counter += 1
         self.sync()
 
+    def _allign_audio_buses(self):
+        acc, bcc, ccc = [],[],[]
+        for token in self.audio_bus_tokens.values():
+            if token.is_protected():
+                cid = token.client_id()
+                if cid.startswith('in_'):
+                    acc.append(token)
+                elif cid.startswith('out_'):
+                    bcc.append(token)
+            else:
+                ccc.append(token)
+        acc.sort(key = lambda x: x.client_id())
+        bcc.sort(key = lambda x: x.client_id())
+        ccc.sort(key = lambda x: x.client_id())
+        # Input buses
+        x0,y0 = 30, 60
+        dx,dy = 0, 30
+        for i, token in enumerate(acc):
+            y = y0 + i*dy
+            token.move_to(x0, y)
+        # Output buses
+        x0,y0 = 1000,60
+        for i, token in enumerate(bcc):
+            y = y0 + i*dy
+            token.move_to(x0, y)
+        # General auio buses
+        x0,y0 = 120,350
+        dx = 120
+        for i,token in enumerate(ccc):
+            x = x0 + i*dx
+            token.move_to(x,y0)
+
+    def _allign_control_buses(self):
+        acc = self.control_bus_tokens.values()
+        acc.sort(key=lambda x: x.client_id())
+        x0, y0 = 180, 450
+        dx = 120
+        for i,token in enumerate(acc):
+            x = x0 + i * dx
+            token.move_to(x, y0)
+
+    def _allign_synths(self):
+        acc,bcc = [],[]
+        for t in self.synth_tokens.values():
+            if t.is_controller():
+                bcc.append(t)
+            else:
+                acc.append(t)
+        acc.sort(key=lambda x: x.synth_serial_number())
+        bcc.sort(key=lambda x: x.synth_serial_number())
+        for tlst in (acc,bcc):
+            tokens_per_line = 4
+            xdelta = 160            # distance between tokens
+            x0 = xdelta * tokens_per_line + 200
+            x= x0
+            #x,y = x0,100
+            if tlst is acc:
+                y = 100
+            else:
+                y = 400
+            j = 0                   # token line counter
+            for i,token in enumerate(tlst):
+                if j == 0:
+                    x = x0
+                    y += 100
+                    j = tokens_per_line
+                else:
+                    x -= xdelta
+                    j -= 1
+                token.move_to(x,y)
+            
+    def allign_tokens(self):
+        self.canvas.delete('path')
+        self._allign_audio_buses()
+        self._allign_control_buses()
+        self._allign_synths()
+        self.sync()
+        
     def _show_bus_warning(self):
         self.info_canvas.display_warning(BUS_WARNING)
 

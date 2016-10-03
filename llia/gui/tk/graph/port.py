@@ -2,6 +2,7 @@
 
 import abc
 from llia.gui.tk.graph.gconfig import gconfig
+from llia.thirdparty.simplegeneric import generic
 
 class Port(dict):
 
@@ -285,3 +286,11 @@ class ControlSink(Port):
                 for prt in sytkn.control_output_ports.values():
                     acc.append((sytkn, prt[1]))
         return acc
+
+@generic
+def is_port(obj):
+    return False
+
+@is_port.when_type(Port)
+def _is_port(obj):
+    return True
