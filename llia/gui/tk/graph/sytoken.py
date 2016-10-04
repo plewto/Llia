@@ -17,6 +17,7 @@ class SynthToken(Token):
         self.audio_output_ports = {}   # (param, Port, (x, y)).
         self.control_input_ports = {}  # Where x and y are relative to
         self.control_output_ports = {} # x0,y0.
+        self._position = [-1,-1]
 
     def client_id(self):
         return self.client.sid
@@ -35,6 +36,7 @@ class SynthToken(Token):
 
     def _create_construction_points(self,x0,y0):
         x0,y0 = float(x0),float(y0)
+        self._position = [x0,y0]
         x1 = x0+gconfig['synth-node-width']
         y1 = y0+gconfig['synth-node-height']
         xi = x0+gconfig['synth-node-image-padding']
@@ -164,7 +166,9 @@ class SynthToken(Token):
             x0,y0 = xc-radius, yc-radius
             x1,y1 = xc+radius, yc+radius
             self.canvas.coords(tag,x0,y0,x1,y1)
-            
+
+    def position(self):
+        return self._position
         
     def show_editor(self, event):
         sy = self.client

@@ -95,82 +95,133 @@ class LliaGraph(Frame):
             LliaGraph.control_bus_counter += 1
         self.sync()
 
-    def _allign_audio_buses(self):
-        acc, bcc, ccc = [],[],[]
-        for token in self.audio_bus_tokens.values():
-            if token.is_protected():
-                cid = token.client_id()
-                if cid.startswith('in_'):
-                    acc.append(token)
-                elif cid.startswith('out_'):
-                    bcc.append(token)
-            else:
-                ccc.append(token)
-        acc.sort(key = lambda x: x.client_id())
-        bcc.sort(key = lambda x: x.client_id())
-        ccc.sort(key = lambda x: x.client_id())
-        # Input buses
-        x0,y0 = 30, 60
-        dx,dy = 0, 30
-        for i, token in enumerate(acc):
-            y = y0 + i*dy
-            token.move_to(x0, y)
-        # Output buses
-        x0,y0 = 1000,60
-        for i, token in enumerate(bcc):
-            y = y0 + i*dy
-            token.move_to(x0, y)
-        # General auio buses
-        x0,y0 = 120,350
-        dx = 120
-        for i,token in enumerate(ccc):
-            x = x0 + i*dx
-            token.move_to(x,y0)
-
-    def _allign_control_buses(self):
-        acc = self.control_bus_tokens.values()
-        acc.sort(key=lambda x: x.client_id())
-        x0, y0 = 180, 450
-        dx = 120
-        for i,token in enumerate(acc):
-            x = x0 + i * dx
-            token.move_to(x, y0)
-
-    def _allign_synths(self):
-        acc,bcc = [],[]
+  
+    def _allign_audio_synths(self):
+        acc, bcc = [], []
         for t in self.synth_tokens.values():
             if t.is_controller():
                 bcc.append(t)
             else:
                 acc.append(t)
         acc.sort(key=lambda x: x.synth_serial_number())
-        bcc.sort(key=lambda x: x.synth_serial_number())
-        for tlst in (acc,bcc):
-            tokens_per_line = 4
-            xdelta = 160            # distance between tokens
-            x0 = xdelta * tokens_per_line + 200
-            x= x0
-            #x,y = x0,100
-            if tlst is acc:
-                y = 100
-            else:
-                y = 400
-            j = 0                   # token line counter
-            for i,token in enumerate(tlst):
-                if j == 0:
-                    x = x0
-                    y += 100
-                    j = tokens_per_line
+        bcc.sort(key=lambda x: x.synth_serial_number()) # Used only as function return
+        x = x0 = 850
+        xdelta = 200
+        y = 0
+        ydelta = 100
+        tokens_per_line = 4
+        token_counter = 0
+        line_counter = 0
+        for i,token in enumerate(acc):
+            if token_counter == 0:
+                token_counter = tokens_per_line
+                line_counter += 1
+                xstagger = (line_counter%2)*(xdelta/2)
+                x = x0 - xstagger
+                y += ydelta
+            token.move_to(x,y)
+            x -= xdelta
+            token_counter -= 1
+        return acc,bcc
+
+    def _allign_audio_buses(self, synth_tokens):
+        for ab in self.audio_bus_tokens.values():
+            ab.move_to(-100, 0)
+            ab.off_screen = True
+        # Allign synth output buses
+        for st in synth_tokens:
+            sid = st.client_id()
+            bus_counter = 0
+            for aport in st.audio_output_ports.values():
+                param,port,junk = aport
+                for abtoken in self.audio_bus_tokens.values():
+                    abus = abtoken.client
+                    if abtoken.off_screen and abus.has_source(sid,param):
+                        x,y = st.position()
+                        y = y + bus_counter*32
+                        abtoken.move_to(x+100,y)
+                        abtoken.off_screen = False
+                        bus_counter += 1
+        # Park remaining audio buses
+        input_bus_counter = 0
+        output_bus_counter = 0
+        general_bus_counter = 0
+        xin, xgeneral, xout = 30, 120, 210
+        y0, ydelta = 300, 40
+        for atoken in self.audio_bus_tokens.values():
+            if atoken.off_screen:
+                cid = atoken.client_id()
+                atoken.off_screen = False
+                if cid.startswith("in_"):
+                    x = xin
+                    y = y0 + ydelta * input_bus_counter
+                    input_bus_counter += 1
+                elif cid.startswith("out_"):
+                    x = xout
+                    y = y0 + ydelta * output_bus_counter
+                    output_bus_counter += 1
                 else:
-                    x -= xdelta
-                    j -= 1
-                token.move_to(x,y)
-            
+                    x = xgeneral
+                    y = y0 + ydelta * general_bus_counter
+                    general_bus_counter += 1
+                atoken.move_to(x,y)
+                        
+    def _allign_controller_synths(self, controller_tokens):
+        x = x0 = 850
+        xdelta = 96
+        y = 300
+        ydelta = 150
+        tokens_per_line = 6
+        token_counter = 0
+        line_counter = 0
+        for i,token in enumerate(controller_tokens):
+            if token_counter == 0:
+                line_counter += 1
+                xstagger = (line_counter%2)*(xdelta/4)
+                x = x0+xstagger
+                y += ydelta
+                token_counter = tokens_per_line
+            token.move_to(x,y)
+            x -= xdelta
+            token_counter -= 1
+        
+    def _allign_control_buses(self, controller_tokens):
+        for cb in self.control_bus_tokens.values():
+            cb.move_to(-100,0)
+            cb.off_screen = True
+        for st in controller_tokens:
+            sid = st.client_id()
+            bus_counter = 0
+            for cport in st.control_output_ports.values():
+                param,port,junk = cport
+                for cbtoken in self.control_bus_tokens.values():
+                    cbus = cbtoken.client
+                    if cbtoken.off_screen and cbus.has_source(sid,param):
+                        x,y = st.position()
+                        x += bus_counter*32
+                        cbtoken.move_to(x,y-64)
+                        cbtoken.off_screen = False
+                        bus_counter += 1
+        # Park remaining control buses
+        x,y = x0,y0 = 300,300
+        ydelta = 40
+        for ctoken in self.control_bus_tokens.values():
+            if ctoken.off_screen:
+                ctoken.off_screen = False
+                ctoken.move_to(x,y)
+                y += ydelta
+                
+
+                
+        
+
+    
     def allign_tokens(self):
         self.canvas.delete('path')
-        self._allign_audio_buses()
-        self._allign_control_buses()
-        self._allign_synths()
+        synth_tokens, controller_tokens = self._allign_audio_synths()
+        self._allign_audio_buses(synth_tokens)
+        self._allign_controller_synths(controller_tokens)
+        self._allign_control_buses(controller_tokens)
         self.sync()
         
     def _show_bus_warning(self):

@@ -10,6 +10,7 @@ class BusToken(Token):
 
     def __init__(self,graph,bus):
         super(BusToken,self).__init__(graph,bus)
+        self._position = [-1,-1]
 
     def client_id(self):
         return self.client.name
@@ -58,6 +59,7 @@ class BusToken(Token):
 
     def move_to(self, x, y):
         self._create_construction_points(x,y)
+        self._position = (x,y)
         ppnts = self._construction_points['pad']
         txpnts = self._construction_points['text']
         srcpnts = self._construction_points['source']
@@ -77,6 +79,8 @@ class BusToken(Token):
                 else:
                     self.canvas.coords(tag,*cpnts)
 
+    def position(self):
+        return self._position
             
 class AudiobusToken(BusToken):
 

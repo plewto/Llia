@@ -109,6 +109,11 @@ class Token(dict):
     @abc.abstractmethod
     def move_to(self, x, y):
         pass
+
+    @abc.abstractmethod
+    def position(self):
+        # Returns canvas coordinates of token.
+        return (-1,-1)
     
     @abc.abstractmethod
     def info_text(self):
