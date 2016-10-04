@@ -6,9 +6,6 @@ from __future__ import print_function
 import sys
 import mido
 import llia.constants as con
-#import llia.gui.llhelp as lliahelp
-
-
 
 pyver = sys.version_info[0]
 if pyver <= 2:
@@ -158,7 +155,4 @@ class TextSplashScreen(object):
                 print("ERROR")                
 
     def help_(self):
-        pass
-        #text = lliahelp.read_help_file("splash")
-        #print(text)
-        
+        print("TextSplashScreen.help_ not implemented")
