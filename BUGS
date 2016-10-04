@@ -123,7 +123,7 @@ Main window menu option "new synth group"
 raise an AttributeError SythHelper._synth_serial_number
 
 
-This bug was introduced with the swtich to application wide synth serial
+This bug was introduced with the switch to application wide synth serial
 numbers.  The fix was to reintroduce separate serial numbers for synthhelper.
 This new series of numbers keeps track of the relative creation times of all
 synths and groups.
@@ -144,4 +144,27 @@ There are two parts:
 
 1) At times double clicking a lliagraph token causes it to move.
 2) At times a lliagraph token moves outside the canvas making it
-imposible to access.
+impossible to access.
+
+2016.10.04
+Part 2 has been partially solved by new graph 'Align' feature
+
+---------------------------------------------------------------------- OPEN 0012
+BUG 0012 2016.10.04
+
+Deleting an audio bus may produce errors at a later time.
+
+To reproduce using lliagraph:
+   1) Create an effects synth such as mixer.
+   2) Create and connect audio buses to the effect inputs.
+   3) Delete one of the buses by double-right clicking it.
+
+Now move mouse pointer into the synth token and observe then text in the
+info area.   The deleted bus is still listed as connected to the synth.
+
+If an attempt is made to connect another bus to the same synth param, a
+NoSuchBusOrParameterError is raised and the bus can not be connected. 
+   
+It has not been verified if the same behavior holds for control buses
+or if it holds with buses deleted using lliascript.
+
