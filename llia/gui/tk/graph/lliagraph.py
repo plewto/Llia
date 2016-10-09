@@ -16,8 +16,6 @@ Effects must be connected in the correct order.
 Newer synths may not process previous synths.
 '''
 
-
-
 class LliaGraph(Frame):
 
     control_bus_counter = 0
@@ -54,7 +52,7 @@ class LliaGraph(Frame):
         tbutton(0, 'sync', self.sync)
         tbutton(1, '+Audio', self.add_audio_bus)
         tbutton(2, "+Control", self.add_control_bus)
-        tbutton(3, "Allign", self.allign_tokens)
+        tbutton(3, "Align", self.allign_tokens)
         self.synth_tokens = {}  # map [sid] -> SynthToken
         self.audio_bus_tokens = {}    # map [bus-name] -> BusToken
         self.control_bus_tokens = {}
