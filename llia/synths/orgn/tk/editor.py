@@ -23,7 +23,7 @@ class TkOrgnPanel1(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame, 946,518, self.IMAGE_FILE)
+        canvas = factory.canvas(frame, 946,777, self.IMAGE_FILE)
         canvas.pack()
         self.canvas = canvas
         self.editor = editor
