@@ -6,8 +6,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.msb import MSB
-from llia.gui.tk.freq_spinner import FrequencySpinnerControl
-
+from llia.gui.tk.tumbler import Tumbler
 
 
 class TkFm2Panel2(TkSubEditor):
@@ -43,7 +42,7 @@ class TkFm2Panel2(TkSubEditor):
         x_amp = x_xbias + 90
         
         self.norm_slider("port", x0, y0)
-        self.spinner("lfoFreq", x_lfo, y1)
+        self.tumbler("lfoFreq", x_lfo, y1)
         self.linear_slider("lfoDelay", (0,4), x_delay, y0)
         self.norm_slider("vsens", x_vsens, y0)
         self.norm_slider("vdepth", x_vdepth, y0)
@@ -54,14 +53,14 @@ class TkFm2Panel2(TkSubEditor):
         svol = cf.volume_slider(self.canvas, "amp", editor)
         self.add_control("amp", svol)
         svol.widget().place(x=x_amp, y=y0, width=14, height=150)
-        
-        
-    def spinner(self, param, x, y, from_=0, to=300): 
-        s = FrequencySpinnerControl(self.canvas,param,self.editor,from_, to)
-        self.add_control(param, s)
-        s.layout(offset=(x,y))
-        return s
-
+ 
+    def tumbler(self, param, x, y):
+        t = Tumbler(self.canvas, param,self.editor,
+                    digits=4, scale=0.01)
+        self.add_control(param,t)
+        t.layout((x,y))
+        return t
+    
     def norm_slider(self, param, x, y, width=14, height=150):
         s = cf.normalized_slider(self.canvas, param, self.editor)
         self.add_control(param,s)

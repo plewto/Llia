@@ -7,8 +7,9 @@ import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.msb import MSB
 from llia.gui.tk.addsr_editor import ADDSREditor
-from llia.gui.tk.freq_spinner import FrequencySpinnerControl
+from llia.gui.tk.tumbler import Tumbler
 from llia.synths.fm2.tk.editor2 import TkFm2Panel2
+
 
 def create_editor(parent):
     TkFm2Panel1(parent)
@@ -47,14 +48,8 @@ class TkFm2Panel1(TkSubEditor):
                       'font' : ('Times', 12)}
         
         # OP2 Modulator
-        spin_mratio = self.spinner('op2Ratio', xfreq, y0+yfreq_offset)
-        spin_mratio.create_nudgetools(canvas,(xfreq+15,y0+yfreq_offset+30))
-
-        spin_mbias = self.spinner('op2Bias', xbias, y0+ybias_offset, 
-                                  from_=0, to=9999)
-        spin_mbias.create_nudgetools(canvas, (xfreq+9, y0+ybias_offset+30),
-                                     deltas = [100,10,1,0.1,0.01],
-                                     constant=0)
+        self.ratio_tumbler('op2Ratio', xfreq,y0+yfreq_offset)
+        self.bias_tumbler('op2Bias', xbias, y0+ybias_offset)
         self.linear_slider('op2Amp', (0,10), xamp, y0, height=110)
         msb_2amp = MSB(self.canvas, "op2AmpRange", editor, 5)
         self.add_control("op2AmpRange", msb_2amp)
@@ -143,13 +138,8 @@ class TkFm2Panel1(TkSubEditor):
         env2.sync()
         
         # OP1 Carrier
-        spin_cratio = self.spinner('op1Ratio', xfreq, y1+yfreq_offset)
-        spin_cratio.create_nudgetools(canvas,(xfreq+15,y1+yfreq_offset+30))
-        spin_cbias = self.spinner('op1Bias', xbias, y1+ybias_offset, 
-                                  from_=0, to=9999)
-        spin_cbias.create_nudgetools(canvas, (xfreq+9, y1+ybias_offset+30),
-                                     deltas = [100,10,1,0.1,0.01],
-                                     constant=0)
+        self.ratio_tumbler('op1Ratio',xfreq,y1+yfreq_offset)
+        self.bias_tumbler('op1Bias',xbias,y1+ybias_offset)
         s_amp1 = cf.volume_slider(canvas, "op1Amp", editor)
         self.add_control("op1Amp", s_amp1)
         s_amp1.widget().place(x=xamp, y=y1)
@@ -205,13 +195,21 @@ class TkFm2Panel1(TkSubEditor):
                            editor)
         self.add_child_editor("OP1ENV", env1)
         env1.sync()
-        
-    def spinner(self, param, x, y, from_=0, to=32): 
-        s = FrequencySpinnerControl(self.canvas,param,self.editor,from_, to)
-        self.add_control(param, s)
-        s.layout(offset=(x,y))
-        return s
 
+
+    def ratio_tumbler(self, param, x, y):
+        t = Tumbler(self.canvas,param,self.editor,
+                    digits=5,scale=0.001)
+        self.add_control(param, t)
+        t.layout((x,y))
+        return t
+
+    def bias_tumbler(self, param, x, y):
+        t = Tumbler(self.canvas,param,self.editor,
+                    digits=5,scale=0.01)
+        self.add_control(param,t)
+        t.layout((x,y))
+    
     def norm_slider(self, param, x, y, width=14, height=150):
         s = cf.normalized_slider(self.canvas, param, self.editor)
         self.add_control(param,s)
