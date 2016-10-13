@@ -7,7 +7,7 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.freq_spinner import FrequencySpinnerControl
+from llia.gui.tk.tumbler import Tumbler
 from llia.synths.saw3.tk.s3filter import TkSaw3FilterPanel
 
 def create_editor(parent):
@@ -41,23 +41,18 @@ class TkSaw3Panel1(TkSubEditor):
         x_env1_amp_offset = x_amp_offset
         for i, osc in enumerate(("osc1", "osc2", "osc3")):
             x = x0 + (i * xosc_offset)
-            spinner = self.spinner(osc+"Freq", x, y0+yfreq_offset)
-            spinner.create_nudgetools(canvas,
-                                      (x+13,y0+yfreq_offset+30),
-                                      fill = '#131313',
-                                      outline='#c37978')
+            tumbler = Tumbler(canvas,osc+"Freq",editor,digits=5, scale=0.001)
+            self.add_control(osc+"Freq", tumbler)
+            tumbler.layout((x, y0+yfreq_offset))
             self.norm_slider(osc+"Wave", x+x_wave_offset, y0)
             self.volume_slider(osc+"Amp", x+x_amp_offset, y0)
             self.exp_slider(osc+"Wave_env1", x+x_env1_wave_offset, y1)
             self.exp_slider(osc+"Wave_lfo", x+x_lfo_wave_offset, y1)
             self.exp_slider(osc+"Amp_env1", x+x_env1_amp_offset, y1)
             xosc3 = x
-        spin_bias = self.spinner("osc3Bias", xosc3, y0+ybias_offset, (0,9999))
-        spin_bias.create_nudgetools(canvas,(xosc3+9,y0+ybias_offset+30),
-                                   deltas =(100,10,1,0.1,0.01),
-                                   constant = 0,
-                                   fill='#131313',
-                                   outline='#c37978')
+        tumbler = Tumbler(canvas,"osc3Bias",editor,digits=5,scale=0.01)
+        self.add_control("osc3Bias", tumbler)
+        tumbler.layout((xosc3,y0+ybias_offset))
         self.norm_slider("osc3WaveLag", xosc3+x_wave_offset+25, y0, width=10, height=75)
         xnoise = xosc3 + xosc_offset + 30
         self.linear_slider("noiseFreq", xnoise, y0)
@@ -68,13 +63,6 @@ class TkSaw3Panel1(TkSubEditor):
         self.linear_slider("port", xpitch, y0, range_=(0,2))
         self.norm_slider("xToPitch", xpitch, y1)
 
-    def spinner(self, param, x, y, range_=(0,32)):
-        s = FrequencySpinnerControl(self.canvas, param, self.editor,
-                                    range_[0], range_[1])
-        self.add_control(param, s)
-        s.layout(offset=(x,y))
-        return s
-        
     def volume_slider(self, param, x, y, width=14, height=150):
         s = cf.volume_slider(self.canvas, param, self.editor)
         self.add_control(param, s)
