@@ -15,8 +15,12 @@ from llia.util.lmath import log2, logn, log10, clip
 from llia.gui.abstract_control import AbstractControl
 import llia.gui.tk.tk_factory as factory
 
+print("DEPRECIATION WARNING: gui.tk.oscfreq_control")
+
 class OscFrequencyControl(AbstractControl):
 
+    
+    
     def __init__(self, master, param, editor):
         """
         Create new OscFrequencyControl object.
@@ -28,6 +32,7 @@ class OscFrequencyControl(AbstractControl):
           editor - An instance of TkSubEditor
           master - Tk container.
         """
+        print("DEPRECIATION WARNING: OscFrequencyControl")
         super(OscFrequencyControl, self).__init__(param, editor, master)
         octaves = [(3, "+3"),(2, "+2"),(1, "+1"),(0, " 0"),
                    (-1,"-1"),(-2,"-2"),(-3,"-3")]

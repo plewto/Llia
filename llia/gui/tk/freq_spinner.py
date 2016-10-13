@@ -25,13 +25,14 @@ from llia.gui.tk.nudgetool import (BasicNudgeTool,
                                    ScaleNudgeTool,
                                    ConstantNudgeTool) 
 
-
+print("DEPRECIATION WARNING: llia.gui.tk.freq_spinner")
 
 
 class FrequencySpinnerControl(AbstractControl):
 
     def __init__(self, master, param, editor,
                  from_=0, to=32):
+        print("DEPRECIATION WARNING: FrequencySpinnerControl")
         super(FrequencySpinnerControl, self).__init__(param, editor, master)
         self.range_ = [min(from_,to),max(from_,to)]
         self.var_value = tk.StringVar()

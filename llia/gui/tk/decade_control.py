@@ -11,6 +11,9 @@ from llia.util.lmath import log2, logn, log10, clip
 from llia.gui.abstract_control import AbstractControl
 import llia.gui.tk.tk_factory as factory
 
+
+print("DEPRECIATION WARNING llia.gui.tk.decade_control")
+
 class DecadeControl(AbstractControl):
     
     """
@@ -39,6 +42,7 @@ class DecadeControl(AbstractControl):
                     between a and b.
            limit  - Tuple (mn, mx), sets minimum and maximum value.
         """
+        print("DEPRECIATION WARNING: DecadeCounter")
         super(DecadeControl, self).__init__(param, editor, master)
         self._min_value, self._max_value = limit
         start, end = coarse
