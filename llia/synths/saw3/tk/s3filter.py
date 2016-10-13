@@ -8,8 +8,6 @@ from Tkinter import Frame
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cfactory
-from llia.gui.tk.oscfreq_control import OscFrequencyControl
-from llia.gui.tk.decade_control import DecadeControl
 from llia.gui.tk.expslider import ExpSlider
 
 
