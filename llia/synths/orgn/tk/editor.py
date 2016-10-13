@@ -7,7 +7,8 @@ from Tkinter import Frame
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
-from llia.gui.tk.freq_spinner import FrequencySpinnerControl
+#from llia.gui.tk.freq_spinner import FrequencySpinnerControl
+from llia.gui.tk.tumbler import Tumbler
 from llia.gui.tk.expslider import ExpSlider
 
 
@@ -48,9 +49,9 @@ class TkOrgnPanel1(TkSubEditor):
         xvdelay = xvfreq+60
         xvdepth = xvdelay+60
         xamp = xchorus_delay
-        self.spinner("r2", xfreq1, y0+yfreq_offset)
+        self.tumbler("r2", xfreq1, y0+yfreq_offset)
         self.norm_slider("amp2",xamp1,y0)
-        self.spinner("r4", xfreq2,y0+yfreq_offset)
+        self.tumbler("r4", xfreq2,y0+yfreq_offset)
         self.norm_slider("amp4",xamp2,y0) 
         self.env_time_slider("mattack", xattack, y0)
         self.env_time_slider("mdecay", xdecay, y0)
@@ -61,9 +62,9 @@ class TkOrgnPanel1(TkSubEditor):
         self.norm_slider("xToPitch", xexternpitch, y0)
         self.norm_slider("chorus", xchorus, y0)
         self.linear_slider("chorusDelay",(0,4),xchorus_delay, y0)
-        self.spinner("r1", xfreq1, y1+yfreq_offset)
+        self.tumbler("r1", xfreq1, y1+yfreq_offset)
         self.volume_slider("amp1", xamp1, y1)
-        self.spinner('r3', xfreq2, y1+yfreq_offset)
+        self.tumbler('r3', xfreq2, y1+yfreq_offset)
         self.volume_slider("amp3", xamp2, y1)
         self.env_time_slider("cattack", xattack, y1)
         self.env_time_slider("cdecay", xdecay, y1)
@@ -74,12 +75,18 @@ class TkOrgnPanel1(TkSubEditor):
         self.norm_slider("vdepth", xvdelay, y1)
         self.volume_slider("amp", xamp, y1)
         
-    def spinner(self, param, x, y, from_=0.25, to=32):
-        s = FrequencySpinnerControl(self.canvas,param,self.editor,from_,to)
-        self.add_control(param,s)
-        s.layout(offset=(x,y))
-        return s
+    # def spinner(self, param, x, y, from_=0.25, to=32):
+    #     s = FrequencySpinnerControl(self.canvas,param,self.editor,from_,to)
+    #     self.add_control(param,s)
+    #     s.layout(offset=(x,y))
+    #     return s
 
+    def tumbler(self, param, x, y):
+        t = Tumbler(self.canvas,param,self.editor,digits=5, scale=0.001)
+        self.add_control(param,t)
+        t.layout((x,y))
+        return t
+    
     def norm_slider(self, param, x, y, width=14, height=150):
         s = cf.normalized_slider(self.canvas, param, self.editor)
         self.add_control(param,s)
