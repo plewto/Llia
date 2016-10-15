@@ -36,12 +36,17 @@ def pick_bend():
     nse = coin(0.85, 1, random_sign())
     return (a,b,nse)
 
+def pick_velocity():
+    return coin(0.75, (0,0, 0,0, 0,0), (rnd(),rnd(),rnd()))
+
 def gen_rdrum_program(slot=127, *_):
     ar, br, nr, nbias  = pick_ratios()
     aa, ba, na = pick_attacks()
     ad, bd, nd = pick_decays()
     abnd, bbnd, nbnd = pick_bend()
+    avel, bvel, nvel = pick_velocity()
     aamp, bamp, namp = pick_mix()
+    
     rs = rdrum(slot, "Random", amp=-3,
                a = {"ratio" : ar,
                     "attack" : aa,

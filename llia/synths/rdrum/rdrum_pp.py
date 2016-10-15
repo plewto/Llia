@@ -29,13 +29,15 @@ def pp_rdrum(program, slot=127):
     acc += '%s     "decay"  : %5.3f,\n' % (pad2, fval("aDecay"))
     acc += '%s     "bend"   : %-6.3f,\n' % (pad2, fval("aBend"))
     acc += '%s     "tone"   : %5.3f,\n' % (pad2, fval("aTone"))
+    acc += '%s     "velocity" : %5.3f,\n' % (pad2, fval("aVelocity"))
     acc += '%s     "amp"    : %d},\n' % (pad2, db("aAmp"))
-
+    
     acc += '%sb = {"ratio"  : %6.4f,\n' % (pad2, fval("bRatio"))
     acc += '%s     "attack" : %5.3f,\n' % (pad2, fval("bAttack"))
     acc += '%s     "decay"  : %5.3f,\n' % (pad2, fval("bDecay"))
     acc += '%s     "bend"   : %-6.3f,\n' % (pad2, fval("bBend"))
     acc += '%s     "tune"   : %6.4f,\n' % (pad2, fval("bTune"))
+    acc += '%s     "velocity" : %5.3f,\n' % (pad2, fval("bVelocity"))
     acc += '%s     "amp"    : %d},\n' % (pad2, db("bAmp"))
 
     acc += '%snoise = {"ratio"  : %6.4f,\n' % (pad2, fval("noiseRatio"))
@@ -43,6 +45,7 @@ def pp_rdrum(program, slot=127):
     acc += '%s         "decay"  : %5.3f,\n' % (pad2, fval("noiseDecay"))
     acc += '%s         "bend"   : %-6.3f,\n' % (pad2, fval("noiseBend"))
     acc += '%s         "res"    : %6.4f,\n' % (pad2, fval("noiseRes"))
+    acc += '%s         "velocity" : %5.3f,\n' % (pad2, fval("noiseVelocity"))
     acc += '%s         "amp"    : %d})\n' % (pad2, db("noiseAmp"))
     return acc
     

@@ -19,12 +19,16 @@ class RdrumProxy(SynthProxy):
     def create_subeditors(self):
         gui = self.app.config["gui"].upper()
         if gui == "TK":
-            from llia.synths.rdrum.tk.rdrum_ed import create_tk_rdrum_editor
+            #from llia.synths.rdrum.tk.rdrum_ed import create_tk_rdrum_editor
+            from llia.synths.rdrum.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
-            create_tk_rdrum_editor(parent_editor)
+            create_editor(parent_editor)
+            return parent_editor
             
-rdrum_pallet = Pallet(default_pallet)        
+rdrum_pallet = Pallet(default_pallet)
+rdrum_pallet["slider-trough"] = "#283442"
+rdrum_pallet["slider-outline"] = "#4f304f"
 
 specs["constructor"] = RdrumProxy
 specs["description"] = "Massed pulse waves"
