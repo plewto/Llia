@@ -40,7 +40,7 @@
 	var hpfreq = (Lag2.kr(lpfreq,filterBLag)*filterBRatio).min(20000).max(50);
 	var rq = LinExp.kr(res,0,1,1,0.01);
 	var lfoBleed = 1-lfoEnable;
-	var filterA = RLPF.ar(dry,lpfreq,rq) * ((lfo1a*lfoEnable) + lfoBleed)
+	var filterA = RLPF.ar(dry,lpfreq,rq) * ((lfo1a*lfoEnable) + lfoBleed);
 	var bpf =  Resonz.ar(dry, hpfreq, rq)*2;
 	var hpf = RHPF.ar(dry,hpfreq,rq);
 	var filterB = XFade2.ar(bpf,hpf,filterBMix.linlin(0,1,-1,1)) * ((lfo1b * lfoEnable) + lfoBleed);
