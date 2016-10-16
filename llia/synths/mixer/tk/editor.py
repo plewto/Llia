@@ -1,6 +1,7 @@
 # llia.synths.mixer.tk.editor
 
 
+from Tkinter import StringVar
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
@@ -29,6 +30,8 @@ class TkMixerPanel(TkSubEditor):
         ypan = y0 + 350
         ymod = ypan
         ymute = ymod + 150
+        yledger = ymute+60
+
         x0 = 120
         xmain = x0+500
         
@@ -50,6 +53,11 @@ class TkMixerPanel(TkSubEditor):
             self.add_control(param, s)
             s.widget().place(x=x, y=ymod, height=100)
 
+        def entry(x):
+            var = StringVar()
+            e = factory.entry(canvas,var)
+            e.place(x=x,y=yledger, width=74)
+            
         for i,prefix in enumerate("ABCD"):
             chan = "%s" % prefix
             x = x0 + i * 120
@@ -72,7 +80,7 @@ class TkMixerPanel(TkSubEditor):
             msb_mute.define_aspect(1,1,aon)
             msb_mute.layout((x+7,ymute))
             msb_mute.update_aspect()
-
+            entry(x)
 
         for i in range(2):
             x = xmain + i*60
