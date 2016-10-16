@@ -6,7 +6,6 @@ from __future__ import print_function
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.xover.xover_data import program_bank, pp, random_xover
-#from llia.synths.xover.xover_gen import gen_xover_program
 
 specs = SynthSpecs("XOver");
 
@@ -37,11 +36,12 @@ specs["is-efx"] = True
 specs["pretty-printer"] = pp
 specs["pallet"] = xover_pallet
 specs["help"] = "xover"
-specs["audio-output-buses"] = [["lpOutbus","out_0"],
-                               ["hpOutbus","out_0"],
-                               ["dryOutbus","out_0"]]
-specs["audio-input-buses"] = [["inbus", "in_0"]]
+specs["audio-output-buses"] = [["outbus1","out_0"],
+                               ["outbus2","out_0"]]
+specs["audio-input-buses"] = [["inbus","in_0"]]
+specs["control-output-buses"] = [["lfo1aOutbus", "null_source"],
+                                 ["lfo1bOutbus", "null_source"],
+                                 ["lfo2Outbus", "null_source"]]
 specs["control-input-buses"] = [["xbus", "null_sink"]]
-specs["control-output-buses"] = [["xoverLfoOutbus", "null_source"],
-                                 ["lpModLfoOutbus", "null_source"],
-                                 ["hpModLfoOutbus", "null_source"]]
+
+                               

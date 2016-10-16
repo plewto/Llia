@@ -1,73 +1,73 @@
+(SynthDef(\XOver, {
+	|inbus = 16
+	outbus1 = 0
+	outbus2 = 0
+	xbus = 1024
+	lfo1aOutbus = 1023
+	lfo1bOutbus = 1023
+	lfo2Outbus = 1023
+	xscale= 1.0
+	xbias = 0.0
+	lfoFreq = 1.0        // common LFO frequency
+	lfoEnable = 1        // 0-> do not apply LFO to filter output
+	lfo2Ratio = 1.0      // xover lfo ratio
+	lfo2Wave = 0.0       // varsaw -1 = saw 0 = tri +1 = saw
+	res = 0              // filter resonace
+	xover = 500          // static crossover frequency
+	lfoToXover = 0.0     // xLFO -> xover
+	externToXover = 0.0
+	minXover = 100
+	maxXover = 20000
 
+	filterBMix = 0.0     // 0 = Highpass, 1 = bandpass
+	filterBRatio = 1.0   // freq ratio filterB:filterA
+	filterBLag = 0.0
 
-(SynthDef (\XOver, {|
-	inbus = 128,
-	lpOutbus = 128,      // lowpass filter output bus
-	hpOutbus = 128,      // highpass filter output bus
-	dryOutbus = 128,     // dry signal output bus
-
-	xbus = 1024,            // external control input bus
-	xoverLfoOutbus=1023,    // crossover LFO output bus  (LFO 1)
-	lpModLfoOutbus=1023,    // lowpass amp LFO output bus (LFO 2)
-	hpModLfoOutbus=1023,    // highpass amp LFO output bus 90 degree phase shifted (LFO 3)
-
-	xScale = 1.0,           // external control signal scale (0..4)
-	xBias = 0.0,            // external control bias (-4..+4)
-
-	lfoFreq = 1.0,          // Reference LFO frequency in Hertz.
-	                        //   All other LFO frequencies are relative to this.
-
-    crossover = 500,        // crossover freq in Hertz.
-    minCrossover = 200,     // min/max crossover frequency  
-    maxCrossover = 16000,
-	xoverLfoRatio = 1.0,    // crossover LFO frequency relative to lfoFreq  (LFO 1)
-	xoverLfoDepth = 0.0,    // LFO -> crossover freq (0..1)
-	xoverX = 0.0,           // external -> crossover freq (0..1)
-
-	res = 0.5,              // resonace (0..1)
-
-	lpMode = 1.0,           // 0 -> bandpass, 1 -> lowpass
-	lpMix = 1.0,            // lowpass filter static gain (0..2)
-	lpMixLfo = 0.0,         // LFO -> lowpass mix (0..1)
-	lpMixX = 0.0,           // external -> lowpass mix (0..1)
-	lpLfoRatio = 1.0,       // lowpass LFO freq ratio
-
-	hpMode = 1.0,           // 0 -> band-reject, 1 -> highpass
-	hpMix = 1.0,            //   highpass LFO is 90 degrees
-	hpMixLfo = 0.0,         //   relative to lowpass
-	hpMixX = 0.0,
-	hpLfoRatio = 1.0,
-
-	dryMix = 0.0,           // dry signal gain (0..2)
-	amp = 1.0|              // Overall gain (applies to lowpass, highpass and dry), (0..2)
-
+	dryAmp = 0.0
+	filterAAmp = 1.0
+	filterBAmp = 1.0
+	dryPan = 0.0
+	filterAPan = 0.0
+	filterBPan = 0.0
+	amp = 1.0|           // main output amp
 	var dry = In.ar(inbus);
-	var x = In.kr(xbus) * xScale + xBias;
-	var posX = (x * 0.5 + 0.5).max(0).min(1);   // positive only version of external signal
-	                                             // assumens -1 <= x <= +1.
-	var lfo1Freq = lfoFreq * xoverLfoRatio;
-	var lfo1Raw = LFCub.kr(lfo1Freq);
-	var lfo1 = 1 + (lfo1Raw * xoverLfoDepth);
-	var xxover = 1 + (x * xoverX);
-	var crossoverFrequency = Lag2.kr((crossover * lfo1 * xxover), 0.01).max(minCrossover).min(maxCrossover);
-	var rq = res.linexp(0,1, 1, 0.01);
-	var lfo2Raw = LFCub.kr(lfoFreq*lpLfoRatio);
-	var lfo2 = 1 + ((lfo2Raw * 0.5 + 0.5) * lpMixLfo);
-	var xlp = 1 + (posX * lpMixX);
-	var lpAmp = lpMix * lfo2 * xlp;
-	var lp = RLPF.ar(dry, crossoverFrequency, rq);
-    var bp = Resonz.ar(dry, crossoverFrequency, rq)*2;
-	var filter1 = XFade2.ar(bp, lp, lpMode.linlin(0, 1, -1, 1)) * lpAmp;
-	var lfo3Raw = LFCub.kr(lfoFreq*hpLfoRatio,pi/2);
-	var lfo3 = 1 + ((lfo3Raw * 0.5 + 0.5) * hpMixLfo);
-	var xhp = 1 + (posX * hpMixX);
-	var hpAmp = hpMix * lfo3 * xhp;
-	var hp = RHPF.ar(dry, crossoverFrequency, rq);
-	var filter2 = XFade2.ar(bp, hp, hpMode.linlin(0, 1, -1, 1)) * hpAmp;
-	Out.ar(dryOutbus, dry*amp);
-	Out.ar(lpOutbus, filter1*amp);
-	Out.ar(hpOutbus, filter2*amp);
-	Out.kr(xoverLfoOutbus, lfo1Raw);
-	Out.kr(lpModLfoOutbus, lfo2Raw);
-	Out.kr(hpModLfoOutbus, lfo3Raw);
+	var x = In.kr(xbus)*xscale+xbias;
+	var lfo1a = LFCub.kr(lfoFreq);
+	var lfo1b = LFCub.kr(lfoFreq,0.25);
+	var lfo2Raw = (VarSaw.kr(lfoFreq*lfo2Ratio,0,lfo2Wave,1,1)*0.5);
+	var lfo2 = lfo2Raw * lfoToXover;
+	var lpfreq = (xover + (((x*externToXover) + lfo2) * 20000)).min(maxXover).max(minXover);
+	var hpfreq = (Lag2.kr(lpfreq,filterBLag)*filterBRatio).min(20000).max(50);
+	var rq = LinExp.kr(res,0,1,1,0.01);
+	var lfoBleed = 1-lfoEnable;
+	var filterA = RLPF.ar(dry,lpfreq,rq) * ((lfo1a*lfoEnable) + lfoBleed)
+	var bpf =  Resonz.ar(dry, hpfreq, rq)*2;
+	var hpf = RHPF.ar(dry,hpfreq,rq);
+	var filterB = XFade2.ar(bpf,hpf,filterBMix.linlin(0,1,-1,1)) * ((lfo1b * lfoEnable) + lfoBleed);
+	var out1;
+	var out2;
+	filterA = Pan2.ar(filterA, filterAPan)*filterAAmp;
+	filterB = Pan2.ar(filterB, filterBPan)*filterBAmp;
+	dry = Pan2.ar(dry,dryPan)*dryAmp;
+	out1 = (filterA[0]+filterB[0]+dry[0])*amp;
+	out2 = (filterA[1]+filterB[1]+dry[1])*amp;
+	Out.ar(outbus1, out1);
+	Out.ar(outbus2, out2);
+	Out.kr(lfo1aOutbus,lfo1a);
+	Out.kr(lfo1bOutbus, lfo1b);
+	Out.kr(lfo2Outbus,lfo2);
+
 }).load)
+
+
+
+
+
+
+
+
+
+
+
+
+	

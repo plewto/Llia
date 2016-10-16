@@ -4,9 +4,20 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.freq_spinner import FrequencySpinnerControl
-from llia.synths.xover.xover_data import LF_RATIOS, CROSSOVER_FREQUENCIES
+from llia.gui.tk.tumbler import Tumbler, ToggleButton
+from llia.gui.tk.msb import MSB
+import llia.synths.xover.xover_constants as xcon
 
+def _msb_aspect(value, text):
+    d = {'value' : value,
+         'fill' : '',
+         'active-fill' : '',
+         'foreground' : '#c29e78',
+         'active-foreground' : 'yellow',
+         'outline' : '#c29e78',
+         'active-outline' : 'yellow',
+         'text' : text}
+    return d
 
 def create_editor(parent):
     TkXOverPanel(parent)
@@ -19,90 +30,110 @@ class TkXOverPanel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,868,514,self.IMAGE_FILE)
+        canvas = factory.canvas(frame,1000,700,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        y0,y1 = 60, 300
-        x0 = 60
-        x_crossover = x0 + 150
-        x_minx = x_crossover+50
-        x_maxx = x_minx + 50
-        x_lfo_ratio = x_maxx + 60
-        x_lfo_depth = x_lfo_ratio + 60
-        x_external = x_lfo_depth + 60
-        x_res = x_external + 60
+        y0 = 75
+        y1 = y0+60
+        y2 = y1+60 
+        y3 = y2+70
+        x0=90
+        x1 = x0+100
+        x2 = x1+60
+        x3 = x2+60
+        x4 = x3+60
+        x5 = x4+75
+        x6 = x5+60
+        xlfo = x6+75
+        xmix = x6+196
         
-        def discrete_slider(param, x, y, values):
-            s = cf.discrete_slider(canvas, param, editor, values=values)
-            self.add_control(param, s)
-            s.widget().place(x=x, y=y)
-            return s
-
         def norm_slider(param, x, y):
             s = cf.normalized_slider(canvas, param, editor)
-            self.add_control(param, s)
-            s.widget().place(x=x, y=y)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y)
             return s
 
+        def bipolar_slider(param, x, y, height=150):
+            s = cf.bipolar_slider(canvas, param, editor)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y,height=height)
+            return s
+            
         def amp_slider(param, x, y):
             s = cf.volume_slider(canvas, param, editor)
-            self.add_control(param, s)
+            self.add_control(param,s)
             s.widget().place(x=x,y=y)
             return s
 
         def linear_slider(param, x, y, range_):
             s = cf.linear_slider(canvas, param, editor, range_=range_)
-            self.add_control(param, s)
+            self.add_control(param,s)
             s.widget().place(x=x,y=y)
             return s
-
-        spin_freq = FrequencySpinnerControl(canvas,"lfoFreq",editor,
-                                            from_=0,to=1000)
-        self.add_control("lfoFreq", spin_freq)
-        spin_freq.layout(offset=(x0,y0))
-        spin_freq.create_nudgetools(canvas,offset=(x0+13,y0+30),
-                                    deltas = (10,1,0.1,0.01),
-                                    constant = 1,
-                                    fill='#131313',
-                                    outline='#a5a08a')
-        discrete_slider("crossover",x_crossover, y0, CROSSOVER_FREQUENCIES)
-        discrete_slider("minCrossover",x_minx, y0, CROSSOVER_FREQUENCIES)
-        discrete_slider("maxCrossover",x_maxx, y0, CROSSOVER_FREQUENCIES)
-        discrete_slider("xoverLfoRatio",x_lfo_ratio, y0, LF_RATIOS)
-        norm_slider("xoverLfoDepth", x_lfo_depth, y0)
-        norm_slider("xoverX", x_external, y0)
-        norm_slider("res", x_res, y0)
-
-        x_scale = x_res + 90
-        x_bias = x_scale + 60
-        linear_slider("xScale", x_scale, y0, (0.0, 4.0))
-        linear_slider("xBias", x_bias, y0, (-4.0, 4.0))
+     
+        msb_xover = MSB(canvas,"xover",editor,len(xcon.CROSSOVER_FREQUENCIES))
+        for i,v in enumerate(xcon.CROSSOVER_FREQUENCIES):
+            d = _msb_aspect(v,str(v))
+            msb_xover.define_aspect(i,v,d)
+        self.add_control("xover", msb_xover)
+        msb_xover.layout((x0,y0))
+        msb_xover.update_aspect()
+        msb_maxxover = MSB(canvas,"maxXover",editor,len(xcon.CROSSOVER_FREQUENCIES))
+        for i,v in enumerate(xcon.CROSSOVER_FREQUENCIES):
+            d = _msb_aspect(v,str(v))
+            msb_maxxover.define_aspect(i,v,d)
+        self.add_control("maxXover", msb_maxxover)
+        msb_maxxover.layout((x0,y1))
+        msb_maxxover.update_aspect()
+        msb_minxover = MSB(canvas,"minXover",editor,len(xcon.CROSSOVER_FREQUENCIES))
+        for i,v in enumerate(xcon.CROSSOVER_FREQUENCIES):
+            d = _msb_aspect(v,str(v))
+            msb_minxover.define_aspect(i,v,d)
+        self.add_control("minXover",msb_minxover)
+        msb_minxover.layout((x0,y2))
+        msb_minxover.update_aspect()
+        norm_slider("lfoToXover", x1,y0)
+        msb_lforatio = MSB(canvas,"lfo2Ratio",editor,len(xcon.LFO_RATIOS))
+        for i,p in enumerate(xcon.LFO_RATIOS):
+            ratio, text = p
+            d = _msb_aspect(ratio,text)
+            msb_lforatio.define_aspect(i,ratio,d)
+        self.add_control("lfo2Ratio", msb_lforatio)
+        msb_lforatio.layout((x1-22,y3))
+        msb_lforatio.update_aspect()
+        norm_slider("lfo2Wave",x2,y0)
+        norm_slider("externToXover",x3,y0)
+        norm_slider("res",x4,y0)
+        norm_slider("filterBMix",x5,y0)
+        norm_slider("filterBLag",x6,y0)
+        msb_b_ratio = MSB(canvas,"filterBRatio",editor,len(xcon.FILTER_B_RATIOS))
+        for i,p in enumerate(xcon.FILTER_B_RATIOS):
+            ratio,text = p
+            d = _msb_aspect(ratio,text)
+            msb_b_ratio.define_aspect(i,ratio,d)
+        self.add_control("filterBRatio", msb_b_ratio)
+        msb_b_ratio.layout((x5+6,y3))
+        msb_b_ratio.update_aspect()
+        tumbler = Tumbler(canvas,"lfoFreq",editor,digits=4,scale=0.01)
+        self.add_control("lfoFreq", tumbler)
+        tumbler.layout((xlfo, y1))
+        msb_lfo_enable = ToggleButton(canvas,"lfoEnable",editor,
+                                      fill='',foreground='#c29378',outline='#c29378',
+                                      active_color='yellow',
+                                      selected_fill='#825151', selected_foreground='white')
+        self.add_control("lfoEnable",msb_lfo_enable)
+        msb_lfo_enable.layout((xlfo, y2))
+        msb_lfo_enable.update_aspect()
+        amp_slider("dryAmp", xmix, y0)
+        amp_slider("filterAAmp", xmix+60, y0)
+        amp_slider("filterBAmp", xmix+120, y0)
+        amp_slider("amp", xmix+180,y0)
+        bipolar_slider("dryPan", xmix, y3)
+        bipolar_slider("filterAPan", xmix+60, y3)
+        bipolar_slider("filterBPan", xmix+120, y3)
+        linear_slider("xscale", xlfo-7, y3, (0,4))
+        linear_slider("xbias", xlfo+53, y3, (-4,4))
+                      
         
-        x_lp = x0
-        x_lp_lfo_ratio = x_lp + 60
-        x_lp_lfo_depth = x_lp_lfo_ratio + 60
-        x_lp_external = x_lp_lfo_depth + 60
-        x_lp_mix = x_lp_external + 60
-        norm_slider("lpMode", x_lp, y1)
-        discrete_slider("lpLfoRatio", x_lp_lfo_ratio, y1,LF_RATIOS)
-        norm_slider("lpMixLfo", x_lp_lfo_depth, y1)
-        norm_slider("lpMixX", x_lp_external, y1)
-        amp_slider("lpMix", x_lp_mix, y1)
         
-        x_hp = x_lp_mix + 90
-        x_hp_lfo_ratio = x_hp + 60
-        x_hp_lfo_depth = x_hp_lfo_ratio + 60
-        x_hp_external = x_hp_lfo_depth + 60
-        x_hp_mix = x_hp_external + 60
-        norm_slider("hpMode", x_hp, y1)
-        discrete_slider("hpLfoRatio", x_hp_lfo_ratio, y1,LF_RATIOS)
-        norm_slider("hpMixLfo", x_hp_lfo_depth, y1)
-        norm_slider("hpMixX", x_hp_external, y1)
-        amp_slider("hpMix", x_hp_mix, y1)
-
-        x_dry_mix = x_hp_mix + 90
-        x_amp = x_dry_mix + 60
-        amp_slider("dryMix", x_dry_mix, y1)
-        amp_slider("amp", x_amp, y1)
-            

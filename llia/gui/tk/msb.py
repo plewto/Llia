@@ -379,7 +379,6 @@ class MSB(object):
 
         Raises KeyError if no aspect has matching value.
         '''
-        
         if new_value is not None:
             try:
                 value = float(new_value)
