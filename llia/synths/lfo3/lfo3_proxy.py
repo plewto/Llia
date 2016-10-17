@@ -5,7 +5,6 @@ from __future__ import print_function
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.lfo3.lfo3_data import program_bank, pp
-from llia.synths.lfo3.lfo3_random import random_lfo3
 
 specs = SynthSpecs("LFO3")
 
@@ -35,7 +34,7 @@ specs["keymodes"] = ("EFX", )
 specs["audio-output-buses"] = []
 specs["audio-input-buses"] = []
 specs["pretty-printer"] = pp
-specs["program-generator"] = random_lfo3
+specs["program-generator"] = None
 specs["is-efx"] = True
 specs["is-controller"] = True
 specs["help"] = "LFO3"
