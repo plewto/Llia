@@ -66,7 +66,6 @@ pitchshifter : True
 lfo1      : True            
 lfo2      : True            
 lfo3      : True             
-pulsegen  : False    # DEPRECIATED
 cascade   : True
 snh       : True            
 ghostbus  : True                 
