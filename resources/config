@@ -36,7 +36,7 @@ trace-osc-transmission : False
 
 [GUI]
 gui : Tk
-no-splash : False
+no-splash : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
 warn-on-exit : False
@@ -66,7 +66,8 @@ pitchshifter : True
 lfo1      : True            
 lfo2      : True            
 lfo3      : True             
-pulsegen  : True                 
+pulsegen  : False    # DEPRECIATED
+cascade   : True
 snh       : True            
 ghostbus  : True                 
 
