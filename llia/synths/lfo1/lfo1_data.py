@@ -7,92 +7,199 @@ from llia.bank import ProgramBank
 from llia.performance_edit import performance
 from llia.util.lmath import coin, rnd, pick
 
+FREQ_RATIOS = ((0.125,"1/8"),
+               (0.250,"1/4"),
+               (1.0/3,"1/3"),
+               (0.500,"1/2"),
+               (2.0/3,"2/3"),
+               (0.750,"3/4"),
+               (1.0,"1"),
+               (5.0/4,"1 1/4"),
+               (4.0/3,"1 1/3"),
+               (1.5,  "1 1/2"),
+               (5.0/3, "1 2/3"),
+               (7.0/4, "1 3/4"),
+               (2.0, "2"),
+               (2.5, "2 1/2"),
+               (3.0, "3"),
+               (3.5, "3 1/2"),
+               (4.0, "4"),
+               (5.0, "5"),
+               (6.0, "6"),
+               (7.0, "7"),
+               (8.0, "8"),
+               (9.0, "9"),
+               (12.0, "12"),
+               (16.0, "16"))
+
 prototype = {
 	"lfoFreq" : 1.0,
-	"lfoFeedback" : 0.0,
+	"sineAmp" : 1.0,
+	"sineRatio" : 1.0,
+	"sawAmp" : 1.0,
+	"sawRatio" : 1.0,
+	"sawWidth" : 0.0,
+	"pulseAmp" : 1.0,
+	"pulseRatio" : 1.0,
+	"pulseWidth" : 0.5,
 	"lfoDelay" : 0.0,
-	"lfoAttack" : 0.0,
 	"lfoHold" : 0.5,
-	"lfoRelease" : 0.5,
 	"lfoBleed" : 0.0,
 	"lfoScale" : 1.0,
-	"lfoBias" : 0.0}
+	"lfoBias" : 0}
 
-class Lfo1(Program):
+class LFO1(Program):
 
     def __init__(self, name):
-        super(Lfo1, self).__init__(name, "LFO1", prototype)
+        super(LFO1, self).__init__(name, "LFO1", prototype)
         self.performance = performance()
 
-init_program = Lfo1("Init")        
-program_bank = ProgramBank(init_program)
+program_bank = ProgramBank(LFO1("Init"))
 program_bank.enable_undo = False
 
 def lfo1(slot, name,
-         freq=1, feedback=0, bleed=0,
-         delay=0, attack=0, hold=0, release=0,
-         scale=1, bias=0):
-    p = Lfo1(name)
+         freq = 1.0,
+         sineRatio = 1.0,
+         sineAmp = 1.0,
+         sawRatio = 1.0,
+         sawWidth = 0.0,
+         sawAmp = 0.0,
+         pulseRatio = 1.0,
+         pulseWidth = 0.5,
+         pulseAmp = 0.0,
+         delay = 0.0,
+         hold = 0.0,
+         bleed = 1.0,
+         scale = 1.0,
+         bias = 0.0):
+    p = LFO1(name)
     p["lfoFreq"] = float(freq)
-    p["lfoFeedback"] = float(feedback)
+    p["sineAmp"] = float(sineAmp)
+    p["sineRatio"] = float(sineRatio)
+    p["sawAmp"] = float(sawAmp)
+    p["sawRatio"] = float(sawRatio)
+    p["sawWidth"] = float(sawWidth)
+    p["pulseAmp"] = float(pulseAmp)
+    p["pulseRatio"] = float(pulseRatio)
+    p["pulseWidth"] = float(pulseWidth)
     p["lfoDelay"] = float(delay)
-    p["lfoAttack"] = float(attack)
     p["lfoHold"] = float(hold)
-    p["lfoRelease"] = float(release)
     p["lfoBleed"] = float(bleed)
     p["lfoScale"] = float(scale)
     p["lfoBias"] = float(bias)
     program_bank[slot] = p
     return p
 
-def pp(program, slot=127):
+def pp(program,slot=127):
     def fval(key):
         return float(program[key])
     pad = ' '*5
+    pmap = (("lfoFreq",  "freq"),
+            ("sineAmp",  "sineAmp"),
+            ("sineRatio",  "sineRatio"),
+            ("sawAmp",  "sawAmp"),
+            ("sawRatio",  "sawRatio"),
+            ("sawWidth",  "sawWidth"),
+            ("pulseAmp",  "pulseAmp"),
+            ("pulseRatio",  "pulseRatio"),
+            ("pulseWidth",  "pulseWidth"),
+            ("lfoDelay",  "delay"),
+            ("lfoHold",  "hold"),
+            ("lfoBleed",  "bleed"),
+            ("lfoScale",  "scale"),
+            ("lfoBias",  "bias"))
+    pend = pmap[-1][0]
     acc = 'lfo1(%d,"%s",\n' % (slot, program.name)
-    frmt = '%sfreq=%5.3f, feedback=%5.3f, bleed=%5.3f,\n'
-    acc += frmt % (pad,fval("lfoFreq"),fval("lfoFeedback"),fval("lfoBleed"))
-    frmt = '%sscale=%5.3f, bias=%5.3f)\n'
-    acc += frmt % (pad,fval("lfoScale"),fval("lfoBias"))
+    for p,a in pmap:
+        acc += '%s%s = %s' % (pad,a,fval(p))
+        if p != pend:
+            acc += ',\n'
+        else:
+            acc += ')\n'
     return acc
 
 def random_lfo1(slot=127, *_):
-    p = lfo1(slot, "Random",
-             freq = coin(0.75, rnd(5), rnd(10)),
-             feedback = coin(0.75, 0, coin(0.75, rnd(0.75), rnd())),
-             bleed = coin(0.5, 0, rnd()),
-             delay = coin(0.5, 0, rnd(4)),
-             attack = coin(0.75, delay, rnd(4)),
-             hold = 1,
-             release = coin(0.75, hold, rnd(4)),
-             scale = 1.0,
-             bias = 0)
-    return p
+    return None
 
-lfo1( 0, "Delayed Vibrato",
-      freq=5.00, feedback=0.0, bleed=0.0,
-      delay=1.5, attack=2, hold=1, release=1)
 
-lfo1( 1, "1Hz",
-      freq=1.00, feedback=0.0, bleed=1.0,
-      delay=0, attack=0, hold=0, release=0)
 
-lfo1( 2, "2Hz",
-      freq=2.00, feedback=0.0, bleed=1.0,
-      delay=0, attack=0, hold=0, release=0)
+lfo1(0,"Delay Vibrato 5Hz",
+     freq = 5.0,
+     sineAmp = 1.0,
+     sineRatio = 1.0,
+     sawAmp = 0.0,
+     sawRatio = 1.0,
+     sawWidth = 0.0,
+     pulseAmp = 0.0,
+     pulseRatio = 1.0,
+     pulseWidth = 0.50,
+     delay = 1.3,
+     hold = 0.92,
+     bleed = 0.0,
+     scale = 0.27,
+     bias = 0.0)
 
-lfo1( 3, "3Hz",
-      freq=3.00, feedback=0.0, bleed=1.0,
-      delay=0, attack=0, hold=0, release=0)
+lfo1(1,"Delay Complex Vibrato 5Hz",
+     freq = 5.0,
+     sineAmp = 1.0,
+     sineRatio = 1.0,
+     sawAmp = 0.18,
+     sawRatio = 0.75,
+     sawWidth = 0.50,
+     pulseAmp = 0.0,
+     pulseRatio = 1.0,
+     pulseWidth = 0.50,
+     delay = 1.3,
+     hold = 0.92,
+     bleed = 0.0,
+     scale = 0.15,
+     bias = 0.0)
 
-lfo1( 4, "4Hz",
-      freq=4.00, feedback=0.0, bleed=1.0,
-      delay=0, attack=0, hold=0, release=0)
+lfo1(2,"1Hz Sine",
+     freq = 1.0,
+     sineAmp = 1.0,
+     sineRatio = 1.0,
+     sawAmp = 0.0,
+     sawRatio = 1.0,
+     sawWidth = 0.0,
+     pulseAmp = 0.0,
+     pulseRatio = 1.0,
+     pulseWidth = 0.5,
+     delay = 0.0,
+     hold = 0.5,
+     bleed = 1.0,
+     scale = 1.0,
+     bias = 0.0)
 
-lfo1( 5, "5Hz",
-      freq=5.00, feedback=0.0, bleed=1.0,
-      delay=0, attack=0, hold=0, release=0)
+lfo1(3,"1Hz Sawtooth",
+     freq = 1.0,
+     sineAmp = 0.0,
+     sineRatio = 1.0,
+     sawAmp = 1.0,
+     sawRatio = 1.0,
+     sawWidth = 0.0,
+     pulseAmp = 0.0,
+     pulseRatio = 1.0,
+     pulseWidth = 0.5,
+     delay = 0.0,
+     hold = 0.5,
+     bleed = 0.0,
+     scale = 1.0,
+     bias = 0.0)
 
-lfo1( 6, "6Hz w feedback",
-      freq=6.00, feedback=0.3, bleed=1.0,
-      delay=0, attack=0, hold=0, release=0)
+lfo1(4,"Square Triangle",
+     freq = 1.0,
+     sineAmp = 0.0,
+     sineRatio = 1.0,
+     sawAmp = 0.45,
+     sawRatio = 2.0,
+     sawWidth = 0.50,
+     pulseAmp = 1.0,
+     pulseRatio = 1.0,
+     pulseWidth = 0.5,
+     delay = 0.0,
+     hold = 0.5,
+     bleed = 1.0,
+     scale = 1.0,
+     bias = 0.0)
+

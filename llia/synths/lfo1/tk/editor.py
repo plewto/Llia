@@ -5,7 +5,24 @@ import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
 from llia.gui.tk.tumbler import Tumbler
-from llia.gui.tk.reciprocal_slider import ReciprocalSlider
+from llia.gui.tk.msb import MSB
+from llia.synths.lfo1.lfo1_data import FREQ_RATIOS
+
+
+# lfoFreq    tumbler
+# sineAmp    norm
+# sineRatio  msb
+# sawAmp     norm
+# sawRatio   msb
+# sawWidth   norm
+# pulseAmp   norm
+# pulseRatio msb
+# pulseWidth norm
+# lfoDelay   linear
+# lfoHold    linear
+# lfoBleed   norm
+# lfoScale   linear
+# lfoBias    linear
 
 
 def create_editor(parent):
@@ -20,48 +37,71 @@ class TkLfo1Panel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,852,550,self.IMAGE_FILE)
+        canvas = factory.canvas(frame,966,433,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        tumbler = Tumbler(canvas,"lfoFreq",editor,digits=5,scale=0.001)
-        s_feedback = cf.normalized_slider(canvas, "lfoFeedback", editor)
-        s_delay = ExpSlider(canvas, "lfoDelay", editor, range_=8)
-        s_attack = ExpSlider(canvas, "lfoAttack", editor, range_=8)
-        s_hold = ExpSlider(canvas, "lfoHold", editor, range_=8)
-        s_release = ExpSlider(canvas, "lfoRelease", editor, range_=8)
-        s_bleed = cf.normalized_slider(canvas, "lfoBleed", editor)
-        sr_scale = ReciprocalSlider(canvas, "lfoScale", editor, range_=4, degree=1)
-        s_bias = cf.linear_slider(canvas, "lfoBias", editor, range_=(-4,4))
-        self.add_control("lfoFreq",tumbler)
-        self.add_control("lfoFeedback",s_feedback)
-        self.add_control("lfoDelay",s_delay)
-        self.add_control("lfoAttack",s_attack)
-        self.add_control("lfoHold",s_hold)
-        self.add_control("lfoRelease",s_release)
-        self.add_control("lfoBleed",s_bleed)
-        self.add_control("lfoScale",sr_scale)
-        self.add_control("lfoBias",s_bias)
-        y0 = 120
-        x0 = 90
-        x_freq = x0
-        x_fb = x_freq + 142
-        x_env = x_fb + 90
-        x_delay = x_env
-        x_attack = x_delay + 60
-        x_hold = x_attack + 60
-        x_release = x_hold + 60
-        x_bleed = x_release + 90
-        x_scale = x_bleed + 60
-        x_bias = x_scale + 60
-        tumbler.layout((x_freq+9,y0+30))
-        s_feedback.widget().place(x=x_fb,y=y0, height=200)
-        s_delay.layout(offset=(x_delay,y0),height=200,checkbutton_offset=None)
-        s_attack.layout(offset=(x_attack,y0),height=200,checkbutton_offset=None)
-        s_hold.layout(offset=(x_hold,y0),height=200,checkbutton_offset=None)
-        s_release.layout(offset=(x_release,y0),height=200,checkbutton_offset=None)
-        s_bleed.widget().place(x=x_bleed,y=y0, height=200)
-        sr_scale.layout(offset=(x_scale, y0), height=200,
-                        sign_offset=None,
-                        invert_offset=(-4, -23))
-        s_bias.widget().place(x=x_bias,y=y0, height=200)
+
+        SLIDER_HEIGHT = 200
+        y0 = 75
+        y_tumbler = y0
+        y_msb = y0+SLIDER_HEIGHT+40
+
+        x0 = 75
+        xsine = x0+160
+        xsaw = xsine+90
+        xpulse = xsaw+150
+        xdelay = xpulse+150
+
+        
+        def tumbler(param,x):
+            t = Tumbler(canvas,param,editor,
+                        digits=5,scale=0.001,
+                        fill='#140e23',
+                        foreground='#8f94a9',
+                        outline='#8f94a9')
+            self.add_control(param,t)
+            t.layout((x,y_tumbler))
+            return t
+
+        def msb(param,x):
+            b = MSB(canvas,param,editor,len(FREQ_RATIOS))
+            self.add_control(param,b)
+            b.layout((x,y_msb))
+            for i,r in enumerate(FREQ_RATIOS):
+                value = float(r[0])
+                txt = r[1]
+                adict = {'value' : value,
+                         'text' : txt,
+                         'fill' : '#13302d',
+                         'foreground' : '#8f94a9',
+                         'outline' : '#8f94a9'}
+                b.define_aspect(i,value,adict)
+            b.update_aspect()
+        
+        def norm(param,x):
+            s = cf.normalized_slider(canvas,param,editor)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y0,height=SLIDER_HEIGHT)
+            return s
+
+        def linear_slider(param,x,range_):
+            s = cf.linear_slider(canvas,param,editor,range_=range_)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y0,height=SLIDER_HEIGHT)
+            return s
+        
+        tumbler("lfoFreq",x0)
+        msb("sineRatio", xsine-23)
+        norm("sineAmp", xsine)
+        msb("sawRatio", xsaw+7)
+        norm("sawAmp", xsaw)
+        norm("sawWidth", xsaw+60)
+        msb("pulseRatio", xpulse+7)
+        norm("pulseAmp", xpulse)
+        norm("pulseWidth", xpulse+60)
+        linear_slider("lfoDelay",xdelay,(0,4))
+        linear_slider("lfoHold",xdelay+60,(0,4))
+        norm("lfoBleed",xdelay+120)
+        linear_slider("lfoScale",xdelay+195,(-1,1))
+        linear_slider("lfoBias",xdelay+255,(-4,4))

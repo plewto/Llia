@@ -25,19 +25,19 @@ class Lfo1Proxy(SynthProxy):
             
 
 lfo1_pallet = Pallet(default_pallet)
-lfo1_pallet["SLIDER-TROUGH"] = "#432703"
-lfo1_pallet["SLIDER-OUTLINE"] = "#42033E"
+lfo1_pallet["SLIDER-TROUGH"] = "#301319"
+lfo1_pallet["SLIDER-OUTLINE"] = "#13302d"
 
 specs["constructor"] = Lfo1Proxy
 specs["description"] = "Simple sine LFO"
 specs["keymodes"] = ("EFX", )
-
 specs["pretty-printer"] = pp
 specs["program-generator"] = random_lfo1
 specs["is-efx"] = True
 specs["is-controller"] = True
 specs["help"] = "LFO1"
 specs["pallet"] = lfo1_pallet
-
-
-specs["control-output-buses"] = [["outbus","null_source"]]
+specs["control-output-buses"] = [["sineout","null_source"],
+                                 ["sawout","null_source"],
+                                 ["pulseout","null_source"],
+                                 ["outbus","null_source"]]
