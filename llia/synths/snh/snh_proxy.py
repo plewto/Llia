@@ -8,10 +8,10 @@ from llia.synths.snh.snh_data import program_bank, pp, random_snh
 
 specs = SynthSpecs("SnH")
 
-class SnhProxy(SynthProxy):
+class SnHProxy(SynthProxy):
 
     def __init__(self, app):
-        super(SnhProxy, self).__init__(app, specs, program_bank)
+        super(SnHProxy, self).__init__(app, specs, program_bank)
         self.app = app
         
     def create_subeditors(self):
@@ -25,10 +25,10 @@ class SnhProxy(SynthProxy):
             
 
 snh_pallet = Pallet(default_pallet)
-snh_pallet["SLIDER-TROUGH"] = "#432703"
-snh_pallet["SLIDER-OUTLINE"] = "#42033E"
+snh_pallet["SLIDER-TROUGH"] = "#070064"
+snh_pallet["SLIDER-OUTLINE"] = "#63002b"
 
-specs["constructor"] = SnhProxy
+specs["constructor"] = SnHProxy
 specs["is-efx"] = True
 specs["is-controller"] = True
 specs["description"] = "Sample and Hold"
@@ -38,4 +38,9 @@ specs["program-generator"] = random_snh
 specs["help"] = "SnH"
 specs["pallet"] = snh_pallet
 
-specs["control-output-buses"] = [["outbus", "null_source"]]
+specs["control-output-buses"] = [["outbus", "null_source"],
+                                 ["sawbus", "null_source"],
+                                 ["noisebus","null_source"],
+                                 ["clockoutbus", "null_source"]]
+specs["control-input-buses"] = [["clockbus", "null_sink"],
+                                ["xbus", "null_sink"]]

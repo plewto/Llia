@@ -3,12 +3,13 @@
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
-from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.freq_spinner import FrequencySpinnerControl
-from llia.gui.tk.reciprocal_slider import ReciprocalSlider
+from llia.gui.tk.tumbler import Tumbler
+from llia.gui.tk.msb import ToggleButton
+
 
 def create_editor(parent):
-    panel = TkSnHPanel(parent)
+    TkSnHPanel(parent)
+
 
 class TkSnHPanel(TkSubEditor):
 
@@ -18,79 +19,53 @@ class TkSnHPanel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        canvas=factory.canvas(frame,1039,600,self.IMAGE_FILE)
+        canvas=factory.canvas(frame,696,361,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        # lab_panel = factory.image_label(canvas, self.IMAGE_FILE)
-        # lab_panel.pack(anchor="nw", expand=False)
 
-        # dc_rate = DecadeControl(canvas, "shRate", editor,
-        #                         coarse = (0.01, 10), limit = (0.01,99))
-        # dc_srcfreq = DecadeControl(canvas, "srcFreq", editor,
-        #                            coarse = (0.01, 10), limit = (0.01,99))
-        spin_rate = FrequencySpinnerControl(canvas,"shRate",editor,
-                                            from_=0,to=100)
-        spin_srcfreq = FrequencySpinnerControl(canvas,"srcFreq",editor,
-                                               from_=0,to=100)
-        s_src = cf.normalized_slider(canvas, "srcSelect", editor)
-        s_lag = cf.normalized_slider(canvas, "shLag", editor)
-        s_bleed = cf.normalized_slider(canvas, "shBleed", editor)
-        sx_delay = ExpSlider(canvas, "shDelay", editor, range_=4)
-        sx_attack = ExpSlider(canvas, "shAtack", editor, range_=4)
-        sx_hold = ExpSlider(canvas, "shHold", editor, range_=4)
-        sx_release = ExpSlider(canvas, "shRelease", editor, range_=4)
-        sr_scale = ReciprocalSlider(canvas, "shScale", editor, range_=4, degree=1)
-        s_bias = cf.linear_slider(canvas, "shBias", editor, range_=(-4,4))
-        self.add_control("shRate", spin_rate)
-        self.add_control("srcFreq", spin_srcfreq)
-        self.add_control("srcSelect", s_src)
-        self.add_control("shLag", s_lag)
-        self.add_control("shBleed", s_bleed)
-        self.add_control("shDelay", sx_delay)
-        self.add_control("shAttack", sx_attack)
-        self.add_control("shHold", sx_hold)
-        self.add_control("shRelease", sx_release)
-        self.add_control("shScale", sr_scale)
-        self.add_control("shBias", s_bias)
-        y0 = 90
-        x0 = 90
-        x_rate = x0
-        x_srcfreq = x_rate + 120
-        x_src = x_srcfreq + 140
-        x_lag = x_src + 60
-        x_delay = x_lag + 90
-        x_attack = x_delay + 60
-        x_hold = x_attack + 60
-        x_release = x_hold + 60
-        x_bleed = x_release + 60
-        x_scale = x_bleed + 90
-        x_bias = x_scale + 75
-        # dc_rate.layout(offset=(x_rate, y0), label_offset=(0, 100),
-        #                slider_offset = (80, 0, 14, 200))
-        # dc_srcfreq.layout(offset=(x_srcfreq, y0), label_offset=(0,100),
-        #                   slider_offset = (80, 0, 14, 200))
-        spin_rate.layout((x_rate,y0))
-        spin_rate.create_nudgetools(canvas,(x_rate+13,y0+30),
-                                    deltas=(10,1,0.1,0.01),
-                                    constant=1,
-                                    fill='#131313',
-                                    outline='#a5a08a')
-        #spin_srcfreq.layout((x_srcfreq,y0))
-        spin_srcfreq.layout((x_srcfreq,y0))
-        spin_srcfreq.create_nudgetools(canvas,(x_srcfreq+13,y0+30),
-                                       deltas=(10,1,0.1,0.01),
-                                       constant=1,
-                                       fill='#131313',
-                                       outline='#a5a08a')
-        s_src.widget().place(x=x_src, y=y0, height=200)
-        s_lag.widget().place(x=x_lag, y=y0, height=200)
-        sx_delay.layout(offset=(x_delay, y0), height=200, checkbutton_offset=None)
-        sx_attack.layout(offset=(x_attack, y0), height=200, checkbutton_offset=None)
-        sx_hold.layout(offset=(x_hold, y0), height=200, checkbutton_offset=None)
-        sx_release.layout(offset=(x_release, y0), height=200, checkbutton_offset=None)
-        s_bleed.widget().place(x=x_bleed, y=y0, height=200)
-        sr_scale.layout(offset=(x_scale, y0), height=200,
-                        sign_offset=None,
-                        invert_offset=(-4, -23))
-        s_bias.widget().place(x=x_bias, y=y0, height=200)
+        y0 = 75
+        x0 = 100
+        xmix = x0 + 150
+        xsaw = xmix
+        xnoise = xsaw+64
+        xexternal = xnoise + 60
+        xlag = xexternal+90
+        
+        def tumbler(param,x,y):
+            t = Tumbler(canvas,param,editor,digits=5,scale=0.001,
+                        outline='#a5a08a',
+                        foreground='#a5a08a',
+                        fill='black')
+            self.add_control(param,t)
+            t.layout((x,y))
+            return y
+
+        def norm(param,x):
+            s = cf.normalized_slider(canvas,param,editor)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y0)
+            return s
+
+        def linear_slider(param,x,range_):
+            s = cf.linear_slider(canvas,param,editor,range_=range_)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y0)
+        
+        tumbler("clockRate",x0,y0)
+        tumbler("sawFreq",xsaw-30,y0+160)
+
+        tog = ToggleButton(canvas,"clockSource",editor,
+                           text=["Internal","External"],
+                           fill='black',foreground='#007d47',
+                           selected_fill='black',selected_foreground='#007d47')
+        self.add_control("clockSource", tog)
+        tog.layout((x0+8,y0+36))
+        tog.update_aspect()
+        norm("sawMix",xsaw)
+        norm("noiseMix",xnoise)
+        norm("externalMix",xexternal)
+        norm("lag",xlag)
+        norm("scale",xlag+60)
+        linear_slider("bias",xlag+120,(-4,4))
+

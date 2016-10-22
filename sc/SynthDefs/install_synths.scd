@@ -5,6 +5,7 @@
 (
 ~manifesat = [ "asplit.scd",
 	"carnal.scd",
+	"cascade.scd",
 	"chronos.scd",
 	"flngr.scd",
 	"fm2.scd",
@@ -18,7 +19,6 @@
 	"orgn.scd",
 	"panner.scd",
 	"pitchshifter.scd",
-	"pulsegen.scd",
 	"rdrum.scd",
 	"saw3.scd",
 	"snh.scd",
