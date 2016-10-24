@@ -16,8 +16,8 @@ startup-script :
 
 
 [MIDI]
-input-port : Launchkey Mini 20:0
-output-port : Launchkey Mini 20:0
+input-port : Launchkey Mini 24:0
+output-port : Launchkey Mini 24:0
 backend : mido.backends.rtmidi
 ; backend : midi.backends.portmidi
 enable-program-pp : True
