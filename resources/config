@@ -67,7 +67,8 @@ lfo1      : True
 lfo2      : True            
 lfo3      : True             
 cascade   : True
-snh       : True            
+snh       : True
+controlmixer : True
 ghostbus  : True                 
 
 [MIDI-CHANNELS]

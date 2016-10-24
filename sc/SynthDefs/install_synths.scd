@@ -7,6 +7,7 @@
 	"carnal.scd",
 	"cascade.scd",
 	"chronos.scd",
+	"ctrlmixer.scd",
 	"flngr.scd",
 	"fm2.scd",
 	"ghostbus.scd",

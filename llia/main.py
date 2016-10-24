@@ -255,7 +255,8 @@ import_controller("LFO2", "llia.synths.lfo2.lfo2_proxy", "llia/synths/lfo2/lfo2_
 import_controller("LFO3", "llia.synths.lfo3.lfo3_proxy", "llia/synths/lfo3/lfo3_proxy.py")
 import_controller("Cascade", "llia.synths.cascade.cascade_proxy", "llia/synths/cascade/cascade_proxy.py")
 import_controller("SnH", "llia.synths.snh.snh_proxy", "llia/synths/snh/snh_proxy.py")
-import_controller("Ghostbus", "llia.synths.ghostbus.ghost_proxy", "llia/synths/ghostbus/ghost_proxy.py")
+#import_controller("Ghostbus", "llia.synths.ghostbus.ghost_proxy", "llia/synths/ghostbus/ghost_proxy.py")
+import_controller("ControlMixer", "llia.synths.controlmixer.controlmixer_proxy","llia/synths/controlmixer/controlmixer_proxy.py")
 print()
     
 
