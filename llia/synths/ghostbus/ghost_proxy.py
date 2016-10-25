@@ -37,8 +37,6 @@ specs["is-efx"] = True
 specs["is-controller"] = True
 specs["help"] = "Ghostbus"
 specs["pallet"] = ghostbus_pallet
-specs["control-input-buses"] = [["inbusA","null_sink"],
-                                ["inbusB","null_sink"],
-                                ["inbusC","null_sink"],
-                                ["inbusD","null_sink"]]
+specs["control-input-buses"] = [["inbus","null_sink"],
+                                ["xbus","null_sink"]]
 specs["control-output-buses"] = [["outbus","null_source"]]

@@ -3,8 +3,9 @@
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
-from llia.gui.tk.msb import MSB
+from llia.gui.tk.msb import ToggleButton
 from llia.synths.ghostbus.ghost_data import MAX_DELAY
+from llia.gui.tk.tumbler import Tumbler
 
 def create_editor(parent):
     TkGhostbusPanel(parent)
@@ -17,71 +18,72 @@ class TkGhostbusPanel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame, 1000, 700, self.IMAGE_FILE)
+        canvas = factory.canvas(frame, 491, 708,self.IMAGE_FILE)
         canvas.pack()
         self.canvas = canvas
         self.editor = editor
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-
-        y_slider = 75
-        x0 = 75
-        x_bias_offset = 60
-        slider_width=14
-        slider_height = 300
-        
-        def scale_slider(param, x):
-            s = cf.linear_slider(canvas,param,self.editor,range_=(-4.0, 4.0))
-            self.add_control(param,s)
-            s.widget().place(x=x,y=y_slider,
-                             width=slider_width,
-                             height=slider_height)
-            return s
-
-        def bias_slider(param, x):
-            s = cf.linear_slider(canvas,param,self.editor,range_=(-4.0,4.0))
-            self.add_control(param,s)
-            s.widget().place(x=x+x_bias_offset,y=y_slider,
-                             width=slider_width,
-                             height=slider_height)
-            return s
-
-        def mute_button(param, x):
-            b = MSB(canvas,param,self.editor,2)
-            aoff = {'fill' : 'black',
-                    'foreground' : 'gray',
-                    'outline' : 'gray',
-                    'text' : 'Mute'}
-            aon = {'fill' : '#002e00',
-                   'foreground' : 'white',
-                   'outline' : '#096c00',
-                   'text' : 'Mute'}
-            b.define_aspect(0, 0, aoff)
-            b.define_aspect(1, 1, aon)
+        cfill = 'black'
+        cforeground = '#d6dce6'
+        cselected = cforeground
+        def toggle(param,x,y):
+            b = ToggleButton(canvas,param,editor,
+                             fill=cfill,
+                             foreground=cforeground,
+                             outline=cforeground,
+                             selected_fill = cfill,
+                             selected_foreground = cselected)
             self.add_control(param,b)
-            x = x + 8
-            y = y_slider + slider_height + 40
-            b.layout(offset = (x,y))
+            b.layout((x,y))
             b.update_aspect()
             return b
+
+        def norm(param,x,y):
+            s = cf.normalized_slider(canvas,param,editor)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y)
+            return s
+
+        def linear_slider(param,range_,x,y):
+            s = cf.linear_slider(canvas,param,editor,range_=range_)
+            self.add_control(param,s)
+            s.widget().place(x=x,y=y)
+            return s
+
+        def scale_slider(param,x,y):
+            return linear_slider(param,(0,4),x,y)
+
+        def bias_slider(param,x,y):
+            return linear_slider(param,(-4,4),x,y)
+
+        def bipolar_slider(param,x,y):
+            return linear_slider(param,(-1,1),x,y)
+
+        y0 = 75
+        yhp = y0+100
+        x0 = 75
+        xfb = x0+100
+        xlag = xfb+60
+        xscale = xlag+60
+        xbias = xscale+60
+        toggle("enableMod",x0,y0)
+        toggle("enableHpA",x0,yhp)
+        norm("lagA",xlag,y0)
+        scale_slider("scaleA",xscale,y0)
+        bias_slider("biasA",xbias,y0)
+        y1 = y0+250
+        yhp = y1+100
+        t = Tumbler(canvas,"delay",editor,digits=4,scale=0.001,
+                    fill=cfill,foreground=cforeground,outline=cforeground,
+                    range_=(0,4000))
+        self.add_control("delay",t)
+        t.layout((x0,y1))
+        toggle("enableHpDelay",x0,yhp)
+        bipolar_slider("feedback",xfb,y1)
+        norm("lagDelay",xlag,y1)
+        scale_slider("scaleDelay",xscale,y1)
+        bias_slider("biasDelay",xbias,y1)
         
-        x_diff = 130
-        for i,p in enumerate("ABCD"):
-            x = x0 + i*x_diff
-            scale_slider("scale%s" % p, x)
-            bias_slider("bias%s" % p, x)
-            mute_button("mute%s" % p, x)
-
-        x_master = 600
-        scale_slider("masterScale", x_master)
-        bias_slider("masterBias", x_master)
-        mute_button("masterMute", x_master)
-   
-
-        s_lag = cf.normalized_slider(canvas,"lag",self.editor)
-        s_delay = cf.normalized_slider(canvas,"delay",self.editor)
-        self.add_control("lag", s_lag)
-        self.add_control("delay", s_delay)
-        s_delay.widget().place(x=x_master+120,y=y_slider, width=14, height=slider_height)
-        s_lag.widget().place(x=x_master+180,y=y_slider, width=14, height=slider_height)
+        
         

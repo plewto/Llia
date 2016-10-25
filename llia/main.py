@@ -228,7 +228,9 @@ def import_controller(stype, modname, path):
         
     
 
-warnings.filterwarnings("ignore")  # ISSUE: I dont like this! 
+warnings.filterwarnings("ignore")  # ISSUE: I dont like this!
+                                   # Move to inside import_xxx function
+                                   # and restore warnings before function returns
 
 import_synth("Orgn", "llia.synths.orgn.orgn_proxy","llia/synths/orgn/orgn_proxy.py")
 import_synth("Saw3", "llia.synths.saw3.s3_proxy","llia/synths/saw3/s3_proxy.py")
@@ -255,7 +257,7 @@ import_controller("LFO2", "llia.synths.lfo2.lfo2_proxy", "llia/synths/lfo2/lfo2_
 import_controller("LFO3", "llia.synths.lfo3.lfo3_proxy", "llia/synths/lfo3/lfo3_proxy.py")
 import_controller("Cascade", "llia.synths.cascade.cascade_proxy", "llia/synths/cascade/cascade_proxy.py")
 import_controller("SnH", "llia.synths.snh.snh_proxy", "llia/synths/snh/snh_proxy.py")
-#import_controller("Ghostbus", "llia.synths.ghostbus.ghost_proxy", "llia/synths/ghostbus/ghost_proxy.py")
+import_controller("Ghostbus", "llia.synths.ghostbus.ghost_proxy", "llia/synths/ghostbus/ghost_proxy.py")
 import_controller("ControlMixer", "llia.synths.controlmixer.controlmixer_proxy","llia/synths/controlmixer/controlmixer_proxy.py")
 print()
     
