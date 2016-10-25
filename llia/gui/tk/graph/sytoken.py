@@ -49,28 +49,34 @@ class SynthToken(Token):
         self._construction_points['cout'] = cout
         self._construction_points['cin'] = cin
         spacing = int(gconfig['port-radius'] * 2)
-        aoutparams = self.client.available_audio_output_parameters()
+        def get_bus_params(key):
+            acc = []
+            blst = self.client.specs[key]
+            for b in blst:
+                acc.append(b[0])
+            return acc
+        aoutparams = get_bus_params("audio-output-buses")
         for i,param in enumerate(aoutparams):
              x = gconfig['synth-node-width']
              y = spacing*(i+1)
              rel_position = x,y
              abs_position = x0+rel_position[0], y0+rel_position[1]
              aout[param] = abs_position,rel_position
-        ainparams = self.client.available_audio_input_parameters()
+        ainparams = get_bus_params("audio-input-buses")
         for i,param in enumerate(ainparams):
             x = 0
             y = spacing*(i+1)
             rel_position = x,y
             abs_position = x0+rel_position[0], y0+rel_position[1]
             ain[param] = abs_position,rel_position
-        coutparams = self.client.available_control_output_parameters()
+        coutparams = get_bus_params("control-output-buses")
         for i,param in enumerate(coutparams):
             x = spacing*(i+1)
             y = 0
             rel_position = x,y
             abs_position = x0+rel_position[0], y0+rel_position[1]
             cout[param] = abs_position,rel_position
-        cinparams = self.client.available_control_input_parameters()
+        cinparams = get_bus_params("control-input-buses")
         for i,param in enumerate(cinparams):
             x = spacing*(i+1)
             y = gconfig['synth-node-height']
