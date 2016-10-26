@@ -40,7 +40,7 @@ class LliaConfig(dict):
         file.
         
            Linux    ~/.config/Llia/config
-           OSX      ? not yet determined
+           OSX      ~/.config/Llia/config (Tentitive)
            Windows  ? not yet determined
         
         ARGS:
@@ -58,7 +58,7 @@ class LliaConfig(dict):
                 if platform.startswith("linux"):
                     filename = "~/.config/Llia/config"
                 elif platform.startswith("darwin"): # ISSUE: OSX Portability
-                    _non_support_message("OSX")
+                    filename = "~/.config/Llia/config"
                 elif platform.startswith("win32"): # ISSUE: Windows Portability
                     _non_support_message("Windows")
                 else:
