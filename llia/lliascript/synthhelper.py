@@ -267,6 +267,8 @@ class SynthHelper(object):
             self._synth_and_group_serial_number+=1
             self.current_sid = sy.sid
             self.update_prompt()
+            sy.keymode = keymode
+            sy.voice_count = voice_count
         return sy
 
     def add_efx(self, stype):

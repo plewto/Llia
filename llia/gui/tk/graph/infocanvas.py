@@ -14,8 +14,6 @@ class InfoCanvas(Canvas):
                     height=gconfig["graph-height"],
                     background=gconfig["info-fill"])
         self._current_info_text = ''
-        # lab_legend = factory.image_label(self, "resources/graph/legend.png")
-        # lab_legend.place(x=0,y=200)
         
     def clear_info(self):
         self.delete("info")

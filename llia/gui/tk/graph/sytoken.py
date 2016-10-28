@@ -210,10 +210,42 @@ class SynthToken(Token):
                           fill = fill,
                           outline = outline)
 
+    # def info_text(self,head="Synth"):
+    #     sy = self.client
+    #     specs = sy.specs
+    #     acc = "%s %s\n" % (head, self.client_id())
+    #     pad = ' '*4
+    #     aip = sy.available_audio_input_parameters()
+    #     if aip:
+    #         acc += "Audio inputs:\n"
+    #         for p in aip:
+    #             bname = sy.get_audio_input_bus(p)
+    #             acc += '%s%-12s <-- %s\n' % (pad,p,bname)
+    #     aop = sy.available_audio_output_parameters()
+    #     if aop:
+    #         acc += "Audio outputs:\n"
+    #         for p in aop:
+    #             bname = sy.get_audio_output_bus(p)
+    #             acc += '%s%-12s --> %s\n' % (pad,p,bname)
+    #     cip = sy.available_control_input_parameters()
+    #     if cip:
+    #         acc += "Control inputs:\n"
+    #         for p in cip:
+    #             bname = sy.get_control_input_bus(p)
+    #             acc += '%s%-12s <-- %s\n' % (pad,p,bname)
+    #     cop = sy.available_control_output_parameters()
+    #     if cop:
+    #         acc += "Control outputs:\n"
+    #         for p in cop:
+    #             bname = sy.get_control_output_bus(p)
+    #             acc += '%s%-12s --> %s\n' % (pad,p,bname)
+    #     return acc
+
     def info_text(self,head="Synth"):
         sy = self.client
-        specs = sy.specs
-        acc = "%s %s\n" % (head, self.client_id())
+        # specs = sy.specs
+        # acc = "%s %s\n" % (head, self.client_id())
+        acc = str(sy)
         pad = ' '*4
         aip = sy.available_audio_input_parameters()
         if aip:
@@ -240,6 +272,7 @@ class SynthToken(Token):
                 bname = sy.get_control_output_bus(p)
                 acc += '%s%-12s --> %s\n' % (pad,p,bname)
         return acc
+
 
                   
 class EfxToken(SynthToken):

@@ -251,6 +251,8 @@ class SynthProxy(object):
         global_oscid = app.proxy.global_osc_id()
         self.oscID = "%s/%s/%s" % (global_oscid,self.synth_format, self.id_)
         self._bank = bank.clone()
+        self.keymode = ""            # Read only
+        self.voice_count = 0         # Read only
         self._midi_chan0 = 0         # MIDI channel is "zero-indexed" (0..15)
         self._key_table_name = "EQ12"
         # _audio_output_buses
@@ -901,7 +903,7 @@ class SynthProxy(object):
         acc += self._bank.dump(1)
         acc += program.dump(1)
         return acc
-        
+    
     def random_program(self, slot=127, *args):
         '''
         Generate random program if a generator is defined.
@@ -923,3 +925,27 @@ class SynthProxy(object):
             msg = "No generator defined for %s" % self.specs["format"]
             self.status(msg)
             return None
+
+    def __str__(self):
+        pad = " "*4
+        if self.is_controller:
+            acc = "Controller"
+        elif self.is_efx:
+            acc = "Effect"
+        else:
+            acc = "Synth"
+        bnk = self._bank
+        prog = self.bank()[None]
+        perf = prog.performance
+        acc += "  SID %s\n" % self.sid
+        acc += "MIDI channel %d\n" % self.midi_input_channel()
+        acc += "Key mode  %s   voice count = %s\n" % (self.keymode, self.voice_count)
+        acc += "Key table %s\n" % self.keytable()
+        acc += 'Program [%s] "%s"\n' % (bnk.current_slot, prog.name)
+        acc += "Transpose %d\n" % perf.transpose
+        acc += "Key range [%d,%d]\n" % perf.key_range()
+        return acc
+        
+        
+        
+        
