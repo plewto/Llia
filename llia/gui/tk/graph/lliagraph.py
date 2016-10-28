@@ -11,16 +11,10 @@ from llia.gui.tk.graph.sytoken import SynthToken, EfxToken, ControllerToken
 from llia.gui.tk.graph.bustoken import AudiobusToken, ControlbusToken
 from llia.gui.tk.graph.infocanvas import InfoCanvas
 
-BUS_WARNING = '''
-Effects must be connected in the correct order.
-Newer synths may not process previous synths.
-'''
-
 class LliaGraph(Frame):
 
     control_bus_counter = 0
     audio_bus_counter = 0
-    
     
     def __init__(self, master, app):
         Frame.__init__(self, master)
@@ -208,11 +202,6 @@ class LliaGraph(Frame):
                 ctoken.off_screen = False
                 ctoken.move_to(x,y)
                 y += ydelta
-                
-
-                
-        
-
     
     def allign_tokens(self):
         self.canvas.delete('path')
@@ -221,12 +210,6 @@ class LliaGraph(Frame):
         self._allign_controller_synths(controller_tokens)
         self._allign_control_buses(controller_tokens)
         self.sync()
-        
-    def _show_bus_warning(self):
-        self.info_canvas.display_warning(BUS_WARNING)
-
-    def _clear_bus_warning(self):
-        self.info_canvas.clear_warning()
         
     def clear_drag_and_drop(self):
         self.current_token_and_port = None
@@ -253,7 +236,6 @@ class LliaGraph(Frame):
             self._drag_data['anchor-y'] = y
             self._drag_data['rubberband'] = rubber
             self.status(self.current_token_and_port)
-            self._show_bus_warning()
             
 
     def bus_drag(self, event):
@@ -290,8 +272,6 @@ class LliaGraph(Frame):
                 self._locate_drop_destination_bus(event,prt1)
             else:
                 self._locate_drop_destination_synth(event,prt1)
-        self._clear_bus_warning()
-
                 
     def _locate_drop_destination_bus(self, event, prt1):
         # For use when drag operation begins with synth port
