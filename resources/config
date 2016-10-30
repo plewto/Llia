@@ -60,7 +60,9 @@ panner      : True
 asplit      : True
 rumklang    : True
 chronos     : True
-pitchshifter : True
+pitchshifter  : True
+ringmodulator : True
+
 
 [CONTROL-SYNTH-IMPORTS]
 lfo1      : True            

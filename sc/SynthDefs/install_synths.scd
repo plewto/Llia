@@ -3,7 +3,7 @@
 */
 
 (
-~manifesat = [ "asplit.scd",
+~manifest = [ "asplit.scd",
 	"carnal.scd",
 	"cascade.scd",
 	"chronos.scd",
@@ -26,8 +26,8 @@
 	"rumklang.scd",
 	"testtones.scd",
 	"tremolo.scd",
-	"xover.scd"];
-
+	"xover.scd"
+	"ringmodulator.scd"];
 
 ~manifest.do({|fname|
 	postf("Installing '%'\n", fname);
