@@ -60,6 +60,7 @@ panner      : True
 asplit      : True
 rumklang    : True
 chronos     : True
+crusher     : True
 pitchshifter  : True
 ringmodulator : True
 

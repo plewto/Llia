@@ -26,8 +26,10 @@
 	"rumklang.scd",
 	"testtones.scd",
 	"tremolo.scd",
-	"xover.scd"
-	"ringmodulator.scd"];
+	"xover.scd",
+	"ringmodulator.scd",
+	"crusher.scd"
+];
 
 ~manifest.do({|fname|
 	postf("Installing '%'\n", fname);

@@ -250,6 +250,7 @@ import_effect("Rumklang", "llia.synths.rumklang.rumklang_proxy")
 import_effect("Chronos", "llia.synths.chronos.chronos_proxy")
 import_effect("PitchShifter", "llia.synths.pitchshifter.pitchshifter_proxy")
 import_effect("RingModulator", "llia.synths.ringmodulator.rm_proxy")
+import_effect("Crusher", "llia.synths.crusher.crusher_proxy")
 print()
 
 import_controller("LFO1", "llia.synths.lfo1.lfo1_proxy")
