@@ -3,7 +3,7 @@ SynthDef(\Crusher, {
 	|inbus = 8
 	outbus = 0
 	clockFreq = 20000       // clock freq
-	low = 20000         // lowpass cutoff
+	low = 20000             // lowpass cutoff
 	wet = 0.5
 	dry = 0.5
 	amp = 1.0|
