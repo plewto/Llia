@@ -252,6 +252,8 @@ import_effect("PitchShifter", "llia.synths.pitchshifter.pitchshifter_proxy")
 import_effect("RingModulator", "llia.synths.ringmodulator.rm_proxy")
 import_effect("Crusher", "llia.synths.crusher.crusher_proxy")
 import_effect("Grayhound", "llia.synths.grayhound.grayhound_proxy")
+import_effect("QMod","llia.synths.qmod.qmod_proxy")
+    
 print()
 
 import_controller("LFO1", "llia.synths.lfo1.lfo1_proxy")

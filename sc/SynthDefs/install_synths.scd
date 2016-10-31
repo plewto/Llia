@@ -22,6 +22,7 @@
     "orgn.scd",
     "panner.scd",
     "pitchshifter.scd",
+    "qmod.scd",
     "rdrum.scd",
     "ringmodulator.scd",
     "rumklang.scd",

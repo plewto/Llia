@@ -62,6 +62,7 @@ rumklang    : True
 chronos     : True
 crusher     : True
 grayhound   : True
+qmod        : True
 pitchshifter  : True
 ringmodulator : True
 
