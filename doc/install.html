@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia Installation">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Installation</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION install **** -->
+        <a id="install"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Llia Installation</h1>
+    <a class="navigation" href="index.html">Previous(&nbsp;index&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="quickstart1.html">Next(&nbsp;quickstart1&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            
+            Quick outline of installation process.
+            <ol>
+                <li>Install SuperCollider if not already installed.</li>
+                <li>Copy top level Llia folder to wherever you wish, we'll call this the <em>install</em> directory</li>
+                <li>Copy contents of {install}/sc/Extensions/Classes to SuperCollider extensions directory.<br>
+                    <ul>
+                      <li>
+                        Linux:
+                        <ul>
+                           <li>system-wide &nbsp;&nbsp;&nbsp; /usr/local/share/SuperCollider/Extensions/</li>
+                           <li>per-user   &nbsp;&nbsp;&nbsp; ~/.local/share/SuperCollider/Extensions/</li>
+                        </ul>
+                      </li>
+                      <li>
+                       OSX:
+                       <ul>
+                          <li>system-wide   &nbsp;&nbsp;&nbsp; /Library/Application Support/SuperCollider/Extensions/</li>
+                          <li>per-user   &nbsp;&nbsp;&nbsp; ~/Library/Application Support/SuperCollider/Extensions/</li>
+                       </ul>
+                     </li>
+                     <li>
+                      Windows:  ?  Fixme
+                     </li>
+                    </ul>
+                 </li>   
+                    
+                <li>In a terminal, navigate to the directory {install}/sc/SynthDefs/</li>
+                <li>Start the SuperCollider ide with the command: &nbsp;&nbsp; scide</li>
+                <li>From the SuperCollider ide load and execute the file {install}/sc/SynthDefs/install_synths.scd<br>
+                    <p class="footnote">
+                       To manually execute code in SuperCollider, place the cursor just inside the opening 
+                       parenthesis and press control+Enter keys simultaneously.
+                    </p>
+                    </li>
+                <li>Resolve any Python dependencies, form a terminal:<br>
+                   <ol>
+                      <li>pip install numpy</li>
+                      <li>pip install pillow</li>
+                      <li>pip install mido</li>
+                    </ol>
+                    <p class="footnote">
+                       The mido package requires a MIDI backend and there are two possibilities: <b>rtmidi</b> (preferred) and
+                       <b>portmidi</b>.   These are very common and pre-installed on many systems. If neither is installed 
+                          consult the rtmidi and portmidi web sites.  In the future pygame may be a third option.
+                    </p>
+                 </li>
+                 <li>Copy Llia configuration file {install}/resources/config to the appropriate location:<br>
+                     <ol>
+                       <li>Linux:  ~/.config/Llia/</li>
+                       <li>OSX:  ~/.config/Llia/</li>
+                       <li>Windows:   ? Fixme</li>
+                     </ol>
+                     Create missing directories if needed.
+                 </li>
+                 <li>Edit configuration file for MIDI backend.<br>
+                     Locate the [MIDI] section of the config file and change the backend value to either
+                     <ul>
+                       <li>backend : mido.backends.rtmidi</li>
+                       <li>backend : mido.backends.portmidi</li>
+                     </ul>
+                     Whichever library is installed on your system.
+                 </li>
+            </ol>
+            
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

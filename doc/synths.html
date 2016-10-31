@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia Synths">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Synths</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION synths **** -->
+        <a id="synths"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Llia Synths</h1>
+    <a class="navigation" href="graph.html">Previous(&nbsp;graph&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="performance.html">Next(&nbsp;performance&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            Llia has three general synth types:</p>
+            
+        <ol start="1">
+            <li>Regular &#34;Instrument&#34; synths</li>
+            <li>Effect Synths</li>
+            <li>Control Synths</li>
+        </ol>
+            <p class="section-body">
+            The word &#34;synth&#34; may refer to any one of these types, hopefully
+            context will make it clear which synth  type is being described.   Within
+            each of these broad categories there are numerous specific synth types. <BR><BR>
+            
+            
+            A <i>regular</i> synth is an instrument of some sort which may be
+            played, such as an organ or synthesizer.  Concrete examples are the MASA
+            organ and Saw3 synthesizer. All <i>regular</i> synths have at least one audio
+            output. They typically have at least one control input. Conceivably they
+            might also have audio inputs or control outputs, but this would be
+            rare and no current instrument have these ports.<br><br>
+            
+            An <i>effect</i> synth is used to process signals external to itself.
+             The input signal may come from an instrument synth, another effect or
+            from the sound card audio inputs.  Effect synths will always have at least
+            one audio input and one audio output.  They typically have at least
+            one control input, but not always.  They might also have one or more
+            control outputs.<br><br> 
+            
+            <i>Control</i> synths will always have at least one control output.  They
+            may also have one or more control inputs.  They will never
+            have audio ports of any kind.
+            </p>
+            
+            <p class="section-body">
+            
+            It is important to maintain a distinction between client side and server
+            side synths.   A server side Synth is an active object running on the
+            SuperCollider server.  We are rarely directly concerned with these as they
+            are taken care of behind the scenes.  The synths that do concern us are on
+            the client.   Technically these are instances of the python SynthProxy class.  
+            Unless specifically noted the term
+            &#34;synth&#34; refers to these client-side proxies and not to the objects
+            on the server. 
+            </p>
+            
+            <p class="section-body">
+            
+            All (client-side) synths share certain common features.  These include:</p>
+            
+        <ul>
+            <li>A Program Bank</li>
+            <li>A &#34;current&#34; program</li>
+            <li>A keymode</li>
+        </ul>
+            <p class="section-body">
+            
+            A <a href="bank.html">program bank</a> is a collection of 128
+            Programs.  Programs may be moved around within the bank or copy and pasted
+            across banks of the same type.  Banks as a whole may be saved to external
+            files.  A program contains values for all parameters of a synth. Each
+            program also contains a <a href="performance.html">Performance</a>
+            which is a collection of values related to how the synth responds to
+            specific MIDI events.<br><br>
+            
+            A bank always has a <i>current</i> program which is selected either by MIDI
+            program change events or by the user selecting it from a
+            program list.<br><br>
+            
+            Each synth also has a <a href="keymode.html">keymode</a> which is specified
+            when the synth is created.  The keymode controls how a synth is allocated
+            in response to MIDI note events.  Not all synths work with all possible
+            keymodes.  Effects and Control synths for example may only use the special
+            <i>efx</i> keymode.  </p>
+            
+    <a class="navigation" href="graph.html">Previous(&nbsp;graph&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="performance.html">Next(&nbsp;performance&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

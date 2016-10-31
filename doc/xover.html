@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="XOver">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>XOver</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION xover **** -->
+        <a id="xover"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">XOver</h1>
+        <img class="center" src="images/synthcat/xover.png" alt="" />
+    <a class="navigation" href="carnaldelay.html">Previous(&nbsp;carnaldelay&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="flngr.html">Next(&nbsp;flngr&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            XOver is a duel filter effect.  Two filters, one lowpass the other
+            highpass/bandpass, share the same crossover frequency with the output cross
+            fading between the two sets of filter.
+            </p>
+            
+        <img class="center" src="images/synthcat/xover_block.png" alt="" />
+        <img class="center" src="images/synthcat/xover_editor.png" alt="" />
+        <h4 class="heading">Crossover section</h4>
+            <p class="section-body">
+            
+            The controls of the Crossover section are divided into two groups.  All
+            controls to the left are common to both lowpass and highpass/bandpass
+            filters. The controls in the HP&nbsp;Filter section are specific to the
+            highpass/bandpass filters.
+            </p>
+            
+            <p class="section-body">
+            
+            The set of 3 <a href="glossary.html#msb">multi-state&nbsp;buttons</a> on
+            the far left set the fixed crossover frequency and limits on the maximum
+            and minimum frequency.
+            </p>
+            
+            <p class="section-body">
+            
+            <b>LFO</b> slider sets LFO modulation depth of crossover frequency.<br>
+            <b>Lfo Freq Ratio</b> button sets the crossover LFO frequency relative to
+            the main LFO.<br>
+            <b>Wave</b> sets crossover LFO waveform, between sawtooth and triangle<br>
+            <b>External</b> signal applied to crossover frequency<br>
+            <b>Res</b>, filter resonance.
+            </p>
+            
+        <h4 class="heading">HP Filter</h4>
+            <p class="section-body">
+            
+            <b>Filter Mix</b> mix between highpass and bandpass filters<br>
+            <b>Lag</b> lag applied to highpass/bandpass frequency control signal<br>
+            <b>HP Filter Offset</b> frequency ratio of highpass cutoff to crossover
+            point
+            </p>
+            
+        <h4 class="heading">LFO</h4>
+            <p class="section-body">
+            
+            Internally there are 3 LFOs, the crossover frequency LFO and two filter
+            mix LFOs.  The filter mix LFOs produce sine waves and have the same
+            frequency, but they are 90 degrees out of phase. 
+            The crossover LFO produces a sawtooth/triangle wave.  The 
+            LFO <a href="glossary.html#tumbler">tumbler</a> sets the frequency for the
+            two filter output LFOS.  The crossover LFO frequency is always relative to
+            this value as described above.
+            </p>
+            
+            <p class="section-body">
+            
+            <b>LFO on/off</b> button, turns LFO modulation of filter outputs on or off
+            </p>
+            
+        <h4 class="heading">External</h4>
+            <p class="section-body">
+            
+            <b>Scale</b> value applied to external signal<br>
+            <b>Bias</b> value added to external signal
+            </p>
+            
+        <h4 class="heading">Mixer</h4>
+            <p class="section-body">
+            
+            <b>Dry</b> signal <a href="glossary.html#volume-slider">slider</a><br>
+            <b>LP</b> lowpass mix<br>
+            <b>HP</b> highpass/bandpass mix<br>
+            <b>Amp</b> overall amplitude<br>
+            <b>Pan Dry</b><br>
+            <b>Pan LP</b><br>
+            <b>Pan HP</b>
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Buses</h4>
+            <p class="section-body">
+            
+            <b>inbus</b> audio input<br>
+            <b>outbus1</b> audio output 1<br>
+            <b>outbus2</b> audio output 2<br>
+            <b>xbus</b> xontrol input<br>
+            <b>lfo1aOutbus</b> lowpass LFO output<br>
+            <b>lfo1bOutbus</b> highpass LFO output, same signal as lfo1aOutbus except
+            90 degrees phase shift<br>
+            <b>lfo2Outbus</b> crossover LFO output
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">XOver parameters</h4>
+            
+            <ul>
+            <li><b>lfoFreq</b>, &nbsp;&nbsp; common LFO frequency (0,99.999)</li>
+            <li><b>lfo2Ratio</b>, &nbsp;&nbsp; crossover LFO ratio (see xover_constants)</li>
+            <li><b>lfo2Wave</b>, &nbsp;&nbsp; crossover LFO wave (0,1) 0.5 = tri</li>
+            <li><b>lfoEnable</b>, &nbsp;&nbsp; enable output LFO (0,1) </li>
+            <li><b>res</b>, &nbsp;&nbsp; filter resonace (0,1)</li>
+            <li><b>xover</b>, &nbsp;&nbsp; crossover frequency (see xover_constants)</li>
+            <li><b>lfoToXover</b>, &nbsp;&nbsp; LFO crossover modulation depth (0,1)</li>
+            <li><b>externToXover</b>, &nbsp;&nbsp; external signal crossover modulation (0,1)</li>
+            <li><b>minXover</b>, &nbsp;&nbsp; minimum crossover frequency (see xover_constants)</li>
+            <li><b>maxXover</b>, &nbsp;&nbsp; maximum crossover frequency (see xover_constants)</li>
+            <li><b>filterBMix</b>, &nbsp;&nbsp; highpass/bandpass mix (0,1)</li>
+            <li><b>filterBRatio</b>, &nbsp;&nbsp; highpass cutoff as ratio of crossover (see xover_constants)</li>
+            <li><b>filterBLag</b>, &nbsp;&nbsp; highpass control lag time (0,1)</li>
+            <li><b>dryAmp</b>, &nbsp;&nbsp; dry signal output amplitude (0,2)</li>
+            <li><b>filterAAmp</b>, &nbsp;&nbsp; lowpass output amplitude (0,2)</li>
+            <li><b>filterBAmp</b>, &nbsp;&nbsp; highpass outut amplitude (0,2)</li>
+            <li><b>dryPan</b>, &nbsp;&nbsp; dry pan (-1,+1)</li>
+            <li><b>filterAPan</b>, &nbsp;&nbsp; lowpass pan (-1,+1)</li>
+            <li><b>filterBPan</b>, &nbsp;&nbsp; highpass pan (-1,+1)</li>
+            <li><b>xscale</b>, &nbsp;&nbsp; external signal scale factor (0,4)</li>
+            <li><b>xbias</b>, &nbsp;&nbsp; external signal bias (-4,+4)</li>
+            <li><b>amp</b>, &nbsp;&nbsp; main output amplitude (0,2)</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="carnaldelay.html">Previous(&nbsp;carnaldelay&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="flngr.html">Next(&nbsp;flngr&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Risset Drum">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>RDrum</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION rdrum **** -->
+        <a id="rdrum"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">RDrum</h1>
+        <img class="center" src="images/synthcat/rdrum.png" alt="" />
+    <a class="navigation" href="orgn.html">Previous(&nbsp;orgn&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="saw3.html">Next(&nbsp;saw3&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            RDrum is an extension of the &#34;Risset Drum&#34;, an additive technique developed by 
+            <a href="https://en.wikipedia.org/wiki/Jean-Claude_Risset"> Jean Claude Risset</a>
+            for the synthesis of drum sounds.  It is capable of producing relatively realistic drum sounds, 
+            at least over a short range.
+            </p>
+            
+            <p class="section-body">
+            
+            The original Risset Drum has 4 sine wave partials, one at the fundamental
+            and the remaining three at specific non-harmonic frequencies.  RDrum treats
+            the fundamental separately from the other three partials and adds a
+            noise component. 
+            </p>
+            
+            
+            The RDrum components are:<br>
+            <ul>
+            <li>Tone A, single sine/square wave</li>
+            <li>Tone B, 3 non-harmonic sine waves</li>
+            <li>Filtered noise</li>
+            </ul>
+            <p class="section-body">
+            The controls for Tone A and Tone B are nearly identical. The Noise section
+            adds a few additional parameters but it too is very similar to the other two
+            sections.
+            </p>
+            
+        <img class="center" src="images/synthcat/rdrum_editor.png" alt="" />
+        <h4 class="heading">Tone A</h4>
+            <p class="section-body">
+            
+            Tone A is a single sine/square wave with relative tuning set by the tune
+            <a href="glossary.html#tumbler">tumbler</a> control on the left<br>
+            <b>Tone</b> Mix between sine and square waves, 0=sine, 1=square.<br>
+            <b>Attack</b> time<br>
+            <b>Decay</b> time<br>
+            <b>Bend</b>, amount of envelope applied to pitch bend, either negative or positive.<br>
+            <b>Velocity</b><br>
+            <b>Amp</b> See <a href="glossary.html#volume-slider">amp slider</a>
+            </p>
+            
+        <h4 class="heading">Tone B</h4>
+            <p class="section-body">
+            
+            Tone B consist of 3 non-harmonic sine partials.  The controls for Tone B are
+            identical to those of Tone A with exception of the <b>Tone</b> control.
+            For tone B the tone control sets the relative frequencies of the component
+            partials.  The &#34;R&#34; tick marks the classic Risset Drum frequencies.
+            </p>
+            
+        <h4 class="heading">Noise</h4>
+            <p class="section-body">
+            
+            The noise section consist of band-pass filtered white noise with the same
+            envelope controls as Tones A and B.<br> 
+            
+            <b>Tune</b> tumbler - filter tracking amount<br>
+            <b>Bias</b> tumbler - fixed filter frequency<br>
+            <b>Res</b> filter resonance<br>
+            <b>Attack</b> time<br>
+            <b>Decay</b> time<br>
+            <b>Bend</b> envelope application to filter frequency<br>
+            <b>Velocity</b><br>
+            <b>Amp</b>
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">RDrum Parameters</h4>
+            
+            <ul>
+            <li><b>amp</b>,&nbsp;&nbsp; Linear output amp (0,2)</li>
+            <li><b>aRatio</b>,&nbsp;&nbsp; Tone A frequency ratio</li>
+            <li><b>aAttack</b>,&nbsp;&nbsp; Tone A attack time (0,2)</li>
+            <li><b>aDecay</b>,&nbsp;&nbsp; Tone A decay time (0,2)</li>
+            <li><b>aAmp</b>,&nbsp;&nbsp; Tone A amp (0,2)</li>
+            <li><b>aBend</b>,&nbsp;&nbsp; Tone A envelope bend (-1,+1)</li>
+            <li><b>aTone</b>,&nbsp;&nbsp; Tone A sine, square mix, 0=sine, 1=square</li>
+            <li><b>aVelocity</b>,&nbsp;&nbsp; Tone A velocity sensitivity</li>
+            <li><b>bRatio</b>,&nbsp;&nbsp; Tone B frequency ratio</li>
+            <li><b>bAttack</b>,&nbsp;&nbsp; Tone B attack time (0,2)</li>
+            <li><b>bDecay</b>,&nbsp;&nbsp; Tone B decay time (0,2)</li>
+            <li><b>bAmp</b>,&nbsp;&nbsp; Tone B amp (0,2)</li>
+            <li><b>bBend</b>,&nbsp;&nbsp; Tone B envelope bend amount (-1,+1)</li>
+            <li><b>bTune</b>,&nbsp;&nbsp; Tone B partial tuning (0,4)</li>
+            <li><b>bVelocity</b>,&nbsp;&nbsp; Tone B velocity sensitivity (0,1)</li>
+            <li><b>noiseRatio</b>,&nbsp;&nbsp; Noise filter track (0,16)</li>
+            <li><b>noiseBias</b>,&nbsp;&nbsp; Noise filter static value (0,20k)</li>
+            <li><b>noiseAttack</b>,&nbsp;&nbsp; Noise attack time (0,2)</li>
+            <li><b>noiseDecay</b>,&nbsp;&nbsp; Noise decay time (0,2)</li>
+            <li><b>noiseAmp</b>,&nbsp;&nbsp; Noise amp (0,2)</li>
+            <li><b>noiseRes</b>,&nbsp;&nbsp; Noise filter resonance (0,1)</li>
+            <li><b>noiseBend</b>,&nbsp;&nbsp; Noise envelope to filter (-1,+1)</li>
+            <li><b>noiseVelocity</b>,&nbsp;&nbsp; Noise velocity sensitivity (0,1)</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="orgn.html">Previous(&nbsp;orgn&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="saw3.html">Next(&nbsp;saw3&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

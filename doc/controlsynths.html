@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia Control Synths">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Control Synths</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION controlsynths **** -->
+        <a id="controlsynths"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Llia Control Synths</h1>
+    <a class="navigation" href="effects2.html">Previous(&nbsp;effects2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="graph.html">Next(&nbsp;graph&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            
+            <p class="section-body">
+               To conserve resources most synthesis systems, including SuperCollider,
+               operate on at least two separate time scales
+            </p>
+            <ul>
+              <li>Audio</li>
+              <li>Control</li>
+            </ul>
+            
+            <p class="section-body">
+            
+            A common audio rate is 44100 Hz which gives a time resolution of about 45
+            micro-seconds.   Many signals, such as LFOs, envelopes, user input etc,  do
+            not require anywhere near this level of resolution.  To save processor time
+            these signals are updated at a much slower <em>control</em> rate.  A typical control
+            rate is about 1 tenth the audio rate, for every 10 audio samples the
+            control signals are updated once.
+            </p>
+            
+            <p class="section-body">
+            
+            Llia provides several control rate 
+            <a href="glossary.html#synth">synths</a>
+            which do not process or generate audio.   Instead they influence how other
+            synths (including other control synths) operate. 
+            </p>
+            
+            <p class="footnote">
+            
+            As with audio rate synths, the order in which two control synths are 
+            created is meaningful but it is more relaxed.  Connections to and between
+            control synths should always work, however there may be different results
+            if the creation order of the control synths is different. 
+            <b class="verify">verify this</b>
+             </p>
+            
+            <p class="section-body">
+            
+            Creating a control synth is no different from any other synth.  There will
+            be no audio inputs or outputs, and there will be at least one control
+            output, and perhaps one or more control inputs.  Control outputs appear on
+            the top of graph icons, control inputs are on the bottom.
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl001.png" alt="" />
+            <p class="section-body">
+            
+            For illustration we'll use an LFO1 first for vibrato and then for combined
+            vibrato and panning.
+            </p>
+            
+            <p class="section-body">
+            
+            From the main window, select the Controllers tab and add an instance of
+            LFO1.
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl002.png" alt="" />
+            <p class="section-body">
+            
+            Switching to the graph screen note that LFO1 has several outputs. When the
+            mouse pointer moves into an output(or input) port, information about that
+            port is displayed in the area to the left of the graph.  
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl003.png" alt="" />
+            <p class="section-body">
+            
+            The port names can at times be a bit cryptic but you can always consult the
+            synth documentation for details.   Typically the main output will have a
+            name such as "outbus".  For LFO1, which is actually three
+            LFOs in one, there are outputs for each individual LFO and a main output
+            which combines the three signals. 
+            </p>
+            
+            <p class="section-body">
+            
+            Next from the Effects tab create an instance of Panner and from the Synth
+            tab add a copy of MASA.   Using an audio bus patch MASA to the panner
+            input, the graph should now look something like this:
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl004.png" alt="" />
+            
+            <p class="section-body">
+               In the group window select each synth in turn and select the following
+               programs:
+            <p>
+            <ul>
+               <li>LFO1 [000] &#34;Delayed vibrato 5Hz&#34;</li>
+               <li>Panner [000] &#34;Center&#34;</li>
+               <li>MASA - [000] &#34;Albatross&#34;</li>
+            </ul>
+            
+            <p class="section-body">
+            
+            Connecting control signals is no different then audio, except that
+            <em>control buses</em> are used.  Click the +Control button to add a new
+            control bus.
+            </p>
+            
+            <p class="section-body">
+            
+            Control bus tokens are circular with input on the bottom and output at top.
+            Connect the &#34;outbus&#34; output of LFO1 to the control bus and the
+            control bus to the MASA control input.
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl005.png" alt="" />
+            <p class="section-body">
+            
+            Playing a few notes at this point should not sound any different.  This is
+            because most synth programs have external signals turned off by default.
+            Go back to the group window, select the MASA_2 tab and then the MASA
+            editor.
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl006.png" alt="" />
+            <p class="section-body">
+            
+            The <em>Pitch</em> slider in the <em>External</em> section controls how much the
+            external control signal is applied to the pitch.
+            </p>
+            
+            <p class="section-body">
+            
+            To connect the LFO1 sawtooth output to the Panner, create another control
+            bus and make the connections.
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl007.png" alt="" />
+            <p class="section-body">
+            
+            Like MASA, the panner does not automatically use the external signal.
+            Switch to the Panner editor and use the External &#34;Scale&#34; slider.
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl008.png" alt="" />
+            <p class="section-body">
+            
+            Many effects, including the Panner, have internal control generators which
+            are made available to the outside world.  The control output on the
+            top of Panner is for connection to it's internal LFO.  The above patch can
+            be simplified, at the cost of flexibility, by using the Panner's LFO
+            as the vibrato source to MASA.
+            </p>
+            
+        <img class="center" src="images/controlsynths/ctrl009.png" alt="" />
+            <p></p>
+            <hr class="section-head" />
+    <a class="navigation" href="effects2.html">Previous(&nbsp;effects2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="graph.html">Next(&nbsp;graph&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

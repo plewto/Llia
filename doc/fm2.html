@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="FM2">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>FM2</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION fm2 **** -->
+        <a id="fm2"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">FM2</h1>
+        <img class="center" src="images/synthcat/fm2.png" alt="" />
+    <a class="navigation" href="synth_catalog.html">Previous(&nbsp;synth_catalog&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="klstr.html">Next(&nbsp;klstr&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            FM2 is a simple 1-modulator 1-carrier <a href="https://en.wikipedia.org/wiki/Frequency_modulation_synthesis">FM</a> synth.
+            </p>
+            
+        <img class="center" src="images/synthcat/fm2_block.png" alt="" />
+            <hr class="section-head" />
+        <h4 class="heading">FM2 OPS Panel</h4>
+            <p class="section-body">
+            
+            Editor tab FM2OPS contains nearly identical controls for both the
+            modulator and carrier.
+            </p>
+            
+        <img class="center" src="images/synthcat/fm2_editor1.png" alt="" />
+            <p class="section-body">
+            
+            Each <a href="glossary.html#operator">operator</a> has controls for
+            frequency ratio and bias, amplitude, LFO and velocity modulation, key scaling and
+            envelope. 
+            </p>
+            
+            <p class="section-body">
+            
+            The <a href="glossary.html#tumbler">tumbler</a> controls on the left set
+            frequency ratio and bias offset for each operator.
+            </p>
+            
+            <p class="footnote">
+            
+            An interesting chorusing effect may be produced by setting the carrier
+            ratio to 0 and the bias to some low value less then about 10, or even less
+            then 1.  Care should be taken since the carrier will be directly outputting
+            a sub sonic signal.  FM2 contains a fixed highpass filter on its output
+            specifically to reduce the danger while using this technique.
+             </p>
+            
+            <p class="section-body">
+            
+            Operator amplitude controls are different for the carrier and modulators.
+            For the carrier the <b>Amp</b> slider sets the overall volume in db. The
+            modulator has two amplitude controls which combine to set the <b>Mod
+            Depth</b> (modulation depth).  The box below the mod depth slider is a 
+            <a href="glossary.html#msb">multi state button</a> which scales the slider
+            value.  Extreme modulation depths may be obtained. 
+            </p>
+            
+            <p class="section-body">
+            
+            The <b>LFO</b> and <b>Velocity</b> sliders function the same for both carrier and
+            modulator by setting an output modulation depth from the corresponding
+            sources. 
+            </p>
+            
+            <p class="section-body">
+            
+            The modulator <b>Feedback</b> slider produces self
+            modulation.  With feedback at 0 the modulator produces a sine wave.  As
+            feedback is increased, higher harmonics progressively appear producing something
+            like a sawtooth wave.  As the feedback increases still further the
+            modulator becomes <a href="https://en.wikipedia.org/wiki/Chaos_theory">chaotic</a>. 
+            </p>
+            
+            <p class="section-body">
+            
+            Immediately to the left of the envelope are <b>key scale controls</b>.  These are
+            identical for both carrier and modulator.   The top button sets a MIDI
+            keynumber and has an increment of an octave (60=middle&nbsp;C).
+             The middle button sets the scaling depth for notes to the left
+            of the key number.   The bottom button sets the right scaling depth.
+            Scaling depths are in db per octave and have a range between &plusmn;12.
+            </p>
+            
+            <p class="section-body">
+            
+            Keyscaling is most useful with the modulator where a negative
+            scale factor is often useful to reduce the harshness of high notes.
+            Positive left scale factors are useful for increasing brightness of low
+            notes.  
+            </p>
+            
+            <p class="section-body">
+            
+            The carrier and modulator have identical <a
+            href="glossary.html#addsr">ADDSR</a> envelopes.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">FM2 LFO Panel</h4>
+            <p class="section-body">
+            
+            The 2nd editor tab FM2 LFO contains controls common to both
+            operators.
+            </p>
+            
+        <img class="center" src="images/synthcat/fm2_editor2.png" alt="" />
+            <p class="section-body">
+            
+            <b>Portamento</b> Sets portamento time (not available in Poly1 
+            <a href="keymode.html">key mode</a>)
+            </p>
+            
+            <p class="section-body">
+            
+            LFO <b>Delay</b>, LFO onset delay<br>
+            LFO <b>VSens</b>, Vibrato sensitivity<br>
+            LFO <b>VDepth</b>, Vibrato depth
+            </p>
+            
+            <p class="section-body">
+            
+            External <b>Pitch</b>, amount of external signal applied to pitch.<br>
+            External <b>Mod Depth</b>, amount of external signal applied to modulation depth.<br>
+            External <b>Scale</b>, scale factor applied to external signal.<br>
+            External <b>Bias</b>, fixed bias amount added to external signal.
+            </p>
+            
+            <p class="section-body">
+            
+            Out <b>Amp</b>, main output amplitude.
+            See <a href="glossary.html#volume-slider">Volume slider</a>
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">FM2 Parameters</h4>
+            <ul>
+            
+            
+            <li><b>amp</b>, &nbsp;&nbsp; overall linear amplitude (0,2)</li>
+            
+            <li><b>port</b>, &nbsp;&nbsp;  portamento time (0,1)</li>
+            
+            <li><b>xPitch</b>, &nbsp;&nbsp;  external signal pitch modulation (0,1)</li>
+            
+            <li><b>xModDepth</b>, &nbsp;&nbsp; external signal modulation depth (0,1)</li>
+            
+            <li><b>xScale</b>, &nbsp;&nbsp;  external signal scale factor (0,4)</li>
+            
+            <li><b>xBias</b>, &nbsp;&nbsp;  external signal bias amount (0,4)</li>
+            
+            <li><b>lfoFreq</b>, &nbsp;&nbsp; LFO frequency (0,99.99)</li>
+            
+            <li><b>lfoDelay</b>, &nbsp;&nbsp;  LFO onset delay in seconds (0,4)</li>
+            
+            <li><b>vsens</b>, &nbsp;&nbsp;  Vibrato sensitivity (0,1)</li>
+            
+            <li><b>vdepth</b>, &nbsp;&nbsp;  Programmed vibrato depth (0,1)</li>
+            
+            <li><b>op1Enable</b>, &nbsp;&nbsp;  Not used</li>
+            
+            <li><b>op1Ratio</b>, &nbsp;&nbsp;  carrier frequency ratio (0,99.999)</li>
+            
+            <li><b>op1Bias</b>, &nbsp;&nbsp;  carrier frequency bias (0,999.99)</li>
+            
+            <li><b>op1Amp</b>, &nbsp;&nbsp;  carrier linear amplitude (0,2)</li>
+            
+            <li><b>op1Attack</b>, &nbsp;&nbsp;  carrier attack time in seconds</li>
+            
+            <li><b>op1Decay1</b>, &nbsp;&nbsp;  carrier decay1 time in seconds</li>
+            
+            <li><b>op1Decay2</b>, &nbsp;&nbsp;  carrier decay2 time in seconds</li>
+            
+            <li><b>op1Release</b>, &nbsp;&nbsp;  carrier release time in seconds</li>
+            
+            <li><b>op1Breakpoint</b>, &nbsp;&nbsp;  carrier envelope breakpoint (0,1)</li>
+            
+            <li><b>op1Sustain</b>, &nbsp;&nbsp;  carrier envelope sustain level (0,1)</li>
+            
+            <li><b>op1GateHold</b>, &nbsp;&nbsp;  carrier envelope mode (0=gate, 1=trig)</li>
+            
+            <li><b>op1Keybreak</b>, &nbsp;&nbsp;  carrier keyscale breakpoint, MIDI key number (0,&#8230;48,60,72,&#8230;120)</li>
+            
+            <li><b>op1LeftScale</b>, &nbsp;&nbsp;  carrier left keyscale, db per octave (-12,+12)</li>
+            
+            <li><b>op1RightScale</b>, &nbsp;&nbsp;  carrier right keyscale, db per octave (-12,+12)</li>
+            
+            <li><b>op1Lfo</b>, &nbsp;&nbsp;  carrier LFO modulation depth (0,1)</li>
+            
+            <li><b>op1Velocity</b>, &nbsp;&nbsp;  carrier velocity modulation depth (0,1)</li>
+            
+            <li><b>op2Enable</b>, &nbsp;&nbsp;  Not Used</li>
+            
+            <li><b>op2Ratio</b>, &nbsp;&nbsp;  modulator frequency ratio (0,99.999)</li>
+            
+            <li><b>op2Bias</b>, &nbsp;&nbsp;  modulator frequency bias (0,999.99)</li>
+            
+            <li><b>op2Amp</b>, &nbsp;&nbsp;  modulator modulation depth (0,10)</li>
+            
+            <li><b>op2AmpRange</b>, &nbsp;&nbsp;  modulator, modulation scale factor (1,10,100,1000,10000)</li>
+            
+            <li><b>op2Attack</b>, &nbsp;&nbsp;  modulator attack time in seconds</li>
+            
+            <li><b>op2Decay1</b>, &nbsp;&nbsp;  modulator decay1 time in seconds</li>
+            
+            <li><b>op2Decay2</b>, &nbsp;&nbsp;  modulator decay2 time in seconds</li>
+            
+            <li><b>op2Release</b>, &nbsp;&nbsp;  modulator release time in seconds</li>
+            
+            <li><b>op2Breakpoint</b>, &nbsp;&nbsp;  modulator envelope breakpoint (0,1)</li>
+            
+            <li><b>op2Sustain</b>, &nbsp;&nbsp;  modulator envelope sustain level (0,1)</li>
+            
+            <li><b>op2GateHold</b>, &nbsp;&nbsp;  modulator envelope mode (0=gate, 1=trig)</li>
+            
+            <li><b>op2Keybreak</b>, &nbsp;&nbsp;  modulator keyscale breakpoint, MIDI key number (0,&#8230;48,60,72,&#8230;120)</li>
+            
+            <li><b>op2LeftScale</b>, &nbsp;&nbsp;  modulator left key scale, db per octave (-12,+12)</li>
+            
+            <li><b>op2RightScale</b>, &nbsp;&nbsp;  modulator right keyscale, db per octave (-12,+12)</li>
+            
+            <li><b>op2Lfo</b>, &nbsp;&nbsp;  modulator LFO modulation depth (0,1)</li>
+            
+            <li><b>op2Velocity</b>, &nbsp;&nbsp;  modulator velocity modulation depth (0,1)</li>
+            
+            <li><b>op2Feedback</b>, &nbsp;&nbsp;  modulator feedback (0,4)</li>
+            
+            
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="synth_catalog.html">Previous(&nbsp;synth_catalog&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="klstr.html">Next(&nbsp;klstr&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>
