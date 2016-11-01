@@ -6,6 +6,9 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
+FILTER_VALUES = (1000,2000,5000,10000,20000)
+MAX_INPUT_GAIN_MAGNITUDE = 6
+
 prototype = {
 	"keyTrack" : 0.0,       # float 0..16  (tumbler)
 	"fixedFrequency" : 1.0, # int   0..8k  (tumbler)
@@ -18,6 +21,7 @@ prototype = {
 	"wetAmp" : 1.0,         # volume
 	"dryAmp" : 1.0          # volume
 }
+
 
 class QMod(Program):
 
