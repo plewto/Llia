@@ -61,7 +61,7 @@ asplit      : True
 rumklang    : True
 chronos     : True
 crusher     : True
-grayhound   : True
+hund        : True
 qmod        : True
 pitchshifter  : True
 ringmodulator : True

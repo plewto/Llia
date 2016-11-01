@@ -1,24 +1,24 @@
-# llia.synths.grayhound.tk.editor
+# llia.synths.hund.tk.editor
 
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.msb import MSB, ToggleButton
 from llia.gui.tk.tumbler import Tumbler
-from llia.synths.grayhound.grayhound_data import FILTER_FREQUENCIES,GAINS
+from llia.synths.hund.hund_data import FILTER_FREQUENCIES,GAINS
 
 def create_editor(parent):
-    TkGrayhoundPanel(parent)
+    TkHundPanel(parent)
 
-class TkGrayhoundPanel(TkSubEditor):
+class TkHundPanel(TkSubEditor):
 
-    NAME = "Grayhound"
-    IMAGE_FILE = "resources/Grayhound/editor.png"
+    NAME = "Hund"
+    IMAGE_FILE = "resources/Hund/editor.png"
 
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame, 760, 290,self.IMAGE_FILE)
+        canvas = factory.canvas(frame, 760, 708,self.IMAGE_FILE)
         canvas.pack()
         self.canvas = canvas
         self.editor = editor

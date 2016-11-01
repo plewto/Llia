@@ -1,4 +1,4 @@
-# llia.synths.grayhound.grayhound_data
+# llia.synths.hund.hund_data
 
 from __future__ import print_function
 
@@ -29,16 +29,16 @@ prototype = {
     "dryamp" : 1.0,       # volume
     "wetamp" : 1.0}       # volume
 
-class Grayhound(Program):
+class Hund(Program):
 
     def __init__(self,name):
-        super(Grayhound,self).__init__(name,Grayhound,prototype)
+        super(Hund,self).__init__(name,Hund,prototype)
         self.performance = performance()
 
-program_bank = ProgramBank(Grayhound("Init"))
+program_bank = ProgramBank(Hund("Init"))
 program_bank.enable_undo = False
 
-def grayhound(slot, name,
+def hund(slot, name,
               pregain = 1,
               attack = 0.01,
               release = 0.01,
@@ -48,7 +48,7 @@ def grayhound(slot, name,
               xmod = 0.0,
               dryamp = 1.0,
               wetamp = 1.0):
-   p = Grayhound(name)
+   p = Hund(name)
    p["filterFreq"] = int(filterFreq)
    p["pregain"] = float(pregain)
    p["attack"] = float(attack)
@@ -62,8 +62,8 @@ def grayhound(slot, name,
    return p
 
 def pp(program,slot=127):
-    pad = ' '*len("grayhound")
-    acc = 'grayhound(%d,"%s",\n' % (slot,program.name)
+    pad = ' '*len("hund")
+    acc = 'hund(%d,"%s",\n' % (slot,program.name)
     acc += '%sfilterFreq = %d,\n' % (pad, int(program["filterFreq"]))
     params = ("pregain","attack","release","res","modDepth",
               "xmod","dryamp","wetamp")
@@ -76,11 +76,11 @@ def pp(program,slot=127):
             acc += ",\n"
     return acc
 
-grayhound(0,"Bypass",
+hund(0,"Bypass",
           dryamp = 1.0,
           wetamp = 0.0)
 
-grayhound(1,"Static 4k",
+hund(1,"Static 4k",
           filterFreq = 4000,
           res = 0.5,
           modDepth = 0.0,
@@ -88,7 +88,7 @@ grayhound(1,"Static 4k",
           dryamp = 0.0,
           wetamp = 1.0)
 
-grayhound(2,"pos mod",
+hund(2,"pos mod",
           filterFreq=400,
           res=0.7,
           modDepth = 1.0,
@@ -96,7 +96,7 @@ grayhound(2,"pos mod",
           dryamp = 0.0,
           wetamp = 1.0)
 
-grayhound(3,"neg mod",
+hund(3,"neg mod",
           filterFreq=20000,
           res=0.7,
           modDepth = -1.0,
@@ -104,7 +104,7 @@ grayhound(3,"neg mod",
           dryamp = 0.0,
           wetamp = 1.0)
 
-grayhound(4,"External mod",
+hund(4,"External mod",
           filterFreq=400,
           res=0.7,
           modDepth = 0.0,

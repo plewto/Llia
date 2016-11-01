@@ -1,9 +1,9 @@
 /*
-** Defines Grayhound synth
+** Defines Hund synth
 ** Lowpass filter with envelope follower
 */
 
-(SynthDef (\Grayhound, {
+(SynthDef (\Hund, {
    |inbus = 128
 	outbus = 0
 	xbus = 1024         // external control input

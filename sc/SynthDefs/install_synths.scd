@@ -12,7 +12,7 @@
     "flngr.scd",
     "fm2.scd",
     "ghostbus.scd",
-    "grayhound.scd",
+	"hund.scd",
     "klstr.scd",
     "lfo1.scd",
     "lfo2.scd",
