@@ -204,7 +204,6 @@ if args.listgui:
     print()
     sys.exit(0)
 
-
 config = LliaConfig.create_instance(args)
 
 def _import(modname):

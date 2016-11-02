@@ -107,9 +107,6 @@
               <li><a class="config" href="#midi">[MIDI]</a></li>
               <li><a class="config" href="#osc">[OSC]</a></li>
               <li><a class="config" href="#gui">[GUI]</a></li>
-              <li><a class="config" href="#imports">[SYNTH-IMPORTS]</a></li>
-              <li><a class="config" href="#imports">[EFX-IMPORTS]</a></li>
-              <li><a class="config" href="#imports">[CONTROL-SYNTH-IMPORTS]</a></li>
               <li><a class="config" href="#midi_channels">[MIDI-CHANNELS]</a></li>
               <li><a class="config" href="#midi_controllers">[MIDI-CONTROLLERS]</a></li>
             </ul>
@@ -307,19 +304,6 @@
             
             <b>enable-active-updates</b> Flag which enables GUI components to be
             updated in response to mapped MIDI values.  See <a href="performance.html">Performances</a>. 
-            </p>
-            
-        <a id="imports"></a>
-            <hr class="section-head" />
-        <h4 class="heading">[SYNTH-IMPORTS]</h4>
-        <h4 class="heading">[EFX-IMPORTS]</h4>
-        <h4 class="heading">[CONTROL-SYNTH-IMPORTS]</h4>
-            <p class="section-body">
-            
-            These sections control which synth packages are loaded when the client
-            application starts.   For the most part they should all be set to True.  If
-            there is some synth you absolutely will never use, go ahead and disable
-            it.  The primary use of these flags is to speed up restarts during development.
             </p>
             
         <a id="midi_channels"></a>
