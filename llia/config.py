@@ -573,33 +573,7 @@ class LliaConfig(dict):
         except ValueError:
             pass
         return x
-
-    def import_synth(self, section, stype):
-        '''
-        Returns flag indicating if a specific synth modules should be 
-        imported.
-
-        ARGS:
-          section - String, one of "SYNTH-IMPORTS", "EFX-IMPORTS" or
-                    "CONTROL-SYNTH-IMPORTS"
-
-          stype   - String, specific synth type in indicated section.
-
-
-        RETURNS: Boolean True if module was imported.
-          If the module can not be imported, return False and display warning
-          message.
-        '''
-        try:
-            flag = self.get_option(section,stype)
-            return str(flag).upper() == "TRUE"
-        except(NoOptionError, NoSectionError) as err:
-            msg = "WARNING: config import_synth option or section missing.\n"
-            msg += "WARNING: section = '%s', option = '%s'.\n" % (section, stype)
-            msg += "WARNING: Aborting import of synth: %s" % stype
-            print(msg)
-            return False
-
+  
     def startup_script(self):
         '''
         Returns filename of python script to executed on startup.
