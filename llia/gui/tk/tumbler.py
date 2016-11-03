@@ -21,7 +21,14 @@ class Tumbler(object):
         self.canvas = canvas
         self.param=param
         self.editor = editor
-        self._range = range_ or (0,10**digits-1)
+        #self._range = range_ or (0,10**digits-1)
+        if not range_:
+            mag = 10**digits-1
+            if sign:
+                range_ = (-mag,mag)
+            else:
+                range_ = (0,mag)
+        self._range = range_
         self._common_aspect = {"fill" : fill,
                                "foreground" : foreground,
                                "outline" : outline,
