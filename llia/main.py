@@ -256,5 +256,6 @@ _import_controller("Cascade", "llia.synths.cascade.cascade_proxy")
 _import_controller("SnH", "llia.synths.snh.snh_proxy")
 _import_controller("Ghostbus", "llia.synths.ghostbus.ghost_proxy")
 _import_controller("ControlMixer", "llia.synths.controlmixer.controlmixer_proxy")
+_import_controller("CUtil", "llia.synths.cutil/cutil_proxy")
 
 app = LliaApp(config, args.skip_mainloop)
