@@ -30,7 +30,7 @@ crusher_pallet["SLIDER-OUTLINE"] = "blue"
 
 specs["constructor"] = CrusherProxy
 specs["is-efx"] = True
-specs["description"] = "Ring modulator effect"
+specs["description"] = "Sample degrade & distortion effect"
 specs["keymodes"] = ("EFX", )
 specs["pretty-printer"] = pp
 # specs["program-generator"] = random_program

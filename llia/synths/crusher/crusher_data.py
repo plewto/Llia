@@ -6,10 +6,11 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-MAX_DELAY = 1
-
 prototype = {
-    "clockFreq" : 20000,        # sample clock frequency
+    "gain" : 1.0,               # fold/wrap pregain 0..10?
+    "wave" : 0,                 # wave select [0,1,2] -> [None,Soft, Distort,Fold,Wrap]
+    "clockFreq" : 10000,        # sample clock frequency
+    "resampleEnable" : 1,       # 0 -> bypass, 1 -> resample
     "low"  : 20000,             # low pass filter cutoff
     "wet" : 0.5,                # wet signal amp
     "dry" : 0.5,                # dry signal amp
@@ -25,13 +26,19 @@ program_bank = ProgramBank(Crusher("Init"))
 program_bank.enable_undo = False
 
 def crusher(slot, name,
-            clockFreq = 20000,
+            gain = 1.0,
+            wave = 0,
+            clockFreq = 16000,
+            resampleEnable = 1,
             low = 20000,
             wet = 0.5,
             dry = 0.5,
             amp = 1.0):
     p = Crusher(name)
+    p["gain"] = float(gain)
+    p["wave"] = int(wave)
     p["clockFreq"] = int(clockFreq)
+    p["resampleEnable"] = int(resampleEnable)
     p["low"] = int(low)
     p["wet"] = float(wet)
     p["dry"] = float(dry)
@@ -48,46 +55,21 @@ def pp(program, slot=127):
         return bcc
     acc += "%simodfreq = %d,\n" % (pad, int(program["clockFreq"]))
     acc += "%slow = %d,\n" % (pad, int(program["low"]))
+    acc += "%swave = %d,\n" % (pad,int(program["wave"]))
+    acc += "%sresampleEnable = %d,\n" % (pad,int(program["resampleEnable"]))
+    acc += frmt("gain")
     acc += frmt("wet")
     acc += frmt("dry")
     acc += frmt("amp")
     return acc
 
 crusher(0,"Bypass",
-        clockFreq = 10000,
+        wave = 0,
+        gain = 1,
+        clockFreq = 16000,
+        resampleEnable = 0,
         low = 20000,
         wet = 0.0,
         dry = 1.0,
         amp = 1.0  )
-
-crusher(1, "10k",
-        clockFreq=10000,
-        low=20000,
-        wet = 1.0,
-        dry = 0.0,
-        amp = 1.0)
-
-crusher(2, "5k",
-        clockFreq=5000,
-        low=20000,
-        wet = 1.0,
-        dry = 0.0,
-        amp = 1.0)
-
-crusher(3, "2k",
-        clockFreq=2000,
-        low=20000,
-        wet = 1.0,
-        dry = 0.0,
-        amp = 1.0)
-
-crusher(4, "1k",
-        clockFreq=1000,
-        low=20000,
-        wet = 1.0,
-        dry = 0.0,
-        amp = 1.0)
-
-
-
 
