@@ -295,14 +295,14 @@ class ADDSREditor(EnvEditorSpecs):
 
     def decay1_drag(self, event):
         time, level = self._drag_helper("env%s-point-1" % self.envid, event)
-        self.set_synth_value(self.params['decay1'], time)
         self.set_synth_value(self.params['breakpoint'], level)
+        self.set_synth_value(self.params['decay1'], time)
         self.sync_ui()
 
     def decay2_drag(self, event):
         time, level = self._drag_helper("env%s-point-2" % self.envid, event)
-        self.set_synth_value(self.params['decay2'], time)
         self.set_synth_value(self.params['sustain'], level)
+        self.set_synth_value(self.params['decay2'], time)
         self.sync_ui()
         
     def sustain_drag(self, event):
