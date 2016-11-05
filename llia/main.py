@@ -227,6 +227,7 @@ def _import_controller(stype, modname):
     _import(modname)
     constants.CONTROLLER_SYNTH_TYPES.append(stype)     
 
+_import_synth("Algo","llia.synths.algo.algo_proxy")
 _import_synth("Orgn", "llia.synths.orgn.orgn_proxy")
 _import_synth("Saw3", "llia.synths.saw3.s3_proxy")
 _import_synth("Klstr", "llia.synths.klstr.klstr_proxy")

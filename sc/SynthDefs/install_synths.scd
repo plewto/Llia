@@ -3,7 +3,8 @@
 */
 
 (
-~manifest=["asplit.scd",
+~manifest=["algo.scd",
+    "asplit.scd",
     "carnal.scd",
     "cascade.scd",
     "chronos.scd",

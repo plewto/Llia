@@ -1,0 +1,66 @@
+# llia.synths.algo.tk.envedit
+
+from llia.gui.tk.tk_subeditor import TkSubEditor
+import llia.gui.tk.tk_factory as factory
+import llia.gui.tk.control_factory as cf
+from llia.gui.tk.addsr_editor import ADDSREditor
+import llia.synths.algo.algo_constants as acon
+
+class TkAlgoEnvelopePanel(TkSubEditor):
+
+    NAME = "Envelopes"
+    IMAGE_FILE = "resources/Algo/envelope_editor.png"
+
+    ENV_WIDTH = 350
+    ENV_HEIGHT = 150
+    
+    def __init__(self,editor):
+        frame = editor.create_tab(self.NAME)
+        frame.config(background=factory.bg())
+        canvas = factory.canvas(frame, 1170, 700, self.IMAGE_FILE)
+        canvas.pack()
+        self.canvas = canvas
+        self.editor = editor
+        TkSubEditor.__init__(self, canvas, editor, self.NAME)
+        editor.add_child_editor(self.NAME, self)
+        for i in (1,2,3,4,5,6,7,8):
+            def param(key):
+                return "op%d_%s" % (i,key)
+            ed = ADDSREditor(canvas,i,self.coords(i),
+                             (self.ENV_WIDTH,self.ENV_HEIGHT),
+                             (param("attack"),
+                              param("decay1"),
+                              param("decay2"),
+                              param("release"),
+                              param("breakpoint"),
+                              param("sustain"),
+                              param("envmode")),
+                             self.editor,
+                             acon.MAX_ENV_SEGMENT)
+            self.add_child_editor("OP%sENV" % i, ed)
+            ed.sync()
+        
+    @staticmethod
+    def coords(op):
+        dx = TkAlgoEnvelopePanel.ENV_WIDTH + 30
+        dy = TkAlgoEnvelopePanel.ENV_HEIGHT + 40
+        x0 = 25
+        xa = x0
+        xb = xa + dx
+        xc = xb + dx
+        y0 = 25
+        y3 = y0
+        y2 = y3+dy
+        y1 = y2+dy
+        return {1 : (xa,y1),
+                2 : (xa,y2),
+                3 : (xa,y3),
+                4 : (xb,y2),
+                5 : (xb,y1),
+                6 : (xb,y3),
+                7 : (xc,y1),
+                8 : (xc,y2)}[op]
+    
+        
+
+
