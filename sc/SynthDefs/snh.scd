@@ -28,6 +28,6 @@
 	Out.kr(sawbus,saw);
 	Out.kr(noisebus, noise);
 	Out.kr(clockoutbus,clock);
-	Out.kr(outsig);
+	Out.kr(outbus,outsig);
 }).load)
 	
