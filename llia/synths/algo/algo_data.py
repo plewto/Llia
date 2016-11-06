@@ -6,8 +6,6 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-MOD_SCALE_COUNT = 6
-
 
 prototype = {
     "amp" : 0.1,

@@ -37,3 +37,52 @@ _c.sort()
 KEY_BREAKPOINTS = tuple(_c)
 
 MAX_ENV_SEGMENT = 12
+
+
+HARMONICS = []
+for n,f in (( 1, 0.25),
+            ( 8, 0.50), 
+            ( 3, 0.75),
+            (24, 1.00),
+            ( 3, 1.333),
+            ( 8, 1.5),
+            (24, 2.0),
+            (18, 3.0),
+            (12, 4.0),
+            ( 7, 5.0),
+            ( 9, 6.0),
+            ( 1, 7.0),
+            ( 6, 8.0),
+            ( 4, 9.0),
+            ( 2,10.0),
+            ( 2,12.0),
+            ( 1,16.0)):
+    for i in range(n):
+        HARMONICS.append(f)
+
+# Envelope times
+#
+
+ULTRA_FAST = 1
+FAST = 2
+MEDIUM = 3
+SLOW = 4
+GLACIAL = 5
+FULL = 6
+
+
+ENV_TIME_NAMES = {ULTRA_FAST : "Ultra-fast",   # (0.00, 0.01)
+                  FAST : "Fast",               # (0.00, 0.10)
+                  MEDIUM : "Medium",           # (0.10, 1.00)
+                  SLOW : "Slow",               # (1.00, 4.00)
+                  GLACIAL : "Glacial",         # (4.00, 12.0)
+                  FULL : "Full",               # (0.00, 12.0)
+                  None : ""}
+
+# Envelope contours
+#
+GATE = 1
+PERCUSSIVE = 2
+ASR = 3
+ADSR = 4
+

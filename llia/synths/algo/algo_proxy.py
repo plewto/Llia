@@ -6,7 +6,7 @@ from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.algo.algo_data import program_bank
 from llia.synths.algo.algo_pp import pp
-#from llia.synths.algo.algo_random import algo_random
+from llia.synths.algo.algogen.algo_random import algogen
 
 specs = SynthSpecs("Algo")
 
@@ -34,7 +34,7 @@ specs["is-controller"] = False
 specs["description"] = "An 8-operator FM Synth"
 specs["keymodes"] = ('Poly1', 'PolyRotate', 'Mono1')
 specs["pretty-printer"] = pp   
-#specs["program-generator"] = algo_random
+specs["program-generator"] = algogen
 specs["help"] = "Algo"
 specs["pallet"] = algo_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"],
