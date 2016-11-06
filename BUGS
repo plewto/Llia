@@ -168,3 +168,13 @@ NoSuchBusOrParameterError is raised and the bus can not be connected.
 It has not been verified if the same behavior holds for control buses
 or if it holds with buses deleted using lliascript.
 
+2016.11.05 Same issue applies to control buses
+
+---------------------------------------------------------------------- OPEN 0013
+BUG 0013 2016.11.05
+
+Audio bus assignments not working with PolyRotate keymode.
+This is probably an issue on the server side of not updating existent
+Synth objects to reflect new bus assignments.
+
+Control buses have not yet tested for the same issue.
