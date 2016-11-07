@@ -50,6 +50,9 @@ LliaSynthInfo : Object {
 		    {keymodeName == "Mono1"}
 		    {Mono1.new(lliaApp, synthType, oscID, globalAppID)}
 
+		    {keymodeName == "MonoExclusive"}
+		    {MonoExclusive.new(lliaApp, synthType, oscID, globalAppID)}
+		
 		    {keymodeName == "EFX"}
 		    {EfxKeymode.new(lliaApp, synthType, oscID, globalAppID)}
 
