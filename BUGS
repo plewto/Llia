@@ -197,10 +197,19 @@ point audio output is degraded, further along the system as a whole becomes
 sluggish.
 
 
----------------------------------------------------------------------- OPEN 0015
+---------------------------------------------------------------------- Closed 0015
 BUG 0015 2016.11.07
 
 KeyError when the value method of MSB is called with a value not defined
 by the button.   This usually happens due to rounding of floats.
 
+
+Fixed 2016.11.07
+Added fallback method to be used if MSB.value fails.
+The fallback checks each assigned value against the new_value and selects
+the one which is closest.  This only works for numeric values and is
+highly inefficient.  
+
+However the most likely cause for using the fallback is due to float 
+rounding errors and typically only a few values need to be checked.
 

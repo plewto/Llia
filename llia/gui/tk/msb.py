@@ -366,6 +366,27 @@ class MSB(object):
             self.update_aspect()
         return self._current_aspect
 
+
+    # Hack to brute force update value (BUG FIX 0015)
+    # Should only be called when there is not an exact match between
+    # a defined value and new_value, most often this is due to float
+    # rounding errors.
+    def _update_value_fallback(self, new_value):
+        mindiff = 1e6
+        locked = None
+        for v in self._value_map.keys():
+            q = abs(new_value-v)
+            if q < mindiff:
+                mindiff = q
+                locked = v
+        if locked != None:
+            aspect = self._value_map[locked]
+            self._current_aspect = self._value_map[locked]
+            self.update_aspect()
+        else:
+            raise KeyValue("Can not set MSB(%s) value to %s" % (self.param, new_value))
+
+    
     def value(self, new_value=None):
         '''
         Retrieve/change current button value.
@@ -385,8 +406,9 @@ class MSB(object):
                 self._current_aspect = self._value_map[value]
                 self.update_aspect()
             except KeyError:
-                msg = "'%s' MSB does not have value: %s" % (self.param, value)
-                raise KeyError(msg)
+                # msg = "'%s' MSB does not have value: %s" % (self.param, value)
+                # raise KeyError(msg)
+                self._update_value_fallback(new_value)
         a = self._aspects[self._current_aspect]
         return a['value']
 
