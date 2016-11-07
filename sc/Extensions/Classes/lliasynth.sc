@@ -44,6 +44,9 @@ LliaSynthInfo : Object {
 		    {keymodeName == "Poly1"}
 		    {Poly1.new(lliaApp, synthType, oscID, globalAppID)}
 
+		    {keymodeName == "PolyN"}
+		    {PolyN.new(lliaApp, synthType, oscID, globalAppID, voiceCount)}
+		
 		    {keymodeName == "PolyRotate"}
 		    {PolyRotate.new(lliaApp, synthType, oscID, globalAppID, voiceCount)}
 		

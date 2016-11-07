@@ -36,7 +36,7 @@ orgn_pallet["SLIDER-OUTLINE"] = "#464f42"
 
 specs["constructor"] = OrgnProxy
 specs["description"] = "Simple FM Synth"
-specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1", "MonoExclusive")
+specs["keymodes"] = ("PolyN", "Poly1", "PolyRotate", "Mono1", "MonoExclusive")
 specs["pretty-printer"] = pp_orgn    
 specs["program-generator"] = gen_orgn_program
 specs["help"] = "orgn"

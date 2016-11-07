@@ -17,7 +17,7 @@ HELP_EXT = "html"                 # Help file extension
 GUI_OPTIONS = (("None", "Use Llia without GUI."),
                ("TK", "Aviliable wherever Python is sold."))
 
-KEY_MODES = ("Poly1", "PolyRotate", "Mono1", "MonoExclusive", "EFX")
+KEY_MODES = ("PolyN", "PolyRotate", "Poly1", "Mono1", "MonoExclusive", "EFX")
 
 SYNTH_TYPES = []
 EFFECT_TYPES = []
