@@ -53,6 +53,12 @@ PolyRotate : Keymode {
 		});
 	}
 
+	setBusParameters {|param, rate, busName, offset=0|
+		var index = super.setBusParameters(param,rate,busName,offset);
+		this.set_(param,index);
+		^index;
+	}
+		
 	noteOn {|keynumber, frequency, velocity|
 		var ptr, sy, old;
 		old = keyStates.at(keynumber);

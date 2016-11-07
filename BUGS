@@ -170,7 +170,7 @@ or if it holds with buses deleted using lliascript.
 
 2016.11.05 Same issue applies to control buses
 
----------------------------------------------------------------------- OPEN 0013
+---------------------------------------------------------------------- Closed 0013
 BUG 0013 2016.11.05
 
 Audio bus assignments not working with PolyRotate keymode.
@@ -178,6 +178,10 @@ This is probably an issue on the server side of not updating existent
 Synth objects to reflect new bus assignments.
 
 Control buses have not yet tested for the same issue.
+
+FIX:
+Changed SuperCollider PolyRotate class to override setBusParameters 
+
 
 ---------------------------------------------------------------------- OPEN 0014
 BUG 0014 2016.11.06
