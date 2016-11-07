@@ -78,13 +78,33 @@ class TkSynthWindow(Frame):
         # Adds child editor to list of editors without adding a notebook tab.
         self._child_editors[child_name] = child
 
-    def create_tab(self, name):
-        # Creates notebook tab for child editors.
-        # Returns Frame
+    def _create_basic_tab(self,text):
         f = factory.frame(self.notebook)
-        self.notebook.add(f, text=name)
+        self.notebook.add(f, text=text)
         return f
 
+    # icon_filename = "resources/%s/logo_32.png" % sy.specs["format"]
+    # icon = factory.image(icon_filename)
+    # group.notebook.add(swin, text=sy.sid, image=icon, compound="top")
+    
+    def _create_compund_tab(self,text,image_filename):
+        try:
+            icon = factory.image(image_filename)
+            f = factory.frame(self.notebook)
+            self.notebook.add(f,text=text,image=icon,compound="top")
+            return f
+        except IOError:
+            msg = "IOError while loaidng image file '%s'" % image_filename
+            print(msg)
+            return self._create_basic_tab(text)
+    
+    def create_tab(self, tab_text, image_filename=""):
+        if not image_filename:
+            return self._create_basic_tab(tab_text)
+        else:
+            return self._create_compund_tab(tab_text,image_filename)
+
+       
     def remove_synth(self, *_):
         sid = self.synth.sid
         parser = self.app.ls_parser

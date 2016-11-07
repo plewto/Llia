@@ -16,7 +16,8 @@ class TkAlgoEnvelopePanel(TkSubEditor):
     def __init__(self,stack_id,editor):
         name = "Env %s" % stack_id
         image_file = "resources/Algo/envelope_editor_%s.png" % (stack_id.lower())
-        frame = editor.create_tab(name)
+        tab_image = "resources/Algo/tab_env_%s.png" % (stack_id.lower())
+        frame = editor.create_tab(name,tab_image)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 1000, 700, image_file)
         canvas.pack()

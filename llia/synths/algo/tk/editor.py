@@ -25,7 +25,9 @@ def create_editor(parent):
 class TkAlgoStackPanel(TkSubEditor):
 
     def __init__(self,stack_id,name,imagefile,editor):
-        frame = editor.create_tab(name)
+        tab_image = "resources/Algo/tab_stack_%s.png" % stack_id.lower()
+        #env_tab_image = "resources/Algo/tab_env_%s.png" % stack_id.lower()
+        frame = editor.create_tab(name,tab_image)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 1050, 700, imagefile)
         canvas.pack()
