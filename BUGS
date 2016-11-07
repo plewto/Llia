@@ -180,7 +180,7 @@ Synth objects to reflect new bus assignments.
 Control buses have not yet tested for the same issue.
 
 
-FIX:
+FIX 2016.11.07
 On sclang Keymode class added call to _set method from setBusParameter.
 
 
@@ -194,4 +194,13 @@ active synths.  Poly1 synths are supposed to be freed once the key is up and
 all envelopes have stopped, and for the most part they are.  However some
 synths are not freed, these "zombie" synths gradually build up.  At some
 point audio output is degraded, further along the system as a whole becomes
-sluggish. 
+sluggish.
+
+
+---------------------------------------------------------------------- OPEN 0015
+BUG 0015 2016.11.07
+
+KeyError when the value method of MSB is called with a value not defined
+by the button.   This usually happens due to rounding of floats.
+
+
