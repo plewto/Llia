@@ -20,9 +20,10 @@ class TkOrgnPanel1(TkSubEditor):
 
     NAME = "Orgn Tone"
     IMAGE_FILE = "resources/Orgn/editor.png"
+    TAB_FILENAME = "resources/Orgn/tab.png"
 
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILENAME)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 946,777, self.IMAGE_FILE)
         canvas.pack()
