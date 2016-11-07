@@ -15,8 +15,17 @@
 
 Mono1 : Keymode {
 
-	var stack, activeVoice;
+	var stack, keyMap, activeVoice;
 
+	/*
+     * keyMap maps MIDI key number to frequency.
+     * The map is initially empty, as new key numbers are encountered, their 
+     * frequencies are added to the map.  This information is used on keyUp 
+     * events.  If there are keys still being help the synths frequency parameter
+     * is updated with the frequency of the "freshest" held key.
+    */
+
+	
 	*new {|lliaApp, synthType, oscid=nil, globalID="llia"|
 		^super.new().init(lliaApp, synthType, oscid, globalID);
 	}
@@ -24,6 +33,7 @@ Mono1 : Keymode {
 	init {|lliaApp, synthType, oscid=nil, globalID="llia"|
 		super.init(lliaApp, synthType, oscid, globalID);
 		stack = Stack.new;
+		keyMap = IdentityDictionary.new(32);
 		activeVoice = Synth(synthType, [\gate, 0, \doneAction, 0]);
 	}
 		
@@ -45,14 +55,17 @@ Mono1 : Keymode {
 			var value = q[1];
 			activeVoice.set(param, value)});
 		stack.push(keynumber);
+		keyMap.put(keynumber, frequency);
 	}
 
 	noteOff {|keynumber|
 		stack.pop(keynumber);
 		if(stack.isEmpty, {
 			activeVoice.set(\gate, 0);
-		});
-		
+		},{
+			var freq = keyMap.at(stack.top());
+			activeVoice.set(\freq, freq);
+		})
 	}
 	
 }
