@@ -44,7 +44,6 @@ def pick_env_segment_time(hint=FULL, p_changeup=0.1):
 #
 def pick_envelope_times(hint=None,p_changeup=0.1):
     hint = hint or pick_env_time_hint()
-    print("Debug env time hint is ", hint)
     acc = []
     for i in range(4):
         t = pick_env_segment_time(hint,p_changeup)
