@@ -178,3 +178,15 @@ This is probably an issue on the server side of not updating existent
 Synth objects to reflect new bus assignments.
 
 Control buses have not yet tested for the same issue.
+
+---------------------------------------------------------------------- OPEN 0014
+BUG 0014 2016.11.06
+
+
+Memory leak, not all server-side synths terminate while using Poly1
+keymode.  Use s.plotTree (where s is the SuperCollider server) to monitor
+active synths.  Poly1 synths are supposed to be freed once the key is up and
+all envelopes have stopped, and for the most part they are.  However some
+synths are not freed, these "zombie" synths gradually build up.  At some
+point audio output is degraded, further along the system as a whole becomes
+sluggish. 
