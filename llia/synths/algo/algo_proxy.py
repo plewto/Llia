@@ -27,12 +27,11 @@ class AlgoProxy(SynthProxy):
             
 algo_pallet = Pallet(default_pallet)
 algo_pallet["SLIDER-OUTLINE"] = "#008279"
-
 specs["constructor"] = AlgoProxy
 specs["is-efx"] = False
 specs["is-controller"] = False
 specs["description"] = "An 8-operator FM Synth"
-specs["keymodes"] = ('Poly1', 'PolyRotate', 'Mono1')
+specs["keymodes"] = ('PolyN','PolyRotate','Poly1','Mono1','MonoExclusive')
 specs["pretty-printer"] = pp   
 specs["program-generator"] = algogen
 specs["help"] = "Algo"

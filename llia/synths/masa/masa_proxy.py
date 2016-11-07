@@ -27,12 +27,10 @@ class MasaProxy(SynthProxy):
 masa_pallet = Pallet(default_pallet)
 masa_pallet["SLIDER-TROUGH"] = "#4f3e46"
 masa_pallet["SLIDER-OUTLINE"] = "#3e4f46"
-
 specs["constructor"] = MasaProxy
 specs["description"] = "Tonewheel Organ"
-specs["keymodes"] = ("Poly1", "PolyRoate", "Mono1")
+specs["keymodes"] = ('PolyN', 'PolyRotate','Poly1','Mono1','MonoExclusive')
 specs["pretty-printer"] = pp_masa  
-# specs["program-generator"] = masa_gen
 specs["pallet"] = masa_pallet
 specs["help"] = "masa"
 specs["audio-output-buses"] = [["outbus","out_0"]]

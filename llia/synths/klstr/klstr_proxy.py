@@ -27,11 +27,9 @@ class KlstrProxy(SynthProxy):
 klstr_pallet = Pallet(default_pallet)        
 klstr_pallet["SLIDER-TROUGH"] = "#4d424f"
 klstr_pallet["SLIDER-OUTLINE"] = "#464f42"
-
-
 specs["constructor"] = KlstrProxy
 specs["description"] = "Massed pulse waves"
-specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
+specs["keymodes"] = ('PolyN', 'PolyRotate','Poly1','Mono1','MonoExclusive')
 specs["pretty-printer"] = pp_klstr    
 specs["program-generator"] = gen_klstr_program
 specs["help"] = "klstr"

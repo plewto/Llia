@@ -29,10 +29,9 @@ s3_pallet = Pallet(default_pallet)
 s3_pallet["BG"] = "#131313"
 s3_pallet["FG"] = "#DAC0C0"
 s3_pallet["SLIDER-TROUGH"] = "#1f2f40"
-            
 specs["constructor"] = Saw3Proxy
 specs["description"] = "A 3 Oscillator Subtractive Synth"
-specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
+specs["keymodes"] = ('PolyN', 'PolyRotate','Poly1','Mono1','MonoExclusive')
 specs["pretty-printer"] = pp_saw3  
 specs["program-generator"] = s3gen
 specs["pallet"] = s3_pallet
