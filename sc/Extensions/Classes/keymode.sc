@@ -143,6 +143,7 @@ Keymode : Object {
 		var index;
 		index = lliaApp.getBusIndex(rate, busName, offset);
 		fixedParameters.put(param.asSymbol, index);
+		this.set_(param.asSymbol, index);
 		^index;
 	}
 

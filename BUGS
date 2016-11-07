@@ -179,8 +179,9 @@ Synth objects to reflect new bus assignments.
 
 Control buses have not yet tested for the same issue.
 
+
 FIX:
-Changed SuperCollider PolyRotate class to override setBusParameters 
+On sclang Keymode class added call to _set method from setBusParameter.
 
 
 ---------------------------------------------------------------------- OPEN 0014
