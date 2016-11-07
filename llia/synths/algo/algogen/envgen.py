@@ -2,10 +2,11 @@
 #
 # Random envelope generator
 
+
 from llia.util.lmath import (rnd,coin,approx,pick)
 from llia.synths.algo.algo_constants import *
 
-verbose=True
+verbose=False
 
 
 # Envelope times
@@ -43,6 +44,7 @@ def pick_env_segment_time(hint=FULL, p_changeup=0.1):
 #
 def pick_envelope_times(hint=None,p_changeup=0.1):
     hint = hint or pick_env_time_hint()
+    print("Debug env time hint is ", hint)
     acc = []
     for i in range(4):
         t = pick_env_segment_time(hint,p_changeup)
@@ -72,7 +74,7 @@ def _round_env_values(envlst):
 
 def status(etype,time_hint):
     if verbose:
-        print("Env type = %s, time_hint = %s" % (etype,ENV_TIME_NAMES[time_hint]))
+        print("# Env type = %s, time_hint = %s" % (etype,ENV_TIME_NAMES[time_hint]))
 
 def _gate_envelope(*_):
     status("gate", None)

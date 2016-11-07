@@ -27,8 +27,6 @@ def carrier_amps():
         c,a,b = pick_amps()
     return a,b,c
 
-
-
 def _pick_mod_scale(p_deep_modulation=0.1):
     s = coin(p_deep_modulation,
              coin(0.75, pick((1e2,1e3)), pick((1e4,1e5))),

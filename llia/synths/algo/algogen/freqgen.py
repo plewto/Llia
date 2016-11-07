@@ -6,7 +6,7 @@
 from llia.synths.algo.algo_constants import *
 from llia.util.lmath import (coin,pick,rnd,approx)
 
-verbose=True
+verbose=False
 
 
 # Return operator frequency ratio

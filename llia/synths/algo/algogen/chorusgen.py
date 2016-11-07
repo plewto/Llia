@@ -1,6 +1,7 @@
-# llia.synths.algo.algogen.basicgen
+# llia.synths.algo.algogen.chorusgen
 #
-# Basic patch generator
+# Specilized algo patch generator uses at least one
+# carrier with fixed frequency for corusing effect.
 
 from __future__ import print_function
 from llia.synths.algo.algo_constants import *
@@ -9,68 +10,42 @@ from llia.synths.algo.algo_data import (vibrato,stack,env,op,algo)
 from llia.synths.algo.algogen.envgen import pick_envelopes
 from llia.synths.algo.algogen.freqgen import pick_frequencies
 from llia.synths.algo.algogen.ampgen import operator_amps,modulation_scales
-
+from llia.synths.algo.algogen.basicgen import (pick_velocity,
+                                               pick_op_lfo,
+                                               pick_stack_feedback,
+                                               pick_vibrato,
+                                               pick_stack_lfo)
 
 def _round(n):
-    return round(n,3)
+    return round(n,4)
 
-def pick_velocity():
-    return coin(0.5, 0, _round(rnd()))
-
-def pick_op_lfo():
-    return coin(0.2 ,_round(rnd()), 0)
-
-# p_feedback  - probabbilty there is feedback
-# Returns tuple (fb,env,lfo)
-#
-def pick_stack_feedback(p_feedback):
-    fb = env = lfo = 0.0
-    if coin(p_feedback):
-        fb,env,lfo = coin(0.75,      # p "simple" feedback w/o modulation
-                          (rnd(2),0.0,0.0),
-                          (coin(0.33, rnd(), 0),
-                           coin(0.33, rnd(), 0),
-                           coin(0.33, rnd(), 0)))
-    fb = _round(fb)
-    env = _round(env)
-    lfo = _round(lfo)
-    return fb,env,lfo
-
-# pick vibrato parameters
-# Returns tuple (frequency, delay, sensitivity, depth)
-#
-def pick_vibrato():
-    freq = _round(coin(0.75,2+rnd(5),coin(0.80, rnd(10),rnd(99))))
-    dly = _round(rnd(4))
-    sens = _round(coin(0.90, rnd(0.2),rnd()))
-    depth = _round(coin(0.75, rnd(0.5), 0))
-    return freq,dly,sens,depth
-    
-    
-# Returns tuple (ratio,delay,wave)
-#
-def pick_stack_lfo():
-    r = coin(0.75, pick(LFO_RATIOS[:14]), pick(LFO_RATIOS))[0]
-    dly = _round(rnd(4))
-    wv = _round(rnd())
-    return r,dly,wv
-
-def basic_generator(slot=127,genconfig={}):
-    print("# Using basic_generator")
+def chorus_generator(slot=127,genconfig={}):
+    print("# Using chorus_generator")
     def get_config(key,dflt):
         return genconfig.get(key,dflt)
-    
-    ratios,biases =pick_frequencies(get_config("p-harmonic", 0.8))
+    ratios,biases = pick_frequencies(get_config("p-harmonic", 0.8))
     op_amps = operator_amps()
-    mod_scales = modulation_scales(get_config("p-deep-modulation", 0.1))
+    mod_scales = modulation_scales(0)
+    ratios,biases,mod_scales = list(ratios),list(biases),list(mod_scales)
+    for stk in "ABC":
+        use_chorus = coin(0.6)
+        if use_chorus:
+            cop = {"A":1,"B":5,"C":7}[stk]
+            mod1 = {"A":2,"B":4,"C":8}[stk]
+            mod2 = {"A":3,"B":6,"C":None}[stk]
+            ratios[cop-1] = 0
+            biases[cop-1] = coin(0.75, _round(rnd(2)), _round(rnd(7)))
+            mod_scales[mod1-1] = pick((100,100,1000,1000,10000))
+            if (mod2 == 6 and coin(0.20)):
+                mod_scales[mod2-1] = pick((100,100,1000,1000,10000))
     envelopes = pick_envelopes(get_config("env-type-hint",ADSR),
                                get_config("env-time-hint",ADSR),
-                               get_config("p-env-changeup",0.1),
-                               get_config("p-env-changeup",0.1),
+                               get_config("p-env-changeup",MEDIUM),
+                               get_config("p-env-changeup",MEDIUM),
                                p_duplicate_carrier = 0.35)
     env1, env2, env3, env4, env5, env6, env7, env8 = envelopes
     vf,vdly,vsens,vdepth = pick_vibrato()
-    pfb = get_config("p-feedback", 0.1)
+    pfb = get_config("p-feedback",0.1)
     afb = pick_stack_feedback(pfb)
     bfb = pick_stack_feedback(pfb)
     cfb = pick_stack_feedback(pfb)
@@ -96,7 +71,10 @@ def basic_generator(slot=127,genconfig={}):
              modDepth = _round(coin(0.75, 1.0, 0.5+rnd(0.5))),
              external = [0.0, 0.0, 1.0], # [mod,pitch,scale]
              vibrato = vibrato(vf,vdly,vsens,vdepth),
-             stackA = stack("A",True,op_amps[0],60,
+             stackA = stack("A",
+                            True,
+                            op_amps[0],
+                            60,
                             feedback=afb[0],
                             fb_env=afb[1],
                             fb_lfo=afb[2],
@@ -134,4 +112,3 @@ def basic_generator(slot=127,genconfig={}):
              op7 = opp(7),
              op8 = opp(8))
     return p
-             

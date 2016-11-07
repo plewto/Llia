@@ -943,7 +943,7 @@ class SynthProxy(object):
         acc += "Key table %s\n" % self.keytable()
         acc += 'Program [%s] "%s"\n' % (bnk.current_slot, prog.name)
         acc += "Transpose %d\n" % perf.transpose
-        acc += "Key range [%d,%d]\n" % perf.key_range()
+        acc += "Key range %s\n" % str(perf.key_range())
         return acc
         
         
