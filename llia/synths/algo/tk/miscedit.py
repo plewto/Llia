@@ -13,12 +13,13 @@ class TkAlgoMiscPanel(TkSubEditor):
 
     NAME = "Misc"
     IMAGE_FILE = "resources/Algo/misc_editor.png"
-
+    TAB_FILE = "resources/Tabs/misc.png"
+    
     ENV_WIDTH = 350
     ENV_HEIGHT = 150
     
     def __init__(self,editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 1000, 700, self.IMAGE_FILE)
         canvas.pack()

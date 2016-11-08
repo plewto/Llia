@@ -15,7 +15,9 @@ import llia.gui.tk.tk_factory as factory
 _NAME = "Random"
 
 
-BLURB = \
+_TAB_FILE = "resources/Tabs/rnd.png"
+
+_BLURB = \
 """
 Random Program Generator Options
 
@@ -51,7 +53,7 @@ Feedback:
 class TkProgramGenConfigPanel(TkSubEditor):
     
     def __init__(self,editor):
-        frame = editor.create_tab(_NAME)
+        frame = editor.create_tab(_NAME, _TAB_FILE)
         frame.config(background=factory.bg())
         self.editor = editor
         TkSubEditor.__init__(self,frame,editor,_NAME)
@@ -60,7 +62,7 @@ class TkProgramGenConfigPanel(TkSubEditor):
         self._layout_env_type(frame)
         self._layout_env_time(frame)
         self._layout_slider_panel(frame)
-        lab_help = factory.label(frame,BLURB)
+        lab_help = factory.label(frame,_BLURB)
         lab_help.grid(row=2,column=0,rowspan=3,columnspan=4)
 
         

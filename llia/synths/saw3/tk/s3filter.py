@@ -13,11 +13,12 @@ from llia.gui.tk.expslider import ExpSlider
 
 class TkSaw3FilterPanel(TkSubEditor):
 
-    NAME = "Saw3 Filter"
+    NAME = "Filter/Env/LFO"
     IMAGE_FILE = "resources/Saw3/editor_filter.png"
-
+    TAB_FILE = "resources/Saw3/tab_filter.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         TkSubEditor.__init__(self, frame, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)

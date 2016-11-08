@@ -15,9 +15,10 @@ class TkMasaPanel1(TkSubEditor):
 
     NAME = "MASA"
     IMAGE_FILE = "resources/MASA/editor.png"
-
+    TAB_FILE = "resources/MASA/tab.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         TkSubEditor.__init__(self, frame, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)

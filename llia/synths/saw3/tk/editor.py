@@ -19,9 +19,10 @@ class TkSaw3Panel1(TkSubEditor):
 
     NAME = "Saw3 Oscillators"
     IMAGE_FILE = "resources/Saw3/editor_osc.png"
+    TAB_FILE = "resources/Saw3/tab_sine.png"
     
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 1200, 600, self.IMAGE_FILE)
         canvas.pack()
@@ -96,9 +97,10 @@ class TkSaw3InfoPanel(object):
 
     NAME = "Saw3 Info"
     IMAGE_FILE = "resources/Saw3/editor_info.png"
-
+    TAB_FILE = "resources/Saw3/tab_info.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         lab_panel = factory.image_label(frame, self.IMAGE_FILE)
         lab_panel.pack(anchor="nw", expand=False)
         

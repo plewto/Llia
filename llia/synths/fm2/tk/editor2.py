@@ -13,9 +13,10 @@ class TkFm2Panel2(TkSubEditor):
 
     NAME = "FM2 LFO"
     IMAGE_FILE = "resources/FM2/editor2.png"
-
+    TAB_FILE = "resources/Tabs/misc.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 900, 600, self.IMAGE_FILE)
         canvas.pack()

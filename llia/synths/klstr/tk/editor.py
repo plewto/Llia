@@ -18,9 +18,10 @@ class TkKlstrTonePanel(TkSubEditor):
 
     NAME = "Klstr Tone"
     IMAGE_FILE = "resources/Klstr/editor_tone_panel.png"
+    TAB_FILE = "resources/Tabs/pulse.png"
     
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         TkSubEditor.__init__(self, frame, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
         self.pack(expand=True, fill="both")
@@ -98,9 +99,10 @@ class TkKlstrModPanel(TkSubEditor):
 
     NAME = "Klstr Mod"
     IMAGE_FILE = "resources/Klstr/editor_mod_panel.png"
+    TAB_FILE = "resources/Tabs/adsr.png"
     
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         TkSubEditor.__init__(self, frame, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
         self.pack(expand=True, fill="both")

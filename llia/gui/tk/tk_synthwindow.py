@@ -44,11 +44,7 @@ class TkSynthWindow(Frame):
         b_lift = factory.button(south, "+", command=self.lift_window)
         self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
         b_panic.grid(row=0, column=0)
-        # b_lower.grid(row=0, column=1)
-        # b_lift.grid(row=0, column=2)
         self._lab_status.grid(row=0, column=3, sticky='w')
-
-        
         
         south.config(background=factory.bg())
         main.add(self.bank_editor)
@@ -114,9 +110,10 @@ class TkSynthWindow(Frame):
         self.status("Removed synth: %s" % sid)
     
     def _init_info_tab(self, master):
+        img = factory.image("resources/Tabs/info.png")
         frame = factory.frame(master)
         inner_frame = factory.frame(frame)
-        master.add(frame, text="Info")
+        master.add(frame, text="Info", image=img,compound="top")
         text_widget = factory.text_widget(inner_frame)
         text_widget.config(width=90, height=40)
         vsb = factory.scrollbar(inner_frame, orientation='vertical')
@@ -163,13 +160,15 @@ class TkSynthWindow(Frame):
         self._info_text_widget.insert("end", txt)
     
     def _init_busconnection_tab(self, master):
+        img = factory.image("resources/Tabs/bus.png")
         bct = TkBusConnectionEditor(master, self, self.synth)
-        master.add(bct, text = "Buses")
+        master.add(bct, text = "Buses", image=img,compound="top")
         self.bus_connection_editor = bct
         
     def _init_performance_tab(self, master):
+        img = factory.image("resources/Tabs/performance.png")
         frame = factory.frame(master)
-        master.add(frame, text = "Performance")
+        master.add(frame, text = "Performance", image=img, compound="top")
         frame_channel = factory.label_frame(frame, "MIDI Channel")
         frame_keytab = factory.label_frame(frame, "Key Table")
         lab_transpose = factory.label(frame, "Transpose")
@@ -278,9 +277,10 @@ class TkSynthWindow(Frame):
 
     # map1_tab -> MIDI controller, pitch wheel
     def _init_map1_tab(self, master):
+        img = factory.image("resources/Tabs/map.png")
         HELP_TOPIC = "parameter-maps"
         frame = factory.frame(master)
-        master.add(frame, text="Map1")
+        master.add(frame, text="Map1", image=img, compound="top")
         north = factory.label_frame(frame, "MIDI Controller Maps")
         south = factory.label_frame(frame, "Pitch Wheel Maps")
         north.grid(row=0, column=0, sticky="ew", padx=8, pady=8)
@@ -355,10 +355,11 @@ class TkSynthWindow(Frame):
             self.list_pwheel_maps.insert("end", q)
 
     def _init_map2_tab(self, master):
+        img = factory.image("resources/Tabs/map.png")
         HELP_TOPIC = "parameter-maps"
         HEIGHT = 8
         frame = factory.frame(master)
-        master.add(frame, text="Map2")
+        master.add(frame, text="Map2",image=img,compound="top")
         north = factory.label_frame(frame, "Velocity Maps")
         center = factory.label_frame(frame, "Aftertouch Maps")
         south = factory.label_frame(frame, "Keynumber Maps")
