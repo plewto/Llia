@@ -20,9 +20,10 @@ class TkCarnalPanel(TkSubEditor):
 
     NAME = "Carnal Delay"
     IMAGE_FILE = "resources/CarnalDelay/editor.png"
-
+    TAB_FILE = "resources/Tabs/delay.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         TkSubEditor.__init__(self, frame, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)

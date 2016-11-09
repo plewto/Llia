@@ -13,9 +13,10 @@ class TkCUtilPanel(TkSubEditor):
 
     NAME = "CUtil"
     IMAGE_FILE = "resources/CUtil/editor.png"
+    TAB_FILE = "resources/Tabs/util.png"
 
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 700, 250, self.IMAGE_FILE)
         canvas.pack()

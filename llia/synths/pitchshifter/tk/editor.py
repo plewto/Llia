@@ -17,9 +17,10 @@ class TkPitchShifterPanel(TkSubEditor):
 
     NAME = "PitchShifter"
     IMAGE_FILE = "resources/PitchShifter/editor.png"
+    TAB_FILE =   "resources/PitchShifter/tab.png"
 
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 1400, 700, self.IMAGE_FILE)
         canvas.pack()
@@ -34,7 +35,6 @@ class TkPitchShifterPanel(TkSubEditor):
         x2 = x1+60
         x3 = x2+60
         x4 = x3+60
-
         x5 = x4+90
         x6 = x5+60
         x7 = x6+60
@@ -59,16 +59,13 @@ class TkPitchShifterPanel(TkSubEditor):
                          range_=(0,4000))
         self.add_control("pitchRatio", tratio)
         tratio.layout((x0,y))
-        
         norm_slider("pitchDispersion",x1,y)
         norm_slider("timeDispersion",x2,y)
         norm_slider("delay",x3,y)
         norm_slider("feedback",x4,y)
-
         amp_slider("dryAmp",x5,y)
         amp_slider("psAmp",x6,y)
         amp_slider("delayAmp",x7,y)
-
         bipolar_slider("dryPan",x5,ypan)
         bipolar_slider("psPan",x6,ypan)
         bipolar_slider("delayPan",x7,ypan)

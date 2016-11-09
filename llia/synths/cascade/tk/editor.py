@@ -7,46 +7,17 @@ from llia.gui.tk.expslider import ExpSlider
 from llia.gui.tk.tumbler import Tumbler
 from llia.gui.tk.msb import MSB, ToggleButton
 
-
-
-# clkfreq : 1.000,          # float, tumbler (0,99.999)
-# clksrc : 0,               # int toggle (0=interna;,1=external)
-# hold : 1.0,               # float, tumbler (0,99.999) ?
-
-# amp1 : 1.00,              # float, norm
-# amp2 : 1.00,
-# amp3 : 1.00,
-# amp4 : 1.00,
-# amp5 : 1.00,
-# amp6 : 1.00,
-
-# gate1 : 0,                # int, toggle (0=off, 1=gate)
-# gate2 : 0,
-# gate3 : 0,
-# gate4 : 0,
-# gate5 : 0,
-# gate6 : 0,
-
-# n : 8,                    # int, msb (7,32)
-# ampn : 1.00,
-# gaten : 0,
-
-# scale : 1.0,              # float, norm
-# bias : 0,                 # float linear (-4,+4)
-# lag : 0.0}                # float norm
-
-
 def create_editor(parent):
     TkCascadePanel(parent)
-
 
 class TkCascadePanel(TkSubEditor):
 
     NAME = "Cascade"
     IMAGE_FILE = "resources/Cascade/editor.png"
-
+    TAB_FILE = "resources/Cascade/tab.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame,1000,600,self.IMAGE_FILE)
         canvas.pack()

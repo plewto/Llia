@@ -28,9 +28,10 @@ class TkLfo3Panel(TkSubEditor):
 
     NAME = "LFO 3"
     IMAGE_FILE = "resources/LFO3/editor.png"
-
+    TAB_FILE = "resources/Tabs/lfo.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame,1018,663,self.IMAGE_FILE)
         canvas.pack()

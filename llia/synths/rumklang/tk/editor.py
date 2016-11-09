@@ -4,7 +4,6 @@ from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
-from llia.gui.tk.freq_spinner import FrequencySpinnerControl
 from llia.gui.tk.msb import ToggleButton
 
 
@@ -29,9 +28,10 @@ class TkRumklangPanel(TkSubEditor):
 
     NAME = "Rumklang"
     IMAGE_FILE = "resources/Rumklang/editor.png"
-
+    TAB_FILE = "resources/Tabs/reverb.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame,735,510,self.IMAGE_FILE)
         canvas.pack()

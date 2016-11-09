@@ -6,7 +6,6 @@ import llia.gui.tk.control_factory as cf
 from llia.gui.tk.tumbler import Tumbler
 from llia.gui.tk.msb import ToggleButton
 
-
 def create_editor(parent):
     TkSnHPanel(parent)
 
@@ -15,9 +14,10 @@ class TkSnHPanel(TkSubEditor):
 
     NAME = "SnH"
     IMAGE_FILE = "resources/SnH/editor.png"
-
+    TAB_FILE = "resources/SnH/tab.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas=factory.canvas(frame,696,361,self.IMAGE_FILE)
         canvas.pack()

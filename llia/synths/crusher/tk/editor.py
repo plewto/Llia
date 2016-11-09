@@ -17,9 +17,10 @@ class TkCrusherPanel(TkSubEditor):
 
     NAME = "Crusher"
     IMAGE_FILE = "resources/Crusher/editor.png"
-
+    TAB_FILE = "resources/Crusher/tab.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 1000, 700, self.IMAGE_FILE)
         canvas.pack()

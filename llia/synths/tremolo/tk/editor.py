@@ -15,9 +15,10 @@ class TkTremoloPanel(TkSubEditor):
 
     NAME = "Tremolo"
     IMAGE_FILE = "resources/Tremolo/editor.png"
+    TAB_FILE = "resources/Tremolo/tab.png"
     
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         TkSubEditor.__init__(self, frame, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
         self.pack(expand=True, fill="both")

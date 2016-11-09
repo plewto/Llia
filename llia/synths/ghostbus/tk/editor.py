@@ -14,9 +14,10 @@ class TkGhostbusPanel(TkSubEditor):
 
     NAME = "Ghostbus"
     IMAGE_FILE = "resources/Ghostbus/editor.png"
-
+    TAB_FILE = "resources/Ghostbus/tab.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 491, 708,self.IMAGE_FILE)
         canvas.pack()

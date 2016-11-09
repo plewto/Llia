@@ -14,9 +14,10 @@ class TkQModPanel(TkSubEditor):
 
     NAME = "QMod"
     IMAGE_FILE = "resources/QMod/editor.png"
-
+    TAB_FILE = "resources/QMod/tab.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 741,700, self.IMAGE_FILE)
         canvas.pack()
@@ -79,12 +80,9 @@ class TkQModPanel(TkSubEditor):
         self.add_control("inputFilter",msb_filter)
         msb_filter.layout((xfilter,y0+25))
         msb_filter.update_aspect()
-        print("HERE 1")
 
         msb_gain = MSB(canvas,"inputGain",editor,MAX_INPUT_GAIN_MAGNITUDE)
-        print("HERE 10")
         for i in range(MAX_INPUT_GAIN_MAGNITUDE):
-            print("DEBUG i = %s" % i)
             j = i+1
             v = 10**i
             tx = "x%d" % j
@@ -94,12 +92,9 @@ class TkQModPanel(TkSubEditor):
                  "value" : v,
                  "text" : tx}
             msb_gain.define_aspect(i,v,d)
-        print("HERE 30")
         self.add_control("inputGain",msb_gain)
         msb_gain.layout((xfilter,y0+100))
         msb_gain.update_aspect()
-        print("HERE 40")
-
         norm_slider("modDepth",xmod)
         linear_slider("attack",(0,4),xattack)
         linear_slider("release",(0,4),xrelease)

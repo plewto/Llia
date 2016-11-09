@@ -15,23 +15,20 @@ class TkMixerPanel(TkSubEditor):
 
     NAME = "Mixer"
     IMAGE_FILE = "resources/Mixer/editor.png"
-
+    TAB_FILE = "resources/Tabs/mixer.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 811,700,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-        #lab_panel = factory.image_label(canvas, self.IMAGE_FILE)
-        #lab_panel.pack(anchor="nw", expand=False)
-
         y0 = 60
         ypan = y0 + 350
         ymod = ypan
         ymute = ymod + 150
         yledger = ymute+60
-
         x0 = 120
         xmain = x0+500
         

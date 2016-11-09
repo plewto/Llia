@@ -14,9 +14,10 @@ class TkASplitPanel(TkSubEditor):
 
     NAME = "Audio Splitter"
     IMAGE_FILE = "resources/ASplit/editor.png"
-
+    TAB_FILE = "resources/Tabs/spliter.png"
+    
     def __init__(self, editor):
-        frame = editor.create_tab(self.NAME)
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
         canvas = factory.canvas(frame, 900, 600, self.IMAGE_FILE)
         canvas.pack()
