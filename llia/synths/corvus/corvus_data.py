@@ -17,8 +17,8 @@ prototype = {
     "lfo1_ratio" : 1.0,   # msb
     "lfo1_delay" : 0.0,   # linear
     "lfo2_ratio" : 0.5,   # msb
-    "lfo2_delay" : 0.0    # linear
-}
+    "lfo2_delay" : 0.0}   # linear
+
 
 for op in (1,2,3,4):
     for p,dflt in (("op%d_enable" , 1),       # toggle
@@ -39,6 +39,7 @@ for op in (1,2,3,4):
                    ("op%d_breakpoint" , 1.0), 
                    ("op%d_sustain" , 1.0),
                    ("op%d_env_mode" , 0),
+                   ("op%d_pe", 0.0),
                    ("fm%d_ratio" , 1.00),     # tumbler
                    ("fm%d_modscale" , 1),     # msb
                    ("fm%d_moddepth" , 0.0),   # norm
@@ -56,6 +57,18 @@ prototype["bzz4_env"] = 16
 prototype["bzz4_lfo2"] = 0
 prototype["bzz4_mix"] = 0.0
 prototype["bzz4_lag"] = 0.0
+prototype["pe_t1"] = float(1.0)
+prototype["pe_t2"] = float(1.0)
+prototype["pe_t3"] = float(1.0)
+prototype["pe_t4"] = float(1.0)
+prototype["pe_a0"] = float(0.0)
+prototype["pe_a1"] = float(1.0)
+prototype["pe_a2"] = float(-1.0)
+prototype["pe_a3"] = float(1.0)
+prototype["pe_a4"] = float(0.0)
+prototype["pe_rnode"] = int(3)
+prototype["pe_loop"] = int(4)   
+
 
 class Corvus(Program):
 
@@ -65,6 +78,32 @@ class Corvus(Program):
 
 program_bank = ProgramBank(Corvus("Init"))
 program_bank.enable_undo = False
+
+def pitch_env(levels = [0.0, 0.0, 0.0, 0.0, 0.0],
+             times = [1.0, 1.0, 1.0, 1.0],
+             hold = 3,    # Release node (1,2,3,4)
+             loop = 4):   # loop node (0,1,2,3,4) ?
+    def fill(lst, template):
+        acc = []
+        for i,d in enumerate(template):
+            try:
+                acc.append(float(lst[i]))
+            except IndexError:
+                acc.append(float(d))
+        return acc
+    levels = fill(levels, [0,0,0,0,0])
+    times = fill(times, [1,1,1,1])
+    map = {"pe_rnode" : int(hold),
+           "pe_loop" : int(loop)}
+    for i,v in enumerate(levels):
+        p = "pe_a%d" % i
+        map[p] = v
+    for i, v in enumerate(times):
+        j = i+1
+        p = "pe_t%d" % j
+        map[p] = v
+    return map
+             
 
 def op(n, 
        enable= 1,
@@ -85,6 +124,7 @@ def op(n,
        breakpoint= 1.0,
        sustain= 1.0,
        env_mode= 0,
+       pe = 0.0,
        nse_mix = 0.0,    # op3 only
        nse_bw = 1,       # op3 only
        bzz_n = 1,        # op4 only buzz initial n-harmonics
@@ -108,6 +148,7 @@ def op(n,
            "op%d_right" % n : int(right),
            "op%d_key" % n : int(key),
            "op%d_enable" % n : int(enable),
+           "op%d_pe" % n : float(pe),
            "op%d_env_mode" % n : int(env_mode)}
     if n==3:
         map["nse3_mix"] = float(nse_mix)
@@ -153,6 +194,7 @@ def corvus(slot, name,
            lfo1_delay = 0.0,
            lfo2_ratio = 0.5,
            lfo2_delay = 0.0,
+           pitch_env = pitch_env(),
            op1 = op(1),
            fm1 = fm(1),
            op2 = op(2),
@@ -177,12 +219,12 @@ def corvus(slot, name,
     def copymap(m):
         for param,value in m.items():
             p[param] = value
-    for m in (op1,op2,op3,op4,fm1,fm2,fm4):
+    for m in (op1,op2,op3,op4,fm1,fm2,fm4,pitch_env):
         copymap(m)
     program_bank[slot] = p
     return p
 
 
+# TEST 
 corvus(0,"Crow")
-
 

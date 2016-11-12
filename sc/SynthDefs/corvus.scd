@@ -30,6 +30,22 @@
 		lfo1_delay = 0.0
 		lfo2_ratio = 0.5
 		lfo2_delay = 0.0
+		// pitch envelope
+		pe_t1 = 1.0                     // pitch enve times
+		pe_t2 = 1.0
+		pe_t3 = 1.0
+		pe_t4 = 1.0
+		pe_a0 = 0.0                     // pitch envelope levels -/+1
+		pe_a1 = 1.0
+		pe_a2 = -1.0
+		pe_a3 = 1.0
+		pe_a4 = 0.0
+		pe_rnode = 3                    // pitch env release node (1,2,3)
+		pe_loop = 4                     // pitch env loop node (1,2,3,4)
+		op1_pe = 0.0                    // pitch env -> op
+		op2_pe = 0.0
+		op3_pe = 0.0
+		op4_pe = 0.0
 		// op 1
 		op1_enable = 1                  // (0|1)
 		op1_ratio = 1.0                 // (0..16)
@@ -165,6 +181,9 @@
 		var gate4 = Select.kr(op4_env_mode, [gate,Trig1.kr(gate,(op4_attack + op4_decay1 + op4_decay2))]);
 		var env4 = EnvGen.kr(Env([env_floor,1,op4_breakpoint.max(env_floor),op4_sustain.max(env_floor),env_floor],
 			[op4_attack,op4_decay1,op4_decay2,op4_release],\lin,3),gate4,doneAction: 0);
+	    // Pitch envelope
+		var pe = EnvGen.kr(Env([pe_a0,pe_a1,pe_a2,pe_a3,pe_a4],
+			[pe_t1,pe_t2,pe_t3,pe_t4],\lin,pe_rnode,pe_loop),gate);
         // LFOs
 		var lfov_env = EnvGen.kr(Env([0,0,1,0],[vdelay,vdelay,hold_time],\lin,2),gate);
 		var lfo1_env = EnvGen.kr(Env([0,0,1,0],[lfo1_delay,lfo1_delay,hold_time],\lin,2),gate);
@@ -180,7 +199,7 @@
 		// carrier frequencies
 		var f = Lag2.kr(freq,port)*detune*vibsig;
 		var cratios = [op1_ratio,op2_ratio,op3_ratio,op4_ratio]*f;
-		var cfrequencies = cratios+[op1_bias,op2_bias,op3_bias,op4_bias];
+		var cfrequencies = (cratios+[op1_bias,op2_bias,op3_bias,op4_bias]) * [1+(op1_pe*pe), 1+(op2_pe*pe), 1+(op3_pe*pe), 1+(op4_pe*pe)];
 		// velocities
 		var cvelocities = LinXFade2.kr(1,velocity,[op1_velocity,op2_velocity,op3_velocity,op4_velocity].linlin(0,1,-1,1));
 		var mvelocities = cvelocities;
@@ -204,7 +223,7 @@
 		// modulators
 		var mamps = [fm1_modscale*fm1_moddepth,fm2_modscale*fm2_moddepth,fm3_modscale*fm3_moddepth,fm4_modscale*fm4_moddepth]*
 		             cfrequencies*mlfo1*mlfo2*mxtern*mvelocities*mkeyamps;
-		var mfrequencies = [fm1_ratio,fm2_ratio,fm3_ratio,fm4_ratio]*f;
+		var mfrequencies = [fm1_ratio,fm2_ratio,fm3_ratio,fm4_ratio]*f* [1+(op1_pe*pe), 1+(op2_pe*pe), 1+(op3_pe*pe), 1+(op4_pe*pe)];
 		var menvs = Lag2.kr([env1,env2,env3,env4],[fm1_lag,fm2_lag,fm3_lag,fm4_lag]);
 		var msigs = SinOsc.ar(mfrequencies,0,mamps*menvs);
 		// carriers

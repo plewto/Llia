@@ -50,3 +50,7 @@ for i in range(10,100, 10):
 for i in range(100,1100,100):
     _acc.append(i)
 NOISE_BANDWIDTHS = tuple(_acc)
+
+
+PENV_HOLD_NODES = (0,1,2,3,4)
+PENV_LOOP_NODES = (0,1,2)

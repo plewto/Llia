@@ -17,7 +17,7 @@ class TkCorvusMiscPanel(TkSubEditor):
         tab_file =   "resources/Tabs/misc.png"
         frame = editor.create_tab(name,tab_file)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame, 750, 357,image_file)
+        canvas = factory.canvas(frame, 1000, 750,image_file)
         canvas.pack()
         self.canvas = canvas
         self.editor = editor
@@ -91,4 +91,54 @@ class TkCorvusMiscPanel(TkSubEditor):
         msb_ratio(2,x_lfo2-22)
         volume_slider("amp",x_amp,y0)
         
+        y_penv = 375
+        y_buttons = y_penv+200
+        x_penv = x0
+        for a in (0,1,2,3,4):
+            x = x_penv + a*60
+            linear_slider("pe_a%d" % a, (-1.0,1.0),x,y_penv)
+        x += 60
+        for t in (1,2,3,4):
+            x = x+60
+            linear_slider("pe_t%d" % t, (0,2),x,y_penv)
+        x += 60
+        x_send = x
+        for i in (1,2,3,4):
+          x += 60
+          linear_slider("op%d_pe" % i,(-1,1),x,y_penv)
+        count = len(PENV_HOLD_NODES)
+        msb_loop = MSB(canvas,"pe_loop",editor,count)
+        for i,v in enumerate(PENV_LOOP_NODES):
+            d = {"fill" : CFILL,
+                 "foreground" : CFOREGROUND,
+                 "outline" : COUTLINE,
+                 "value" : v,
+                 "text" : str(v)}
+            msb_loop.define_aspect(i,v,d)
+        self.add_control("pe_loop",msb_loop)
+        msb_loop.layout((x_penv, y_buttons))
+        msb_loop.update_aspect()
+
+        def zero_levels():
+            for a in (0,1,2,3,4):
+                p = "pe_a%d" % a
+                self.set_value(p,0.0)
+            self.sync()
+
+        def zero_sends():
+            for a in (1,2,3,4):
+                p = "op%d_pe" % a
+                self.set_value(p,0.0)
+            self.sync()
+            
+        b1 = factory.button(canvas,"0", command=zero_levels)
+        b1.place(x=x_penv+120,y=y_buttons)
+        b2 = factory.button(canvas,"0",command=zero_sends)
+        b2.place(x=x_send+60,y=y_buttons)
+        
+
+    def set_value(self,param,value):
+        prog = self.synth.bank()[None]
+        prog[param] = value
+
         

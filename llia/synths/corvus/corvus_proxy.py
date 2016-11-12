@@ -42,5 +42,5 @@ specs["audio-output-buses"] = [["outbus", "out_0"],
                                ["outbus3", "out_2"],
                                ["outbus4", "out_2"]]
 specs["audio-input-buses"] = []
-specs["control-output-buses"] = [["xbus","null_source"]]
-specs["control-input-buses"] = []
+specs["control-output-buses"] = []
+specs["control-input-buses"] = [["xbus","null_source"]]

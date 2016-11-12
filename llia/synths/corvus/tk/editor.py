@@ -175,7 +175,7 @@ class TkCorvusOpPanel(TkSubEditor):
         self.add_child_editor("OP%dENV" % n, enved)
         enved.sync()
 
-        y_extra = y_env
+        y_extra = y_env+30
         x_extra = x0 + 800
 
         if n==3:
@@ -195,7 +195,7 @@ class TkCorvusOpPanel(TkSubEditor):
             norm_slider("nse3_mix",x_extra+24, y_extra+75)
         if n==4:
             # Add buzz controls
-            x_n = x_extra+30
+            x_n = x_extra+16
             x_env = x_n+60
             x_lfo = x_env+60
             x_lag = x_env
@@ -203,6 +203,5 @@ class TkCorvusOpPanel(TkSubEditor):
             linear_slider("bzz4_n",(1,128),x_n,y_extra)
             linear_slider("bzz4_env",(-128,128),x_env,y_extra)
             linear_slider("bzz4_lfo2",(0,128),x_lfo,y_extra)
-            
             norm_slider("bzz4_lag",x_lag,y_extra+200, height=100)
             norm_slider("bzz4_mix",x_mix,y_extra+200, height=100)
