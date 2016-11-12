@@ -8,6 +8,7 @@
     "carnal.scd",
     "cascade.scd",
     "chronos.scd",
+    "corvus.scd",
     "crusher.scd",
     "ctrlmixer.scd",
     "cutil.scd",

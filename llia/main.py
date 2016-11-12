@@ -227,6 +227,7 @@ def _import_controller(stype, modname):
     _import(modname)
     constants.CONTROLLER_SYNTH_TYPES.append(stype)     
 
+_import_synth("Corvus","llia.synths.corvus.corvus_proxy")
 _import_synth("Algo","llia.synths.algo.algo_proxy")
 _import_synth("Orgn", "llia.synths.orgn.orgn_proxy")
 _import_synth("Saw3", "llia.synths.saw3.s3_proxy")
@@ -234,6 +235,7 @@ _import_synth("Klstr", "llia.synths.klstr.klstr_proxy")
 _import_synth("RDrum", "llia.synths.rdrum.rdrum_proxy")
 _import_synth("MASA", "llia.synths.masa.masa_proxy")
 _import_synth("FM2", "llia.synths.fm2.fm2_proxy")
+
 
 _import_effect("CarnalDelay", "llia.synths.carnal.crnl_proxy")
 _import_effect("XOver", "llia.synths.xover.xover_proxy")
