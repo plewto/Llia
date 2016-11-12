@@ -245,7 +245,7 @@
 		c4 = XFade2.ar(c4,bzz,bzz4_mix.linlin(0,1,-1,1));
 		outsig = (c1+c2+c3+c4);
 		Out.ar([outbus1,outbus2,outbus3,outbus4],[c1,c2,c3,c4]);
-		Out.ar(outbus,outsig);
+		Out.ar(outbus,outsig*0.25);
 		Linen.kr(gate, 0.01, 1, hold_time, doneAction); // Voice hold envelope
 
 }).load)

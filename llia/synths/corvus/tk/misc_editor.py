@@ -134,7 +134,7 @@ class TkCorvusMiscPanel(TkSubEditor):
         b1 = factory.button(canvas,"0", command=zero_levels)
         b1.place(x=x_penv+120,y=y_buttons)
         b2 = factory.button(canvas,"0",command=zero_sends)
-        b2.place(x=x_send+60,y=y_buttons)
+        b2.place(x=x_send+49,y=y_buttons)
         
 
     def set_value(self,param,value):
