@@ -1,6 +1,6 @@
 /*
 ** Corvus hybrid synth
-** 4 sets of simple FM piars [m]->[c]
+** 4 sets of simple FM pairs [m]->[c]
 ** 3 LFOS, vibrato
 **         lfo1
 **         lfo2
@@ -8,10 +8,10 @@
 
 (SynthDef (\Corvus,
 	{|outbus = 0
-		outbus1 = 2
-		outbus2 = 2
-		outbus3 = 2
-		outbus4 = 2
+		outbus1 = 128,
+		outbus2 = 128,
+		outbus3 = 128,
+		outbus4 = 128,
 		xbus = 1024
 		gate = 1
 		doneAction = 2
@@ -48,12 +48,12 @@
 		op1_release = 0.00              // (0..8)
 		op1_breakpoint = 1.0            // (0..1)
 		op1_sustain = 1.0               // (0..1)
-		op1_env_mode = 0                // (0|1) 0 = gated, 1 = triggerd
+		op1_env_mode = 0                // (0|1) 0 = gated, 1 = triggered
 		fm1_ratio = 1.00                // (0..16) modulation frequency ratio
 		fm1_modscale = 1                // (1,10,100,...10^^n)  n=(0,1,2,...,5)
 		fm1_moddepth = 0.0              // (0..1) modulation depth
 		fm1_lag = 0.00                  // (0..1) modulator envelope lag
-		fm1_lfo1 = 0.00                 // (0..1) lfo1 -> modulatino depth
+		fm1_lfo1 = 0.00                 // (0..1) lfo1 -> modulation depth
 		fm1_lfo2 = 0.00                 // (0..1) lfo2 -> modulation depth
 		fm1_external = 0.00             // (0..1) external ->modulation depth
 		fm1_left = 0                    // modulator left keyscale
@@ -114,6 +114,8 @@
 		fm3_external = 0.00
 		fm3_left = 0
 		fm3_right = 0
+		nse3_mix = 0.0      // noise ring modulated w op3, 0-> c3, 1-> noise
+		nse3_bw = 1.0       // noise band width (1..1000)
 		// op 4
 		op4_enable = 1
 		op4_ratio = 1.0
@@ -141,7 +143,11 @@
 		fm4_lfo2 = 0.00
 		fm4_external = 0.00
 		fm4_left = 0
-		fm4_right = 0|
+		fm4_right = 0
+		bzz4_n = 1       //  1..63
+		bzz4_env = 16    //  +/- 63
+		bzz4_mix = 0.0    //  0-> c4, 1-> bzz
+		bzz4_lag = 0.0|
 		var x = In.kr(xbus,1);
 		// envelopes
 		var hold_time = [op1_release,op2_release,op3_release,op4_release].max;
@@ -204,10 +210,22 @@
 		var camps = [op1_enable*op1_amp,op2_enable*op2_amp,op3_enable*op3_amp,op4_enable*op4_amp]*
 		             cvelocities*clfo1*clfo2*cxtern*ckeyamps;
 		var csig = SinOsc.ar(cfrequencies+msigs,0,camps*[env1,env2,env3,env4])*amp;
-		var outsig = Mix.ar(csig);
-	    Out.ar(outbus, outsig*0.25);
-	    Out.ar([outbus1,outbus2,outbus3,outbus4],outsig);
-		// Voice hold envelope
-		Linen.kr(gate, 0.01, 1, hold_time, doneAction);
+		var c1 = csig[0];
+		var c2 = csig[1];
+		var c3 = csig[2];
+		var c4 = csig[3];
+		var nsemod = LPF.ar(WhiteNoise.ar(),nse3_bw);
+		var nserm = (c3*nsemod) * nse3_bw.expexp(1,1000,350,3);
+		var bzz_max = 200;
+		var bzz_env = Lag2.kr(env4,bzz4_lag)*bzz4_env;
+		var bzz_harmonics = (bzz4_n+bzz_env).max(1).min(bzz_max);
+		var bzz = Blip.ar(cfrequencies[3],bzz_harmonics)*camps[3]*env4*amp;
+		var outsig;
+		c3 = XFade2.ar(c3,nserm,nse3_mix.linlin(0,1,-1,1));
+		c4 = XFade2.ar(c4,bzz,bzz4_mix.linlin(0,1,-1,1));
+		outsig = (c1+c2+c3+c4);
+		Out.ar([outbus1,outbus2,outbus3,outbus4],[c1,c2,c3,c4]);
+		Out.ar(outbus,outsig);
+		Linen.kr(gate, 0.01, 1, hold_time, doneAction); // Voice hold envelope
 
 }).load)

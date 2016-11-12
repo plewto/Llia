@@ -53,7 +53,7 @@ class TkCorvusOpPanel(TkSubEditor):
         x_keyscale = x_external + 60
         x_enable = x_keyscale + 90
 
-        x_env = x0
+        x_env = x0-22
        
         
         
@@ -168,12 +168,38 @@ class TkCorvusOpPanel(TkSubEditor):
             p = "op%d_%s" % (n,s)
             env_parameters.append(p)
         enved = ADDSREditor(canvas,n,(x_env,y_env),
-                            (950,350),
+                            (800,350),
                             env_parameters,
                             editor,
                             MAX_ENV_SEGMENT)
         self.add_child_editor("OP%dENV" % n, enved)
         enved.sync()
 
-                          
-                          
+        y_extra = y_env
+        x_extra = x0 + 800
+
+        if n==3:
+            # Add exgtra noise controls
+            count = len(NOISE_BANDWIDTHS)
+            msb = MSB(canvas,"nse3_bw",editor,count)
+            for i,v in enumerate(NOISE_BANDWIDTHS):
+                d = {"fill" : CFILL,
+                     "foreground" : CFOREGROUND,
+                     "outline" : COUTLINE,
+                     "value" : v,
+                     "text" : str(v)}
+                msb.define_aspect(i,v,d)
+            self.add_control("nse3_bw",msb)
+            msb.layout((x_extra,y_extra))
+            msb.update_aspect()
+            norm_slider("nse3_mix",x_extra+24, y_extra+75)
+        if n==4:
+            # Add buzz controls
+            x_n = x_extra+30
+            x_env = x_n+60
+            x_lag = x_env
+            x_mix = x_lag + 60
+            linear_slider("bzz4_n",(1,200),x_n,y_extra)
+            linear_slider("bzz4_env",(-200,200),x_env,y_extra)
+            norm_slider("bzz4_lag",x_lag,y_extra+200,height=75)
+            norm_slider("bzz4_mix",x_mix,y_extra)

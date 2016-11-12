@@ -42,3 +42,11 @@ for v in range(2,17):
 # ((float,str),(float,str)...)
 LFO_RATIOS = tuple(_acc)
             
+_acc= []
+for i in range(1,10,1):
+    _acc.append(i)
+for i in range(10,100, 10):
+    _acc.append(i)
+for i in range(100,1100,100):
+    _acc.append(i)
+NOISE_BANDWIDTHS = tuple(_acc)

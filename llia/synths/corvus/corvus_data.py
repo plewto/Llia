@@ -39,7 +39,6 @@ for op in (1,2,3,4):
                    ("op%d_breakpoint" , 1.0), 
                    ("op%d_sustain" , 1.0),
                    ("op%d_env_mode" , 0),
-                   
                    ("fm%d_ratio" , 1.00),     # tumbler
                    ("fm%d_modscale" , 1),     # msb
                    ("fm%d_moddepth" , 0.0),   # norm
@@ -50,8 +49,12 @@ for op in (1,2,3,4):
                    ("fm%d_left" , 0),         # msb
                    ("fm%d_right" , 0)):       # msb
         prototype[p%op] = dflt
-    
-
+prototype["nse3_mix"] = 0.0                   # noise mix
+prototype["nse3_bw"] = 1                      # noise band width (1,1000)
+prototype["bzz4_n"] = 1
+prototype["bzz4_env"] = 16
+prototype["bzz4_mix"] = 0.0
+prototype["bzz4_lag"] = 0.0
 
 class Corvus(Program):
 
@@ -80,7 +83,12 @@ def op(n,
        release= 0.00,
        breakpoint= 1.0,
        sustain= 1.0,
-       env_mode= 0):
+       env_mode= 0,
+       nse_mix = 0.0,    # op3 only
+       nse_bw = 1,       # op3 only
+       bzz_n = 1,        # op4 only buzz initial n-harmonics
+       bzz_env = 16,     # env -> buzz n-harmonics   -/+ 200
+       bzz_mix = 0.0):   # c4/buzz mix
     map = {"op%d_ratio" % n : float(ratio),
            "op%d_bias" % n : float(bias),
            "op%d_amp" % n : float(amp),
@@ -99,6 +107,14 @@ def op(n,
            "op%d_key" % n : int(key),
            "op%d_enable" % n : int(enable),
            "op%d_env_mode" % n : int(env_mode)}
+    if n==3:
+        map["nse3_mix"] = float(nse_mix)
+        map["nse3_bw"] = int(nse_bw)
+    if n==4:
+        map["bzz4_n"] = int(bzz_n)
+        map["bzz4_env"] = int(bzz_env)
+        map["bzz4_mix"] = float(bzz_mix)
+            
     return map
 
 def fm(n,
@@ -122,7 +138,6 @@ def fm(n,
            "right" : int(right)}
     return map
 
-        
 def corvus(slot, name,
            port = 0.00,
            amp = 0.1,
@@ -142,7 +157,8 @@ def corvus(slot, name,
            op3 = op(3),
            fm3 = fm(3),
            op4 = op(4),
-           fm4 = fm(4)):
+           fm4 = fm(4),
+           ):
     p = Corvus(name)
     p["port"] = float(port)
     p["amp"] = float(amp)
@@ -167,4 +183,3 @@ def corvus(slot, name,
 corvus(0,"Crow")
 
 
-# TEST 

@@ -19,11 +19,19 @@ def pp(program, slot):
             param = "op%d_%s" % (n,p)
             value = int(program[param])
             bcc += '%s%s = %d' % (pad2,p,value)
-            if p == "env_mode":
+            if op < 3 and p == "env_mode":
                 bcc += "),\n"
             else:
                 bcc += ",\n"
+        if n==3:
+            bcc += '%snse_mix = %5.4f,\n' % (pad2,float(program["nse3_mix"]))
+            bcc += '%snse_bw = %d),\n' % (pad2,int(program["nse3_bw"]))
+        if n==4:
+            bcc += '%sbzz4_n = %d,\n' % (pad2,int(program["bzz4_n"]))
+            bcc += '%sbzz4_env = %d,\n' % (pad2,int(program["bzz4_env"]))
+            bcc += '%sbxx4_mix = %5.4f),\n' % (pad2,float(program["bzz4_mix"]))
         return bcc
+    
     def fm(n):
         pad2 = ' '*17
         bcc = '%sfm%d = fm(%d,\n' % (pad,n,n)
@@ -34,10 +42,7 @@ def pp(program, slot):
             bcc += '%s%s = %5.4f,\n' % (pad2,p,value)
         bcc += '%sleft = %d,\n' % (pad2,int(program["fm%d_left"%n]))
         bcc += '%sright = %d' % (pad2,int(program["fm%d_right"%n]))
-        if n == 4:
-            bcc += "))\n"
-        else:
-            bcc += "),\n"
+        bcc += "),\n"
         return bcc
     for n in (1,2,3,4):
         acc += op(n)
