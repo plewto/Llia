@@ -144,9 +144,10 @@
 		fm4_external = 0.00
 		fm4_left = 0
 		fm4_right = 0
-		bzz4_n = 1       //  1..63
-		bzz4_env = 16    //  +/- 63
-		bzz4_mix = 0.0    //  0-> c4, 1-> bzz
+		bzz4_n = 1        //  1..63
+		bzz4_env = 16     //  +/- 63
+		bzz4_lfo2 = 0.0    // lfo2 -> buzz
+		bzz4_mix = 0.0    //  0-> c4, 1-> buzz
 		bzz4_lag = 0.0|
 		var x = In.kr(xbus,1);
 		// envelopes
@@ -216,9 +217,9 @@
 		var c4 = csig[3];
 		var nsemod = LPF.ar(WhiteNoise.ar(),nse3_bw);
 		var nserm = (c3*nsemod) * nse3_bw.expexp(1,1000,350,3);
-		var bzz_max = 200;
+		var bzz_max = 128;
 		var bzz_env = Lag2.kr(env4,bzz4_lag)*bzz4_env;
-		var bzz_harmonics = (bzz4_n+bzz_env).max(1).min(bzz_max);
+		var bzz_harmonics = ((bzz4_n+bzz_env)+(bzz4_lfo2*lfos[2])).max(1).min(bzz_max);
 		var bzz = Blip.ar(cfrequencies[3],bzz_harmonics)*camps[3]*env4*amp;
 		var outsig;
 		c3 = XFade2.ar(c3,nserm,nse3_mix.linlin(0,1,-1,1));

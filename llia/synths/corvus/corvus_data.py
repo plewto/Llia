@@ -53,6 +53,7 @@ prototype["nse3_mix"] = 0.0                   # noise mix
 prototype["nse3_bw"] = 1                      # noise band width (1,1000)
 prototype["bzz4_n"] = 1
 prototype["bzz4_env"] = 16
+prototype["bzz4_lfo2"] = 0
 prototype["bzz4_mix"] = 0.0
 prototype["bzz4_lag"] = 0.0
 
@@ -87,7 +88,8 @@ def op(n,
        nse_mix = 0.0,    # op3 only
        nse_bw = 1,       # op3 only
        bzz_n = 1,        # op4 only buzz initial n-harmonics
-       bzz_env = 16,     # env -> buzz n-harmonics   -/+ 200
+       bzz_env = 16,     # env -> buzz n-harmonics   (-/+ 128)
+       bzz_lfo2 = 0,     # lfo2 -> buzz n-harmonics  (0..128)
        bzz_mix = 0.0):   # c4/buzz mix
     map = {"op%d_ratio" % n : float(ratio),
            "op%d_bias" % n : float(bias),
@@ -113,6 +115,7 @@ def op(n,
     if n==4:
         map["bzz4_n"] = int(bzz_n)
         map["bzz4_env"] = int(bzz_env)
+        map["bzz4_lfo2"] = int(bzz_lfo2)
         map["bzz4_mix"] = float(bzz_mix)
             
     return map

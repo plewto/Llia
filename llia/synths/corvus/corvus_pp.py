@@ -29,6 +29,7 @@ def pp(program, slot):
         if n==4:
             bcc += '%sbzz4_n = %d,\n' % (pad2,int(program["bzz4_n"]))
             bcc += '%sbzz4_env = %d,\n' % (pad2,int(program["bzz4_env"]))
+            bcc += '%sbzz4_lfo2 = %d,\n' % (pad2,int(program["bzz4_lfo2"]))
             bcc += '%sbxx4_mix = %5.4f),\n' % (pad2,float(program["bzz4_mix"]))
         return bcc
     

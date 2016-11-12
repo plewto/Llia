@@ -197,9 +197,12 @@ class TkCorvusOpPanel(TkSubEditor):
             # Add buzz controls
             x_n = x_extra+30
             x_env = x_n+60
+            x_lfo = x_env+60
             x_lag = x_env
-            x_mix = x_lag + 60
-            linear_slider("bzz4_n",(1,200),x_n,y_extra)
-            linear_slider("bzz4_env",(-200,200),x_env,y_extra)
-            norm_slider("bzz4_lag",x_lag,y_extra+200,height=75)
-            norm_slider("bzz4_mix",x_mix,y_extra)
+            x_mix = x_lag+60
+            linear_slider("bzz4_n",(1,128),x_n,y_extra)
+            linear_slider("bzz4_env",(-128,128),x_env,y_extra)
+            linear_slider("bzz4_lfo2",(0,128),x_lfo,y_extra)
+            
+            norm_slider("bzz4_lag",x_lag,y_extra+200, height=100)
+            norm_slider("bzz4_mix",x_mix,y_extra+200, height=100)
