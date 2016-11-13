@@ -36,9 +36,9 @@
 		pe_t3 = 1.0
 		pe_t4 = 1.0
 		pe_a0 = 0.0                     // pitch envelope levels -/+1
-		pe_a1 = 1.0
-		pe_a2 = -1.0
-		pe_a3 = 1.0
+		pe_a1 = 0.0
+		pe_a2 = 0.0
+		pe_a3 = 0.0
 		pe_a4 = 0.0
 		pe_rnode = 3                    // pitch env release node (1,2,3)
 		pe_loop = 4                     // pitch env loop node (1,2,3,4)

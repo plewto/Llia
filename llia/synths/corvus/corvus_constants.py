@@ -20,9 +20,7 @@ KEYBREAK = tuple(_acc)
 
 MODSCALES = (0,1,2,3,4)
              
-MAX_ENV_SEGMENT = 8
-
-
+MAX_ENV_SEGMENT = 8      # Maximum time envelope segment
 
 _acc = [(round(1.0/16,3),"1/16")]
 for n in range(7):
@@ -40,6 +38,7 @@ for v in range(2,17):
     _acc.append((float(v), str(v)))
 
 # ((float,str),(float,str)...)
+#
 LFO_RATIOS = tuple(_acc)
             
 _acc= []
@@ -54,3 +53,19 @@ NOISE_BANDWIDTHS = tuple(_acc)
 
 PENV_HOLD_NODES = (0,1,2,3,4)
 PENV_LOOP_NODES = (0,1,2)
+
+
+# Envelope hints
+#
+GATE = 1
+ASR = 2
+ADSR = 3
+PERCUSSIVE = 4
+
+# Envelope time hints
+#
+FAST = 5
+MEDIUM = 6
+SLOW = 7
+GLACIAL = 8
+

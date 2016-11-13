@@ -6,7 +6,6 @@ import llia.gui.tk.control_factory as cf
 from llia.gui.tk.msb import MSB, ToggleButton
 from llia.gui.tk.tumbler import Tumbler
 from llia.gui.tk.addsr_editor import ADDSREditor
-
 from llia.synths.corvus.corvus_constants import *
 
 class TkCorvusMiscPanel(TkSubEditor):
@@ -100,7 +99,7 @@ class TkCorvusMiscPanel(TkSubEditor):
         x += 60
         for t in (1,2,3,4):
             x = x+60
-            linear_slider("pe_t%d" % t, (0,2),x,y_penv)
+            linear_slider("pe_t%d" % t, (0,MAX_ENV_SEGMENT),x,y_penv)
         x += 60
         x_send = x
         for i in (1,2,3,4):

@@ -34,7 +34,6 @@ def set_engion(name):
 set_engion("random")
     
 def algogen(slot=127,*_):
-    print("DEBUG time hint is ", gen_config["env-time-hint"])
     eng = gen_config["engion"]
     prog = eng(slot,gen_config)
     return prog

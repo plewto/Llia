@@ -6,7 +6,7 @@ from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.corvus.corvus_data import program_bank
 from llia.synths.corvus.corvus_pp import pp 
-#from llia.synths.corvus.corvus_random import corvus_random
+from llia.synths.corvus.rndgen.corvus_gen import corvusgen
 
 specs = SynthSpecs("Corvus")
 
@@ -33,7 +33,7 @@ specs["is-controller"] = False
 specs["description"] = "Hybrid FM Additive synth"
 specs["keymodes"] = ('PolyN','PolyRotate', 'Poly1', 'PolyRotate', 'Mono1', 'MonoExclusive')
 specs["pretty-printer"] = pp   
-#specs["program-generator"] = corvus_random
+specs["program-generator"] = corvusgen
 specs["help"] = "Corvus"
 specs["pallet"] = corvus_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"],
