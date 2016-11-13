@@ -209,6 +209,7 @@ class TkAddSynthDialog(Toplevel):
             sy.create_subeditors()
             swin.group_index = grp_index
             self.app.main_window().status("Added %s" % sy.sid)
+            sy.use_program(0)
         else:
             self.app.main_widnow().warning("Synth could not be added")    
         factory.restore_pallet()

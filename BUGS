@@ -84,12 +84,14 @@ So for instrument Foo feeding effect Bar which then feeds effect Baz.
    3) Create efx Baz,    input <- B, output -> out_0   (sound card)
    4) Create efx Bar,    input <- A, output -> B
 
----------------------------------------------------------------------- OPEN 0006
+---------------------------------------------------------------------- CLOSED
 BUG 0006 2016.07.14
 
 New synths are not immediately "active" after creation.  It is necessary
 select a program first before the synth produces output.
 
+2016.11.13
+Added explicit program change on synth editor creation.
 
 ---------------------------------------------------------------------- CLOSED
 BUG 0007 2016.08.06  CLOSED 2016.08.13

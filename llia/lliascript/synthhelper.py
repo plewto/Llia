@@ -248,7 +248,7 @@ class SynthHelper(object):
           self.parser.register_entity(ename, etype, data)
           self._assignment_serial_number += 1
 
-    def add_synth(self, stype, keymode="Poly1", voice_count=8):
+    def add_synth(self, stype, keymode="PolyN", voice_count=8):
         self.assert_synth_type(stype)
         self.assert_keymode(keymode)
         sy = self.proxy.add_synth(stype, keymode, voice_count)
@@ -330,6 +330,8 @@ class SynthHelper(object):
                 mw[sy.sid] = swin
                 sy.create_subeditors()
                 notebook.add(swin, text=sy.sid, image=icon, compound="top")
+                sy.use_program(0)
+                sy.synth_editor.sync()
 
     # Destroy editor for indicated synth
     # NOTES:
