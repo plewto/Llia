@@ -12,6 +12,7 @@
     "crusher.scd",
     "ctrlmixer.scd",
     "cutil.scd",
+    "envgen.scd",
     "flngr.scd",
     "fm2.scd",
     "ghostbus.scd",
