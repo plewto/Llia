@@ -34,7 +34,7 @@ class TkControlbusEditor(Toplevel):
         #spin_chancount = factory.int_spinbox(main, self._var_chancount, 1, 64)
         self.lab_warning = factory.warning_label(main, modal=True)
         button_bar = factory.frame(main, modal=True)
-        b_remove = factory.delete_button(button_bar,ttip="Delete control bus",command=self.remove_bus)
+        #b_remove = factory.delete_button(button_bar,ttip="Delete control bus",command=self.remove_bus)
         b_add = factory.add_button(button_bar, ttip="Add new control bus", command=self.add_bus)
         #b_refresh = factory.refresh_button(button_bar, ttip="Refresh bus list", command=self.refresh)
         b_accept = factory.accept_button(button_bar, command=self.accept)
@@ -48,7 +48,7 @@ class TkControlbusEditor(Toplevel):
         #spin_chancount.grid(row=7, column=1)
         self.lab_warning.grid(row=8, column=0, columnspan=6)
         button_bar.grid(row=9, column=0, columnspan=6, padx=8, pady=4)
-        b_remove.grid(row=0, column=0)
+        #b_remove.grid(row=0, column=0)
         b_add.grid(row=0, column=1)
         #b_refresh.grid(row=0, column=2)
         b_help.grid(row=0, column=3)
@@ -102,21 +102,21 @@ class TkControlbusEditor(Toplevel):
         self._var_name.set('')
     
          
-    def remove_bus(self, *_):
-        bname = self._var_name.get().strip()
-        exists = self.parser.what_is(bname)
-        if exists == "cbus":
-            protected = len(bname) > 5 and bname[:5] == "null_"
-            if protected:
-                msg = "Can not remove protected bus '%s'" % bname
-                self.warning(msg)
-            else:
-                rs = self.parser.remove_bus(bname)
-                self.refresh()
-                self.status("Removed controlbus '%s'" % bname)
-        else:
-            msg = "'%s' is not an control bus" % bname
-            self.warning(msg)
+    # def remove_bus(self, *_):
+    #     bname = self._var_name.get().strip()
+    #     exists = self.parser.what_is(bname)
+    #     if exists == "cbus":
+    #         protected = len(bname) > 5 and bname[:5] == "null_"
+    #         if protected:
+    #             msg = "Can not remove protected bus '%s'" % bname
+    #             self.warning(msg)
+    #         else:
+    #             rs = self.parser.remove_bus(bname)
+    #             self.refresh()
+    #             self.status("Removed controlbus '%s'" % bname)
+    #     else:
+    #         msg = "'%s' is not an control bus" % bname
+    #         self.warning(msg)
             
     def accept(self):
         self.destroy()

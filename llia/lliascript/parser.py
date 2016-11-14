@@ -418,27 +418,27 @@ class Parser(object):
             msg += "disabled."
         print(msg)
         return flag
-            
-    def remove_bus(self, name):
-        lstype = self.what_is(name)
-        if lstype == "abus":
-            self.proxy.remove_audio_bus(name)
-            self.forget(name)
-            print("Removed audio bus: '%s'" % name)
-        elif lstype == "cbus":
-            self.proxy.remove_control_bus(name)
-            self.forget(name)
-            print("Removed control bus: '%s'" % name)
-        else:
-            raise NoSuchBusError(name)
+
+    # DEPRECIATED bus removal
+    # def remove_bus(self, name):
+    #     lstype = self.what_is(name)
+    #     if lstype == "abus":
+    #         self.proxy.remove_audio_bus(name)
+    #         self.forget(name)
+    #         print("Removed audio bus: '%s'" % name)
+    #     elif lstype == "cbus":
+    #         self.proxy.remove_control_bus(name)
+    #         self.forget(name)
+    #         print("Removed control bus: '%s'" % name)
+    #     else:
+    #         raise NoSuchBusError(name)
 
     # Universal remove  (bus, synth, map)
     def rm(self, name, param=ALL, sid=None, force=False):
         lstype = self.what_is(name)
         if lstype == "abus" or lstype == "cbus":
-            self.remove_bus(name)
-        # elif lstype == "buffer":
-        #     self.bufferhelper.remove_buffer(name)
+            msg = "Buses can not be removed"
+            raise LliascripError(msg)
         elif lstype == "synth" or lstype == "efx":
             self.synthhelper.remove_synth(name, force)
         elif "controller" in lstype:

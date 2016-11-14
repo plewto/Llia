@@ -151,7 +151,7 @@ impossible to access.
 2016.10.04
 Part 2 has been partially solved by new graph 'Align' feature
 
----------------------------------------------------------------------- OPEN 0012
+---------------------------------------------------------------------- CLOSED
 BUG 0012 2016.10.04
 
 Deleting an audio bus may produce errors at a later time.
@@ -172,6 +172,8 @@ or if it holds with buses deleted using lliascript.
 
 2016.11.05 Same issue applies to control buses
 
+
+2016.11.13 Depreciated ability to remove buses.
 ---------------------------------------------------------------------- Closed 0013
 BUG 0013 2016.11.05
 

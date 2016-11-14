@@ -358,34 +358,35 @@ class LliaProxy(object):
         Raises KeyError if bus does not exits.
         '''
         return self._audio_buses[bname]
-        
-    def remove_audio_bus(self, bname):
-        '''
-        Remove audio bus.
-        
-        NOTE: SynthProxy objects maintain a list of buses connected to them.
-        If a bus is removed and some Synth object still thinks it exists
-        there may be problems.  
 
-        ARGS:
-          bname - String
-
-        Raises LliaError if the bus is protected.  
-           The protected buses represent SuperCollider hardware buses and
-           have names "out_?" and "in_?"  where ? is a single digit integer.
-
-        Raises NoSuchBusError if matching bus does not exists.
-        '''
-        if bname[:4] == "out_" or bname[:3] == "in_":
-            msg = "Can not remove protected audio bus: '%s'." % bname
-            raise LliaError(msg)
-        else:
-            try:
-                del self._audio_buses[bname]
-                self._send("free-bus", ["audio", bname])
-                return True
-            except KeyError:
-                raise NoSuchBusError(bname)
+    # DEPRECIATED bus removal
+    # def remove_audio_bus(self, bname):
+    #     '''
+    #     Remove audio bus.
+    #        
+    #     NOTE: SynthProxy objects maintain a list of buses connected to them.
+    #     If a bus is removed and some Synth object still thinks it exists
+    #     there may be problems.  
+    #
+    #     ARGS:
+    #       bname - String
+    #
+    #     Raises LliaError if the bus is protected.  
+    #        The protected buses represent SuperCollider hardware buses and
+    #        have names "out_?" and "in_?"  where ? is a single digit integer.
+    #
+    #     Raises NoSuchBusError if matching bus does not exists.
+    #     '''
+    #     if bname[:4] == "out_" or bname[:3] == "in_":
+    #         msg = "Can not remove protected audio bus: '%s'." % bname
+    #         raise LliaError(msg)
+    #     else:
+    #         try:
+    #             del self._audio_buses[bname]
+    #             self._send("free-bus", ["audio", bname])
+    #             return True
+    #         except KeyError:
+    #             raise NoSuchBusError(bname)
 
     def audio_bus_count(self):
         '''
@@ -451,27 +452,28 @@ class LliaProxy(object):
         Raises KeyError if bus does not exists.
         '''
         return self._control_buses[bname]
-        
-    def remove_control_bus(self, bname):
-        '''
-        Removed named control bus.
 
-        NOTE 1: The same concerns with removing audio-buses apply to 
-                control buses.   Some synth object may still 'think'
-                it is connected to a bus which has been removed.
-
-        NOTE 2: There are also protected control buses which should 
-                not be removed and this method does not prevent their 
-                removal
-
-        Raises KeyError if the bus does not exists,
-        '''
-        try:
-            del self._control_buses[bname]
-            self._send("free-bus", ["control", bname])
-            return True
-        except KeyError:
-            raise NoSuchBusError(bname)
+    # DEPRECIATED bus removal
+    # def remove_control_bus(self, bname):
+    #     '''
+    #     Removed named control bus.
+    #
+    #     NOTE 1: The same concerns with removing audio-buses apply to 
+    #             control buses.   Some synth object may still 'think'
+    #             it is connected to a bus which has been removed.
+    #
+    #     NOTE 2: There are also protected control buses which should 
+    #             not be removed and this method does not prevent their 
+    #             removal
+    #
+    #     Raises KeyError if the bus does not exists,
+    #     '''
+    #     try:
+    #         del self._control_buses[bname]
+    #         self._send("free-bus", ["control", bname])
+    #         return True
+    #     except KeyError:
+    #         raise NoSuchBusError(bname)
 
     def control_bus_names(self):
         '''

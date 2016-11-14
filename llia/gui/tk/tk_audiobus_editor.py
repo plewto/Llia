@@ -30,7 +30,7 @@ class TkAudiobusEditor(Toplevel):
         entry_name = factory.entry(main, self._var_name, ttip="Audio bus name")
         self.lab_warning = factory.warning_label(main)
         button_bar = factory.frame(main)
-        b_remove = factory.delete_button(button_bar,ttip="Delete audio bus",command=self.remove_bus)
+        #b_remove = factory.delete_button(button_bar,ttip="Delete audio bus",command=self.remove_bus)
         b_add = factory.add_button(button_bar, ttip="Add new audio bus", command=self.add_bus)
         b_accept = factory.accept_button(button_bar, command=self.accept)
         b_help = factory.help_button(button_bar, command=self.help_)
@@ -41,7 +41,7 @@ class TkAudiobusEditor(Toplevel):
         entry_name.grid(row=6, column=1)
         self.lab_warning.grid(row=8, column=0, columnspan=6)
         button_bar.grid(row=9, column=0, columnspan=6, padx=8, pady=4)
-        b_remove.grid(row=0, column=0)
+        #b_remove.grid(row=0, column=0)
         b_add.grid(row=0, column=1)
         b_help.grid(row=0, column=3)
         factory.label(button_bar, "").grid(row=0, column=4, padx=16)
@@ -93,21 +93,21 @@ class TkAudiobusEditor(Toplevel):
         self._var_name.set('')
         self.refresh()
     
-    def remove_bus(self, *_):
-        bname = self._var_name.get().strip()
-        exists = self.parser.what_is(bname)
-        if exists == "abus":
-            protected = len(bname) > 3 and (bname[:3] == "in_" or bname[:3] == "out")
-            if protected:
-                msg = "Can not remove protected bus '%s'" % bname
-                self.warning(msg)
-            else:
-                rs = self.parser.remove_bus(bname)
-                self.refresh()
-                self.status("Removed audiobus '%s'" % bname)
-        else:
-            msg = "'%s' is not an audio bus" % bname
-            self.warning(msg)
+    # def remove_bus(self, *_):
+    #     bname = self._var_name.get().strip()
+    #     exists = self.parser.what_is(bname)
+    #     if exists == "abus":
+    #         protected = len(bname) > 3 and (bname[:3] == "in_" or bname[:3] == "out")
+    #         if protected:
+    #             msg = "Can not remove protected bus '%s'" % bname
+    #             self.warning(msg)
+    #         else:
+    #             rs = self.parser.remove_bus(bname)
+    #             self.refresh()
+    #             self.status("Removed audiobus '%s'" % bname)
+    #     else:
+    #         msg = "'%s' is not an audio bus" % bname
+    #         self.warning(msg)
             
     def accept(self):
         self.destroy()

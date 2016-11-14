@@ -40,22 +40,22 @@ class BusToken(Token):
             canvas.tag_bind(citem, '<B1-Motion>', self.drag_token)
             canvas.tag_bind(citem, '<ButtonPress-1>', self.pickup_token)
             canvas.tag_bind(citem, '<ButtonRelease-1>', self.drop_token)
-            canvas.tag_bind(citem, '<Double-Button-3>', self.remove_bus)
+            #canvas.tag_bind(citem, '<Double-Button-3>', self.remove_bus)
     
     def info_text(self):
         bus = self.client
         acc = bus.dump(depth=0, silent=True)
         return acc
 
-    def remove_bus(self, event):
-        busname = self.client_id()
-        if not(self.is_protected()):
-            parser = self.app.ls_parser
-            parser.rm(busname)
-            self.graph.sync()
-            self.graph.status("Removed bus '%s'" % busname)
-        else:
-            self.graph.warning("Can not remove protected bus '%s'" % busname)
+    # def remove_bus(self, event):
+    #     busname = self.client_id()
+    #     if not(self.is_protected()):
+    #         parser = self.app.ls_parser
+    #         parser.rm(busname)
+    #         self.graph.sync()
+    #         self.graph.status("Removed bus '%s'" % busname)
+    #     else:
+    #         self.graph.warning("Can not remove protected bus '%s'" % busname)
 
     def move_to(self, x, y):
         self._create_construction_points(x,y)
