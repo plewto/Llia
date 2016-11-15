@@ -22,6 +22,7 @@ class TkBankEditor(Frame):
         self.synth = synth
         self.app = synth.app
         self.listbox = None
+        self._var_lock_current = StringVar()
         north = self._init_north_toolbar()
         center = self._init_list_frame()
         perf_frame = self._init_performance_toolbar()
@@ -33,6 +34,7 @@ class TkBankEditor(Frame):
         self.big_label = factory.big_label(self, "000 ABCDEFGH")
         self.big_label.pack()
         self.sync_no_propegate()
+
         
     def _init_north_toolbar(self):
         frame = factory.frame(self)
@@ -104,13 +106,28 @@ class TkBankEditor(Frame):
                                 ttip="Copy current prgoram to clipbaord")
         b_paste = factory.button(frame, "Paste", command=self._paste_program,
                                  ttip="Paste clipboard to current program")
+        cb_lock = factory.checkbutton(frame,"Lock",self._var_lock_current,
+                                     command = self.lock_current_program)
         b_store.grid(row=0, column=0, sticky="ew")
         b_random.grid(row=0, column=1, sticky="ew")
         b_init.grid(row=0, column=2, sticky="ew")
         b_copy.grid(row=1, column=0, sticky="ew")
         b_paste.grid(row=1, column=1, sticky="ew")
+        cb_lock.grid(row=1, column=2, sticky="ew")
         return frame
 
+    def lock_current_program(self):
+        flag = int(self._var_lock_current.get()) == 1
+        bnk = self.synth.bank()
+        bnk.lock_current_program = flag
+        msg = "Current Program "
+        if flag:
+            msg += "locked"
+        else:
+            msg += "unlocked"
+        self.status(msg)
+        
+        
     def status(self, msg):
         self.parent_editor.status(msg)
 
@@ -131,6 +148,10 @@ class TkBankEditor(Frame):
         self.listbox.see(slot)
         txt = "%03d %-8s" % (slot, program.name[:8])
         self.big_label.config(text = txt)
+        if bnk.lock_current_program:
+            self._var_lock_current.set(1)
+        else:
+            self._var_lock_current.set(0)
 
     def sync(self):
         self.sync_no_propegate()
