@@ -17,6 +17,7 @@
     "fm2.scd",
     "ghostbus.scd",
     "hund.scd",
+    "io.scd",
     "klstr.scd",
     "lfo1.scd",
     "lfo2.scd",

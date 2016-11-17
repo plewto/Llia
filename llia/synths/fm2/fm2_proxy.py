@@ -31,7 +31,7 @@ fm2_pallet["SLIDER-OUTLINE"] = "blue"
 
 specs["constructor"] = FM2Proxy
 specs["description"] = "A 2-Operator FM Synth"
-specs["keymodes"] = ("Poly1", "PolyRotate", "Mono1")
+specs["keymodes"] = ('polyN','PolyRotate', 'Poly1', 'PolyRotate', 'Mono1', 'MonoExclusive')
 specs["pretty-printer"] = pp_fm2    
 specs["program-generator"] = fm2_random
 specs["help"] = "FM2"
