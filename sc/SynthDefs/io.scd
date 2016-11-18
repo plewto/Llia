@@ -1,15 +1,5 @@
 /*
-** Io Synth, FM generated formants.
-**
-** Io is an experimental instrument to produce wind-instrument like sounds
-** using FM and noise.  The signal consist of three major components:
-** a transient "chiff", sustained noise, and FM generated tone.
-**
-** The FM section uses a single modulator shared by three carriers.  The
-** carrier frequencies are such that they are always the closest harmonic
-** of the fundamental to a patch determined frequency, thus simulating
-** formant frequencies.
-**
+** Io Synth, FM Produced formants.
 */
 
 (SynthDef (\Io,
