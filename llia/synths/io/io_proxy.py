@@ -24,7 +24,7 @@ class IoProxy(SynthProxy):
             return parent_editor
             
 io_pallet = Pallet(default_pallet)
-
+io_pallet["SLIDER-OUTLINE"] = "#004000"
 specs["constructor"] = IoProxy
 specs["is-efx"] = False
 specs["is-controller"] = False

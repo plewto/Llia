@@ -104,7 +104,6 @@ def volume_slider(master, param, editor, ttip=""):
 # It is an atenuator only with maximum gain of 0db.
 #
 def mix_slider(master, param, editor, ttip=""):
-    print("DEPRCIATION WARNING: control_factory.mix_slider")
     s = ControlSlider(master, param, editor,
                       (absctrl.amp_to_mix_aspect,
                        absctrl.mix_aspect_to_amp),
@@ -115,7 +114,6 @@ def mix_slider(master, param, editor, ttip=""):
         frmt = "[%s] -> %5.3f (%d db)"
         msg = frmt % (param, amp, db)
         editor.status(msg)
-
     s.widget().bind("<Enter>", enter_callback)
     s.widget().bind("<Leave>", enter_callback)
     return s
