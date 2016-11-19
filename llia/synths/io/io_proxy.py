@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
-from llia.synths.io.io_data import program_bank,pp,io_random
+from llia.synths.io.io_data import program_bank  #,pp,io_random
 
 specs = SynthSpecs("Io")
 
@@ -30,11 +30,11 @@ specs["is-efx"] = False
 specs["is-controller"] = False
 specs["description"] = "FM Fomat synth"
 specs["keymodes"] = ('PolyN','PolyRotate', 'Poly1', 'PolyRotate', 'Mono1', 'MonoExclusive')
-specs["pretty-printer"] = pp   
-specs["program-generator"] = io_random
+#specs["pretty-printer"] = pp   
+#specs["program-generator"] = io_random
 specs["help"] = "Io"
 specs["pallet"] = io_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = []
-specs["control-output-buses"] = []
+specs["control-output-buses"] = [["xbus", "null_sink"]]
 specs["control-input-buses"] = []
