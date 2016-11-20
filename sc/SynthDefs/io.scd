@@ -106,9 +106,9 @@
 	var noiseRq = 0.1;
 	var noiseRatios = [1.0,1.5,2.0,3.0,4.0,6.0];
 	var rawNoise = Mix.ar(BPF.ar(WhiteNoise.ar(),noiseRatios*freq*detune*noiseRatio,noiseRq));
-	var chiffAttackScale = BrownNoise.kr().abs*1.2;          // Randomize chiff envelope
-	var chiffDecayScale = BrownNoise.kr().abs*1.2;
-	var chiffHP = 10 + Lag2.kr((BrownNoise.kr().abs*1600));  // Randomize chiff high pass
+	var chiffAttackScale = BrownNoise.kr().abs*1.1;          // Randomize chiff envelope
+	var chiffDecayScale = BrownNoise.kr().abs*1.1;
+	var chiffHP = 10 + Lag2.kr((BrownNoise.kr().abs*800));  // Randomize chiff high pass
 	var chiffEnv = EnvGen.kr(Env.adsr(chiffAttack*chiffAttackScale,chiffDecay*chiffDecayScale,0,0),gate);
 	var chiffSig = HPF.ar(rawNoise,chiffHP)*chiffAmp*chiffEnv*LinXFade2.kr(1,velocity,chiffVelocity.linlin(0,1,-1,1))*0.30;
 	var nseAmp = noiseAmp*LinXFade2.kr(1,tlfo,op1Tremolo.linlin(0,1,-1,0))*LinXFade2.kr(1,velocity,op1Velocity.linlin(0,1,-1,1))*0.3;
