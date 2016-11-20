@@ -236,8 +236,8 @@ class TkIoMiscPanel(TkSubEditor):
         norm_slider("vdepth",x_vnoise+180,y0)
         norm_slider("xPitch",x_vnoise+240,y0)
 
-        x_mix = x_attack
-        y_mix = y0+220
+        x_mix = x0
+        y_mix = y0+270
         x_delta = 60
         for op in (1,2,3):
             mix_slider("op%dAmp" % op,x_mix,y_mix)
