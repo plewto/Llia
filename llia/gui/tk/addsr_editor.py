@@ -112,6 +112,15 @@ class ADDSREditor(EnvEditorSpecs):
                             fill=self['axis-fill'],
                             width=self['axis-width'],
                             tags=('y-axis','axis','static'))
+        # Annotation text
+        ax = position[0]+size[0]-100
+        ay = position[1]+60
+        self.annotate_text = canvas.create_text(ax,ay,
+                                                fill = "gray",
+                                                font = ("Mono",10),
+                                                text = "...",
+                                                tags = "env%s-annotation" % self.envid)
+        
         # dynamic elements
         self.segments = []
         for i,name in enumerate(('attack','decay1','decay2',
@@ -139,6 +148,7 @@ class ADDSREditor(EnvEditorSpecs):
         self.canvas.tag_bind("env%s-point-3" % self.envid, "<B1-Motion>",self.decay2_drag)
         self.canvas.tag_bind("env%s-point-4" % self.envid, "<B1-Motion>",self.sustain_drag)
         self.canvas.tag_bind("env%s-point-5" % self.envid, "<B1-Motion>",self.release_drag)
+        
         self._init_zoom_button()
         self._init_gate_button()
         self._init_init_button()
@@ -173,17 +183,6 @@ class ADDSREditor(EnvEditorSpecs):
             self.zoom = msb.value()
             self.sync_ui()
         msb.client_callback = zoom_callback
-        
-    # def _init_gate_button(self):
-    #     msb = MSB(self.canvas, self.params['gate-mode'], self.parent, 2)
-    #     a0 = self._msb_aspect("GATE")
-    #     a1 = self._msb_aspect("TRIG", {"foreground" : "green"})
-    #     msb.define_aspect(0, 0, a0)
-    #     msb.define_aspect(1, 1, a1)
-    #     x, y = self.xi0, self.y1-50
-    #     msb.layout((x,y))
-    #     msb.update_aspect()
-    #     self.msb_gate_mode = msb
 
     def _init_gate_button(self):
         msb = ToggleButton(self.canvas, self.params['gate-mode'],
@@ -314,6 +313,15 @@ class ADDSREditor(EnvEditorSpecs):
         time, level = self._drag_helper("env%s-point-4" % self.envid, event)
         self.set_synth_value(self.params['release'], time)
         self.sync_ui()
+
+    def annotate(self,attack,decay1,decay2,release,breakpoint,sustain):
+        acc =  "attack  : %5.4f\n" % round(attack,4)
+        acc += "decay1  : %5.4f\n" % round(decay1,4)
+        acc += "decay2  : %5.4f\n" % round(decay2,4)
+        acc += "release : %5.4f\n" % round(release,4)
+        acc += "break   : %5.4f\n" % round(breakpoint,4)
+        acc += "sustain : %5.4f" % round(sustain,4)
+        self.canvas.itemconfig(self.annotate_text, text=acc)
         
     def sync_ui(self, *_):
         self.canvas.itemconfig('pad',
@@ -330,6 +338,7 @@ class ADDSREditor(EnvEditorSpecs):
         release = program[self.params['release']]
         breakpoint = program[self.params['breakpoint']]
         sustain = program[self.params['sustain']]
+        self.annotate(attack,decay1,decay2,release,breakpoint,sustain)
         t0 = 0
         t1 = t0 + attack
         t2 = t1 + decay1
