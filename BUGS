@@ -217,3 +217,13 @@ highly inefficient.
 However the most likely cause for using the fallback is due to float 
 rounding errors and typically only a few values need to be checked.
 
+
+---------------------------------------------------------------------- Open 0016
+BUG 0016 2016.11.20
+
+SuperCollider "command FIFO full" message
+
+At times the SC post windows fills with the message "command FIFO full".
+Not sure under what conditions this happens but do not recall seeing it
+prior to the introduction of the PolyN keymode.   On the plus side it
+doesn't appear to effect anything.
