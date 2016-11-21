@@ -33,6 +33,7 @@
     "rumklang.scd",
     "saw3.scd",
     "snh.scd",
+    "ss1.scd",
     "tremolo.scd",
     "xover.scd"];
 
