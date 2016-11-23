@@ -10,23 +10,19 @@ from llia.performance_edit import performance
 prototype = {
     "amp" : 0.2,           # linear amplitude
     "port" : 0.0,          # portamento time (0..1)
-    
     "xPitch" : 0.0,        # external signal -> pitch (0..1)
     "xModDepth" : 0.0,     # external signal -> mod depth (0..1)
     "xScale" : 1.0,        # external signal scale factor (0..4)
     "xBias" : 0.0,         # external signal bias (-4..+4)
-    
     "lfoFreq" : 5.0,       # frequency in Hz, (0..100)
     "lfoDelay" : 0.0,      # LFO onset delay in seconds (0..4)
     "vsens" : 0.1,         # vibrato sensitivity (0..1)
     "vdepth" : 0.0,        # programmed vibrato depth (0..1)
-    
-                           # OP1, carrier
+    # OP1, carrier
     "op1Enable" : 1,       # 0 -> disable  1 -> enable
     "op1Ratio" : 1.0,      # frequency ratio  0 <= ratio <= 32
     "op1Bias" : 0.0,       # frequency bias   0 <= bias <= 20
     "op1Amp" : 1.0,        # linear amplitude (0..1)
-    
     "op1Attack" : 0.0,     # attack time (0..12)
     "op1Decay1" : 0.0,     # initial decay time (0..12)
     "op1Decay2" : 0.0,     # seconds decay time (0..12)
@@ -40,8 +36,8 @@ prototype = {
     "op1Lfo" : 0.0,        # LFO -> tremolo  0.0 .. 0.5 -> 0% .. 100%
                            #                 0.5 .. 1.0 -> adds 2x freq 
     "op1Velocity" : 0.0,   # velocity scale factor (0..1)
-    
-    "op2Enable" : 1,       # OP2, modulator     
+    # OP2, modulator
+    "op2Enable" : 1,
     "op2Ratio" : 1.0,
     "op2Bias" : 0.0,
     "op2Amp" : 1.0,        # modulation depth (0..10)
@@ -58,8 +54,30 @@ prototype = {
     "op2RightScale" : 0,
     "op2Lfo" : 0.0,
     "op2Velocity" : 0.0,
-    "op2Feedback": 0      # OP2 FM feedback (0..?)
-    }
+    "op2Feedback": 0,
+
+    "efxMix" : 0.0,          # -1 -> flanger  +1 -> pitch-shifter
+    "efxAmp" : 0.0,          # (0..1) composed with op2 amp
+    "efxAttack" : 0.0,       # Combined envelope for flanger
+    "efxDecay1" : 0.0,       # and pitch-shifter
+    "efxDecay2" : 0.0,       
+    "efxRelease" : 0.0,
+    "efxBreakpoint" : 1.0,
+    "efxSustain" : 1.0,
+    "efxGateHold" : 0,
+    "efxLfoRatio" : 1.0,     # efx LFO freq as ratio to primary LFO
+    "flangerDelay" : 0.02,   # (0 .. 0.05)
+    "flangerLfoDepth" : 0.0, # (0..1)
+    "flangerFeedback" : 0.0, # (-1..+1)
+    "psRatio" : 2.0,         # (0..4)
+    "psPDispersion" : 0.0,   # (0..1)
+    "psTDispersion" : 0.0,   # (0..1)
+    "psLfoDepth" : 0.0       # (0..1) lfo -> pitch shift amp
+}
+
+
+
+
 
 class FM2(Program):
 
@@ -133,6 +151,35 @@ def _fill_op2_params(d):
     rs["op2Feedback"] = float(d.get("feedback", 0.0))
     return rs
 
+def _fill_efx(d):
+    template = {"attack" : ("efxAttack", 0.0,"f"),
+                "decay1" : ("efxDecay1", 0.0,"f"),
+                "decay2" : ("efxDecay2", 0.0,"f"),
+                "release" : ("efxRelease", 0.0,"f"),
+                "breakPoinit" : ("efxBreakpoint", 1.0,"f"),
+                "sustain" : ("efxSustain", 1.0,"f"),
+                "env-cycle" : ("efxGateHold", 1,"i"),
+                "lfo-ratio" : ("efxLfoRatio", 1.0,"f"),
+                "flanger-delay" : ("flangerDelay", 0.02,"f"),
+                "flanger-lfo-depth" : ("flangerLfoDepth", 0.0,"f"),
+                "flanger-feedback" : ("flangerFeedback", 0.0,"f"),
+                "ps-ratio" : ("psRatio", 2.0,"f"),
+                "ps-pitch-dispersion" : ("psPDispersion", 0.0,"f"),
+                "ps-time-dispersion" : ("psTDispersion", 0.0,"f"),
+                "ps-lfo-depth" : ("psLfoDepth", 0.0,"f"),
+                "efx-mix" : ("efxMix", 0.0,"f"),
+                "efx-amp" : ("efxAmp", 0.0,"f")}
+    rs = {}
+    for arg,t in template.items():
+        param,default,ptype = t
+        if t == 'f':
+            val = round(float(d.get(arg,default)),4)
+        else:
+            val = int(d.get(arg,default))
+        rs[param] = val
+    return rs
+
+
 def fm2(slot, name, amp=-12, port=0.0,
         external = {"scale" : 1.0,
                     "bias" : 0.0,
@@ -142,6 +189,23 @@ def fm2(slot, name, amp=-12, port=0.0,
                "delay" : 0.0,
                "vsens" : 0.1,
                "vdepth" : 0.0},
+        efx = {"attack" : 0.00,
+               "decay1" : 0.00,
+               "decay2" : 0.00,
+               "release" : 0.00,
+               "breakPoinit" : 1.0,
+               "sustain" : 1.0,
+               "env-cycle" : False,
+               "lfo-ratio" : 1.0,
+               "flanger-delay" : 0.05,
+               "flanger-feedback" : 0.0,
+               "flanger-lfo-depth" : 0.0,
+               "ps-ratio" : 2.0,
+               "ps-pitch-dispersion" : 0.0,
+               "ps-time-dispersion" : 0.0,
+               "ps-lfo-depth" : 0.0,
+               "efx-mix" : 0.0,
+               "efx-amp" : 0.0},
         op1 = {"enable" : True,
                "ratio" : 1.0,
                "bias" : 0.0,
@@ -181,6 +245,7 @@ def fm2(slot, name, amp=-12, port=0.0,
     p["port"] = float(port)
     acc = _fill_external_params(external)
     acc.update(_fill_lfo_params(lfo))
+    acc.update(_fill_efx(efx))
     acc.update(_fill_op1_params(op1))
     acc.update(_fill_op2_params(op2))
     for param,value in acc.items():

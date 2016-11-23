@@ -7,6 +7,7 @@ from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.fm2.fm2_data import program_bank
 from llia.synths.fm2.fm2_pp import pp_fm2
 from llia.synths.fm2.fm2_random import fm2_random
+from llia.synths.fm2.fm2_constants import *
 
 specs = SynthSpecs("FM2")
 
@@ -26,8 +27,10 @@ class FM2Proxy(SynthProxy):
             return parent_editor
             
 fm2_pallet = Pallet(default_pallet)
-fm2_pallet["BG"] = "black"
-fm2_pallet["SLIDER-OUTLINE"] = "blue"
+fm2_pallet["BG"] = BG
+fm2_pallet["SLIDER-TROUGH"] =  SLIDER_TROUGH
+fm2_pallet["SLIDER-OUTLINE"] = SLIDER_OUTLINE
+
 
 specs["constructor"] = FM2Proxy
 specs["description"] = "A 2-Operator FM Synth"
@@ -36,6 +39,5 @@ specs["pretty-printer"] = pp_fm2
 specs["program-generator"] = fm2_random
 specs["help"] = "FM2"
 specs["pallet"] = fm2_pallet
-
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["control-input-buses"] = [["xbus", "null_sink"]]
