@@ -146,4 +146,4 @@ class TkFm2Panel1(TkSubEditor):
         exp_slider("psTDispersion",1.0,x_tdisp,y1)
         norm_slider("psLfoDepth",x_lfo,y1)
         linear_slider("efxMix",(1.0,-1.0),x_mix,y_mix)
-        exp_slider("efxAmp",1,x_efx_amp,y_mix,degree=3)
+        exp_slider("efxAmp",1.01,x_efx_amp,y_mix,degree=3)

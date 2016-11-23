@@ -3,7 +3,8 @@
 from __future__ import print_function
 
 from llia.synths.fm2.fm2_data import fm2
-from llia.util.lmath import *
+from llia.util.lmath import (coin,rnd,pick,approx)
+from llia.synths.fm2.fm2_constants import *
 
 def get_env_hint():
     return pick(["PERCUSSION", "ADDSR"])
@@ -35,9 +36,29 @@ def addsr_envelope(time_hint):
     hold = False  # coin(0.75, False, True)
     return a,d1,d2,r,bp,s,hold
 
-
 def get_envelope(time_hint, shape_hint):
     return addsr_envelope(time_hint)
+
+def pick_efx(env):
+    a,d1,d2,r,bp,s,hold = env
+    rs = {"efx-amp" : coin(0.25, 0.0, rnd()),
+          "efx-mix" : coin(0.50, rnd(2)-1, coin(0.5, -1.0, 1.0)),
+          "lfo-ratio" : coin(0.75, pick(LFO_RATIOS[:6]),pick(LFO_RATIOS))[0],
+          "flanger-delay" : rnd(MAX_FLANGER_DELAY),
+          "flanger-feedback" : coin(0.5,-1,1)*coin(0.75,rnd(0.75),0.5*rnd(0.5)),
+          "flanger-lfo-depth" : coin(0.75, rnd(0.3), coin(0.75, 0.0, rnd())),
+          "ps-ratio" : coin(0.75, pick([0.5,1.0,1.5,2,3,4]),rnd(4)),
+          "ps-pitch-dispersion" : coin(0.90, 0, rnd(0.5)),
+          "ps-time-dispersion" : coin(0.75, 0, rnd()),
+          "ps-lfo-depth" : coin(0.75, 0, rnd()),
+          "attack" : a,
+          "decay1" : d1,
+          "decay2" : d2,
+          "release" : r,
+          "breakPoint" : bp,
+          "sustain" : s,
+          "env-cycle" : hold}
+    return rs
 
 
 def fm2_random(slot=127, *_):
@@ -45,6 +66,7 @@ def fm2_random(slot=127, *_):
     env_hint = get_env_hint()
     env1 = get_envelope(time_hint, env_hint)
     env2 = get_envelope(time_hint, env_hint)
+    env3 = get_envelope(time_hint, env_hint)
     op1_chorus = coin(0.2)
     op1_ratio = float(pick([0.5, 0.5, 0.75,
                            1,1,1,1,1.5,
@@ -70,8 +92,6 @@ def fm2_random(slot=127, *_):
         op2_amp_range = pick([1000,10000])
     else:
         op1_bias = 0
-
-    
     p = fm2(slot, "Random", amp=-12,
             port = coin(0.75, 0.0, rnd()),
             external = {"scale" : 1, "bias" : 0, "pitch" : 0, "mod" : 0},
@@ -80,6 +100,7 @@ def fm2_random(slot=127, *_):
                    "delay" : rnd(4),
                    "vsens" : coin(0.80, 0.1, rnd()),
                    "vdepth" : coin(0.30, 0, coin(0.75, rnd(0.4), rnd()))},
+            efx = pick_efx(env3),
             op1 = {"enable" : True,
                    "ratio" : op1_ratio,
                    "bias" : op1_bias,
@@ -92,8 +113,7 @@ def fm2_random(slot=127, *_):
                    "sustain" : env1[5],
                    "env-cycle" : env1[6],
                    "velocity" : coin(0.75, 0, rnd()),
-                   "lfo" : coin(0.75, 0, rnd())
-                   },
+                   "lfo" : coin(0.75, 0, rnd())},
             op2 = {"enable" : True,
                    "ratio" : op2_ratio,
                    "bias" : op2_bias,
@@ -108,8 +128,7 @@ def fm2_random(slot=127, *_):
                    "env-cycle" : env2[6],
                    "velocity" : coin(0.75, 0, rnd()),
                    "lfo" : coin(0.75, 0, rnd()),
-                   "feedback" : coin(0.50, 0, coin(0.75, rnd(2), rnd(4)))
-                   })
+                   "feedback" : coin(0.50, 0, coin(0.75, rnd(2), rnd(4)))})
     return p
             
             
