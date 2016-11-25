@@ -19,7 +19,7 @@ class TkMFilterPanel(TkSubEditor):
     def __init__(self, editor):
         frame = editor.create_tab(self.NAME, self.TAB_FILE)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame, 1000, 700, self.IMAGE_FILE)
+        canvas = factory.canvas(frame, 991,543, self.IMAGE_FILE)
         canvas.pack()
         self.canvas = canvas
         self.editor = editor

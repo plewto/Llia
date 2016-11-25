@@ -117,8 +117,8 @@ class TkMPanel(TkSubEditor):
         define_aspects(msb_lfo_delay, LFO_DELAYS)
         msb_n_lfo = msb("bNLfo",len(B_N_LFO),x_bn,y(1))
         msb_n_env = msb("bNEnv",len(B_N_ENV),x_bn,y(2))
-        msb_n1 = msb("bN1",len(B_N),x_b1,y(3))
-        msb_n2 = msb("bN2",len(B_N),x_b2,y(3))
+        msb_n1 = msb("bN1",len(B_N),x_b1+8,y(3))
+        msb_n2 = msb("bN2",len(B_N),x_b2+8,y(3))
         define_aspects(msb_n_lfo,B_N_LFO)
         define_aspects(msb_n_env,B_N_ENV)
         define_aspects(msb_n1,B_N)
@@ -134,10 +134,8 @@ class TkMPanel(TkSubEditor):
         define_aspects(m_bkey,BREAKKEYS)
         define_aspects(m_bleft,KEYSCALES)
         define_aspects(m_bright,KEYSCALES)
-        norm_slider("aAmp",x_mixer,y(0))
         volume_slider("bAmp",x_mixer,y(0))
         linear_slider("bFilter",(-1,1),x_pan,y(0))
-
         # Noise
         x_noise = x0+660
         x_noise_lp = x_noise
@@ -146,15 +144,12 @@ class TkMPanel(TkSubEditor):
         x_noise_lag = x_noise_trem + 60
         x_noise_amp = x_noise_lag + 60
         x_noise_filter = x_noise_amp + 30
-       
-
         exp_slider("noiseLP",x_noise_lp,y(0),16000)
         exp_slider("noiseHP",x_noise_hp,y(0),16000)
         norm_slider("noiseLfo",x_noise_trem,y(0))
         norm_slider("noiseLag",x_noise_lag,y(0))
         volume_slider("noiseAmp",x_noise_amp,y(0))
         linear_slider("noiseFilter",(-1,1),x_noise_filter,y(0))
-        
         # Tone C
         y0 = y(4)
         x_pratio = x_ratio+100
@@ -165,11 +160,9 @@ class TkMPanel(TkSubEditor):
         msb_lfo_delay = msb("cLfoDelay",len(LFO_DELAYS),x_lfo,y(2))
         define_aspects(msb_lfo,LFO_RATIOS)
         define_aspects(msb_lfo_delay, LFO_DELAYS)
-        #m_pr = msb("cPulseRatio",len(C_PRATIO),x_pratio, y(0))
         tumbler("cPulseRatio",x_pratio,y(0),5,0.001)
         m_pr_lfo = msb("cPulseRatioLfo",len(C_PRATIO_LFO),x_pratio,y(1))
         m_pr_env = msb("cPulseRatioEnv",len(C_PRATIO_ENV),x_pratio,y(2))
-        #define_aspects(m_pr,C_PRATIO)
         define_aspects(m_pr_lfo,C_PRATIO_LFO)
         define_aspects(m_pr_env,C_PRATIO_ENV)
         m_pw = msb("cPw",len(C_PW),x_pw,y(0))
@@ -190,3 +183,11 @@ class TkMPanel(TkSubEditor):
         define_aspects(m_cright,KEYSCALES)  
         volume_slider("cAmp",x_mixer,y(0))
         linear_slider("cFilter",(-1,1),x_pan,y(0))
+        # Envelope pitch
+        x_envpitch = x_noise
+        y0 = 75
+        ma = msb("aEnvPitch",len(ENVPITCH),x_envpitch,y(0))
+        mb = msb("bEnvPitch",len(ENVPITCH),x_envpitch+100,y(0))
+        mc = msb("cEnvPitch",len(ENVPITCH),x_envpitch+200,y(0))
+        for m in (ma,mb,mc):
+            define_aspects(m,ENVPITCH)

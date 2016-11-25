@@ -47,6 +47,7 @@
         aPwmExternal = 0.0       // external -> pw
 		aClkMix = 0.0            // mix clk source with divider signal (0,1)
 		aLfo = 0.0               // lfo -> a amp
+		aEnvPitch = 0.0          // env -> pitch bend
         /* B Dual Buzz */
         bAttack = 0.0
         bDecay1 = 0.0
@@ -70,6 +71,7 @@
         bN2Lag = 0.0            // lag time n2 LFO and Env
 		b2Polarity = 1          // -1|+1
 		bLfo = 0.0              // lfo -> b amp
+		bEnvPitch = 0            // env -> pitch bend
 		/* Noise */
 		noiseLP = 16000          // Noise static lowpass cutoff (Hz)
 		noiseHP = 10             // Noise static highpass cutoff (Hz)
@@ -100,6 +102,7 @@
 		cPwmExternal = 0.0       // external -> incite pulse width
 		cInciteSelect = -1       // -1 -> pulse   +1 -> Noise
 		cLfo = 0.0               // lfo -> c amp
+		cEnvPitch = 0
 		/* Filter input mixer */
 		aAmp = 0.333
 		bAmp = 0.333
@@ -145,16 +148,13 @@
 		var env_floor = 0.01;
 		var env = EnvGen.kr(Env([env_floor,1,[aBreakpoint,bBreakpoint,cBreakpoint].max(env_floor),[aSustain,bSustain,cSustain].max(env_floor),env_floor],
 			[[aAttack,bAttack,cAttack],[aDecay1,bDecay1,cDecay1],[aDecay2,bDecay2,cDecay2],[aRelease,bRelease,cRelease]],-4,3), envGate)-env_floor;
-		//var f0 = Lag2.kr(freq,port)*detune*(1+(lfo[3]*vsens.linlin(0,1,0,0.2)*vdepth));
-
 		var f0 = Lag2.kr(freq,port)*detune*(1+(vsens.linlin(0,1,0,0.2)*((vdepth*lfo[3]) + (x * xPitch))));
-
 	    /* Key scales */
 		var left_octave = ([aKey-keynumber,bKey-keynumber,cKey-keynumber]/12).max(0);
 		var right_octave = ([keynumber-aKey,keynumber-bKey,keynumber-cKey]/12).max(0);
 		var keyscale = dbamp(left_octave*[aKeyscaleLeft,bKeyscaleLeft,cKeyscaleLeft])+(right_octave*[aKeyscaleRight,bKeyscaleRight,cKeyscaleRight]);
 		/* Tone A - Pulse Divider */
-		var fa = f0*aRatio;
+		var fa = f0*aRatio*(1 + (aEnvPitch * env[0]));
 		var aClk = SinOsc.ar(fa);
 		var aWidth = (aPulseWidth+(lfo[0]*aPwmLfo)+(env[0]*aPwmEnv)+(x*aPwmExternal)).abs;
 		var aQuo = (aQuotient+(lfo[0]*aQLfo)+(env[0]*aQEnv)+(x*aQExternal)).max(0.1);
@@ -166,16 +166,17 @@
 		var bnmod = (lfo[1].abs*bNLfo)+(env[1]*bNEnv)+(x*bNExternal);
 		var bn1 = bN1+bnmod;
 		var bn2 = bN2+Lag2.kr(bnmod,bN2Lag);
-		var bblip1 = Blip.ar(f0*bRatio1,bn1);
-		var bblip2 = Blip.ar(f0*bRatio2,bn2,b2Polarity);
+		var bblip1 = Blip.ar(f0*bRatio1*(1+(bEnvPitch*env[1])),bn1);
+		var bblip2 = Blip.ar(f0*bRatio2*(1+(bEnvPitch*env[1])),bn2,b2Polarity);
 		var bsig_1 = (bblip1+bblip2)*env[1]*keyscale[1];
 		var bsig = bsig_1*LinXFade2.kr(1,Lag2.kr(lfo[1],tremoloLag),bLfo.linlin(0,1,-1,1));
 		/* Noise, shares env and LFO with B */
 		var nsemod = Lag2.kr(env[1]+XFade2.kr(1,lfo[1],noiseLfo.linlin(0,1,-1,1)),noiseLag);
 		var nse = LPF.ar(HPF.ar(WhiteNoise.ar(),noiseHP.max(10)),noiseLP.max(100))*nsemod*keyscale[1]*env[1];
+
 		/* Tone C - delay line feedback */
 		var cmaxdelay = 0.025;  // 40hz floor
-		var fc = f0*cRatio;
+		var fc = f0*cRatio*(1 + (cEnvPitch*env[2]));
 		var clfo = lfo[2];
 		var cenv = env[2];
 		var cifreq = (fc*cPulseRatio)*(1+(clfo *cPulseRatioLfo)+(cenv*cPulseRatioEnv)+(x*cPulseRatioExternal));
@@ -187,6 +188,7 @@
 		var cdlyout = DelayC.ar(cdlyin,cmaxdelay,cperiod).clip(-1,1);
 		var csig_1 = cdlyout*cenv*keyscale[2];
 		var csig = csig_1*LinXFade2.kr(1,Lag2.kr(clfo,tremoloLag),cLfo.linlin(0,1,-1,1));
+
 		/* Filter input mixer */
 		var filterin = Pan2.ar(asig*aAmp,aFilter) + Pan2.ar(bsig*bAmp,bFilter) + Pan2.ar(csig*cAmp,cFilter) + Pan2.ar(nse*noiseAmp,noiseFilter);
 		/* Lowpass filter */
@@ -201,5 +203,6 @@
 		Linen.kr(gate,0.01,1, holdtime, doneAction);  // voice hold envelope
 		LocalOut.ar(cdlyout*cFb);
 		Out.ar([outbus1,outbus2],outsig);
+		Poll.kr(LFPulse.kr(1),cifreq,"cifreq");
 }).load)
 

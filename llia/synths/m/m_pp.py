@@ -66,6 +66,7 @@ def _toneA(pad,fval,ival):
         else:
             bcc += ','
     bcc += '%sclkmix=%5.4f,\n' % (pad2,fval('aClkMix'))
+    bcc += '%senvpitch=%5.4f,\n' % (pad2,fval('aEnvPitch'))
     bcc += '%stremolo=%5.4f),\n' % (pad2,fval('aLfo'))
     return bcc
 
@@ -91,6 +92,7 @@ def _toneB(pad,fval,ival):
             bcc += '],\n'
         else:
             bcc += ','
+    bcc += '%senvpitch=%5.4f,\n' % (pad2,fval('bEnvPitch'))
     bcc += '%stremolo=%5.4f),\n' % (pad2,fval('bLfo'))
     return bcc
 
@@ -115,6 +117,7 @@ def _toneC(pad,fval,ival):
         else:
             bcc += ','
     bcc += '%sinciteSelect=%5.4f,\n' % (pad2,fval('cInciteSelect'))
+    bcc += '%senvpitch=%5.4f,\n' % (pad2,fval('cEnvPitch'))
     bcc += '%stremolo=%5.4f),\n' % (pad2,fval('cLfo'))
     return bcc
         

@@ -6,7 +6,7 @@ from llia.util.frange import frange
 # Pallet
 CFILL = 'black'
 CFOREGROUND = 'white'
-CPOS_FOREGROUND = 'green'
+CPOS_FOREGROUND = '#ace6ac'
 CNEG_FOREGROUND = 'red'
 COUTLINE = 'blue'
 
@@ -18,7 +18,7 @@ LFO_RATIOS = (0.01,0.02,0.04,0.08,0.10,0.125,0.250,0.333,0.50,0.667,
               0.75,1.00,1.333,1.50,1.667,2,3,4,5,6,8)
 LFO_DELAYS = tuple(frange(0,4,0.5))
 TREMOLO = tuple(frange(0,1,0.1))
-
+ENVPITCH = tuple(frange(-1.0, 2.0, 0.2))
 
 
                       
