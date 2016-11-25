@@ -227,3 +227,10 @@ At times the SC post windows fills with the message "command FIFO full".
 Not sure under what conditions this happens but do not recall seeing it
 prior to the introduction of the PolyN keymode.   On the plus side it
 doesn't appear to effect anything.
+
+---------------------------------------------------------------------- Open 0017
+BUG 0017 2016.11.25
+
+At times can not store program into slot 0.
+This appears to happen mostly with newly created banks.
+
