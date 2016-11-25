@@ -39,5 +39,5 @@ specs["help"] = "SS1"
 specs["pallet"] = ss1_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = []
-specs["control-output-buses"] = [["xbus","null_sink"]]
-specs["control-input-buses"] = []
+specs["control-output-buses"] = []
+specs["control-input-buses"] = [["xbus","null_sink"]]
