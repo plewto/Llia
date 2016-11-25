@@ -15,6 +15,7 @@ prototype = {
     "vdepth" : 0.0,               # vibrato depth (0..1)
     "xPitch" : 0.0,               # external -> pitch (0..1)
     "tremoloLag" : 0.1,           # Common tremolo lag time (0..1)
+    
     "aAttack" : 0.0,              # Tone A envelope
     "aDecay1" : 0.0,              #
     "aDecay2" : 0.0,              #
@@ -38,6 +39,7 @@ prototype = {
     "aPwmExternal" : 0.0,         # External -> divider pulse width (0..8)
     "aClkMix" : 0.0,              # Tone A master clock (sine) mix, (0->divider only, 1->sine only)
     "aLfo" : 0.0,                 # LFO -> Tone A tremolo
+ 
     "bAttack" : 0.0,              # Tone B envelope
     "bDecay1" : 0.0,              #
     "bDecay2" : 0.0,              #
@@ -54,16 +56,20 @@ prototype = {
     "bKeyscaleRight" : 0,         #
     "bN1" : 32,                   # Tone B1 harmonic count (0..32)
     "bN2" : 24,                   # Tone B2 harmonic count (0..32)
+
     "bNLfo" : 0,                  # LFO -> (joint 1&2) harmonic count
     "bNEnv" : 0,                  # Env -> (joint 1&2) harmonic count
     "bNExternal" : 0,             # External -> (joint 1&2) harmonic count 
+
     "bN2Lag" : 0.0,               # Tone B2 harmonic count lagtime (0..2)
     "b2Polarity" : 1,             # Tone B2 polarity (-1, 0(off), +1)
     "bLfo" : 0.0,                 # LFO -> Tone B tremolo
+
     "noiseLP" : 16000,            # Noise LP cutoff, Hz
     "noiseHP" : 10,               # Noise HP cutoff, Hz
     "noiseLfo" : 0.0,             # LFOB -> noise tremolo
     "noiseLag" : 0.0,             # Noise envelope lag time (0..2)
+    
     "cAttack" : 0.0,              # Tone C envelope
     "cDecay1" : 0.0,              #
     "cDecay2" : 0.0,              #
@@ -73,6 +79,8 @@ prototype = {
     "cTrigMode" : 0,              #
     "cLfoRatio" : 1.0,            #
     "cLfoDelay" : 0.0,            #
+
+    
     "cRatio" : 1.0,               # Tone C frequency ratio (0.25..16)
     "cKey" : 60,                  #
     "cKeyscaleLeft" : 0,          #
@@ -88,6 +96,8 @@ prototype = {
     "cPwmExternal" : 0.0,         # External -> incite pulse width (0..1)
     "cInciteSelect" : -1,         # incite signal mix  -1-> pulse  +1-> pink noise
     "cLfo" : 0.0,                 # LFO -> Tone C tremolo
+
+
     "aAmp" : 0.333,               # Filter mixer input amps
     "bAmp" : 0.333,               #
     "cAmp" : 0.333,               #
@@ -96,6 +106,7 @@ prototype = {
     "bFilter" : -1,               #
     "cFilter" : -1,               #
     "noiseFilter" : -1,           #
+    
     "f1Freq" : 16000,             # Filter 1 (lowpass) static cutoff, (100,...,10k) Hz
     "f1Keytrack" : 0,             # Filter 1 keytrack (0,0.5,1,1.5,2)
     "f1Res" : 0.0,                # Filter 1 resonance (0..1)
@@ -136,7 +147,7 @@ def lfo(vFreq = 7.0,
         aDelay = 0.0,
         bDelay = 0.0,
         cDelay = 0.0,
-        tremlag = 0.0):
+        tLag = 0.0):
     def f(v):
         return round(float(v),4)
     d = {"vfreq" : f(vFreq),
@@ -150,7 +161,7 @@ def lfo(vFreq = 7.0,
          "bLfoDelay" : f(bDelay),
          "cLfoRatio" : f(cRatio),
          "cLfoDelay" : f(cDelay),
-         "tremoloLag" : f(tremlag)}
+         "tremoloLag" : f(tLag)}
     return d
 
 def env(n, times = [0.0, 0.0, 0.0, 0.0], levels = [1.0, 1.0], mode = 0):
@@ -206,7 +217,6 @@ def toneA(ratio = 1.0,
          "aLfo" : f(tremolo)}
     return d
 
-
 def toneB(ratio1 = 1.0, ratio2 = 1.0,
           keyscale = [60,0,0],
           n1 = [32, 0, 0, 0],    # [n1, lfo, env, external]
@@ -256,7 +266,6 @@ def toneC(ratio = 1.0,
          "cInciteSelect" : round(float(inciteSelect), 4),
          "cLfo" :round(float(tremolo),4)}
     return d
-         
 
 def noise(lp = 16000, hp = 10, lag = 0.0, tremolo = 0.0):
     d = {"noiseLP" : int(lp),
@@ -268,7 +277,7 @@ def noise(lp = 16000, hp = 10, lag = 0.0, tremolo = 0.0):
 def mixer(mix = [0.333, 0.333, 0.333, 0.00],    # [a,b,c, noise]
           pan = [-1.0, -1.0, -1.0, -1.0]):
     mix = fill(mix, [0.333,0.333,0.333,0.000])
-    pan = fill(mix, [-1.0, -1.0, -1.0, -1.0])
+    pan = fill(pan, [-1.0, -1.0, -1.0, -1.0])
     d = {}
     for i,n in enumerate(("a","b","c","noise")):
         d["%sAmp" % n] = round(float(mix[i]),4)
@@ -314,8 +323,49 @@ def m(slot, name, # FIXME
       f1 = filter_(1),
       f2 = filter_(2)):
    p = M(name)
-
+   p["port"] = round(float(port),4)
+   p["amp"] = round(float(amp),4)
+   for d in (lfo,enva,envb,envc,a,b,c,noise,mix,f1,f2):
+       p.update(d)
    program_bank[slot] = p
    return p
 
-m(0,"Init")
+m(0,"Init",  port=0.000, amp=0.100,
+  lfo = lfo(vFreq=7.000,vSens=0.100,vDepth=0.000,xPitch=0.000,
+            aRatio=1.000,bRatio=1.000,cRatio=1.000,
+            vDelay=0.000,aDelay=0.000,bDelay=0.000,cDelay=0.000,tLag=0.000),
+  enva = env("a", [0.000,0.000,0.000,0.000],[1.000,1.000],0),
+  envb = env("b", [0.000,0.000,0.000,0.000],[1.000,1.000],0),
+  envc = env("c", [0.000,0.000,0.000,0.000],[1.000,1.000],0),
+  a = toneA(ratio=1.000,
+            keyscale=[60,0,0],
+            quotient=[1,0.000,0.000,0.000],
+            pulse=[0.500,0.000,0.000,0.000],
+            clkmix=0.000,
+            tremolo=0.000),
+  b = toneB(ratio1=1.000,
+            ratio2=1.000,
+            keyscale=[60,0,0],
+            n1=[32,0,0,0],
+            n2=[24,0.000,1],
+            tremolo=0.000),
+  c = toneC(ratio=1.000,
+            keyscale=[60,0,0],
+            fb=-1.000,
+            pulseFreq=[1.000,0.000,0.000,0.000],
+            pwm=[0.500,0.000,0.000,0.000],
+            inciteSelect=1.000,
+            tremolo=0.000),
+  noise = noise(lp=16000,hp=10,lag=0.000,tremolo=0.000),  
+  mix = mixer(mix=[0.333,0.333,0.333,0.000],
+              pan=[0.000,0.000,0.000,0.000]),
+  f1 = filter_(1,freq=16000,track=0.0,res=0.500,
+               lfo=[0, 0],
+               env=[0, 0],
+               external=0,
+               pan=0.000),
+  f2 = filter_(2,freq=16000,track=0.0,res=0.500,
+               lfo=[0, 0],
+               env=[0, 0],
+               external=0,
+               pan=0.000))

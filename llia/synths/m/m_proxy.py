@@ -5,6 +5,7 @@ from __future__ import print_function
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.m.m_data import program_bank
+from llia.synths.m.m_pp import pp
 #from llia.synths.m.m_random import m_random
 
 specs = SynthSpecs("M")
@@ -31,7 +32,7 @@ specs["is-efx"] = False
 specs["is-controller"] = False
 specs["description"] = "M is"
 specs["keymodes"] = ('PolyN', 'PolyRotate', 'Poly1', 'PolyRotate', 'Mono1', 'MonoExclusive')
-#specs["pretty-printer"] = pp   
+specs["pretty-printer"] = pp   
 #specs["program-generator"] = m_random
 specs["help"] = "M"
 specs["pallet"] = m_pallet
@@ -40,3 +41,7 @@ specs["audio-output-buses"] = [["outbus1", "out_0"],
 specs["audio-input-buses"] = []
 specs["control-output-buses"] = []
 specs["control-input-buses"] = [["xbus","null_sink"]]
+
+
+# TEST
+import llia.synths.m.m_constants

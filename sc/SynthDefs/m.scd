@@ -147,7 +147,7 @@
 			[[aAttack,bAttack,cAttack],[aDecay1,bDecay1,cDecay1],[aDecay2,bDecay2,cDecay2],[aRelease,bRelease,cRelease]],-4,3), envGate)-env_floor;
 		//var f0 = Lag2.kr(freq,port)*detune*(1+(lfo[3]*vsens.linlin(0,1,0,0.2)*vdepth));
 
-		var f0 = Lag2.kr(freq,port)*detune*(1+(vsens.linlin(0,1,0,0.2)*(vdepth + (x * xPitch))));
+		var f0 = Lag2.kr(freq,port)*detune*(1+(vsens.linlin(0,1,0,0.2)*((vdepth*lfo[3]) + (x * xPitch))));
 
 	    /* Key scales */
 		var left_octave = ([aKey-keynumber,bKey-keynumber,cKey-keynumber]/12).max(0);
@@ -172,7 +172,7 @@
 		var bsig = bsig_1*LinXFade2.kr(1,Lag2.kr(lfo[1],tremoloLag),bLfo.linlin(0,1,-1,1));
 		/* Noise, shares env and LFO with B */
 		var nsemod = Lag2.kr(env[1]+XFade2.kr(1,lfo[1],noiseLfo.linlin(0,1,-1,1)),noiseLag);
-		var nse = LPF.ar(HPF.ar(WhiteNoise.ar(),noiseHP),noiseLP)*nsemod*keyscale[1]*env[1];
+		var nse = LPF.ar(HPF.ar(WhiteNoise.ar(),noiseHP.max(10)),noiseLP.max(100))*nsemod*keyscale[1]*env[1];
 		/* Tone C - delay line feedback */
 		var cmaxdelay = 0.025;  // 40hz floor
 		var fc = f0*cRatio;
