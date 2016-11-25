@@ -167,7 +167,8 @@
 		bzz4_lag = 0.0|
 		var x = In.kr(xbus,1);
 		// envelopes
-		var hold_time = [op1_release,op2_release,op3_release,op4_release].max;
+		//var hold_time = [op1_release,op2_release,op3_release,op4_release].max;
+		var hold_time = max(op1_release, max(op2_release, max(op3_release, op4_release)));
 		var env_floor = 0.000;
 		var gate1 = Select.kr(op1_env_mode, [gate,Trig1.kr(gate,(op1_attack + op1_decay1 + op1_decay2))]);
 		var env1 = EnvGen.kr(Env([env_floor,1,op1_breakpoint.max(env_floor),op1_sustain.max(env_floor),env_floor],

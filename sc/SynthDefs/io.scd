@@ -87,7 +87,7 @@
 	op3Amp = 1.0
 	op3X = 0.0|
 	var x = In.kr(xbus,1);
-	var holdTime = max(op1Release,op2Release,op3Release);
+	var holdTime = max(op1Release,max(op2Release,op3Release));
 	/* LFOs */
 	var venv = EnvGen.kr(Env([0,0,1,1],[vdelay,vdelay,holdTime],\lin,3),gate,doneAction: doneAction);
 	var vf = Select.kr(vlock,[vfreq,freq/((freq/vfreq).round)]);

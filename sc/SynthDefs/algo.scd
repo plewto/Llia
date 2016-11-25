@@ -190,7 +190,7 @@
 	op8_lfo = 0
 	op8_external = 0|
 	var x = In.kr(xbus,1)*xscale;
-	var hold_time = max(op1_release,op5_release,op7_release)*2;
+	var hold_time = max(op1_release,max(op5_release,op7_release))*2;
 	var lfov_env = EnvGen.kr(Env([0,0,1,0],[lfov_delay,lfov_delay,hold_time],\lin,2),gate);
 	var lfov = LFCub.kr(lfov_freq)*lfov_env;
 	var lfoA_env = EnvGen.kr(Env([0,0,1,0],[lfoA_delay,lfoA_delay,hold_time],\lin,2),gate);
