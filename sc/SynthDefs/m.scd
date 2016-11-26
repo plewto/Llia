@@ -179,7 +179,7 @@
 		var fc = f0*cRatio*(1 + (cEnvPitch*env[2]));
 		var clfo = lfo[2];
 		var cenv = env[2];
-		var cifreq = (fc*cPulseRatio)*(1+(clfo *cPulseRatioLfo)+(cenv*cPulseRatioEnv)+(x*cPulseRatioExternal));
+		var cifreq = ((fc*cPulseRatio)*(1+(clfo *cPulseRatioLfo)+(cenv*cPulseRatioEnv)+(x*cPulseRatioExternal))).abs.min(16000);
 		var ciwidth = (cPw+(clfo*cPwmLfo)+(cenv*cPwmEnv)+(x*cPwmExternal)).max(0.01).min(0.99);
 		var cpulse = Pulse.ar(cifreq,ciwidth);
 		var cincite = XFade2.ar(cpulse,PinkNoise.ar(),cInciteSelect);
@@ -203,6 +203,6 @@
 		Linen.kr(gate,0.01,1, holdtime, doneAction);  // voice hold envelope
 		LocalOut.ar(cdlyout*cFb);
 		Out.ar([outbus1,outbus2],outsig);
-		Poll.kr(LFPulse.kr(1),cifreq,"cifreq");
+
 }).load)
 
