@@ -239,6 +239,7 @@ _import_synth("RDrum", "llia.synths.rdrum.rdrum_proxy")
 _import_synth("MASA", "llia.synths.masa.masa_proxy")
 _import_synth("FM2", "llia.synths.fm2.fm2_proxy")
 
+_import_effect("Prism","llia.synths.prism.prism_proxy")
 _import_effect("Formant","llia.synths.formant.formant_proxy")
 _import_effect("CarnalDelay", "llia.synths.carnal.crnl_proxy")
 _import_effect("XOver", "llia.synths.xover.xover_proxy")

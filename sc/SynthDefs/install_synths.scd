@@ -29,6 +29,7 @@
     "orgn.scd",
     "panner.scd",
     "pitchshifter.scd",
+    "prism.scd",
     "qmod.scd",
     "rdrum.scd",
     "ringmodulator.scd",
