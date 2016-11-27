@@ -15,6 +15,7 @@
     "envgen.scd",
     "flngr.scd",
     "fm2.scd",
+    "formant.scd",
     "ghostbus.scd",
     "hund.scd",
     "io.scd",
