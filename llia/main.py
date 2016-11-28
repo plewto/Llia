@@ -8,8 +8,8 @@ project_root = os.path.dirname(abs_path)
 project_root = os.path.dirname(project_root)
 sys.path.insert(1, project_root)
 
-
 from argparse import ArgumentParser
+import socket
 
 import llia.constants as constants
 from llia.config import LliaConfig
@@ -268,4 +268,12 @@ _import_controller("ControlMixer", "llia.synths.controlmixer.controlmixer_proxy"
 _import_controller("CUtil", "llia.synths.cutil/cutil_proxy")
 _import_controller("Envgen", "llia.synths.envgen.envgen_proxy")
 
-app = LliaApp(config, args.skip_mainloop)
+try:
+    app = LliaApp(config, args.skip_mainloop)
+except socket.error as err:
+    bar = '*'*60
+    print(bar)
+    msg = "socket.error\n"
+    msg += "Most likely another instance of Llia is already in use."
+    print(msg)
+    print(bar)
