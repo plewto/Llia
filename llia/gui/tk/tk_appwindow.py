@@ -6,6 +6,7 @@ from Tkinter import (Frame, Label, Menu, Tk, BOTH, Toplevel)
 import ttk
 import tkMessageBox
 from PIL import Image, ImageTk
+from llia.llerrors import LliaPingError
 from llia.gui.appwindow import AbstractApplicationWindow
 from llia.gui.tk.tk_splash import TkSplashWindow
 import llia.gui.tk.tk_factory as factory
@@ -222,11 +223,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.wait_window(dialog)
 
     def ping_global(self):
-        rs = self.app.proxy.ping()
-        if rs:
-            self.status("Ping OK")
-        else:
-            self.warning("No Ping Response")
+        try:
+            rs = self.app.proxy.ping()
+            if rs:
+                self.status("Ping OK")
+            else:
+                self.warning("Ping Error")
+        except LliaPingError as err:
+            self.warning(err.message)
 
     def toggle_osc_trace(self):
         LliaProxy.trace = not LliaProxy.trace

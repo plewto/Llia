@@ -6,6 +6,7 @@ from __future__ import print_function
 from time import sleep
 import sys
 
+from llia.thirdparty.OSC import OSCClientError
 from llia.llerrors import (LliaPingError, LliaError, NoSuchSynthError,
                            NoSuchBusError, NoSuchBufferError)
 from llia.osc_transmitter import OSCTransmitter
@@ -161,15 +162,19 @@ class LliaProxy(object):
     # Requst ping-response from host
     # transmit Llia/oscID/ping
     # response -> ping-response
+    # Riase LliaPingError if no response
     # returns bool
     def ping(self):
-        self._send("ping")
-        rs = self.expect_osc_response("ping-response")
-        if not rs:
-            msg = "Did not receive expected ping response from '/Llia/%s'"
-            msg = msg % self.global_osc_id()
-            raise LliaPingError(msg)
-        return rs
+        try:
+            self._send("ping")
+            if self.expect_osc_response("ping-response"):
+                return True
+            else:
+                msg = "Did not receive expected ping response from '/Llia/%s'"
+                msg = msg % self.global_osc_id()
+                raise OSCClientError(msg)
+        except OSCClientError as err:
+            raise LliaPingError(err.message)
     
     def free(self):
         '''
