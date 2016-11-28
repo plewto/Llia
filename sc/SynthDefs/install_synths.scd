@@ -5,6 +5,7 @@
 (
 ~manifest=["algo.scd",
     "asplit.scd",
+    "bandpass.scd",
     "carnal.scd",
     "cascade.scd",
     "chronos.scd",
@@ -26,6 +27,7 @@
     "m.scd",
     "masa.scd",
     "mixer.scd",
+    "notch.scd",
     "orgn.scd",
     "panner.scd",
     "pitchshifter.scd",
