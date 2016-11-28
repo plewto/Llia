@@ -29,7 +29,7 @@ controlmixer_pallet["SLIDER-TROUGH"] = "#432703"
 controlmixer_pallet["SLIDER-OUTLINE"] = "#42033E"
 
 specs["constructor"] = ControlmixerProxy
-specs["description"] = "Reads and modifies control bus values"
+specs["description"] = "Combines up to4 control signals"
 specs["keymodes"] = ("EFX", )
 specs["pretty-printer"] = pp
 #specs["program-generator"] = 

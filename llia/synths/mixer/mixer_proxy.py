@@ -30,7 +30,7 @@ mixer_pallet["SLIDER-TROUGH"] = "#432703"
 mixer_pallet["SLIDER-OUTLINE"] = "#42033E"
 
 specs["constructor"] = MixerProxy
-specs["description"] = "4 x 2 Mixer with Reverb"
+specs["description"] = "4 x 2 Mixer"
 specs["keymodes"] = ("EFX", )
 specs["pretty-printer"] = pp
 specs["is-efx"] = True

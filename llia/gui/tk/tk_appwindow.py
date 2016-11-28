@@ -96,24 +96,41 @@ class TkApplicationWindow(AbstractApplicationWindow):
         nb.add(frame_controllers, text = "Controllers")
         nb.add(self.llia_graph, text="Graph")
         nb.bind("<Button-1>", self._tab_change_callback)
-     
+
+        def display_info_callback(event):
+            sp = event.widget.synth_spec
+            msg = "%s:    %s" % (sp["format"],sp["description"])
+            self.status(msg)
+
+        def clear_info_callback(*_):
+            self.status("")
+        
         for st in con.SYNTH_TYPES:
             sp = specs[st]
             ttp = "Add %s Synthesizer (%s)" % (st, sp["description"])
             b = factory.logo_button(frame_synths, st, ttip=ttp)
+            b.synth_spec = sp
             b.bind("<Button-1>", self._show_add_synth_dialog)
+            b.bind("<Enter>", display_info_callback)
+            b.bind("<Leave>", clear_info_callback)
             frame_synths.add(b)
         for st in con.EFFECT_TYPES:
             sp = specs[st]
             ttp = "Add %s Effect (%s)" % (st, sp["description"])
             b = factory.logo_button(frame_efx, st, ttip=ttp)
+            b.synth_spec = sp
             b.bind("<Button-1>", self._show_add_efx_dialog)
+            b.bind("<Enter>", display_info_callback)
+            b.bind("<Leave>", clear_info_callback)
             frame_efx.add(b)
         for st in con.CONTROLLER_SYNTH_TYPES:
             sp = specs[st]
             ttp = "Add %s Effect (%s)" % (st, sp["description"])
             b = factory.logo_button(frame_controllers, st, ttip=ttp)
+            b.synth_spec = sp
             b.bind("<Button-1>", self._show_add_controller_dialog)
+            b.bind("<Enter>", display_info_callback)
+            b.bind("<Leave>", clear_info_callback)
             frame_controllers.add(b)
 
     
