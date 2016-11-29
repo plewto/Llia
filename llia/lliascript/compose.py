@@ -1,6 +1,7 @@
 # llia.lliascript.compose
 # 2016.05.19
 
+from __future__ import print_function
 from llia.lliascript.synthhelper import SynthHelper
 
 
@@ -12,6 +13,9 @@ class Composer(object):
     def __init__(self, parser):
         self.parser = parser
 
+    def get_synth(self, sid):
+        return self.parser.app.proxy.get_synth(sid)
+        
     def build(self):
         code = "from __future__ import print_function\n\n"
         code += self._build_channel_assignments()
@@ -80,6 +84,17 @@ class Composer(object):
         code += "\n"
         return code
 
+    def _load_bank(self,e):
+        sid = e.lsid
+        bank = self.get_synth(sid).bank()
+        fn = bank.filename
+        bcc = ""
+        if fn:
+            bcc += 'load_bank("%s",sid="%s")\n' % (fn,sid)
+        cp = bank.current_slot
+        bcc += 'program(%d)\n' % cp
+        return bcc
+    
     def _build_synths(self):
         def predicate(obj):
             return obj.lstype == 'synth' or obj.lstype == 'group'
@@ -89,16 +104,18 @@ class Composer(object):
         for e in acc:
             if e.data['is-group']:
                 code += 'group("%s")\n' % e.data['name']
-            elif e.data['is-control-synth']:
-                code += 'control_synth("%s")\n' % e.data['stype']
-            elif e.data['is-efx']:
-                code += 'efx("%s")\n' % e.data["stype"]
             else:
-                stype = e.data['stype']
-                kmode = e.data['keymode']
-                vcount = e.data['voice-count']
-                code += 'synth("%s","%s",%s)\n' % (stype,kmode,vcount)
-            code += 'create_editor()\n'
+                if e.data['is-control-synth']:
+                    code += 'control_synth("%s")\n' % e.data['stype']
+                elif e.data['is-efx']:
+                    code += 'efx("%s")\n' % e.data["stype"]
+                else:
+                    stype = e.data['stype']
+                    kmode = e.data['keymode']
+                    vcount = e.data['voice-count']
+                    code += 'synth("%s","%s",%s)\n' % (stype,kmode,vcount)
+                    code += 'create_editor()\n'
+                    code += self._load_bank(e)
         return code
     
     def _build_buffer_assignments(self):
