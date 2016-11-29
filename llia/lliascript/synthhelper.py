@@ -544,10 +544,15 @@ class SynthHelper(object):
         return filename
         
     def load_bank(self, filename, sid=None):
-        bnk = self.get_bank(sid, silent=True)
-        filename = os.path.expanduser(filename)
-        bnk.load(filename)
-        return filename
+        try:
+            bnk = self.get_bank(sid, silent=True)
+            filename = os.path.expanduser(filename)
+            bnk.load(filename)
+            return True
+        except IOError:
+            msg = "Can not open bank file: '%s'" % filename
+            self.warning(msg)
+            return False
 
     def random_program(self, use=True, sid=None):
         sy = self.get_synth(sid)
