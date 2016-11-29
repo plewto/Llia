@@ -2,7 +2,7 @@
 #
 
 from __future__ import print_function
-import os, sys, imp, warnings
+import os, sys
 abs_path = os.path.abspath(__file__)
 project_root = os.path.dirname(abs_path)
 project_root = os.path.dirname(project_root)
