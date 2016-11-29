@@ -1,6 +1,7 @@
 # llia.synths.snh.snh_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -44,3 +45,5 @@ specs["control-output-buses"] = [["outbus", "null_source"],
                                  ["clockoutbus", "null_source"]]
 specs["control-input-buses"] = [["clockbus", "null_sink"],
                                 ["xbus", "null_sink"]]
+print("\t%s" % specs["format"])
+llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

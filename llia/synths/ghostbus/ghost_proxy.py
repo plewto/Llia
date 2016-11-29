@@ -1,6 +1,7 @@
 # llia.synths.ghostbus.ghost_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -40,3 +41,5 @@ specs["pallet"] = ghostbus_pallet
 specs["control-input-buses"] = [["inbus","null_sink"],
                                 ["xbus","null_sink"]]
 specs["control-output-buses"] = [["outbus","null_source"]]
+print("\t%s" % specs["format"])
+llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

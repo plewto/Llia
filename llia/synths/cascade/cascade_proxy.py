@@ -1,6 +1,7 @@
 # llia.synths.cascade.cascade_proxy
 
 from __future__ import print_function
+import llia.constants
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.cascade.cascade_data import program_bank, pp, random_cascade
@@ -53,3 +54,5 @@ specs["control-output-buses"] = [["outbus","null_source"],
                                  ["out6","null_source"],
                                  ["outn","null_source"]]
                                  
+print("\t%s" % specs["format"])
+llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

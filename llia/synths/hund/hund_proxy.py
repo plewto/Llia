@@ -1,6 +1,7 @@
 # llia.synths.hund.hund_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -41,3 +42,5 @@ specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = [["inbus","in_0"]]
 specs["control-output-buses"] = [["envout", "null_source"]]
 specs["control-input-buses"] = [["xbus", "null_sink"]]
+print("\t%s" % specs["format"])
+llia.constants.EFFECT_TYPES.append(specs["format"])

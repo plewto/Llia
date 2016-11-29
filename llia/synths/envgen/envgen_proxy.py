@@ -1,6 +1,7 @@
 # llia.synths.envgen.envgen_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -39,3 +40,5 @@ specs["audio-input-buses"] = []
 specs["control-output-buses"] = [["outbusA", "null_source"],
                                  ["outbusB", "null_source"]]
 specs["control-input-buses"] = []
+print("\t%s" % specs["format"])
+llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

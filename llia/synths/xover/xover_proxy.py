@@ -2,6 +2,7 @@
 # 2016.07.03
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -45,3 +46,5 @@ specs["control-output-buses"] = [["lfo1aOutbus", "null_source"],
 specs["control-input-buses"] = [["xbus", "null_sink"]]
 
                                
+print("\t%s" % specs["format"])
+llia.constants.EFFECT_TYPES.append(specs["format"])

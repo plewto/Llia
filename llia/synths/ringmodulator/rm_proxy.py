@@ -1,6 +1,7 @@
 # llia.synths.ringmodulator.rm_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -42,3 +43,5 @@ specs["audio-output-buses"] = [["outbus", "out_0"]]
 
 specs["audio-input-buses"] = [["carin", "in_0"], # carrier
                               ["xmodin","in_1"]] # external modulator in
+print("\t%s" % specs["format"])
+llia.constants.EFFECT_TYPES.append(specs["format"])

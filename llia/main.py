@@ -206,67 +206,51 @@ if args.listgui:
 
 config = LliaConfig.create_instance(args)
 
-def _import(modname):
-    path = modname.replace(".","/")+".py"
-    warnings.filterwarnings("ignore")
-    imp.load_source(modname,path)
-    warnings.filterwarnings("default")
+print("Importing instrumental synths:")
+import llia.synths.m.m_proxy        
+import llia.synths.ss1.ss1_proxy    
+import llia.synths.io.io_proxy    
+import llia.synths.corvus.corvus_proxy
+import llia.synths.algo.algo_proxy
+import llia.synths.orgn.orgn_proxy
+import llia.synths.saw3.s3_proxy
+import llia.synths.klstr.klstr_proxy
+import llia.synths.rdrum.rdrum_proxy
+import llia.synths.masa.masa_proxy
+import llia.synths.fm2.fm2_proxy
 
-def _import_synth(stype, modname):
-    print("Importing synth: %s" % stype)
-    _import(modname)
-    constants.SYNTH_TYPES.append(stype)
+print("Importing effects:")
+import llia.synths.bandpass.bandpass_proxy
+import llia.synths.notch.notch_proxy
+import llia.synths.prism.prism_proxy
+import llia.synths.formant.formant_proxy
+import llia.synths.carnal.crnl_proxy
+import llia.synths.xover.xover_proxy
+import llia.synths.flngr.flngr_proxy
+import llia.synths.tremolo.trm_proxy
+import llia.synths.mixer.mixer_proxy
+import llia.synths.panner.panner_proxy
+import llia.synths.asplit.asplit_proxy
+import llia.synths.rumklang.rumklang_proxy
+import llia.synths.chronos.chronos_proxy
+import llia.synths.pitchshifter.pitchshifter_proxy
+import llia.synths.ringmodulator.rm_proxy
+import llia.synths.crusher.crusher_proxy
+import llia.synths.hund.hund_proxy
+import llia.synths.qmod.qmod_proxy
 
-def _import_effect(stype, modname):
-    print("Importing effect: %s" % stype)
-    _import(modname)
-    constants.EFFECT_TYPES.append(stype)
+print("Importing controller synths:")
+import llia.synths.lfo1.lfo1_proxy
+import llia.synths.lfo2.lfo2_proxy
+import llia.synths.lfo3.lfo3_proxy
+import llia.synths.cascade.cascade_proxy
+import llia.synths.snh.snh_proxy
+import llia.synths.ghostbus.ghost_proxy
+import llia.synths.controlmixer.controlmixer_proxy
+import llia.synths.cutil.cutil_proxy
+import llia.synths.envgen.envgen_proxy
 
-def _import_controller(stype, modname):
-    print("Importing controller: %s" % stype)
-    _import(modname)
-    constants.CONTROLLER_SYNTH_TYPES.append(stype)     
 
-_import_synth("M","llia.synths.m.m_proxy")        
-_import_synth("SS1","llia.synths.ss1.ss1_proxy")    
-_import_synth("Io","llia.synths.io.io_proxy")    
-_import_synth("Corvus","llia.synths.corvus.corvus_proxy")
-_import_synth("Algo","llia.synths.algo.algo_proxy")
-_import_synth("Orgn", "llia.synths.orgn.orgn_proxy")
-_import_synth("Saw3", "llia.synths.saw3.s3_proxy")
-_import_synth("Klstr", "llia.synths.klstr.klstr_proxy")
-_import_synth("RDrum", "llia.synths.rdrum.rdrum_proxy")
-_import_synth("MASA", "llia.synths.masa.masa_proxy")
-_import_synth("FM2", "llia.synths.fm2.fm2_proxy")
-
-_import_effect("Bandpass","llia.synths.bandpass.bandpass_proxy")
-_import_effect("Notch","llia.synths.notch.notch_proxy")
-_import_effect("Prism","llia.synths.prism.prism_proxy")
-_import_effect("Formant","llia.synths.formant.formant_proxy")
-_import_effect("CarnalDelay", "llia.synths.carnal.crnl_proxy")
-_import_effect("XOver", "llia.synths.xover.xover_proxy")
-_import_effect("Flngr", "llia.synths.flngr.flngr_proxy")
-_import_effect("Tremolo", "llia.synths.tremolo.trm_proxy")
-_import_effect("Mixer", "llia.synths.mixer.mixer_proxy")
-_import_effect("Panner", "llia.synths.panner.panner_proxy")
-_import_effect("ASplit", "llia.synths.asplit.asplit_proxy")
-_import_effect("Rumklang", "llia.synths.rumklang.rumklang_proxy")
-_import_effect("Chronos", "llia.synths.chronos.chronos_proxy")
-_import_effect("PitchShifter", "llia.synths.pitchshifter.pitchshifter_proxy")
-_import_effect("RingModulator", "llia.synths.ringmodulator.rm_proxy")
-_import_effect("Crusher", "llia.synths.crusher.crusher_proxy")
-_import_effect("Hund", "llia.synths.hund.hund_proxy")
-_import_effect("QMod","llia.synths.qmod.qmod_proxy")
-
-_import_controller("LFO1", "llia.synths.lfo1.lfo1_proxy")
-_import_controller("LFO2", "llia.synths.lfo2.lfo2_proxy")
-_import_controller("LFO3", "llia.synths.lfo3.lfo3_proxy")
-_import_controller("Cascade", "llia.synths.cascade.cascade_proxy")
-_import_controller("SnH", "llia.synths.snh.snh_proxy")
-_import_controller("Ghostbus", "llia.synths.ghostbus.ghost_proxy")
-_import_controller("ControlMixer", "llia.synths.controlmixer.controlmixer_proxy")
-_import_controller("CUtil", "llia.synths.cutil/cutil_proxy")
-_import_controller("Envgen", "llia.synths.envgen.envgen_proxy")
 
 try:
     app = LliaApp(config, args.skip_mainloop)

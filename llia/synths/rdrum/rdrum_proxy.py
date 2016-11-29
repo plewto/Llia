@@ -1,6 +1,7 @@
 # llia.synths.rdrum_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -36,3 +37,5 @@ specs["program-generator"] = gen_rdrum_program
 specs["help"] = "rdrum"
 specs["pallet"] = rdrum_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"]]
+print("\t%s" % specs["format"])
+llia.constants.SYNTH_TYPES.append(specs["format"])

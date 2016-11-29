@@ -1,6 +1,7 @@
 # llia.synths.lfo2.lfo2_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -40,3 +41,5 @@ specs["help"] = "LFO2"
 specs["pallet"] = lfo2_pallet
 specs["control-output-buses"] = [["outbusSaw","null_source"],
                                  ["outbusPulse","null_source"]]
+print("\t%s" % specs["format"])
+llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

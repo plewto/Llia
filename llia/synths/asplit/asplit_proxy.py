@@ -1,6 +1,7 @@
 # llia.synths.asplit.asplit_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -40,3 +41,5 @@ specs["audio-output-buses"] = [["outbusA", "out_0"],
                                ["outbusC", "out_2"],
                                ["outbusD", "out_3"]]
 specs["audio-input-buses"] = [["inbus", "in_1"]]
+print("\t%s" % specs["format"])
+llia.constants.EFFECT_TYPES.append(specs["format"])

@@ -1,6 +1,7 @@
 # llia.synths.rumklang.rumklang_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -39,3 +40,5 @@ specs["audio-input-buses"] = [["inbus", "in_0"]]
 specs["audio-output-buses"] = [["outbus1","out_0"],
                                ["outbus2","out_1"]]
 specs["control-input-buses"] = [["xbus","null_sink"]]
+print("\t%s" % specs["format"])
+llia.constants.EFFECT_TYPES.append(specs["format"])

@@ -1,6 +1,7 @@
 # llia.synths.chronos.chronos_proxy
 
 from __future__ import print_function
+import llia.constants
 
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
@@ -43,3 +44,5 @@ specs["audio-output-buses"] = [["outbus1", "out_0"],
 specs["audio-input-buses"] = [["inbus1", "in_0"],
                               ["inbus2", "in_1"]]
 specs["control-input-buses"] = [["xbus","null_sink"]]
+print("\t%s" % specs["format"])
+llia.constants.EFFECT_TYPES.append(specs["format"])
