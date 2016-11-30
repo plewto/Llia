@@ -1,5 +1,7 @@
 # llia.gui.tk.graph.sytoken
 
+from __future__ import print_function
+
 from llia.gui.tk.graph.token import Token, get_logo_image
 from llia.gui.tk.graph.gconfig import gconfig
 from llia.gui.tk.graph.port import (AudioSource,AudioSink,
@@ -17,7 +19,6 @@ class SynthToken(Token):
         self.audio_output_ports = {}   # (param, Port, (x, y)).
         self.control_input_ports = {}  # Where x and y are relative to
         self.control_output_ports = {} # x0,y0.
-        self._position = [-1,-1]
 
     def client_id(self):
         return self.client.sid
@@ -173,8 +174,8 @@ class SynthToken(Token):
             x1,y1 = xc+radius, yc+radius
             self.canvas.coords(tag,x0,y0,x1,y1)
 
-    def position(self):
-        return self._position
+    # def position(self):
+    #     return self._position
         
     def show_editor(self, event):
         sy = self.client

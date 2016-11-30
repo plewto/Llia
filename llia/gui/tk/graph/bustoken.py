@@ -1,5 +1,7 @@
 # llia.gui.tk.graph.bustoken
 
+from __future__ import print_function
+
 from llia.gui.tk.graph.token import Token, get_logo_image
 from llia.gui.tk.graph.gconfig import gconfig
 from llia.gui.tk.graph.port import (AudioSource,AudioSink,
@@ -10,7 +12,6 @@ class BusToken(Token):
 
     def __init__(self,graph,bus):
         super(BusToken,self).__init__(graph,bus)
-        self._position = [-1,-1]
 
     def client_id(self):
         return self.client.name
@@ -59,7 +60,7 @@ class BusToken(Token):
 
     def move_to(self, x, y):
         self._create_construction_points(x,y)
-        self._position = (x,y)
+        self._position = [x,y]
         ppnts = self._construction_points['pad']
         txpnts = self._construction_points['text']
         srcpnts = self._construction_points['source']
@@ -79,9 +80,6 @@ class BusToken(Token):
                 else:
                     self.canvas.coords(tag,*cpnts)
 
-    def position(self):
-        return self._position
-            
 class AudiobusToken(BusToken):
 
     def __init__(self,graph,bus):
@@ -95,6 +93,7 @@ class AudiobusToken(BusToken):
 
     def _create_construction_points(self,x0,y0):
         x0,y0 = float(x0),float(y0)
+        self._position = [x0,y0]
         x1,y1 = x0+gconfig["audio-bus-width"], y0+gconfig["audio-bus-height"]
         chamfer = gconfig["audio-bus-chamfer"]
         xc = (x0+x1)/2
@@ -160,6 +159,7 @@ class ControlbusToken(BusToken):
 
     def _create_construction_points(self,x0,y0):
         x0,y0 = float(x0),float(y0)
+        self._position = [x0,y0]
         x1 = x0+gconfig['control-bus-width']
         y1 = y0+gconfig['control-bus-height']
         xc,yc = (x0+x1)/2,(y0+y1)/2
