@@ -1,7 +1,7 @@
 # llia.gui.tk.graph.lliagraph
 
+from __future__ import print_function
 from Tkinter import Canvas, Frame
-
 from random import randint
 
 from llia.util.lmath import distance
@@ -63,6 +63,22 @@ class LliaGraph(Frame):
         canvas.bind("<ButtonPress-1>", self.bus_drag_pickup)
         canvas.bind("<ButtonRelease-1>", self.bus_drop)
 
+    def dump(self,tab=0):
+        pad=' '*tab*4
+        pad2 = pad+' '*4
+        print("%sLliaGraph:" % pad)
+        print("%ssynth token count : %d" % (pad2,len(self.synth_tokens)))
+        print("%saudio bus count   : %d" % (pad2,len(self.audio_bus_tokens)))
+        print("%scontrol bus count : %d" % (pad2,len(self.control_bus_tokens)))
+        
+    def get_token(self, tid):
+        for d in (self.synth_tokens,
+                  self.audio_bus_tokens,
+                  self.control_bus_tokens):
+            if d.has_key(tid):
+                return d[tid]
+        return None
+        
     def add_audio_bus(self):
         parser = self.app.ls_parser
         while True:

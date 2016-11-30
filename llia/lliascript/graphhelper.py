@@ -46,7 +46,7 @@ class GraphHelper(object):
 
     def control_bus_tokens(self):
         if self.lliagraph:
-            return self.lliagraph.audio_bus_tokens.items()
+            return self.lliagraph.control_bus_tokens.items()
         else:
             return []
 
