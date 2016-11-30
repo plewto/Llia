@@ -207,25 +207,20 @@ if args.listgui:
 config = LliaConfig.create_instance(args)
 
 print("Importing instrumental synths:")
-import llia.synths.m.m_proxy        
 import llia.synths.ss1.ss1_proxy    
-import llia.synths.io.io_proxy    
-import llia.synths.corvus.corvus_proxy
-import llia.synths.algo.algo_proxy
-import llia.synths.orgn.orgn_proxy
 import llia.synths.saw3.s3_proxy
+import llia.synths.orgn.orgn_proxy
+import llia.synths.masa.masa_proxy
 import llia.synths.klstr.klstr_proxy
 import llia.synths.rdrum.rdrum_proxy
-import llia.synths.masa.masa_proxy
 import llia.synths.fm2.fm2_proxy
+import llia.synths.algo.algo_proxy
+import llia.synths.io.io_proxy    
+import llia.synths.corvus.corvus_proxy
+import llia.synths.m.m_proxy        
 
 print("Importing effects:")
-import llia.synths.bandpass.bandpass_proxy
-import llia.synths.notch.notch_proxy
-import llia.synths.prism.prism_proxy
-import llia.synths.formant.formant_proxy
 import llia.synths.carnal.crnl_proxy
-import llia.synths.xover.xover_proxy
 import llia.synths.flngr.flngr_proxy
 import llia.synths.tremolo.trm_proxy
 import llia.synths.mixer.mixer_proxy
@@ -238,6 +233,11 @@ import llia.synths.ringmodulator.rm_proxy
 import llia.synths.crusher.crusher_proxy
 import llia.synths.hund.hund_proxy
 import llia.synths.qmod.qmod_proxy
+import llia.synths.bandpass.bandpass_proxy
+import llia.synths.notch.notch_proxy
+import llia.synths.prism.prism_proxy
+import llia.synths.formant.formant_proxy
+import llia.synths.xover.xover_proxy
 
 print("Importing controller synths:")
 import llia.synths.lfo1.lfo1_proxy
