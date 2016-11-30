@@ -30,7 +30,8 @@ class SynthHelper(object):
         ns["assign_control_input"] = self.assign_control_input_bus
         ns["bend"] = self.bend
         ns["efx"] = self.add_efx
-        ns["input_channel"] = self.input_channel
+        ns["midi_input_channel"] = self.midi_input_channel
+        ns["keytable"] = self.keytable
         ns["keyrange"] = self.keyrange
         ns["synth"] = self.add_synth
         ns["control_synth"] = self.add_control_synth
@@ -355,8 +356,16 @@ class SynthHelper(object):
                 notebook.forget(swin)
             except TclError:
                 pass
-        
-    def input_channel(self, chan=None, sid=None):
+
+    def keytable(self,newtab=None,sid=None,silent=False):
+        sy = self.get_synth(sid)
+        rs = sy.keytable(newtab)
+        if not silent:
+            msg = "Synth %s keytable: '%s'" % (sid,rs)
+            self.status(msg)
+        return rs
+    
+    def midi_input_channel(self, chan=None, sid=None,silent=False):
         sy = self.get_synth(sid)
         chan_number = None
         if not chan:
@@ -364,8 +373,9 @@ class SynthHelper(object):
         else:
             chan_number = self.config.channel_assignments.get_channel(chan)
             chan_number = sy.midi_input_channel(chan_number)
-        msg = "Synth %s MIDI input channel:  %s   '%s'" % (sid, chan_number, chan)
-        self.status(msg)
+        if not silent:
+            msg = "Synth %s MIDI input channel:  %s   '%s'" % (sid, chan_number, chan)
+            self.status(msg)
         return chan_number
 
     def keyrange(self, lower=None, upper=None, sid=None):

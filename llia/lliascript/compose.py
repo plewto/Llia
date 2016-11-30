@@ -26,6 +26,7 @@ class Composer(object):
         code += self._build_synths()
         code += self._build_bus_assignments()
         code += self._build_buffer_assignments()
+        code += self._build_graph()
         code += 'show_group("ALL")\n'
         return code
 
@@ -105,6 +106,8 @@ class Composer(object):
             if e.data['is-group']:
                 code += 'group("%s")\n' % e.data['name']
             else:
+                sid = e.lsid
+                sy = self.get_synth(sid)
                 if e.data['is-control-synth']:
                     code += 'control_synth("%s")\n' % e.data['stype']
                 elif e.data['is-efx']:
@@ -114,8 +117,10 @@ class Composer(object):
                     kmode = e.data['keymode']
                     vcount = e.data['voice-count']
                     code += 'synth("%s","%s",%s)\n' % (stype,kmode,vcount)
-                    code += 'create_editor()\n'
-                    code += self._load_bank(e)
+                code += 'keytable("%s",silent=True)\n' % sy.keytable()
+                code += 'midi_input_channel(%d,silent=True)\n' % sy.midi_input_channel()
+                code += 'create_editor()\n'
+                code += self._load_bank(e)
         return code
     
     def _build_buffer_assignments(self):
@@ -183,3 +188,19 @@ class Composer(object):
                 code += 'controller_name(%d, "%s")\n' % (ctrl, name)
         code += "\n"
         return code
+
+    def _build_graph(self):
+        gh = self.parser.graphhelper
+        code = "# Create graph\n"
+        for tid,t in gh.synth_tokens():
+            pos = t.position()
+            code += 'graph_move_token("%s",%d,%d,sync=False)\n' % (tid,pos[0],pos[1])
+        for tid,t in gh.audio_bus_tokens():
+            pos = t.position()
+            code += 'graph_move_token("%s",%d,%d,sync=False)\n' % (tid,pos[0],pos[1])
+        for tid,t in gh.control_bus_tokens():
+            pos = t.position()
+            code += 'graph_move_token("%s",%d,%d,sync=False)\n' % (tid,pos[0],pos[1])
+        code += 'graph_sync()\n'
+        return code
+        
