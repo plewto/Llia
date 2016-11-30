@@ -192,6 +192,7 @@ class Composer(object):
     def _build_graph(self):
         gh = self.parser.graphhelper
         code = "# Create graph\n"
+        code += "graph_sync()\n"   # Force graph creation 
         for tid,t in gh.synth_tokens():
             pos = t.position()
             code += 'graph_move_token("%s",%d,%d,sync=False)\n' % (tid,pos[0],pos[1])
