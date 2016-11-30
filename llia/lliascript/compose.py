@@ -185,7 +185,7 @@ class Composer(object):
             try:
                 int(name)
             except ValueError:
-                code += 'controller_name(%d, "%s")\n' % (ctrl, name)
+                code += 'controller_name(%d, "%s", silent=True)\n' % (ctrl, name)
         code += "\n"
         return code
 

@@ -5,10 +5,11 @@ from __future__ import print_function
 import sys, os.path
 
 from llia.lliascript.ls_constants import *
-from llia.llerrors import (LliaPingError, LliascriptParseError, LliascriptError,
-                           NoSuchBusError)
+from llia.llerrors import (LliaPingError, LliascriptParseError,
+                           LliascriptError,NoSuchBusError)
 from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
+from llia.lliascript.graphhelper import GraphHelper
 
 
 from llia.lliascript.compose import Composer
@@ -61,6 +62,7 @@ class Parser(object):
         self._lsCommand = LsCommand(self)
         self.synthhelper = SynthHelper(self, self._local_namespace)
         #self.bufferhelper = BufferHelper(self, self._local_namespace)
+        self.graphhelper = GraphHelper(self, self._local_namespace)
         self._init_namespace(self._local_namespace)
 
 
