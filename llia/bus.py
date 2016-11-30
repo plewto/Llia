@@ -281,6 +281,7 @@ class BusProxy(object):
         pad3 = pad2 + ' '*4
         r = self.rate()
         acc = "%s%sBus\n" % (pad1, r)
+        acc += '%sname "%s"\n' % (pad2, self.name)
         acc += "%ssources:\n" % pad2
         for s in self._sources:
             t = s.as_tuple()
