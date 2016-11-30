@@ -170,6 +170,7 @@ class TkSS1Panel(TkSubEditor):
         x_amp = x_env+180+90
         param = "gateMode"
         msb = MSB(canvas,param,editor,2)
+        self.add_control(param,msb)
         msb_aspect(msb,0,"ADSR",0)
         msb_aspect(msb,1,"Gate",1)
         msb.layout((x_amp, y0+90))
