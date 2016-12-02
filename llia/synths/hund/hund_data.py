@@ -76,39 +76,82 @@ def pp(program,slot=127):
             acc += ",\n"
     return acc
 
+
+          
 hund(0,"Bypass",
-          dryamp = 1.0,
-          wetamp = 0.0)
+    filterFreq = 1000,
+    pregain = 1.000,
+    attack = 0.010,
+    release = 0.010,
+    res = 0.497,
+    modDepth = 0.000,
+    xmod = 0.000,
+    dryamp = 1.000,
+    wetamp = 0.000)
 
 hund(1,"Static 4k",
-          filterFreq = 4000,
-          res = 0.5,
-          modDepth = 0.0,
-          xmod = 0.0,
-          dryamp = 0.0,
-          wetamp = 1.0)
+    filterFreq = 4000,
+    pregain = 1.000,
+    attack = 0.010,
+    release = 0.010,
+    res = 0.500,
+    modDepth = 0.000,
+    xmod = 0.000,
+    dryamp = 0.000,
+    wetamp = 1.000)
 
-hund(2,"pos mod",
-          filterFreq=400,
-          res=0.7,
-          modDepth = 1.0,
-          xmod = 0.0,
-          dryamp = 0.0,
-          wetamp = 1.0)
+hund(2,"PosMod",
+    filterFreq = 400,
+    pregain = 2.000,
+    attack = 0.010,
+    release = 0.010,
+    res = 0.698,
+    modDepth = 1.000,
+    xmod = 0.000,
+    dryamp = 0.000,
+    wetamp = 1.000)
 
-hund(3,"neg mod",
-          filterFreq=20000,
-          res=0.7,
-          modDepth = -1.0,
-          xmod = 0.0,
-          dryamp = 0.0,
-          wetamp = 1.0)
+hund(3,"NegMod",
+    filterFreq = 1000,
+    pregain = 4.000,
+    attack = 0.010,
+    release = 0.010,
+    res = 0.588,
+    modDepth = -0.890,
+    xmod = 0.000,
+    dryamp = 0.398,
+    wetamp = 1.000)
 
 hund(4,"External mod",
-          filterFreq=400,
-          res=0.7,
-          modDepth = 0.0,
-          xmod = 1.0,
-          dryamp = 0.0,
-          wetamp = 1.0)
-          
+    filterFreq = 400,
+    pregain = 1.000,
+    attack = 0.010,
+    release = 0.010,
+    res = 0.698,
+    modDepth = 0.000,
+    xmod = 1.000,
+    dryamp = 0.000,
+    wetamp = 1.000)
+
+hund(5,"Gain8",
+    filterFreq = 200,
+    pregain = 8.000,
+    attack = 0.010,
+    release = 1.167,
+    res = 0.779,
+    modDepth = 1.000,
+    xmod = 0.030,
+    dryamp = 0.141,
+    wetamp = 1.000)
+
+hund(6,"Gain8.2",
+    filterFreq = 2000,
+    pregain = 8.000,
+    attack = 0.010,
+    release = 2.304,
+    res = 0.779,
+    modDepth = -0.850,
+    xmod = 0.030,
+    dryamp = 0.158,
+    wetamp = 1.000)
+

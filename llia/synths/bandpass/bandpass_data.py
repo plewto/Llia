@@ -65,5 +65,69 @@ def pp(program,slot=127):
             acc += ',\n'
     return acc
 
-bandpass(0,"Bypass", bleed = 1.0)
+bandpass(0, "Bypass",
+         lfoFreq = 1.0000,
+         cFreq = 1000.0000,
+         cFreqLfo = 0.0000,
+         cFreqX = 0.0000,
+         q = 1.0000,
+         qLfo = 0.0000,
+         qX = 0.0000,
+         filterGain = 0.0000,
+         bleed = 1.0000)
+
+bandpass(1, "1K Emph",
+         lfoFreq = 1.2000,
+         cFreq = 1000.0000,
+         cFreqLfo = 0.0000,
+         cFreqX = 0.0000,
+         q = 2.0797,
+         qLfo = 0.0000,
+         qX = 0.0000,
+         filterGain = 3.3600,
+         bleed = 0.3166)
+
+bandpass(2, "1Hz mod",
+         lfoFreq = 1.0000,
+         cFreq = 1328.6025,
+         cFreqLfo = 1228.2500,
+         cFreqX = 0.0000,
+         q = 4.1064,
+         qLfo = 0.0000,
+         qX = 0.0000,
+         filterGain = 5.5200,
+         bleed = 0.5025)
+
+bandpass(3, "Very Slow Mod",
+         lfoFreq = 0.0500,
+         cFreq = 1186.3800,
+         cFreqLfo = 930.9688,
+         cFreqX = 0.0000,
+         q = 14.4703,
+         qLfo = 0.0000,
+         qX = 0.0000,
+         filterGain = 9.3600,
+         bleed = 0.3568)
+
+bandpass(4, "5Hz Tremolo",
+         lfoFreq = 5.0000,
+         cFreq = 0.0000,
+         cFreqLfo = 118.6380,
+         cFreqX = 0.0000,
+         q = 0.0000,
+         qLfo = 0.0000,
+         qX = 0.0000,
+         filterGain = 7.8000,
+         bleed = 0.3568)
+
+bandpass(5, "Flutter Noise",
+         lfoFreq = 31.0000,
+         cFreq = 2977.5400,
+         cFreqLfo = 949.1040,
+         cFreqX = 0.0000,
+         q = 7.9507,
+         qLfo = 0.0000,
+         qX = 0.0000,
+         filterGain = 2.0400,
+         bleed = 0.4724)
 

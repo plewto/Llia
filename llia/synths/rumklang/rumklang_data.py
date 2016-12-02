@@ -77,9 +77,114 @@ def pp(program, slot=127):
     return acc
     
 
-rumklang(0,"Default")
-rumklang(1,"Big Room", roomSize = 1.0)
-rumklang(2,"with delay", roomSize=0.75, delay = 0.25)
-rumklang(3,"gate on", roomSize=1.0,gatted=1)
+rumklang(0, "Bypass",
+         delay = 0.000,
+         roomSize = 0.497,
+         damp = 0.497,
+         eq = [16000,20],
+         gatted = 0,
+         modDepth = 0.000,
+         wet = [-99,0.025],
+         dry = [0,-0.055])
+
+rumklang(1, "Small Room",
+         delay = 0.000,
+         roomSize = 0.040,
+         damp = 0.593,
+         eq = [8000,125],
+         gatted = 0,
+         modDepth = 0.000,
+         wet = [-8,0.246],
+         dry = [0,0.749])
+
+rumklang(2, "Medium Small Room",
+         delay = 0.013,
+         roomSize = 0.246,
+         damp = 0.332,
+         eq = [6300,20],
+         gatted = 0,
+         modDepth = 0.000,
+         wet = [-7,0.317],
+         dry = [0,-0.417])
+
+rumklang(3, "Large Space 1",
+         delay = 0.048,
+         roomSize = 0.814,
+         damp = 0.905,
+         eq = [4000,40],
+         gatted = 0,
+         modDepth = 0.000,
+         wet = [-3,0.286],
+         dry = [0,-0.317])
+
+rumklang(4, "Large Space 2",
+         delay = 0.157,
+         roomSize = 1.000,
+         damp = 0.905,
+         eq = [20000,63],
+         gatted = 0,
+         modDepth = 0.000,
+         wet = [-3,0.286],
+         dry = [0,-0.317])
+
+rumklang(5, "High SlapBack",
+         delay = 0.236,
+         roomSize = 0.362,
+         damp = 0.000,
+         eq = [8000,1250],
+         gatted = 0,
+         modDepth = 0.000,
+         wet = [-8,0.286],
+         dry = [0,-0.317])
+
+rumklang(6, "Gated Highpass",
+         delay = 0.000,
+         roomSize = 1.000,
+         damp = 0.241,
+         eq = [8000,500],
+         gatted = 1,
+         modDepth = 0.000,
+         wet = [-3,0.286],
+         dry = [0,-0.317])
+
+rumklang(7, "Full Gate",
+         delay = 0.320,
+         roomSize = 1.000,
+         damp = 0.000,
+         eq = [8000,20],
+         gatted = 1,
+         modDepth = 0.000,
+         wet = [-3,0.286],
+         dry = [0,-0.317])
+
+rumklang(8, "Dark And Long",
+         delay = 0.048,
+         roomSize = 1.000,
+         damp = 0.487,
+         eq = [315,10],
+         gatted = 0,
+         modDepth = 0.000,
+         wet = [-3,-0.216],
+         dry = [0,0.246])
+
+rumklang(9, "Wet Gate",
+         delay = 0.000,
+         roomSize = 1.000,
+         damp = 0.487,
+         eq = [20000,10],
+         gatted = 1,
+         modDepth = 0.000,
+         wet = [0,0.005],
+         dry = [-99,0.246])
+
+rumklang(10, "High Wet Gate",
+         delay = 0.000,
+         roomSize = 0.719,
+         damp = 0.000,
+         eq = [8000,1000],
+         gatted = 1,
+         modDepth = 0.000,
+         wet = [5,-0.196],
+         dry = [-25,0.246])
 
 

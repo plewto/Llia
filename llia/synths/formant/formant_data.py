@@ -89,6 +89,7 @@ def pp(program,slot=127):
     acc += '%sbleed = %5.4f)\n' % (pad,fval('bleed'))
     return acc
 
+
 formant(0,"Bypass",
         amp = +0,
         lp = 20000,
@@ -98,3 +99,84 @@ formant(0,"Bypass",
         b3 = band(3,   880, q=1.0000, gain= +0, enable=0),
         b4 = band(4,  1760, q=1.0000, gain= +0, enable=0),
         bleed = 1.0000)
+
+formant(1,"Flute",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   220, q=1.0000, gain= +0, enable=0),
+        b2 = band(2,   800, q=0.7550, gain=+13, enable=1),
+        b3 = band(3,   990, q=1.0000, gain= +0, enable=0),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+
+formant(2,"Oboe",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   220, q=1.0000, gain= +0, enable=0),
+        b2 = band(2,  1400, q=0.7550, gain=+13, enable=1),
+        b3 = band(3,  3000, q=0.7250, gain= +7, enable=1),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+
+formant(3,"English Horn",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   220, q=1.0000, gain= +0, enable=0),
+        b2 = band(2,   930, q=0.7550, gain=+13, enable=1),
+        b3 = band(3,  2300, q=0.7550, gain= +9, enable=1),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+
+formant(4,"Clarinet",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   220, q=1.0000, gain= +0, enable=0),
+        b2 = band(2,  1660, q=0.7100, gain=+15, enable=1),
+        b3 = band(3,  4000, q=0.7150, gain=+10, enable=1),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+
+formant(5,"Bassoon",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   220, q=1.0000, gain= +0, enable=0),
+        b2 = band(2,   480, q=0.7250, gain=+16, enable=1),
+        b3 = band(3,  1240, q=0.7900, gain= +8, enable=1),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+
+formant(6,"Trumnpet",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   220, q=1.0000, gain= +0, enable=0),
+        b2 = band(2,  1300, q=0.6300, gain=+16, enable=1),
+        b3 = band(3,  2500, q=0.6450, gain= +8, enable=1),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+
+formant(7,"Tuba",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   300, q=0.7700, gain=+14, enable=1),
+        b2 = band(2,  1300, q=0.6300, gain=+16, enable=0),
+        b3 = band(3,  2500, q=0.6450, gain= +8, enable=0),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+
+formant(8,"French Horn",
+        amp = +0,
+        lp = 20000,
+        hp =    10,
+        b1 = band(1,   300, q=0.7700, gain=+14, enable=0),
+        b2 = band(2,   450, q=0.6300, gain=+16, enable=1),
+        b3 = band(3,  2500, q=0.6450, gain= +8, enable=0),
+        b4 = band(4,  1200, q=1.0000, gain= +0, enable=0),
+        bleed = 0.0000)
+

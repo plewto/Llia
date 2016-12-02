@@ -64,12 +64,11 @@ def pp(program, slot=127):
     return acc
 
 crusher(0,"Bypass",
-        wave = 0,
-        gain = 1,
-        clockFreq = 16000,
-        resampleEnable = 0,
-        low = 20000,
-        wet = 0.0,
-        dry = 1.0,
-        amp = 1.0  )
-
+       #imodfreq = 16000,
+       low = 20000,
+       wave = 0,
+       resampleEnable = 0,
+       gain = 1.000,
+       wet = 0.000,
+       dry = 1.000,
+       amp = 1.000)

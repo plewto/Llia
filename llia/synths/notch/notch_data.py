@@ -65,5 +65,71 @@ def pp(program,slot=127):
             acc += ',\n'
     return acc
 
-notch(0,"Bypass", bleed = 1.0)
+
+
+notch(0, "Bypass",
+      lfoFreq = 1.0000,
+      cFreq = 1000.0000,
+      cFreqLfo = 0.0000,
+      cFreqX = 0.0000,
+      q = 1.0000,
+      qLfo = 0.0000,
+      qX = 0.0000,
+      filterGain = 0.0000,
+      bleed = 1.0000)
+
+notch(1, "116Hz Cut",
+      lfoFreq = 1.0000,
+      cFreq = 116.6400,
+      cFreqLfo = 0.0000,
+      cFreqX = 0.0000,
+      q = 14.8877,
+      qLfo = 0.0000,
+      qX = 0.0000,
+      filterGain = 0.6000,
+      bleed = 0.0000)
+
+notch(2, "415Hz Cut",
+      lfoFreq = 1.0000,
+      cFreq = 415.9375,
+      cFreqLfo = 0.0000,
+      cFreqX = 0.0000,
+      q = 6.4000,
+      qLfo = 0.0000,
+      qX = 0.0000,
+      filterGain = 0.3600,
+      bleed = 0.0000)
+
+notch(3, "Light Sweep",
+      lfoFreq = 1.0000,
+      cFreq = 1186.3800,
+      cFreqLfo = 762.1563,
+      cFreqX = 0.0000,
+      q = 37.3248,
+      qLfo = 0.0000,
+      qX = 0.0000,
+      filterGain = 0.0000,
+      bleed = 0.0000)
+
+notch(4, "4Hz Sweep",
+      lfoFreq = 4.2000,
+      cFreq = 933.1200,
+      cFreqLfo = 601.5260,
+      cFreqX = 0.0000,
+      q = 0.0000,
+      qLfo = 0.0000,
+      qX = 0.0000,
+      filterGain = 0.0000,
+      bleed = 0.0000)
+
+notch(5, "Very Slow Sweep",
+      lfoFreq = 0.1000,
+      cFreq = 933.1200,
+      cFreqLfo = 601.5260,
+      cFreqX = 0.0000,
+      q = 21.0645,
+      qLfo = 0.0000,
+      qX = 0.0000,
+      filterGain = 0.0000,
+      bleed = 0.0000)
 

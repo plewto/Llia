@@ -14,8 +14,8 @@ prototype = {
     "xmodamp" : 0.0,             # external modulator amp
     "xmodbleed" : 0.0,           # external mod bleed to output
     "carbleed" : 0.0,            # carrier bleed to output
-    "amp"     : 1                # main linear amplitude
-}
+    "amp"     : 1}               # main linear amplitude
+
 
 class RingModulator(Program):
 
@@ -58,17 +58,53 @@ def pp(program, slot=127):
     acc += frmt("amp", ")\n")
     return acc
 
-rm(0,"1K",
-   imodfreq = 1000,
-   imodamp = 1.0,
-   xmodamp = 0.0)
 
-rm(1, "six sixty",
-   imodfreq = 660,
-   imodamp = 1.0,
-   xmodamp = 0.0)
+    rm(0,"Bypass",
+    imodfreq = 1000,
+    imodamp = 0.000,
+    xmodamp = 0.000,
+    xmodbleed = 0.000,
+    carbleed = 1.000,
+    amp = 1.000)
 
-rm(2,"External",
-   imodamp = 0.0,
-   xmodamp = 1.0)
-              
+rm(1,"Self Mod",
+    imodfreq = 1000,
+    imodamp = 0.000,
+    xmodamp = 1.000,
+    xmodbleed = 0.000,
+    carbleed = 0.891,
+    amp = 1.000)
+
+rm(2,"1K",
+    imodfreq = 1000,
+    imodamp = 1.000,
+    xmodamp = 0.000,
+    xmodbleed = 0.000,
+    carbleed = 0.000,
+    amp = 1.000)
+
+rm(3,"5K",
+    imodfreq = 5000,
+    imodamp = 1.000,
+    xmodamp = 0.000,
+    xmodbleed = 0.000,
+    carbleed = 0.000,
+    amp = 1.000)
+
+rm(4,"5Hz Tremolo",
+    imodfreq = 5,
+    imodamp = 1.000,
+    xmodamp = 0.000,
+    xmodbleed = 0.000,
+    carbleed = 0.000,
+    amp = 1.000)
+
+rm(5,"Asymetric Tremolo",
+    imodfreq = 1,
+    imodamp = 1.000,
+    xmodamp = 0.000,
+    xmodbleed = 0.000,
+    carbleed = 0.316,
+    amp = 1.000)
+
+          
