@@ -234,3 +234,8 @@ BUG 0017 2016.11.25
 At times can not store program into slot 0.
 This appears to happen mostly with newly created banks.
 
+
+---------------------------------------------------------------------- Open 0018
+BUG 0018 2016.12.01
+
+Crussher pp produces bugy code
