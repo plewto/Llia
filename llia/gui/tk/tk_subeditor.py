@@ -7,8 +7,10 @@ import abc
 
 from llia.generic import is_synth_control
 import llia.gui.tk.tk_factory as factory
-
-
+import llia.gui.tk.control_factory as cf
+from llia.gui.tk.expslider import ExpSlider
+from llia.gui.tk.msb import MSB, ToggleButton
+from llia.gui.tk.tumbler import Tumbler
 
 class TkSubEditor(Frame):
 
@@ -22,6 +24,8 @@ class TkSubEditor(Frame):
         self.config(background=factory.bg())
         self._child_editors = {}
         self._controls = {}
+        self.canvas = None
+        self.parent = parent
 
     def add_control(self, param, sctrl):
         if is_synth_control(sctrl):
@@ -76,7 +80,85 @@ class TkSubEditor(Frame):
         prog = self.bank[None]
         for param, sctrl in self._controls.items():
             sctrl.value(prog[param])
-            
+
+    def norm_slider(self,param,x,y,height=150):
+        s = cf.normalized_slider(self.canvas,param,self.parent)
+        self.add_control(param,s)
+        s.widget().place(x=x,y=y,height=150)
+        return s
+
+    def linear_slider(self,param,range_,x,y,height=150):
+        s = cf.linear_slider(self.canvas,param,self.parent)
+        self.add_control(param,s)
+        s.widget().place(s=x,y=y,height=150)
+        return s
+    
+    def exp_slider(self,param,mx,x,y,degree=2,height=150,checkbutton=None):
+        s = ExpSlider(self.canvas,param,self.parent,
+                      range_=mx,degree=degree)
+        self.add_control(param,s)
+        s.layout((x,y),checkbutton_offset=checkbutton)
+        return s
+
+    def volume_slider(self,param,x,y,height=150):
+        s = cf.volume_slider(self.canvas,param,self.parent)
+        self.add_control(param,s)
+        s.widget().place(x=x,y=y,height=height)
+
+    def tumbler(self,param,digits,scale,x,y):
+        t = Tumbler(self.canvas,param,self.parent,
+                    digits = digits,
+                    scale = scale)
+        self.add_control(param,t)
+        t.layout((x,y))
+        return t
+
+    def msb_aspect(self,msb,index,value,
+                  text=None,
+                  fill=None,
+                  foreground=None,
+                  outline=None,
+                  update = True):
+        pallet = self.synth.specs["pallet"]
+        fill = fill or pallet["BG"]
+        foreground = foreground or pallet["FG"]
+        outline = outline or foreground
+        text = text or str(value)
+        d = {"fill" : fill,
+             "foreground" : foreground,
+             "outline" : outline,
+             "text" : text,
+             "value" : value}
+        msb.define_aspect(index,value,d)
+        if update: msb.update_aspect()
+        return d
+
+    def msb(self,param,count,x,y):
+        b = MSB(self.canvas,param,self.parent,count)
+        b.layout((x,y))
+        return b
+
+    def toggle(self,param,x,y,
+               off = (0, "Off"),
+               on = (1, "On")
+               update=True):
+        b = self.msb(param,2,x,y)
+        self.msb_aspect(b,0,off[0],text=off[1],update=False)
+        self.msb_aspect(b,1,on[0],text=on[1],update=update)
+        return b
+
+    
+        
+        
+               
+    
+        
+        
+        
+    
+        
+        
+    
         
         
         
