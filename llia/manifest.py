@@ -47,6 +47,4 @@ import llia.synths.ghostbus.ghost_proxy
 import llia.synths.controlmixer.controlmixer_proxy
 import llia.synths.cutil.cutil_proxy
 import llia.synths.envgen.envgen_proxy
-# ENC CONTROLLER IMPORTS
-
-#  LocalWords:  EFX
+# END CONTROLLER IMPORTS
