@@ -1,5 +1,4 @@
 *.pyc
-temp*
 
 # Ignore temp emacs files
 *backup*
