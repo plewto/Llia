@@ -24,7 +24,9 @@ class TkSubEditor(Frame):
         self.config(background=factory.bg())
         self._child_editors = {}
         self._controls = {}
-        self.canvas = None
+        # WARNING: For some 'old-stye' editors, tk_master may be a Frame
+        # WARNING: and not a Canvas!
+        self.canvas = tk_master
         self.parent = parent
 
     def add_control(self, param, sctrl):
@@ -84,20 +86,20 @@ class TkSubEditor(Frame):
     def norm_slider(self,param,x,y,height=150):
         s = cf.normalized_slider(self.canvas,param,self.parent)
         self.add_control(param,s)
-        s.widget().place(x=x,y=y,height=150)
+        s.widget().place(x=x,y=y,height=height)
         return s
 
     def linear_slider(self,param,range_,x,y,height=150):
         s = cf.linear_slider(self.canvas,param,self.parent)
         self.add_control(param,s)
-        s.widget().place(s=x,y=y,height=150)
+        s.widget().place(x=x,y=y,height=height)
         return s
     
     def exp_slider(self,param,mx,x,y,degree=2,height=150,checkbutton=None):
         s = ExpSlider(self.canvas,param,self.parent,
                       range_=mx,degree=degree)
         self.add_control(param,s)
-        s.layout((x,y),checkbutton_offset=checkbutton)
+        s.layout((x,y),height=height,checkbutton_offset=checkbutton)
         return s
 
     def volume_slider(self,param,x,y,height=150):
@@ -118,7 +120,7 @@ class TkSubEditor(Frame):
                   fill=None,
                   foreground=None,
                   outline=None,
-                  update = True):
+                   update = False):
         pallet = self.synth.specs["pallet"]
         fill = fill or pallet["BG"]
         foreground = foreground or pallet["FG"]
@@ -135,31 +137,18 @@ class TkSubEditor(Frame):
 
     def msb(self,param,count,x,y):
         b = MSB(self.canvas,param,self.parent,count)
+        self.add_control(param,b)
         b.layout((x,y))
         return b
 
     def toggle(self,param,x,y,
                off = (0, "Off"),
-               on = (1, "On")
-               update=True):
+               on = (1, "On"),
+               update=False):
         b = self.msb(param,2,x,y)
         self.msb_aspect(b,0,off[0],text=off[1],update=False)
-        self.msb_aspect(b,1,on[0],text=on[1],update=update)
+        self.msb_aspect(b,1,on[0],text=on[1],update=False)
         return b
-
-    
-        
-        
-               
-    
-        
-        
-        
-    
-        
-        
-    
-        
         
         
         
