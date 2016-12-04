@@ -384,7 +384,7 @@ class MSB(object):
             self._current_aspect = self._value_map[locked]
             self.update_aspect()
         else:
-            raise KeyValue("Can not set MSB(%s) value to %s" % (self.param, new_value))
+            raise ValueError("Can not set MSB(%s) value to %s" % (self.param, new_value))
 
     
     def value(self, new_value=None):
