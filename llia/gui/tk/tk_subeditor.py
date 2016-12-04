@@ -84,12 +84,36 @@ class TkSubEditor(Frame):
             sctrl.value(prog[param])
 
     def norm_slider(self,param,x,y,height=150):
+        '''
+        Adds "normalized" slider (a linear slider with range (0,1)) 
+        to canvas.
+
+        ARGS:
+          param  - String, synth parameter
+          x      - int, x-coordinate
+          y      - int, y-coordinate
+          height - int
+
+        RETURNS: Tk Scale Widget
+        '''
         s = cf.normalized_slider(self.canvas,param,self.parent)
         self.add_control(param,s)
         s.widget().place(x=x,y=y,height=height)
         return s
 
     def linear_slider(self,param,range_,x,y,height=150):
+        '''
+        Adds linear slider to canvas.
+
+        ARGS:
+          param  - String, synth parameter
+          range_ - Tuple (a,b) slider value range, a != b
+          x      - int, x-coordinate
+          y      - int, y-coordinate
+          height - int
+
+        Returns: Tk Scale Widget
+        '''
         s = cf.linear_slider(self.canvas,param,self.parent)
         self.add_control(param,s)
         s.widget().place(x=x,y=y,height=height)
@@ -98,16 +122,58 @@ class TkSubEditor(Frame):
     def exp_slider(self,param,mx,x,y,degree=2,height=150,checkbutton=None):
         s = ExpSlider(self.canvas,param,self.parent,
                       range_=mx,degree=degree)
+        '''
+        Adds slider with exponetial response to canvas.
+        
+        ARGS:
+          param  - String, synth parameter
+          mx     - float, maximum slider value, mx > 0.
+          x      - int, x coordinate
+          y      - int, y coordinate
+          degree - int, exponential degree, default 2
+          height - int, slider height, default 150     
+          checkbutton - Tuple, spcifies locatin of optional checkbutton.
+                        The checkbutton is used to invert the sign of the 
+                        slider value.  If used it should be a tuple
+                        (x-offset,y-offset), typical values for default
+                        slider height is (-15,150)
+       
+        RETURNS: ExpSlider
+        '''
         self.add_control(param,s)
         s.layout((x,y),height=height,checkbutton_offset=checkbutton)
         return s
 
     def volume_slider(self,param,x,y,height=150):
+        '''
+        Adds volume slider to canvas.  A volume slider is callibrated in 
+        db and has several distinct ranges.
+
+        ARGS:
+          param  - String, synth parameter
+          x      - int, x-coordinate
+          y      - int, y-coordinate
+          height - int
+        
+        RETURNS: Tk Scale widget
+        '''
         s = cf.volume_slider(self.canvas,param,self.parent)
         self.add_control(param,s)
         s.widget().place(x=x,y=y,height=height)
 
     def tumbler(self,param,digits,scale,x,y):
+        '''
+        Adds digital tumbler to canvas.
+        
+        ARGS:
+          param  - String, synth parameter
+          digits - int, number of digits
+          scale  - float, numeric scale factor.
+          x      - int, x coordinate
+          y      - int, y coordinate
+
+        RETURNS: Tumbler
+        '''
         t = Tumbler(self.canvas,param,self.parent,
                     digits = digits,
                     scale = scale)
@@ -116,11 +182,34 @@ class TkSubEditor(Frame):
         return t
 
     def msb_aspect(self,msb,index,value,
-                  text=None,
-                  fill=None,
-                  foreground=None,
-                  outline=None,
+                   text=None,
+                   fill=None,
+                   foreground=None,
+                   outline=None,
                    update = False):
+        '''
+        Defines an aspect for an MSB (Multi State Button)
+        
+        ARGS:
+          msb        - An instance of MSB
+          index      - int, the aspect index.  index must be between 0
+                       and the maximum aspect count for the msb.
+          value      - The aspects value
+          text       - Optional, defaults to string represtnation of value
+          fill       - Optional, background color
+          foreground - Optional, foreground color
+          outline    - Optional, outline color
+          update     - Boolean, if True the update_aspect method is called 
+                       on the msb.  update_aspect must be called at least
+                       once for the msb to be visible.  On the other hand
+                       needlesly calling it for each defined aspect is
+                       wasteful.
+        
+        The optional color arguments default to the BG and FG colors
+        of the synth's pallet.  outline defaults to foreground.
+
+        RETURNS: dictionary
+        '''
         pallet = self.synth.specs["pallet"]
         fill = fill or pallet["BG"]
         foreground = foreground or pallet["FG"]
@@ -134,8 +223,22 @@ class TkSubEditor(Frame):
         msb.define_aspect(index,value,d)
         if update: msb.update_aspect()
         return d
-
+    
     def msb(self,param,count,x,y):
+        '''
+        Adds Multi State Button to the canvas.   In order for the button to 
+        be usefull, two or more aspects must be defined.  The update_aspect()
+        method should be called at least once after all the aspects have been
+        defined, otherwise the button will not be visible.
+
+        ARGS:
+          param - String, synth parameter
+          count - int, number of aspects.  count > 1.
+          x     - int, x coordinate
+          y     - int, y coordinate
+        
+        RETURNS: MSB
+        '''
         b = MSB(self.canvas,param,self.parent,count)
         self.add_control(param,b)
         b.layout((x,y))
@@ -143,11 +246,23 @@ class TkSubEditor(Frame):
 
     def toggle(self,param,x,y,
                off = (0, "Off"),
-               on = (1, "On"),
-               update=False):
+               on = (1, "On")):
+        '''
+        Adds two-position MSB to canvas.
+        Ther is no need to call update_aspect for the toggle button.
+
+        ARGS:
+          param - String, synth parameter
+          x     - int, x coordinate
+          y     - int, y coordinate
+          off   - Optional tuple defines the "off" aspect (value,text)
+          on    - Optional tuple defines the "On" aspect (value,text)
+        
+        RETURNS: MSB
+        '''
         b = self.msb(param,2,x,y)
         self.msb_aspect(b,0,off[0],text=off[1],update=False)
-        self.msb_aspect(b,1,on[0],text=on[1],update=False)
+        self.msb_aspect(b,1,on[0],text=on[1],update=True)
         return b
         
         
