@@ -260,9 +260,11 @@ class TkSubEditor(Frame):
         
         RETURNS: MSB
         '''
+        pallet = self.synth.specs["pallet"]
+        fg,bg = pallet["FG"],pallet["BG"]
         b = self.msb(param,2,x,y)
-        self.msb_aspect(b,0,off[0],text=off[1],update=False)
-        self.msb_aspect(b,1,on[0],text=on[1],update=True)
+        self.msb_aspect(b,0,off[0],text=off[1],update=False,fill=bg,foreground=fg)
+        self.msb_aspect(b,1,on[0],text=on[1],update=True,fill=fg,foreground=bg,outline=fg)
         return b
         
         
