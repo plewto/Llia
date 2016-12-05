@@ -24,8 +24,8 @@ def _editor_class(sname):
     pad8 = ' '*8
     code = 'class Tk%sPanel(TkSubEditor):\n\n' % capname
     code += '%sNAME = "%s"\n' % (pad4,capname)
-    code += '%sIMAGE_FILE = "resources/%s/editor.png"\n' % (pad4,sname.lower())
-    code += '%sTAB_FILE = "resources/%s/tab.png"\n\n' % (pad4,sname.lower())
+    code += '%sIMAGE_FILE = "resources/%s/editor.png"\n' % (pad4,sname)
+    code += '%sTAB_FILE = "resources/%s/tab.png"\n\n' % (pad4,sname)
     code += '%sdef __init__(self,editor):\n' % pad4
     code += '%sframe = editor.create_tab(self.NAME,self.TAB_FILE)\n' % pad8
     code += '%sframe.config(background=factory.bg())\n' % pad8

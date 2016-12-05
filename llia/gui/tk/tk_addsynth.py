@@ -9,7 +9,6 @@ from llia.synth_proxy import SynthSpecs
 from llia.gui.tk.tk_synthwindow import TkSynthWindow
 from llia.constants import MAX_BUS_COUNT
 from llia.synth_proxy import SynthProxy
-import llia.util.trace as trace
 
 HELP_TOPIC = "add_synth_dialog"
         
@@ -173,14 +172,12 @@ class TkAddSynthDialog(Toplevel):
         self.app.main_window().status("Add Synth Canceld")
 
     def accept(self):
-        trace.enter("TkAddSynthDialog.accept()")
         shelper = self.app.ls_parser.synthhelper
         if self.is_efx:
             sy = shelper.add_efx(self.stype)
         elif self.is_controller:
             sy = shelper.add_control_synth(self.stype)
         else:
-            trace.mark("HERE is synth")
             km = self.var_keymode.get()
             vc = int(self.var_voice_count.get())
             sy = shelper.add_synth(self.stype, km, vc)
@@ -199,21 +196,16 @@ class TkAddSynthDialog(Toplevel):
                 shelper.assign_control_output_bus(param,busname,sy.sid)
             for p,bname in self._buffername_map.items():
                 shelper.assign_buffer(p, bname)
-            trace.mark("HERE 500")
             mw = self.app.main_window()
             group = mw.group_windows[-1]
             swin = TkSynthWindow(group.notebook, sy)
             grp_index = len(mw.group_windows)-1
-            icon_filename = "resources/%s/logo_32.png" % sy.specs["format"].lower()
-            trace.mark("HERE 510   icon filename is '%s'" % icon_filename)
-            trace.mark("HERE 511   format = '%s'" % sy.specs["format"])
-
+            icon_filename = "resources/%s/logo_32.png" % sy.specs["format"]
             icon = factory.image(icon_filename)
             group.notebook.add(swin, text=sy.sid, image=icon, compound="top")
             group.deiconify()
             mw[sy.sid] = swin
             factory.set_pallet(sy.specs["pallet"])
-            trace.mark("HERE 750")
             sy.create_subeditors()
             swin.group_index = grp_index
             self.app.main_window().status("Added %s" % sy.sid)
@@ -222,4 +214,3 @@ class TkAddSynthDialog(Toplevel):
             self.app.main_widnow().warning("Synth could not be added")    
         factory.restore_pallet()
         self.destroy()
-        trace.exit()

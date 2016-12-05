@@ -97,7 +97,7 @@ def create_synth(devdir, stype, sname, params=[]):
     else:
         print "**** Creating %s Files ****" % sname
         #sname = sname.lower()
-        makedirs(join(devdir,"resources",sname.lower()))
+        makedirs(join(devdir,"resources",sname))
         makedirs(join(devdir,"llia","synths",sname.lower(),"tk"))
         scd.write_synthdef(devdir,sname,params)
         graphics.copy_graphic_templates(devdir,sname)

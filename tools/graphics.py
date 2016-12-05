@@ -14,6 +14,6 @@ def copy_graphic_templates(devdir,sname):
     sname is converted to lower case.
     """
     src = join(devdir,"tools","templates","graphics")
-    dst = join(devdir,"resources",sname.lower())
+    dst = join(devdir,"resources",sname)
     copy_files(src,dst)
     print "Copied graphic templates to '%s'" % dst
