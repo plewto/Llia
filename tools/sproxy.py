@@ -31,7 +31,7 @@ def _proxy_boilerplate(stype,sname):
     code += '        gui = self.app.config["gui"].upper()\n'
     code += '        if gui == "TK":\n'
     code += '            from llia.synths.%s.tk.editor import create_editor\n' % lcname
-    code += '            appwin = self.app,main_window()\n'
+    code += '            appwin = self.app.main_window()\n'
     code += '            parent_editor = appwin[self.sid]\n'
     code += '            create_editor(parent_editor)\n'
     code += '            return parent_editor\n\n'
@@ -90,10 +90,10 @@ def write_synth_proxy_file(devdir,stype,sname):
     Raises IOError if directory <devdir>/llia/synths/<sname> does not exists.
     '''
     lcname = sname.lower()
-    fn = join(devdir,"llia","synths",lcname,"%s_proxy.py" % sname)
+    fn = join(devdir,"llia","synths",lcname,"%s_proxy.py" % lcname)
     print "Writing '%s'" % fn
     fobj = open(fn,'w')
-    fobj.write(_proxy_boilerplate(stype,lcname))
+    fobj.write(_proxy_boilerplate(stype,sname))
     fobj.close()
     new_file(join(devdir,"llia","synths",lcname,"__init__.py"))
     

@@ -10,21 +10,22 @@ def _header(sname):
     pad4 = ' '*4
     pad8 = ' '*8
     code = '# llia.synths.%s.tk.editor\n\n' % sname
+    code += 'from llia.gui.tk.tk_subeditor import TkSubEditor\n'
     code += 'import llia.gui.tk.tk_factory as factory\n'
-    code += 'import llia.gui.control_factory as cf\n\n'
+    code += 'import llia.gui.tk.control_factory as cf\n\n'
     code += 'def create_editor(parent):\n'
     code += '%sTk%sPanel(parent)\n\n' % (pad4,capname)
     return code
 
 def _editor_class(sname):
     capname = sname[0].upper()+sname[1:]
-    sname = sname.lower()
+    #sname = sname.lower()
     pad4 = ' '*4
     pad8 = ' '*8
     code = 'class Tk%sPanel(TkSubEditor):\n\n' % capname
     code += '%sNAME = "%s"\n' % (pad4,capname)
-    code += '%sIMAGE_FILE = "resources/%s/editor.png"\n' % (pad4,sname)
-    code += '%sTBA_FILE = "resources/%s/tab.png"\n\n' % (pad4,sname)
+    code += '%sIMAGE_FILE = "resources/%s/editor.png"\n' % (pad4,sname.lower())
+    code += '%sTAB_FILE = "resources/%s/tab.png"\n\n' % (pad4,sname.lower())
     code += '%sdef __init__(self,editor):\n' % pad4
     code += '%sframe = editor.create_tab(self.NAME,self.TAB_FILE)\n' % pad8
     code += '%sframe.config(background=factory.bg())\n' % pad8

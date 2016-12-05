@@ -96,9 +96,9 @@ def create_synth(devdir, stype, sname, params=[]):
         raise IOError(msg)
     else:
         print "**** Creating %s Files ****" % sname
-        sname = sname.lower()
-        makedirs(join(devdir,"resources",sname))
-        makedirs(join(devdir,"llia","synths",sname,"tk"))
+        #sname = sname.lower()
+        makedirs(join(devdir,"resources",sname.lower()))
+        makedirs(join(devdir,"llia","synths",sname.lower(),"tk"))
         scd.write_synthdef(devdir,sname,params)
         graphics.copy_graphic_templates(devdir,sname)
         sproxy.write_synth_proxy_file(devdir,stype,sname)
@@ -151,23 +151,22 @@ def _read_param_file(arg):
         return acc
 
 
-def list_files(devdir,stype,sname):
-    sname = sname.lower()
-   
-    pad = ' '*4
-    print "New files:"
-    print pad,join(devdir,'sc','SynthDefs','%s.scd' % sname)
-    for f in ('_proxy','_data','_pp','_random'):
-        print pad,join(devdir,'llia','synths',sname,'%s%s.py' % (sname,f))
-    print pad,join(devdir,'llia','synths',sname,'tk','editor.py')
-    print "Modified files:"
-    print pad,join(devdir,'s','LliaHandler','install_synths.scd')
-    print pad,join(devdir,'llia','manifest.py')
-    print "Copied graphic files:"
-    g = join(devdir,"tools","templates","graphics")
-    r = join(devdir,"resources",sname)
-    for f in sorted(listdir(g)):
-        print pad,join(r,f)
+# def list_files(devdir,stype,sname):
+#     sname = sname.lower()
+#     pad = ' '*4
+#     print "New files:"
+#     print pad,join(devdir,'sc','SynthDefs','%s.scd' % sname)
+#     for f in ('_proxy','_data','_pp','_random'):
+#         print pad,join(devdir,'llia','synths',sname,'%s%s.py' % (sname,f))
+#     print pad,join(devdir,'llia','synths',sname,'tk','editor.py')
+#     print "Modified files:"
+#     print pad,join(devdir,'s','LliaHandler','install_synths.scd')
+#     print pad,join(devdir,'llia','manifest.py')
+#     print "Copied graphic files:"
+#     g = join(devdir,"tools","templates","graphics")
+#     r = join(devdir,"resources",sname)
+#     for f in sorted(listdir(g)):
+#         print pad,join(r,f)
     
     
 if __name__ == '__main__':
@@ -182,7 +181,6 @@ if __name__ == '__main__':
     if args.usage:
         usage()
         sys.exit()
-    
     devdir = _get_dev_path(args.dev)
     params = _read_param_file(args.params)
     sname = args.name
@@ -191,11 +189,9 @@ if __name__ == '__main__':
         print "A Synth name must be specified."
         print "Try --usage for help"
         sys.exit()
-    if args.list:
-        list_files(devdir,stype,sname)
-        sys.exit()
-        
+    # if args.list:
+    #     list_files(devdir,stype,sname)
+    #     sys.exit()
     print "Llia developemenrt directory: '%s'" % devdir
     print "Params specified: %d" % len(params)
-    
     create_synth(devdir,stype,sname,params)

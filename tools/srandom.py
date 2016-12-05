@@ -11,7 +11,7 @@ def _create_content(sname):
     code += 'from llia.synths.%s.%s_data import %s\n' % (sname,sname,sname)
     code += '#from llia.synths.%s.%s_constants import *\n' % (sname,sname)
     code += '\n'
-    code += 'def %s_random(slot,*):\n' % sname
+    code += 'def %s_random(slot,*_):\n' % sname
     code += '%s# FIXME\n' % cpad4
     code += '%sreturn None\n' % cpad4
     return code

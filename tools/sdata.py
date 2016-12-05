@@ -8,7 +8,7 @@ def _file_header(sname):
     code += 'from __future__ import print_function\n'
     code += 'from llia.program import Program\n'
     code += 'from llia.bank import ProgramBank\n'
-    code += 'from llia.performance_editor import performance\n\n'
+    code += 'from llia.performance_edit import performance\n\n'
     return code
 
 def _prototype(params=[]):

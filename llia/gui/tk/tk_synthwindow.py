@@ -10,7 +10,6 @@ from llia.gui.tk.tk_bankeditor import TkBankEditor
 from llia.gui.tk.tk_busconnection_editor import TkBusConnectionEditor
 from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, delete_map_dialog
 
-
 class TkSynthWindow(Frame):
 
     def __init__(self, master, sproxy):
@@ -96,10 +95,10 @@ class TkSynthWindow(Frame):
     
     def create_tab(self, tab_text, image_filename=""):
         if not image_filename:
-            return self._create_basic_tab(tab_text)
+            rs = self._create_basic_tab(tab_text)
         else:
-            return self._create_compund_tab(tab_text,image_filename)
-
+            rs = self._create_compund_tab(tab_text,image_filename)
+        return rs
        
     def remove_synth(self, *_):
         sid = self.synth.sid
