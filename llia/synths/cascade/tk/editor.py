@@ -23,75 +23,39 @@ class TkCascadePanel(TkSubEditor):
         canvas.pack()
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
-
-        def tumbler(param,x,y):
-            t = Tumbler(canvas,param,editor,digits=5,scale=0.001,
-                        foreground="#c8cbec",
-                        outline="#c8cbec",
-                        fill="#222228")
-            self.add_control(param,t)
-            t.layout((x,y))
-            return t
-
-        def toggle(param,text,x,y):
-            tog = ToggleButton(canvas,param,editor,text,
-                               fill="#222228",
-                               foreground="#c8cbec",
-                               outline="#c8cbec",
-                               selected_fill="#140033",
-                               selected_foreground="#00bfa9")
-            self.add_control(param,tog)
-            tog.layout((x,y))
-            tog.update_aspect()
-            return tog
-
-        def norm(param,x,y):
-            s = cf.normalized_slider(canvas,param,editor)
-            self.add_control(param,s)
-            s.widget().place(x=x,y=y)
-            return s
-
-        def linear_slider(param,range_,x,y):
-            s = cf.linear_slider(canvas,param,editor,range_=range_)
-            self.add_control(param,s)
-            s.widget().place(x=x,y=y)
-            return s
-
         y0 = 75
         x0 = 75
         x1 = x0 + 160
         xdelta = 75
         x_tog_offset = -23
         y_tog_offset = 160
-        tumbler("clkfreq",x0,y0)
-        toggle("clksrc",["Internal","External"],x0+7,y0+40)
-        tumbler("hold",x0,y0+160)
+        self.tumbler("hold",5,0.001,x0,y0+160)
+        self.tumbler("clkfreq",5,0.001,x0,y0)
+        self.toggle("clksrc",x0+7,y0+40,
+                    off = (0, "Internal"),
+                    on = (1, "External"))
         b_half_hold = factory.button(canvas,"1/2",self.half_hold_callback)
         b_half_hold.place(x=x0+13,y=y0+194)
-
-
-        
         for i in range(6):
             j = i+1
             x = x1 + i*xdelta
-            s = norm("amp%d"%j,x,y0)
-            t = toggle("gate%d"%j,["On","Gate"],x+x_tog_offset,y0+y_tog_offset)
-
+            self.norm_slider("amp%d"%j,x,y0)
+            self.toggle("gate%d"%j,x+x_tog_offset,y0+y_tog_offset,
+                        off = [0,"On"],
+                        on = [1,"Gate"])
         xn = x + xdelta
-        norm("ampn",xn,y0)
-        toggle("gaten",["On","Gate"],xn+x_tog_offset,y0+y_tog_offset)
-    
+        self.norm_slider("ampn",xn,y0)
+        self.toggle("gaten",xn+x_tog_offset,y0+y_tog_offset,
+                    off = [0,"On"],
+                    on = [1,"Gate"])
         y_tumbler_n = y0+y_tog_offset
-        tumbler_n = Tumbler(canvas,"n",editor,digits=2,scale=1)
-        self.add_control("n",tumbler_n)
-        tumbler_n.layout((xn-8,y_tumbler_n+40))
+        self.tumbler("n",2,1,xn-8,y_tumbler_n+40)
         xlag = x+170
         xscale = xlag+60
         xbias = xscale+60
-        norm("lag",xlag,y0)
-        norm("scale",xscale,y0)
-        linear_slider("bias",(-4,4),xbias,y0)
-
+        self.norm_slider("lag",xlag,y0)
+        self.norm_slider("scale",xscale,y0)
+        self.linear_slider("bias",(-4,4),xbias,y0)
 
     def half_hold_callback(self):
         prog = self.synth.bank()[None]

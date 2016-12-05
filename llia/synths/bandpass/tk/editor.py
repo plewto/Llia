@@ -26,34 +26,14 @@ class TkBandpassPanel(TkSubEditor):
         editor.add_child_editor(self.NAME, self)
         y0 = 75
         x0 = 75
-        def norm_slider(param,x):
-            s = cf.normalized_slider(canvas,param,editor)
-            self.add_control(param,s)
-            s.widget().place(x=x,y=y0)
-            return s
-        def linear_slider(param,range_,x):
-            s = cf.linear_slider(canvas,param,editor,range_=range_)
-            self.add_control(param,s)
-            s.widget().place(x=x,y=y0)
-            return s
-        def exp_slider(param,range_,x,degree=2):
-            s = ExpSlider(canvas,param,editor,range_=range_,degree=degree)
-            self.add_control(param,s)
-            s.layout((x,y0),checkbutton_offset=None)
-            return s
-        exp_slider("cFreq",20000,x0,degree=3)
-        exp_slider("cFreqLfo",2000,x0+60,degree=3)
-        exp_slider("cFreqX",2000,x0+120,degree=3)
+        self.exp_slider("cFreq",20000,x0,y0,degree=3)
+        self.exp_slider("cFreqLfo",2000,x0+60,y0,degree=3)
+        self.exp_slider("cFreqX",2000,x0+120,y0,degree=3)
         x_res = x0+210
-        exp_slider("q", 100,x_res,degree=3)
-        exp_slider("qLfo",100,x_res+60,degree=3)
-        exp_slider("qX", 100,x_res+120,degree=3)
+        self.exp_slider("q", 100,x_res,y0,degree=3)
+        self.exp_slider("qLfo",100,x_res+60,y0,degree=3)
+        self.exp_slider("qX", 100,x_res+120,y0,degree=3)
         x_out = x_res+210
-        linear_slider("filterGain",(-12,12),x_out)
-        norm_slider("bleed",x_out+60)
-        t = Tumbler(canvas,"lfoFreq",editor,digits=5,scale=0.001)
-        self.add_control("lfoFreq",t)
-        t.layout((x0,y0+180))
-        
-            
-            
+        self.linear_slider("filterGain",(-12,12),x_out,y0)
+        self.norm_slider("bleed",x_out+60,y0)
+        self.tumbler("lfoFreq",5,0.001,x0,y0+180)
