@@ -107,7 +107,7 @@ class TkIoMiscPanel(TkSubEditor):
             s.layout(offset=(x,y),checkbutton_offset=None,height=height)
             return s
         y0,y1 = 50,300
-        x0 = 75
+        x0 = 50
         x_noise = x0
         msb0 = self.msb("noiseRatio",len(NOISE_RATIOS),x_noise,y0)
         for i,v in enumerate(NOISE_RATIOS):
