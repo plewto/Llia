@@ -72,7 +72,7 @@ def write_synthdef(devdir, sname ,params=[]):
     fobj = open(fn,'w')
     fobj.write(_define_synth(sname,params))
     fobj.close()
-    fn = join(devdir,"sc","LliaHandler","install_synths.scd")
+    fn = join(devdir,"sc","SynthDefs","install_synths.scd")
     print "Updating '%s'" % fn
     fobj = open(fn,'w')
     fobj.write(_update_synth_install_file(devdir))
