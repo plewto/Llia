@@ -249,7 +249,7 @@ class TkSubEditor(Frame):
                on = (1, "On")):
         '''
         Adds two-position MSB to canvas.
-        Ther is no need to call update_aspect for the toggle button.
+        There is no need to call update_aspect for the toggle button.
 
         ARGS:
           param - String, synth parameter

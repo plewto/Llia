@@ -50,7 +50,7 @@ class TkIoTonePanel(TkSubEditor):
             xc = x_carrier + x_delta * (op-1)
             self.tumbler("op%dFormant" % op,4,1,xc,yc0)
             self.tumbler("op%dRatio" % op,4,0.001,xc,yc0+60)
-            self.toggle("op%dMode" % op, xc,yc0+120,(0,"Ratio"),(1,"Formant"),update=True)
+            self.toggle("op%dMode" % op, xc,yc0+120,(0,"Ratio"),(1,"Formant"))
             x_mod = xc+100
             self.linear_slider("op%dModDepth" % op, (0,MAX_MOD_DEPTH),x_mod,yc0)
             self.norm_slider("op%dVelocity" % op, x_mod+60, yc0)
@@ -128,7 +128,7 @@ class TkIoMiscPanel(TkSubEditor):
             value, text = pair
             self.msb_aspect(msb1,i,value,text)
         msb1.update_aspect()
-        self.toggle("vlock",x_lfo+8,y0+120,(0,"Free"),(1,"Lock"),update=True)
+        self.toggle("vlock",x_lfo+8,y0+120,(0,"Free"),(1,"Lock"))
         x_vnoise = x_lfo+100
         self.norm_slider("vnoise",x_vnoise,y0)
         self.linear_slider("vdelay",(0,4),x_vnoise+60,y0)
