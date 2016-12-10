@@ -114,7 +114,7 @@ class TkSubEditor(Frame):
 
         Returns: Tk Scale Widget
         '''
-        s = cf.linear_slider(self.canvas,param,self.parent)
+        s = cf.linear_slider(self.canvas,param,self.parent,range_=range_)
         self.add_control(param,s)
         s.widget().place(x=x,y=y,height=height)
         return s
