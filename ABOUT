@@ -5,37 +5,18 @@ Llia is an Open Sound Control (OSC) client for SuperCollider.
 Features:
 
 
-1) An open set of SuperCollider synths.  These include both "instruments"
-   and "effects".  At the time this is written (2016.07.25) there are four
-   synthesizers and three effects:
-
-    * Klstr uses clusters of pulse waves to produce a wide variety of
-      electronic sounds.  The inspiration for Klstr comes from early,
-      pre-sampler, drum machines which used a similar technique for
-      cymbal and hi-hat sounds.  It tends to have a rather thin sound.
-
-    * Orgn is a straight forward organ based on static FM tone
-      generators.
-
-    * RDrum is a percussive instrument synthesizer based on the
-      Risset Drum algorithm.
-
-    * Saw3 is a 3 oscillator subtractive synthesizer.
-
-    * DirtyBurger is a delay effect with distortion and EQ in the
-      feedback path.
-
-    * StepFilter is a duel filter effect using complex stepped
-      control signals.
-
-   * XOver is another filter effect using complementary low and high
-     pass filters,
-
-
-2) A comprehensive MIDI implementation which allows mapping of most MIDI
+1) An open set of SuperCollider synths.  Currently 37 separate synths,
+effects, and control rate generators are implemented.
+   
+2) A comprehensive MIDI implementation allows mapping of most MIDI
    channel message values to synthesizer/effect parameters.
 
+   A) Program banks with 128 slots per instrument.
+   B) Random program generator for several synths.
 
-3) Optional GUI mode.  Llia may be executed with or without a GUI system.
+3) Optional GUI mode. Llia may be executed with or without a GUI system.
+   Synths and effects may be patched together graphically. 
 
-4) Scripting via a simple Python API.
+4) Scripting via a simple Python API.  The scripting feature allows
+   complex patches involving multiple instruments to be saved and
+   later recalled.  
