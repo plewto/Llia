@@ -1,22 +1,21 @@
-
-Llia is an Open Sound Control (OSC) client for SuperCollider.  
+Llia is a framework for controlling SuperCollider synths over OSC.
+It provides a comprehensive MIDI implementation and comes bundled
+with several instruments and effects.
 
 
 Features:
 
+* MIDI values to synth parameter mapping.
+* Program banks.
+* Key-splits, layering and alternate scales.
+* Multiple key modes.
+* Open collection of synths, effects and controllers.
+* Synth Parameter editors.
+* Random program generators.
+* Patching synths and effects graphically.
+* Python scripting.
 
-1) An open set of SuperCollider synths.  Currently 37 separate synths,
-effects, and control rate generators are implemented.
-   
-2) A comprehensive MIDI implementation allows mapping of most MIDI
-   channel message values to synthesizer/effect parameters.
+The doc folder contains a comprehensive set of HTML documents.
+The file doc/index.html is the documentation home page.
 
-   A) Program banks with 128 slots per instrument.
-   B) Random program generator for several synths.
 
-3) Optional GUI mode. Llia may be executed with or without a GUI system.
-   Synths and effects may be patched together graphically. 
-
-4) Scripting via a simple Python API.  The scripting feature allows
-   complex patches involving multiple instruments to be saved and
-   later recalled.  
