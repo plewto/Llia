@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia Effects1">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Effects1</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION effects1 **** -->
+        <a id="effects1"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Llia Effects (part 1)</h1>
+    <a class="navigation" href="quickstart2.html">Previous(&nbsp;Quick Start 2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="effects2.html">Next(&nbsp;Effects 2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+        <h4 class="heading">Effects</h4>
+            <p class="section-body">
+             
+            An effect is a special type of <a
+            href="glossary.html#synth">synth</a> for processing audio signals.  The
+            input may come from another synth or from an external source via 
+            the sound card.
+            </p>
+            
+            <p class="section-body">
+            
+            To use an effect a synth's output is <em>patched</em> to the
+            effects input.  This patching is not done directly, instead 
+            an <em>audio bus</em> is used to connect the two synths together.
+            </p>
+            
+            <p class="section-body">
+            
+            You may assign buses when a synth is created but it is more intuitive to use
+            the &#34;graph&#34; window which graphically displays the interconnection
+            between synths and buses.
+            </p>
+            
+            <p class="section-body">
+            
+            For illustration we'll patch the MASA organ through the Rumklang reverb. 
+            Start with a clean slate by stopping and restarting both the LLia client and 
+            SuperCollider.
+            </p>
+            
+            
+            <ol>
+              <li>From the main window select the &#34;Effects&#34; tab.</li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx001.png" alt="" />
+            
+            <ol start="2">
+               <li>Select the Rumklang effect.</li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx002.png" alt="" />
+            
+            <ol start="3">
+              <li>
+                  When the Rumklang add-synth dialog appears, accept the defaults
+                  and click &#34;OK&#34;.<br>   
+                  As before the dialog is replaced with a new 
+                  synth group window.
+               </li>
+               <li>
+                  Go back to the main window and select the &#34;Synths&#34; tab.
+               </li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx003.png" alt="" />
+            
+            <ol start="4">
+              <li>
+                 Now add the MASA organ, select Poly1 keymode and click OK.
+              </li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx004.png" alt="" />
+            <p class="section-body">
+            
+            The synth group window should look something like this:
+            </p>
+            
+        <img class="center" src="images/efx1/efx005.png" alt="" />
+            
+            <p class="section-body">
+               At this point MASA should be active but it has not yet been patched through
+               the reverb.
+            </p>
+            <ol start="7">
+               <li>Select the &#34;graph&#34; tab from the main application
+                    window.
+               </li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx008.png" alt="" />
+            <p class="section-body">
+            
+            The graph shows several things,  First though, when items are
+            initially placed on the graph they are at random locations. Click 
+            and drag the icons around as you please.
+            </p>
+            
+            <p class="section-body">
+            
+            There are two synth icons, one for MASA and one for Rumklang.  MASA is connected to
+            something called out_0, Rumklang is connected to out_0, out_1 and in_0.
+            These things the synths are connected to are audio buses, but these are
+            special buses related to hardware input and output.  
+            </p>
+            
+            <p class="section-body">
+            
+            The column of buses on the right are hardware outputs.  Buses out_0 and
+            out_1 corresponds to the primary Left and Right outputs of the first
+            sound card.  The remaining buses corresponds to additional outputs or to 
+            additional sound cards. If the system does not have additional outputs,
+            these buses are not connected to anything. 
+            </p>
+            
+            <p class="section-body">
+            
+            Likewise the left column are hardware inputs.  Buses in_0
+            and in_1 are the left and right inputs of the primary sound card.  Additional
+            inputs or sound cards, if any, are connected to the remaining buses.
+            </p>
+            
+            <p class="section-body">
+            
+            In order to process MASA through the reverb a new, general, audio bus must
+            be created.
+            </p>
+            
+            
+            <ol start="8">
+               <li>Click +Audio and a new bus appears at some random location.</li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx009.png" alt="" />
+            
+            Dragging things around a bit gets this:
+            
+        <img class="center" src="images/efx1/efx010.png" alt="" />
+            <p class="section-body">
+            
+            Look closely at the MASA icon and find the small circle near the top on the
+            right hand side.  This is the main output for the synth.  MASA only has a
+            single output, others synths may have several.  Whenever you move the mouse
+            into one of these circles, all of the places to which it may connect are
+            highlighted.
+            </p>
+            
+        <img class="center" src="images/efx1/efx011.png" alt="" />
+            
+            <ol start="9">
+                <li>Drag a line between the output of MASA to the input (left side) of audio
+                 bus A0.
+                </li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx012.png" alt="" />
+            <p class="section-body">
+            
+            When you release the mouse the connection between MASA and A0 is made, and the previous connection
+            between MASA and out_0 is severed.  A synth output may only connect to a
+            single bus.  A bus however may be connected to any number of synths.
+            </p>
+            
+        <img class="center" src="images/efx1/efx013.png" alt="" />
+            
+            <p class="section-body">
+               At this point there is no path between MASA and the sound card.
+            </p>
+            <ol start="10">
+              <li>In a similar manner connect the right side of bus A0 to the input
+                  (left) side of Rumklang.
+              </li>
+            </ol>
+            
+        <img class="center" src="images/efx1/efx014.png" alt="" />
+            <p class="section-body">
+            
+            And Whala, a reverberated organ
+            </p>
+            
+            <p class="section-body">
+            
+            See the <a href="graph.html">graph</a> pages for more details.
+            </p>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="quickstart2.html">Previous(&nbsp;Quick Start 2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="effects2.html">Next(&nbsp;Effects 2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Algo fm synth">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Algo</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION algo **** -->
+        <a id="algo"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Algo</h1>
+        <img class="center" src="images/synthcat/algo.png" alt="" />
+    <a class="navigation" href="synth_catalog.html">Previous(&nbsp;Synth Catalog&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="corvus.html">Next(&nbsp;Corvus&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            Algo is an 8 <a href="glossary.html#operator">operator</a>
+            <a href="https://en.wikipedia.org/wiki/Frequency_modulation_synthesis">FM</a> synth,
+            divided into three "stacks": A, B and C.
+            </p>
+            
+        <img class="center" src="images/synthcat/algo_block.png" alt="" />
+            <p class="section-body">
+            
+            The editor contains 8 Algo specific tabs, 2 per stack, 1 for general miscellaneous 
+            parameters, and 1 for the random program generator.  
+            </p>
+            
+        <img class="center" src="images/synthcat/algo_tabs.png" alt="" />
+            <p class="section-body">
+            
+            The parameters for each stack 
+            are identical, though the effects they have are dependent on the specific stack.  
+            </p>
+            
+        <img class="center" src="images/synthcat/algo_stacked_a.png" alt="" />
+            <p class="section-body">
+            
+            The two left quadrants always contain controls for the stack modulators. The 
+            upper right quadrant is the carrier, and below this are general stack controls.
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Modulator</b> controls:
+            </p>
+            
+        <img class="center" src="images/synthcat/algo_modulator.png" alt="" />
+            
+            <ul>
+              <li>Ratio <a href="glossary.html#tumbler">tumbler</a>, Modulator frequency ratio</li>
+              <li>Bias tumbler, A fixed value added to the operator frequency.</li>
+              <li>Modulation depth slider</li>
+            
+              <li>Modulation depth scale (<a href="glossary.html#msb">msb button)</a> sets
+                  sensitivity of the depth slider.  
+                  <br>Scale factors x1 and x2 are typical values
+                  for FM synthesis, higher values can produce extreme modulation depth.</li>
+            
+              <li>Left and right keyscale depth buttons.  These buttons set an amplitude scaling
+                  factor based on the key played.
+                 <br>The reference key is identical for all operators in a stack and is set by 
+                 the "Keyscale Key" button in the general section.
+                 <br>keyscale values are in db/octave.  It is common to use positive values on 
+                     the left to brighten bass notes
+                 <br>and negative values on the right to 
+                     reduce brightness of high notes.</li>
+              <li>Velocity slider sets sensitivity of the operator to key velocity.</li>
+              <li>LFO slider, the amount of LFO modulation applied to operator amplitude.</li>
+              <li>External slider, the amount of external control signal applied to operator amplitude.</li>
+            </ul>
+            
+            <p class="section-body">
+            <b>Carrier</b> controls:</p>
+            
+        <img class="center" src="images/synthcat/algo_carrier.png" alt="" />
+            <p class="section-body">
+            
+            The carrier controls are nearly identical to the modulators.  
+            The modulation depth controls are replaced with an amp 
+            <a href="glossary.html#volume-slider">volume slider</a>
+            </p>
+            
+            <p class="section-body">
+            
+            <b>General stack controls</b>:
+            </p>
+            
+        <img class="center" src="images/synthcat/algo_general_stack_controls.png" alt="" />
+            <p class="section-body">
+            
+            The general stack controls are identical for each stack, though their effect
+            may be different.
+            </p>
+            
+            
+            <ul>
+                <li>Feedback slider, sets a fixed stack feedback.  Each stack uses feedback in a different way.</li>
+                <li>Env slider, applies envelope to feedback depth.</li>
+                <li>LFO slider, applies LFO to feedback depth.</li>
+                <li>LFO ratio button.  Each stack has a dedicated LFO. This button sets the frequency ratio of
+                    <br>of the stack LFO relative to the vibrato LFO.</li>
+                <li>LFO Delay slider</li>
+                <li>LFO Wave slider,  The stack LFOs produce a waveform continuously variable between
+                    sawtooth and triangle.  
+                    <br>The waveform is more triangular near the center and 
+                    more sawtooth at the extremes.  
+                    <br>The sawtooths have opposite slopes at opposite
+                    ends of the slider.</li>
+                <li>Enable button, enable stack output.</li>
+                <li>Keyscale key, reference key number for key scale feature. 
+                    Middle C is 60</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Each operator has a dedicated <a href="glossary.html#ADDSR">ADDSR</a> envelope.
+            </p>
+            
+        <img class="center" src="images/synthcat/algo_env.png" alt="" />
+            <hr class="section-head" />
+            <p class="section-body">
+            The <b>Misc</b> tab contains general parameters.</p>
+            
+        <img class="center" src="images/synthcat/algo_misc.png" alt="" />
+            
+            <ul>
+               <li>Portamento, (not available for Poly1 keymode)</li>
+            </ul>
+            <ul>
+               <li>LFO Frequency tumbler.  Sets frequency for primary vibrato LFO.<br>
+                  The stack LFO frequencies are relative to this value.</li>
+               <li>Vibrato Delay</li>
+               <li>Vibrato Sensitivity</li>
+               <li>Vibrato Depth, programmed vibrato depth applied after onset delay</li>
+               <li>External control signal applied to pitch.</li>
+            </ul>
+            
+            <ul>
+               <li>Modulation Depth.  Master control over all modulator depths.</li>
+               <li>Modulation External.  Amount of external control signal applied to modulation depth.</li>
+            </ul>
+            
+            <ul>
+                <li>External Scale, scale factor applied to external control signal.</li>
+                <li>Output amp</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            The <b>Rnd</b> tab contains controls that influence the random program generator. 
+            </p>
+            
+        <img class="center" src="images/synthcat/algo_rnd.png" alt="" />
+            <p class="section-body">
+            
+            There are actually two algo program generators; basic and chorus.  The chorus 
+            generator is more likely to have at least one carrier where the frequency ratio
+            is 0.00 and the bias is some value below 10Hz. With a high enough modulation
+            ratios this produces a unique chorusing effect.
+            </p>
+            
+            
+            <ul>
+               <li>Engine, select generator</li>
+               <li>Envelope type and Envelope times, provide hints as to the type of envelopes to produce.</li>
+               <li>Env Changeup slider.  Sets probability that envelopes will deviate from the selected types/times.</li>
+               <li>Harmonic slider.  Sets probability that only harmonic frequencies are used.</li>
+               <li>Modulation slider.  Sets probability of high modulation depths.</li>
+               <li>Feedback slider.  Sets probability of stack feedback.</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            <b>Buses:</b>  Algo has 4 audio output buses and one control input.</p>
+            
+            
+            <ul>
+               <li>outbus - primary output combines all three stacks.</li>
+               <li>outbusA - stack A output.</li>
+               <li>outbusB - stack B output.</li>
+               <li>outbusC - stack C output.</li>
+               <li>xbus - external control input</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            <b>Parameters:</b></p>
+            
+            
+            General parameters:
+            <ul>
+                <li>modDepth - Global modulation depth (0.0 ... 1.0)</li>
+                <li>amp - Output amplitude (0.0 ... 2.0)</li>
+                <li>lfov_freq - Primary (vibrato) LFO frequency (0.0 ... 99.999)</li>
+                <li>lfov_delay - Vibrato onset delay (0.0 ... 4.0) seconds</li>
+                <li>vsens -  Vibrato sensitivity (0.0 ... 1.0)</li>
+                <li>vdepth - Vibrato depth (0.0 ... 1.0)</li>
+                <li>xscale - External control signal scale (0.0 ... 2.0)</li>
+                <li>xpitch - External control to pitch (0.0 ... 1.0)</li>
+                <li>xmod -   External control to global modulation depth (0.0 ... 1.0)</li>
+            </ul>
+            
+            Stack parameters have the form stack?_xxx or lfo?_xxx where ? is A, B or C.
+            <ul>  
+               <li>stack?_key - keyscale reference key as MIDI key number (0,1,2,...,127)</li>
+               <li>stack?_feedback - stack feedback amount (0.0 ... 2.0)</li>
+               <li>stack?_env_feedback - envelope applied to feedback (0.0 ... 2.0)</li>
+               <li>stack?_lfo_feedback - LFO applied to feedback (0.0 ... 2.0)</li>
+               <li>stack?_enable - Stack enable (0|1)</li>
+               <li>lfo?_ratio - LFO frequency relative to vibrato LFO<br>
+                   (1/8, 1/4, 3/8, 1/2, 5/8, 3/4, 7/8, 1, 5/4, 4/3, 3/2, 7/3, 7/4, 2, 5/2, 3, 4, 5, 6, 8, 9, 12,16)</li>   
+               <li>lfo?_delay - LFO onset delay (0.0 ... 4.0)</li>
+               <li>lfo?_wave - LFO wave (0.0 ... 1.0)  0.5 = triangle</li>
+            </ul>
+            
+            
+            Carrier parameters op?_xxx where x is 1, 5 or 7
+            <ul>
+               <li>op?_ratio - frequency ratio (0.0 ... 99.999)</li>
+               <li>op?_bias -  frequency bias (0.0 ... 99.999)</li>
+               <li>op?_attack - attack time (0.0 ... 12)</li>
+               <li>op?_decay1 - initial decay time (0.0 ... 12)</li>
+               <li>op?_decay2 - second decay time (0.0 ... 12)</li>
+               <li>op?_release - release time (0.0 ... 12)</li>
+               <li>op?_breakpoint - envelope breakpoint (0.0 ... 1.0)</li>
+               <li>op?_sustain -  envelope sustain level (0.0 ... 1.0)</li>
+               <li>op?_envmode -  envelope mode (0|1)  0 = gate, 1 = trig</li>
+               <li>op?_amp - carrier amplitude (0.0 ... 2.0)</li>
+               <li>op?_left_scale - left key scale in db/octave (-18,-12,-9,-6,-3,0,+3,+6,+9,+12,+18)</li>
+               <li>op?_right_scale - right key scale in db/octave (-18,-12,-9,-6,-3,0,+3,+6,+9,+12,+18)</li>   
+               <li>op?_velocity - carrier velocity sensitivity (0.0 ... 1.0)</li>
+               <li>op?_lfo - stack LFO applied to carrier amp (0.0 ... 1.0)</li>
+               <li>op?_external - external control applied to carrier amplitude (0.0 ... 1.0)</li>
+            </ul>
+            
+            
+            Modulator parameters op?_xxxx where x is 2,3,4,6 or 7
+            <ul>
+               <li>op2_ratio - frequency ratio (0.0 ... 99.999)</li>
+               <li>op2_bias -  frequency bias (0.0 ... 99.999)</li>
+               <li>op2_attack - attack time (0.0 ... 12)</li>
+               <li>op2_decay1 - initial decay time (0.0 ... 12)</li>
+               <li>op2_decay2 - second decay time (0.0 ... 12)</li>
+               <li>op2_release - release time (0.0 ... 12)</li>
+               <li>op2_breakpoint - envelope breakpoint (0.0 ... 1.0)</li>
+               <li>op2_sustain - envelope sustain level (0.0 ... 1.0)</li>
+               <li>op2_envmode - envelope mode (0|1)  0 = gate, 1 = trig</li>
+               <li>op2_amp - modulation depth (0.0 ... 1.0)   </li>
+               <li>op2_mod_scale - modulation depth scale 10**(1,2,3,4,5,6)</li>
+               <li>op2_left_scale - left key scale in db/octave (-18,-12,-9,-6,-3,0,+3,+6,+9,+12,+18)</li>
+               <li>op2_right_scale - right key scale in db/octave (-18,-12,-9,-6,-3,0,+3,+6,+9,+12,+18)</li>
+               <li>op2_velocity - modulation velocity sensitivity (0.0 ... 1.0)</li>
+               <li>op2_lfo - stack LFO applied to modulation depth</li>
+               <li>op2_external - external control applied to modulation depth</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="synth_catalog.html">Previous(&nbsp;Synth Catalog&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="corvus.html">Next(&nbsp;Corvus&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

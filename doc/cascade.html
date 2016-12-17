@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Cascade">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Cascade</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION cascade **** -->
+        <a id="cascade"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Cascade</h1>
+        <img class="center" src="images/synthcat/cascade.png" alt="" />
+    <a class="navigation" href="xover.html">Previous(&nbsp;Xover crossover&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="cmixer.html">Next(&nbsp;Cmixer control mixer&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Cascade uses frequency dividers to generate complex control signals.
+            A master clock (either internal or external) frequency is divided by
+            1,2,3,4,5 and 6. The final divider has an adjustable quotient between 1 and 99.
+            Outputs are provided for each divider output and the combined signal.
+            </p>
+            
+        <img class="center" src="images/synthcat/cascade_editor.png" alt="" />
+        <h4 class="heading">Clock</h4>
+            <p class="section-body">
+            
+            The clock section has two general areas.  At the top are controls for
+            clock source and frequency.
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Frequency</b> <a href="glossary.html#tumbler"> tumbler</a>, sets internal
+            clock frequency.<br>
+            <b>External</b> button, switches between internal and external clock
+            source.<br>
+            </p>
+            
+            <p class="section-body">
+            
+            The bottom section has controls for the divider hold time. The
+            hold time is the period in seconds the divider output stays high
+            after it is activated.   The hold time control is for the divide by 1
+            output, all other dividers are scaled appropriately. 
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Hold Time</b> tumbler<br>
+            <b>1/2</b> button, Sets hold time to 1/2 the period of the internal clock.
+            </p>
+            
+        <h4 class="heading">Cascade</h4>
+            <p class="section-body">
+            
+            The Cascade section holds controls for the mix and gate status of each
+            divider.  With exception of the divide by n quotient, these controls
+            only effect the combined output, not the individual pule outputs.
+            </p>
+            
+        <img class="center" src="images/synthcat/cascade_editor2.png" alt="" />
+            <p class="section-body">
+            
+            <b>Slider</b>, divider output amplitude.<br>
+            <b>Gate button</b>, Enable divider output to be gated by external control
+            signal.<br>
+            <b>2 digit tumbler</b>, sets divide by n quotient between 1 and 99.  A
+            value of 0 is promoted to 1.
+            </p>
+            
+        <h4 class="heading">Out</h4>
+            <p class="section-body">
+            
+            The Out section holds additional controls for modifying the combined signal.
+            These controls have no effect on the individual divider outputs." 
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Lag</b>, lag time<br>
+            <b>Scale</b>, output scale factor.<br>
+            <b>Bias</b>, fixed value added to output.
+            </p>
+            
+            <hr class="section-head" />
+            
+            <b>Buses:</b>
+            <ul>
+               <li>clkin - external clock input</li>
+               <li>xgate - external gate input</li>
+               <li>outbus - combined divider signal output</li>
+               <li>out1 - divide by 1 output</li>
+               <li>out2 - divide by 2 output</li>
+               <li>out3 - divide by 3 output</li>
+               <li>out4 - divide by 4 output</li>
+               <li>out5 - divide by 5 output</li>
+               <li>out6 - divide by 6 output</li>
+               <li>outn - divide by N output</li>
+            </ul>
+            
+            <hr class="section-head" />
+            
+            <b>Parameters:</b>
+            <ul>
+              <li>clkfreq -  internal clock frequency (0 ... 99.999)</li>
+              <li>clksrc -  clock selection (0=internal, 1=external)</li>
+              <li>hold -  divider hold time (0 ... 99.999)</li>
+              <li>n -  divide by n quotient (1 ... 99)</li>
+              <li>amp1 -  divide by 1 output amp</li>
+              <li>amp2 -  divide by 2 output amp</li>
+              <li>amp3 -  divide by 3 output amp</li>
+              <li>amp4 -  divide by 4 output amp</li>
+              <li>amp5 -  divide by 5 output amp</li>
+              <li>amp6 -  divide by 6 output amp</li>
+              <li>ampn -  divide by n output amp</li>
+              <li>gate1 - divide by 1 gate mode (0=normal, 1=gated)</li>
+              <li>gate2 - divide by 2 gate mode (0=normal, 1=gated) </li>
+              <li>gate3 - divide by 3 gate mode (0=normal, 1=gated) </li>
+              <li>gate4 - divide by 4 gate mode (0=normal, 1=gated) </li>
+              <li>gate5 - divide by 5 gate mode (0=normal, 1=gated) </li>
+              <li>gate6 - divide by 6 gate mode (0=normal, 1=gated) </li>
+              <li>gaten - divide by n gate mode (0=normal, 1=gated) </li>
+              <li>scale - output scale factor (0 ... 1)</li>
+              <li>bias -  output bias offset (-4 ... +4)</li>
+              <li>lag - output lag time (0 ... 1)</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="xover.html">Previous(&nbsp;Xover crossover&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="cmixer.html">Next(&nbsp;Cmixer control mixer&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

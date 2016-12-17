@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Adding synths to Llia">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Adding Llia Synths</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION addsynth **** -->
+        <a id="addsynth"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Adding Synths to Llia</h1>
+    <a class="navigation" href="snh.html">Previous(&nbsp;SnH  Sample and Hold&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="addsynth_demo1.html">Next(&nbsp;addsynth demo&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            
+            In broad outline adding a new synth to Llia requires the following steps:
+            <ol>
+               <li>Define a SuperCollider synth.</li>
+               <li>Create a Llia proxy for the new synth.</li>
+               <li>Create logo and editor graphics</li>
+            </ol>
+            
+            <p class="section-body">
+            
+            The addsynth script, located in the tools folder, may be used to automate much of 
+            this process.  Quite a bit of manual editing will still be required but addsynth
+            will create the basic framework and boilerplate code.
+            </p>
+            
+            <p class="section-body">
+            
+            When calling addsynth you supply the synth name and type, and optionally a parameters list 
+            and target directory.   If a synth with the same name already exists, addsynth will 
+            print a warning message and terminate.
+            </p>
+            
+            
+            <pre class="code">
+            ./addsynth --name &lt;Name&gt; --stype &lt;type&gt;
+            
+            Where &lt;Name&gt; is the synths name, which should be capitalized.
+                  &lt;type&gt; is one of "synth", "efx" or "controller"
+            </pre>
+            
+            <p class="section-body">
+            
+            If executed from the tools directory addsynth infers the target 
+            directory as the current parent directory. You may pass an explicit 
+            target directory with the --dev option.
+            </p>
+            
+            
+            To automate the process further you may specify a parameter file.<br>
+            
+            <pre class="code">
+            ./addsynth --name &lt;Name&gt; --stype &lt;type&gt; --params &lt;filename&gt;
+            </pre>
+            
+            <p class="section-body">
+            
+            A parameter list is best used for synths with relatively few parameters.
+            The file structure has one parameter per line:
+            </p>
+            
+            
+            <pre class="code">
+            t param val
+            t param val
+               ......
+            t param val 
+            </pre>
+            Where
+            <ul>
+              <li>t is the data type, either "f" for float or "i" for int.</li>
+              <li>param is the parameter name</li>
+              <li>val is the default value.
+            </ul>
+            Do not include any of the following parameters:
+            <ul>
+              <li>outbus</li>
+              <li>inbus</li>
+              <li>xbus</li>
+              <li>doneAction</li>
+              <li>gate</li>
+              <li>freq</li>
+              <li>keynumber</li>
+              <li>detune</li>
+              <li>velocity</li>
+            </ul>
+            
+            
+            addsynth creates the following files (where &lt;sname&gt; is the synth name):
+            
+            <ul>
+              <li>LLia/sc/SynthDefs/&lt;sname&gt;.scd</li>
+              <li>resources:
+                  <ul>
+                      <li>Llia/resources/&lt;Sname&gt;/editor.xcf</li>
+                      <li>Llia/resources/&lt;Sname&gt;/editor.png</li>
+                      <li>Llia/resources/&lt;Sname&gt;/tab.png</li>
+                      <li>Llia/resources/&lt;Sname&gt;/logo.png</li>
+                      <li>Llia/resources/&lt;Sname&gt;/logo_small.png</li>
+                      <li>Llia/resources/&lt;Sname&gt;/logo_32.png</li>
+                   </ul>
+              </li>
+              <li>Llia synth proxy: 
+                  <ul>
+                      <li>Llia/llia/synths/&lt;sname&gt;/__init__.py</li>
+                      <li>Llia/llia/synths/&lt;sname&gt;/&lt;sname&gt;_proxy.py</li>
+                      <li>Llia/llia/synths/&lt;sname&gt;/&lt;sname&gt;_data.py</li>
+                      <li>Llia/llia/synths/&lt;sname&gt;/&lt;sname&gt;_pp.py</li>
+                      <li>Llia/llia/synths/&lt;sname&gt;/&lt;sname&gt;_random.py</li>
+                      <li>Llia/llia/synths/&lt;sname&gt;/tk/__init__.py</li>
+                      <li>Llia/llia/synths/&lt;sname&gt;/tk/editor.py</li>
+                  </ul>
+              </li>
+            </ul>
+            The following files are modified:
+            <ul>
+               <li>Llia/sc/SynthDefs/install_synths.scd</li>
+               <li>Llia/llia/manifest.py</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="snh.html">Previous(&nbsp;SnH  Sample and Hold&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="addsynth_demo1.html">Next(&nbsp;addsynth demo&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

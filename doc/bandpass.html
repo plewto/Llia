@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Bandpass">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Bandpass</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION bandpass **** -->
+        <a id="bandpass"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Bandpass and Notch filters</h1>
+    <a class="navigation" href="asplit.html">Previous(&nbsp;ASplit&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="carnaldelay.html">Next(&nbsp;Carnal Delay&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            The band pass and notch filter effects are identical except for filter type.
+            Center frequency and filter Q may be modulated by an internal LFO or by an 
+            external control signal.
+            </p>
+            
+        <img class="center" src="images/synthcat/bandpass_notch.png" alt="" />
+            
+            <ul>
+               <li>Frequency slider - filter center frequency.</li>
+               <li>LFO Freq tumbler - LFO frequency.</li>
+               <li>LFO slider, LFO to filter center frequency.</li>
+               <li>External slider, external control to filter frequency.</li>
+               <li>Q slider.</li>
+               <li>LFO slider, LFO to filter Q.</li>
+               <li>External slider, external to filter Q.</li>
+               <li>Filter output gain.</li>
+               <li>Bleed slider, sets how much signal bypasses the filter.
+                   With bleed at 100% the filter is bypassed.</li>
+            </ul>
+            
+            <hr class="section-head" />
+            
+            <b>Buses:</b>
+            <ul>
+              <li>inbus - audio input</li>
+              <li>outbus - audio output</li>
+              <li>xbus - external control input</li>
+              <li>lfoOutbus - internal LFO output</li>
+            </ul>
+            
+            <hr class="section-head" />
+            
+            <b>Parameters:</b>
+            <ul>
+               <li>lfoFreq - LFO frequency (0.0 ... 99.999)</li>
+               <li>cFreq - Filter center frequency (0 ... 20k)</li>
+               <li>cFreqLfo - LFO to center frequency (0 ... 2k)</li>
+               <li>cFreqX - External control to center frequency (0 ... 2k)</li>
+               <li>filterGain -  (-12 ... +12)</li>
+               <li>q - Filter Q factor (0 ... 100)</li>
+               <li>qLfo - LFO to filter Q (0 ... 100)</li>
+               <li>qX - External control to filter Q (0 ... 100)</li>
+               <li>bleed - source signal bypass of filter (0 ... 1)/li>
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="asplit.html">Previous(&nbsp;ASplit&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="carnaldelay.html">Next(&nbsp;Carnal Delay&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

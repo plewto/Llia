@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia Installation">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Installation</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION install **** -->
+        <a id="install"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Llia Installation</h1>
+    <a class="navigation" href="index.html">Previous(&nbsp;Home&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="quickstart1.html">Next(&nbsp;Quick Start 1&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            
+            Llia is divided into two components:
+            <ol>
+               <li>SuperCollider
+                   <ul>
+                      <li>classes</li>
+            	  <li>synth defs</li>
+                   </ul>
+               </li>
+               <li>Client code in Python</li>
+            </ol>
+            
+            <p class="section-body">
+            
+            Copy the top level Llia folder to where ever is convenient, henceforth this
+            location will be the <b>&lt;install&gt;</b> directory.
+            </p>
+            
+            <hr class="section-head" />
+            
+            <b>Install SuperCollider code:</b>
+            <ol>
+              <li>Copy contents of &lt;install&gt;/sc/Extensions/Classes/ to
+                to the SuperCollider extensions folder.
+                <ul>
+                  <li>Linux:
+            	<ul>
+            	  <li>system-wide /usr/local/share/SuperCollider/Extensions/</li>
+            	  <li>per-user ~/.local/share/SuperCollider/Extensions/</li>
+            	</ul>
+                  </li>
+                  <li>OSX:
+            	<ul>
+            	  <li>system-wide /Library/Application Support/SuperCollider/Extensions/</li>
+            	  <li>per-user ~/Library/Application Support/SuperCollider/Extensions/</li>
+            	</ul>
+                  </li>
+                  <li>Windows:
+            	<ul>
+            	  <li>?</li>
+            	</ul>
+                </ul>
+              </li>
+              <li>From a terminal navigate to the directory &lt;install&gt;/sc/</li>
+              <li>Start the SuperCollider ide with the command: scide<br>
+                <p class="footnote">At this point the new Llia classes will be compiled into the SuperCollider library.
+                  Great care has been taken to eliminate any errors, however if an error should occur
+                  SuperCollider will fail to start properly.   
+                  The only remedy is to either remove or repair the offending file.</p>
+              </li>
+              <li>From the SuperCollider ide load and execute the file
+                &lt;install&gt;/sc/SynthDefs/install_synths.scd"
+            </li>
+            </ol>
+            
+            <hr class="section-head" />
+            
+            <b>Resolve python dependencies:</b>
+            Llia requires the following Python modules
+            <ol>
+              <li>numpy</li>
+              <li>pillow</li>
+              <li>mido
+                <p class="footnote">The mido package requires either rtmidi (preferred) or portmidi as a MIDI backend.
+                  These are very common and pre-installed on many systems. If neither is installed on your system
+                  consult the appropriate sites.   Pygame may be a third option in the future.</p>
+              </li>
+              <li>For OSX only, install ActiveTcl (see <a href="https://www.python.org/download/mac/tcltk/">tkinter with Tcl/Tk on MacOS</a>)</li>
+            </ol>
+            
+            <hr class="section-head" />
+            
+            <b>Install client:</b>
+            <ol>
+              <li>Copy configuration file &lt;install&gt;/resources/config to the appropriate location:
+                <ul>
+                  <li>Linux ~/.config/Llia/</li>
+                  <li>OSX ~/.config/Llia/</li>
+                  <li>Windows ?</li>
+                </ul>
+              </li>
+              <li>Edit above configuration file for the installed MIDI backend.<br>
+                Locate the "backend" value in the [MIDI] section and change it to read
+                either.
+                <ul>
+                  <li>backend : mido.backends.rtmidi</li>
+                  <li>backend : midi.backends.portmidi</li>
+                </ul>
+                Whichever is appropriate for your system.
+              </li>
+              <li>While editing the config file, make sure the following two lines appear under the [GUI]
+                section:
+                <ul>
+                  <li>gui : tk</li>
+                  <li>no-splash : False</li>
+                </ul>
+              </li>
+            </ol>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="index.html">Previous(&nbsp;Home&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="quickstart1.html">Next(&nbsp;Quick Start 1&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

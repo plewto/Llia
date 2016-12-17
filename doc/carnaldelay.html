@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Carnaldelay">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Carnaldelay</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION carnaldelay **** -->
+        <a id="carnaldelay"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Carnaldelay</h1>
+        <img class="center" src="images/synthcat/carnaldelay.png" alt="" />
+    <a class="navigation" href="bandpass.html">Previous(&nbsp;Bandpass&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="chronos.html">Next(&nbsp;Chronos Delay&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Delay with unclean feedback
+            </p>
+            
+        <img class="center" src="images/synthcat/carnaldelay_block.png" alt="" />
+        <img class="center" src="images/synthcat/carnaldelay_editor.png" alt="" />
+        <h4 class="heading">Delay Time</h4>
+            <p class="section-body">
+            
+            Delay time may be modulated by internal LFO, noise source or external signal, and
+            has a maximum time of 1.5 seconds.
+            </p>
+            
+            
+            <ul>
+              <li>Delay - Delay time</li>
+              <li>Wow - Time modulation depth from LFO</li>
+              <li>WowFreq - LFO frequency</li>
+              <li>Flutter - Time modulation by brown noise source</li>
+              <li>External - Time modulation by external source
+            </ul>
+            
+        <h4 class="heading">Feedback:</h4>
+            
+            The feedback path includes a clipping circuit and an eq.
+            <ul>
+              <li>Gain - Gain factor applied before clipper</li>
+              <li>Threshold - Clipper threshold.  Output of clipper will not exceed threshold</li>
+              <li>EQ Low - Feedback lowpass filter cutoff</li>
+              <li>EQ High - Feedback highpass filter cutoff
+            </ul>
+            
+        <h4 class="heading">Mix</h4>
+            
+            <ul>
+               <li>Efx - Wet signal mix.</li>
+               <li>External - External control over wet signal mix.</li>
+            </ul>
+            
+            <hr class="section-head" />
+            
+            <b>Buses:</b>
+            <ul>
+                <li>inbus - audio input</li>
+                <li>outbus - audio output</li>
+                <li>efxbus - control input for effects level</li>
+                <li>dlybus - control input for delay time</li>
+            </ul>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Parameters</h4>
+            
+            <ul>
+               <li>delayTime -  Delay time (0 ... 1.5)</li>
+               <li>wow -  LFO to delay time modulation (0 ... 1)</li>
+               <li>wowFreq -  LFO frequency (0 ... 5)</li>
+               <li>flutter -  Noise to delay time modulation (0 ... 1)</li>
+               <li>xDelayMod -  External signal to delay time modulation (0 ... 1)</li>
+               <li>feedback -  Feedback (-1 ... +1)</li>
+               <li>gain -  Feedback pre-clipper gain (0.5 ... 2.0)</li>
+               <li>threshold -  Feedback clipper threshold (0 ... 1)</li>
+               <li>lowcut -  Feedback lowpass filter cutoff (20 ... 20k)</li>
+               <li>highcut -  Feedback highpass filter cutoff (20 ... 20k)</li>
+               <li>efxMix -  Wet signal mix (0,1)</li>
+               <li>xEfxMix -  External signal to wet signal mix (0 ... 1)</li>
+               <li>amp -  Main amplitude (0 ... 2)</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="bandpass.html">Previous(&nbsp;Bandpass&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="chronos.html">Next(&nbsp;Chronos Delay&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

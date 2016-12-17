@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia Keymodes">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Keymode</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION keymode **** -->
+        <a id="keymode"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Keymodes</h1>
+    <a class="navigation" href="bank.html">Previous(&nbsp;Bank&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="group.html">Next(&nbsp;Group&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            Each active synth has an associated keymode which manages how the synth
+            responds to MIDI key events. Not every synth type is compatible with every
+            keymode.
+            </p>
+            
+            <p class="section-body">
+            
+            Currently there are six keymodes,  each with it's own set of pros and cons.
+            Additional keymodes may be added later.
+            </p>
+            
+            
+            <ol>
+                <li>PolyN</li>
+                <li>PolyRotate</li>
+                <li>Poly1</li>
+                <li>Mono1</li>
+                <li>MonoExclusive</li>
+                <li>Efx</li>
+            </ol>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>PolyN</b> is the default keymode.  It instantiates a fixed number of voices
+            ahead of time and then allocates them to play notes as needed.  If the number
+            of keys down exceeds the voice count then some previous notes will be stolen.
+            When a new key down is received, PolyN first tries to use an un-allocated 
+            voice.  If all voices are currently in use it steals the voice which has 
+            been held down the longest.</p>
+            
+            
+            <p>Pros:</p>
+            <ul>
+               <li>Fast, no need to create synths on the fly.</li>
+               <li>Fixed resource load.</li>
+               <li>Portamento supported (in a fashion).</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+               <li>Limited polyphony, voices are stolen if notes played exceeds voice count.</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>PolyRotate</b> is similar to PolyN except that it allocates voices in strict
+            rotation.  In most cases PolyN is the better choice.   PolyRotate shares the 
+            same set of pros and cons as PolyN.</p>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>Poly1</b> instantiates synths on the fly as required for incoming 
+            key events.  The synths are destroyed once their key has been lifted and all
+            envelopes have terminated.</p>
+            
+            
+            <p>Pros:</p>
+            <ul>
+                <li>Simple</li>
+                <li>Up to 128 note polyphony (if resources are available).</li>
+                <li>May be used with any effects chain without regard to synth creation order.</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+                <li>Complex synths may take too long to create on the fly.</li>
+                <li>Resource heavy if too many notes held, particularly with complex
+                    synths or long decay tails.</li>
+                <li>Effects which require some history between notes, such as portamento, 
+                    do not work.</li>
+            </ul>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>Mono1</b> is a monophonic keymode with last note priority.  A single
+            persistent server side synth object is created.
+            </p>
+            
+            
+            <p>Pros:</p>
+            <ul>
+              <li>Fast</li>
+              <li>Fixed resource load</li>
+              <li>Portamento supported</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+              <li>Monophonic</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>MonoExclusive</b> is a highly specialized keymode where only
+            the initial key down is articulated. Once a key is down, 
+            additional keys are ignored until all keys have been lifted.
+            </p>
+            
+            <p class="section-body">
+            
+            The intended use is for MonoExclusive to be layered with another 
+            keymode to provide an accent on the first note played in a series 
+            of notes.  A real world example is on certain antique electric organs 
+            where a click is produced only on initial key presses.</p>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>Efx</b> is a specialized keymode for effects and control synths.   As
+            with mono mode a single persistent server side synth object is created. 
+            Efx mode passes the last keynumber, note frequency, and velocity to the
+            effect.   As long as any key is down the gate signal is high,  if all keys
+            are up the gate signal goes low. 
+            </p>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="bank.html">Previous(&nbsp;Bank&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="group.html">Next(&nbsp;Group&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Io synth">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Io</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION io **** -->
+        <a id="io"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Io</h1>
+        <img class="center" src="images/synthcat/io.png" alt="" />
+    <a class="navigation" href="fm2.html">Previous(&nbsp;FM2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="klstr.html">Next(&nbsp;Klstr&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            Io is an experimental attempt at producing wind instrument like sounds using
+            FM formants.   The topography is a single modulator feeding three carriers.
+            The carriers may be individuality switched between "normal" FM mode and 
+            Formant mode.  In formant mode the carrier frequency is the harmonic of the 
+            fundamental which is closest to the formant frequency.  A semi-tuned 
+            noise source, "chiff" generator, "blip" envelope, and vibrato round out the sound.
+            </p>
+            
+        <img class="center" src="images/synthcat/io_editor.png" alt="" />
+            <hr class="section-head" />
+            <p class="section-body">
+            <b>Modulator:</b></p>
+            
+            
+            <ul>
+               <li>Ratio <a href="glossary.html#tumbler">tumbler</a> - modulator frequency.</li>
+               <li>Feedback slider.</li>
+               <li>LFO slider, LFO application to modulation depth.</li>
+            </ul>
+            
+            <hr class="section-head" />
+            
+            The three <b>carriers</b> have identical controls:
+            <ul>
+               <li>Formant tumbler - fixed formant frequency, only used in formant mode.</li>
+               <li>Ratio tumbler - relative frequency, only used in ratio mode.</li>
+               <li>Mode button - Select between formant and ratio modes.</li>
+               <li>Mod slider - modulation depth.</li>
+               <li>Velocity slider, carrier velocity sensitivity.</li>
+               <li>LFO slider, carrier LFO sensitivity (tremolo depth).</li>
+               <li>X slider - external signal to carrier amp.</li>
+               <li>Lag slider - lag time applied to modulator envelope.</li>
+               <li>Attack time.</li>
+               <li>Decay time.</li>
+               <li>Sustain level.</li>
+               <li>Release time.</li>
+               <li>Key scale key - reference key for key scale.</li>
+               <li>Left - left key scale depth in db/octave.</li>
+               <li>Right - right key scale depth in db/octave.</li>
+            </ul>
+            The ADSR envelope is applied jointly to the carrier and modulator signals.
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>Misc</b> tab contains noise,Blip envelope,LFO and mixer controls.
+            </p>
+            
+        <img class="center" src="images/synthcat/io_misc.png" alt="" />
+            <p class="section-body">
+            
+            The semi-tuned noise source is used for both background noise and initial 
+            <a href="https://www.merriam-webster.com/dictionary/chiff">chiff</a> sound.
+            </p>
+            
+            
+            <ul>
+               <li>Ratio tumbler, noise frequency ratio relative to fundamental.</li>
+               <li>attack, chiff onset attack time.</li>
+               <li>decay, chiff decay time.</li>
+               <li>velocity, velocity to chiff amplitude sensitivity.</li>
+            </ul>
+            
+            
+            <b>Blip</b> envelope imparts an initial pitch bend.
+            <ul>
+               <li>attack</li>
+               <li>decay</li>
+               <li>depth</li>
+            </ul>
+            
+            
+            <b>LFO</b>
+            <ul>
+               <li>Frequency tumbler</li>
+               <li>Trem ratio button, Sets frequency ratio of LFO used for tremolo.</li>
+               <li>SubHarmonic button, forces LFO frequency to be the subharmonic of the fundamental
+                   which is closest to the set frequency.</li>
+               <li>Pink, adds noise to LFO signal.</li>
+               <li>Delay, vibrato onset delay.</li>
+               <li>Sens, vibrato sensitivity.</li>
+               <li>Vibrato, vibrato depth.</li>
+               <li>External, external control to pitch depth.</li>
+            </ul>
+            
+            <hr class="section-head" />
+            
+            <b>Buses:</b>
+            <ul>
+               <li>outbus - audio output.</li>
+               <li>xbus - control input.</li>
+            </ul>
+            
+            <hr class="section-head" />
+            
+            <b>Parameters:</b>
+            <ul>
+                <li>amp - output amplitude (0.0 ... 2.0)</li>
+                <li>vfreq - LFO frequency (0.0 ... 99.999)</li>
+                <li>vlock - LFO frequency tracks fundamental (0 = no, 1=yes)</li>
+                <li>vnoise - LFO noise amount (0.0 ... 1.0)</li>
+                <li>vdelay -  vibrato onset delay (0.0 ... 1.0)</li>
+                <li>vsens -   vibrato sensitivity (0.0 ... 1.0)</li>
+                <li>vdepth -   programmed vibrato depth (0.0 ... 1.0)</li>
+                <li>vibrato -  manual vibrato depth (0.0 ... 1.0)</li>
+                <li>xPitch -   external control to pitch (0.0 ... 1.0)</li>
+                <li>tremRatio - tremolo frequency ratio *see below</li>
+                <li>noiseRatio - noise frequency ratio (1,2,3,4)</li>
+                <li>chiffAttack - chiff attack time (0.0 ... 1.0)</li>
+                <li>chiffDecay - chiff decay time (0.0 ... 1.0)</li>
+                <li>chiffAmp -   chiff amplitude (0.0 ... 1.0)</li>
+                <li>chiffVelocity - chiff velocity sensitivity (0.0 ... 1.0)</li>
+                <li>noiseAmp - noise amplitude (0.0 ... 1.0)</li>
+                <li>blipAttack - blip envelope attack time (0.0 ... 1.0)</li>
+                <li>blipDecay - blip envelope decay time (0.0 ... 1.0)</li>
+                <li>blipDepth - blip envelope pitch bend depth (0.0 ... 1.0)</li>
+                <li>blipVelocity - blip depth velocity sensitivity (0.0 ... 1.0)</li>
+                <li>op4Ratio - modulator ratio (0.000 ... 9.999)</li>
+                <li>op4Feedback - modulator feedback (0.0 ... 1.0)</li>
+                <li>op4LFO - LFO to modulator output (0.0 ... 1.0)</li>
+            </ul>
+                
+            The following carrier parameters have the form op?xxx where x is 1, 2, or 3<br>
+            The envelope is applied to both carrier output and modulation input.<br>
+            
+            <ul>
+                <li>op?Formant - carrier formant frequency in Hz, ignored if mode is 0,  (0 ... 9999)</li>
+                <li>op?Ratio - carrier frequency ratio, ignored if  mode is 1, (0.000, 9.999) </li>
+                <li>op?Mode - carrier mode (0 = ratio, 1 = formant)</li>
+                <li>op?Velocity - carrier velocity sensitivity (0.0 ... 1.0)</li>
+                <li>op?Tremolo -  LFO to carrier amplitude (0.0 ... 1.0)</li>
+                <li>op?ModDepth - Modulation depth (0.0 ... 1.0)</li>
+                <li>op?Attack - Attack time (0.0 ... 8.0)</li>
+                <li>op?Decay -  Decay time (0.0 ... 8.0)</li>
+                <li>op?Sustain - Sustain level (0.0 ... 1.0)</li>
+                <li>op?Release - Release time (0.0 ... 1.0)</li>
+                <li>op?ModLag - modulation envelope lag time (0.0 ... 1.0)</li>
+                <li>op?BreakKey - keyscale reference key (0,6,12,...,114,120,126)</li>
+                <li>op?LeftKeyScale - left keyscale depth in db/octave (-18,-15,-12,-9,-6,-3,0,+3,+6,+9,+12,+15,+18)</li>
+                <li>op?RightKeyScale - right keyscale depth in db/octave (-18,-15,-12,-9,-6,-3,0,+3,+6,+9,+12,+15,+18)</li>
+                <li>op?Amp - carrier amplitude (0.0 ... 1.0)</li>
+                <li>op?X - external control to carrier amplitude (0.0 ... 1.0)</li>
+            </ul>
+            
+            * tremolo frequency ratios (1/8, 1/4, 1/2, 3/4, 1, 5/4, 4/3, 3/2, 5/3, 7/4, 2, 3, 4)
+            
+            <hr class="section-head" />
+    <a class="navigation" href="fm2.html">Previous(&nbsp;FM2&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="klstr.html">Next(&nbsp;Klstr&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>
