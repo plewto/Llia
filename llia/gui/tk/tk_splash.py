@@ -22,7 +22,7 @@ class TkSplashWindow(Toplevel):
         Toplevel.__init__(self, root)
         self.config(background=factory.bg())
         self.title("Llia Setup")
-        self.maxsize(660, 685)
+        self.maxsize(800,870)
         self.app = app
         self.config = app.config
         main = VFrame(self)
