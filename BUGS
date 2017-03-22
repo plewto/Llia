@@ -239,3 +239,17 @@ This appears to happen mostly with newly created banks.
 BUG 0018 2016.12.01
 
 Crussher pp produces bugy code
+
+---------------------------------------------------------------------- Open 0019
+BUG 0019 2017.03.22
+
+install_synths.scd includes itself which causes an infinite loop.
+
+Temp fix: manually comment out line. 
+
+---------------------------------------------------------------------- Open 0020
+BUG 0020 2017.03.22
+
+Not so much a BUG as something to be aware of.
+install_synths.scd only works if scide is launched from Llia/sc/SynthDefs folder.
+
