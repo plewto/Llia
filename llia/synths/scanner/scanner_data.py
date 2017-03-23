@@ -62,9 +62,9 @@ scanner(0,"Bypass",
         feedback = -0.0000,
         lowpass = 16000,
         dryMix = 0.5000,
-        wet1Mix = 0.0000)
-        wet2Mix = 0.0000)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.0000,
+        wet2Mix = 0.0000,
+        xmodDepth = 0.0000)
 
 scanner(1,"Phasor 1",
         scanRate = 2.7200,
@@ -74,9 +74,9 @@ scanner(1,"Phasor 1",
         feedback = -0.7623,
         lowpass = 16000,
         dryMix = 0.5000,
-        wet1Mix = 0.5000)
-        wet2Mix = 0.5000)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.5000,
+        wet2Mix = 0.5000,
+        xmodDepth = 0.0000)
 
 scanner(2,"Vibrato",
         scanRate = 7.9590,
@@ -86,9 +86,9 @@ scanner(2,"Vibrato",
         feedback = -0.0198,
         lowpass = 8000,
         dryMix = 1.0000,
-        wet1Mix = 0.7079)
-        wet2Mix = 0.7079)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.7079,
+        wet2Mix = 0.7079,
+        xmodDepth = 0.0000)
 
 scanner(3,"Slight Mod",
         scanRate = 0.6270,
@@ -98,9 +98,9 @@ scanner(3,"Slight Mod",
         feedback = -0.9108,
         lowpass = 16000,
         dryMix = 0.5012,
-        wet1Mix = 0.5012)
-        wet2Mix = 0.5012)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.5012,
+        wet2Mix = 0.5012,
+        xmodDepth = 0.0000)
 
 scanner(4,"Slow And Deep",
         scanRate = 0.0660,
@@ -110,9 +110,9 @@ scanner(4,"Slow And Deep",
         feedback = 0.9900,
         lowpass = 2441,
         dryMix = 0.0000,
-        wet1Mix = 0.7079)
-        wet2Mix = 0.7079)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.7079,
+        wet2Mix = 0.7079,
+        xmodDepth = 0.0000)
 
 scanner(5,"Random 1",
         scanRate = 1.3520,
@@ -122,9 +122,9 @@ scanner(5,"Random 1",
         feedback = -0.9900,
         lowpass = 1000,
         dryMix = 0.5000,
-        wet1Mix = 0.8913)
-        wet2Mix = 0.7079)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.8913,
+        wet2Mix = 0.7079,
+        xmodDepth = 0.0000)
 
 scanner(6,"Random 2",
         scanRate = 4.0620,
@@ -134,9 +134,9 @@ scanner(6,"Random 2",
         feedback = -0.7524,
         lowpass = 2000,
         dryMix = 0.5000,
-        wet1Mix = 0.6310)
-        wet2Mix = 0.6310)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.6310,
+        wet2Mix = 0.6310,
+        xmodDepth = 0.0000)
 
 scanner(7,"Random 3",
         scanRate = 4.3960,
@@ -146,6 +146,6 @@ scanner(7,"Random 3",
         feedback = 0.7227,
         lowpass = 16000,
         dryMix = 0.5000,
-        wet1Mix = 0.5000)
-        wet2Mix = 0.5000)
-        xmodDeoth = 0.0000)
+        wet1Mix = 0.5000,
+        wet2Mix = 0.5000,
+        xmodDepth = 0.0000)
