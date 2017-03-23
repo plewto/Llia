@@ -54,7 +54,7 @@ def _proxy_boilerplate(stype,sname):
         code += 'specs["control-output-buses"] = [] # FIXME\n'
         code += 'specs["control-input-buses"] = []  # FIXME\n'
         code += 'print("\\t%s" % specs["format"])\n'
-        code += 'llia.constants.EFX_TYPES.append(specs["format"])\n'
+        code += 'llia.constants.EFFECTS_TYPES.append(specs["format"])\n'
     elif stype == "controller":
         code += 'specs["is-efx"] = True\n'
         code += 'specs["is-controller"] = True\n'

@@ -16,10 +16,10 @@
                  "envgen.scd",
                  "flngr.scd",
                  "fm2.scd",
+                 "foo.scd",
                  "formant.scd",
                  "ghostbus.scd",
                  "hund.scd",
-                 /* "install_synths.scd",   BUG 0019 */
                  "io.scd",
                  "klstr.scd",
                  "lfo1.scd",

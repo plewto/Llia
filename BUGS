@@ -238,18 +238,25 @@ This appears to happen mostly with newly created banks.
 ---------------------------------------------------------------------- Open 0018
 BUG 0018 2016.12.01
 
-Crussher pp produces bugy code
+Crusher pp produces buggy code.
 
----------------------------------------------------------------------- Open 0019
+---------------------------------------------------------------------- Closed 0019
 BUG 0019 2017.03.22
 
 install_synths.scd includes itself which causes an infinite loop.
 
-Temp fix: manually comment out line. 
-
----------------------------------------------------------------------- Open 0020
+2017.03.23 Modified addsynth script to exclude install_synths.sc
+---------------------------------------------------------------------- Closed 0020
 BUG 0020 2017.03.22
 
 Not so much a BUG as something to be aware of.
 install_synths.scd only works if scide is launched from Llia/sc/SynthDefs folder.
 
+2017.03.23 Added note to docmentation.
+---------------------------------------------------------------------- Closed 0021
+BUG 0021 2017.03.22
+
+addsynth script typo:
+Final line of <sname>_proxy.py EFX_TYPES should be EFFECT_TYPES
+
+2017.03.23 modified tools/sproxy.py 

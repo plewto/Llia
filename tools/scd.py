@@ -16,13 +16,14 @@ def _update_synth_install_file(devdir):
     pad = ''
     for f in files:
         ext = splitext(f)[-1]
-        if ext == ".scd":
+        if ext == ".scd" and f != "install_synths.scd":
             code += pad+'"%s"' % f
             if f == terminal:
                 code += '];\n'
             else:
                 code += ',\n'
                 pad = ' '*17
+    
     code += '~llia_manifest.do({|fname|\n'
     code += '    postf("Installing \'%\'\\n", fname);\n'
     code += '    fname.load;\n'
