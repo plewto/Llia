@@ -1,7 +1,7 @@
 # llia.constants
 # 2016.02.07
 
-VERSION = (0,1,1, "Beta", "2016.12.24")
+VERSION = (0,1,2, "Beta", "2017.03.23")
 
 BANNER =""" 
 ,--.   ,--.,--.         
