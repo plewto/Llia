@@ -28,7 +28,7 @@ class ScannerProxy(SynthProxy):
 pallet = Pallet(default_pallet)
 #pallet["BACKGROUND"] =  
 #pallet["SLIDER-OUTLINE"] = 
-#pallet["SLIDER-TROUGH"] = 
+pallet["SLIDER-TROUGH"] = "#31383d"
 specs["constructor"] = ScannerProxy
 specs["description"] = "Phase Shifter"
 specs["help"] = "Scanner"
