@@ -19,7 +19,7 @@
                  "formant.scd",
                  "ghostbus.scd",
                  "hund.scd",
-                 "install_synths.scd",
+                 /* "install_synths.scd",   BUG 0019 */
                  "io.scd",
                  "klstr.scd",
                  "lfo1.scd",
@@ -38,6 +38,7 @@
                  "ringmodulator.scd",
                  "rumklang.scd",
                  "saw3.scd",
+                 "scanner.scd",
                  "snh.scd",
                  "ss1.scd",
                  "tremolo.scd",

@@ -36,6 +36,8 @@ import llia.synths.prism.prism_proxy
 import llia.synths.formant.formant_proxy
 import llia.synths.xover.xover_proxy
 import llia.synths.comb.comb_proxy
+import llia.synths.scanner.scanner_proxy
+import llia.synths.scanner.scanner_proxy
 # END EFX IMPORTS
 
 print("Importing controller synths:")
