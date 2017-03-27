@@ -21,7 +21,7 @@ output-port : Launchkey Mini 20:0
 backend : mido.backends.rtmidi
 ; backend : midi.backends.portmidi
 enable-program-pp : True
-enable-keyswitch : True
+enable-keyswitch : False    # Use with care!
 keyswitch-channel : 10
 keyswitch-transpose : -40
 trace-midi-reception : False
