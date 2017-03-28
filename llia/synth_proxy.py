@@ -292,12 +292,12 @@ class SynthProxy(object):
         register_midi_handler("pitchwheel", self._pitchwheel_handler)
         register_midi_handler("control_change", self._cc_handler)
         register_midi_handler("program_change", self._program_change_handler)
-        if app.config.keyswitch_enabled():
-            self._keyswitch_chan0 = app.config.keyswitch_channel()-1
-            self._keyswitch_transpose = app.config.keyswitch_transpose()
-            register_midi_handler("note_on", 
-                                  self._keyswitch_handler, 
-                                  "keyswitch.")
+        # if app.config.keyswitch_enabled():
+        #     self._keyswitch_chan0 = app.config.keyswitch_channel()-1
+        #     self._keyswitch_transpose = app.config.keyswitch_transpose()
+        #     register_midi_handler("note_on", 
+        #                           self._keyswitch_handler, 
+        #                           "keyswitch.")
 
     def status(self, msg):
         '''
@@ -886,13 +886,13 @@ class SynthProxy(object):
         if mmsg.channel == self._midi_chan0:
             self.use_program(mmsg.program)            
     
-    def _keyswitch_handler(self, mmsg):
-        if mmsg.channel == self._keyswitch_chan0:
-            v127 = mmsg.velocity
-            if v127 != 0:
-                slot = mmsg.note+self._keyswitch_transpose
-                slot = min(max(slot, 0), 127)
-                self.use_program(slot)
+    # def _keyswitch_handler(self, mmsg):
+    #     if mmsg.channel == self._keyswitch_chan0:
+    #         v127 = mmsg.velocity
+    #         if v127 != 0:
+    #             slot = mmsg.note+self._keyswitch_transpose
+    #             slot = min(max(slot, 0), 127)
+    #             self.use_program(slot)
                 
     def dump(self):
         pad = " "*4
