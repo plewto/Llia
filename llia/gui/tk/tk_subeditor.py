@@ -24,11 +24,46 @@ class TkSubEditor(Frame):
         self.config(background=factory.bg())
         self._child_editors = {}
         self._controls = {}
+        self._annotations = {}
         # WARNING: For some 'old-stye' editors, tk_master may be a Frame
         # WARNING: and not a Canvas!
         self.canvas = tk_master
         self.parent = parent
 
+    # Returns set of annotation keys.
+    # Does not include any child editors.
+    def annotation_keys(self):
+        return self._annotations.keys()
+
+    # Define new annotation key.
+    def _define_annotation(self, key):
+        self._annotations[key] = ""
+
+    # Set annotation text.
+    # Ignore if key has not previously been defined by _define_annotation.
+    # Does not actually update any GUI graphics,
+    # Returns True if key is defined, False otherwise.
+    def _set_annotation(self, key, text):
+        if self._annotations.has_key(key):
+            self._annotations[key] =str(text)
+            return True
+        else:
+            return False
+
+    # Returns annotation for key.
+    # Returns None if key has not previously been defined by _define_annotation.
+    def get_annotation(self, key):
+        return self._annotations.get(key, None)
+
+    # Subclasses should implement.
+    # If text, update annotation.
+    # Returns annotation text associated with key.
+    # If key has not been defined by _define_annotation, return None
+    @abc.abstractmethod
+    def annotation(self, key, text=None):
+        return None
+    
+    
     def add_control(self, param, sctrl):
         if is_synth_control(sctrl):
             self._controls[param] = sctrl
@@ -123,7 +158,7 @@ class TkSubEditor(Frame):
         s = ExpSlider(self.canvas,param,self.parent,
                       range_=mx,degree=degree)
         '''
-        Adds slider with exponetial response to canvas.
+        Adds slider with exponential response to canvas.
         
         ARGS:
           param  - String, synth parameter
@@ -132,7 +167,7 @@ class TkSubEditor(Frame):
           y      - int, y coordinate
           degree - int, exponential degree, default 2
           height - int, slider height, default 150     
-          checkbutton - Tuple, spcifies locatin of optional checkbutton.
+          checkbutton - Tuple, specifies location of optional checkbutton.
                         The checkbutton is used to invert the sign of the 
                         slider value.  If used it should be a tuple
                         (x-offset,y-offset), typical values for default
@@ -146,7 +181,7 @@ class TkSubEditor(Frame):
 
     def volume_slider(self,param,x,y,height=150):
         '''
-        Adds volume slider to canvas.  A volume slider is callibrated in 
+        Adds volume slider to canvas.  A volume slider is calibrated in 
         db and has several distinct ranges.
 
         ARGS:
@@ -195,14 +230,14 @@ class TkSubEditor(Frame):
           index      - int, the aspect index.  index must be between 0
                        and the maximum aspect count for the msb.
           value      - The aspects value
-          text       - Optional, defaults to string represtnation of value
+          text       - Optional, defaults to string representation of value
           fill       - Optional, background color
           foreground - Optional, foreground color
           outline    - Optional, outline color
           update     - Boolean, if True the update_aspect method is called 
                        on the msb.  update_aspect must be called at least
                        once for the msb to be visible.  On the other hand
-                       needlesly calling it for each defined aspect is
+                       needlessly calling it for each defined aspect is
                        wasteful.
         
         The optional color arguments default to the BG and FG colors
@@ -227,7 +262,7 @@ class TkSubEditor(Frame):
     def msb(self,param,count,x,y):
         '''
         Adds Multi State Button to the canvas.   In order for the button to 
-        be usefull, two or more aspects must be defined.  The update_aspect()
+        be useful, two or more aspects must be defined.  The update_aspect()
         method should be called at least once after all the aspects have been
         defined, otherwise the button will not be visible.
 

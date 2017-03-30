@@ -31,6 +31,8 @@ class TkMixerPanel(TkSubEditor):
         yledger = ymute+60
         x0 = 120
         xmain = x0+500
+        self._ledger_vars = {}
+
         
         def fader(chan, x):
             param = "gain%s" % chan
@@ -50,10 +52,13 @@ class TkMixerPanel(TkSubEditor):
             self.add_control(param, s)
             s.widget().place(x=x, y=ymod, height=100)
 
-        def entry(x):
+        def entry(key,x,y=yledger):
             var = StringVar()
-            e = factory.entry(canvas,var)
-            e.place(x=x,y=yledger, width=74)
+            self._ledger_vars[key] = var
+            e = factory.entry(canvas,var, index=key)
+            e.place(x=x,y=y, width=74)
+            e.bind("<FocusOut>", self.ledger_callback)
+            self._define_annotation(key)
             
         for i,prefix in enumerate("ABCD"):
             chan = "%s" % prefix
@@ -77,9 +82,27 @@ class TkMixerPanel(TkSubEditor):
             msb_mute.define_aspect(1,1,aon)
             msb_mute.layout((x+7,ymute))
             msb_mute.update_aspect()
-            entry(x)
+            ledger_key = "IN_%s" % prefix
+            entry(ledger_key,x)
 
         for i in range(2):
             x = xmain + i*60
             fader(str(i+1), x)
+
+        entry("OUT_1", xmain, y=yledger-50)
+        entry("OUT_2", xmain, y=yledger)
             
+    def ledger_callback(self, event):
+        key = event.widget.index
+        var = self._ledger_vars[key]
+        self._set_annotation(key, var.get())
+
+    def annotation(self, key, text=None):
+        try:
+            var = self._ledger_vars[key]
+            if text != None:
+                var.set(text)
+                self._set_annotation(key, text)
+            return var.get()
+        except KeyError:
+            return None

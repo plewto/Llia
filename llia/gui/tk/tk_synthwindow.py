@@ -488,3 +488,20 @@ class TkSynthWindow(Frame):
             if key not in ignore:
                 ed.sync(*ignore)
        
+    def annotation_keys(self):
+        acc = []
+        for ed in self._child_editors.values():
+            acc += ed.annotation_keys()
+        return acc
+
+    def set_annotation(self, key, text):
+        for ed in self._child_editors.values():
+            ed.annotation(key, text)
+
+    def get_annotation(self, key):
+        rs = None
+        for ed in self._child_editors.values():
+            rs = ed.get_annotation(key)
+            if rs != None:
+                return rs
+        return None

@@ -59,6 +59,9 @@ class SynthHelper(object):
         ns["qbuffers"] = self.q_buffers
         ns["qparams"] = self.q_params
         ns["param"] = self.param
+        ns["annotation_keys"] = self.annotation_keys
+        ns["set_annotation"] = self.set_annotation
+        ns["get_annotation"] = self.get_annotation
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -684,3 +687,20 @@ class SynthHelper(object):
         if not silent:
             print("# [%s] -> %s" % (pname, value))
         return value
+
+    def annotation_keys(self, sid=None):
+        sy = self.get_synth(sid)
+        ed = sy.synth_editor
+        return ed.annotation_keys()
+
+    # Ignore if key is not a defined annotation.
+    def set_annotation(self, key, text, sid=None):
+        sy = self.get_synth(sid)
+        ed = sy.synth_editor
+        ed.set_annotation(key, text)
+
+    def get_annotation(self, key, sid=None):
+        sy = self.get_synth(sid)
+        ed = sy.synth_editor
+        return ed.get_annotation(key)
+        
