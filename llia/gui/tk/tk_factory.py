@@ -393,8 +393,12 @@ def controller_combobox(master, app):
 #
 # NOTE: Text is not a ttk widget
 
-def entry(master, var, ttip=""):
+
+# Optional index used for widget identification in callbacks.
+#
+def entry(master, var, ttip="", index=None):
     t = Entry(master)
+    t.index = index
     t.configure(textvariable=var)
     tooltip(t, ttip)
     t.config(background=bg(), foreground=fg())
