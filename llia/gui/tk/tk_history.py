@@ -51,8 +51,8 @@ class TkHistoryEditor(Toplevel):
         sb1.grid(row=0, column=5, rowspan=5, sticky=NS)
         sb2.grid(row=5, column=0, columnspan=5, sticky=EW)
         self._get_current_history()
-        self.grab_set()
-        self.mainloop()
+        # self.grab_set()
+        # self.mainloop()
         
 
     def _get_current_history(self):
