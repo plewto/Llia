@@ -1,0 +1,34 @@
+
+
+Adds run-time editor annotation.
+Depreciated keyswitch feature.
+**************************************************** v 0.1.2    2017.03.23
+Multiple bug fixes
+Adds Scanner phase-shifter
+Adds Comb filter
+Increased size of splash screen
+
+**************************************************** v 0.1.0    2016.12.17
+Multiple bug fixes
+Documentation
+Implements addsynth script to partially automate new synth creation.
+Adds control widget creation methods to TkSubEditor.
+Extends compose feature to include program banks and graph layout.
+Adds Bandpass and Notch filter effects.
+Adds parametric EQ effect.
+Adds M synth.
+Extends FM2 synth.
+Adds SS1 synth.
+Adds IO synth.
+Adds Corvus synth.
+Adds PolyN keymode.
+Adds MonoExclusive keymode.
+Adds Algo synth.
+Adds QMod effect.
+Adds Grayhound effect.
+Adds Crusher effect.
+Adds RingModulator effect.
+Adds Ghostbus controller effect.
+Adds ControlMixer effect.
+Adds Cascade pulse generator.
+
