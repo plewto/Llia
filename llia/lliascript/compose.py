@@ -121,6 +121,10 @@ class Composer(object):
                 code += 'midi_input_channel(%d,silent=True)\n' % sy.midi_input_channel()
                 code += 'create_editor()\n'
                 code += self._load_bank(e)
+                ed = sy.synth_editor
+                for akey in ed.annotation_keys():
+                    txt = ed.get_annotation(akey)
+                    code += 'set_annotation("%s","%s")\n' % (akey,txt)
         return code
     
     def _build_buffer_assignments(self):
