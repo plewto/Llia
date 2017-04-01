@@ -1,10 +1,11 @@
 # llia.synths.controlmixer.tk.editor
 
+from Tkinter import StringVar
+
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
 from llia.gui.tk.msb import MSB
-
 
 def create_editor(parent):
     TkControlmixerPanel(parent)
@@ -24,12 +25,17 @@ class TkControlmixerPanel(TkSubEditor):
         self.editor = editor
         TkSubEditor.__init__(self, canvas, editor, self.NAME)
         editor.add_child_editor(self.NAME, self)
+        self._ledger_vars = {}
 
-        y_slider = 75
         x0 = 75
         x_bias_offset = 60
         slider_width=14
         slider_height = 300
+
+        y_slider = 75
+        y_mute = y_slider+slider_height+40
+        y_ledger = y_mute+60
+        
         
         def scale_slider(param, x):
             s = cf.linear_slider(canvas,param,self.editor,range_=(-4.0, 4.0))
@@ -61,10 +67,19 @@ class TkControlmixerPanel(TkSubEditor):
             b.define_aspect(1, 1, aon)
             self.add_control(param,b)
             x = x + 8
-            y = y_slider + slider_height + 40
-            b.layout(offset = (x,y))
+            b.layout(offset = (x,y_mute))
             b.update_aspect()
             return b
+
+        def entry(key,x):
+            var = StringVar()
+            var.set(key)
+            self._ledger_vars[key] = var
+            e = factory.entry(canvas,var,index=key)
+            e.place(x=x+2,y=y_ledger,width=74)
+            e.bind("<FocusOut>", self.ledger_callback)
+            self._define_annotation(key)
+            
         
         x_diff = 130
         for i,p in enumerate("ABCD"):
@@ -72,16 +87,25 @@ class TkControlmixerPanel(TkSubEditor):
             scale_slider("scale%s" % p, x)
             bias_slider("bias%s" % p, x)
             mute_button("mute%s" % p, x)
+            ledger_key = "IN_%s" % p
+            entry(ledger_key,x)
 
         x_master = 600
         scale_slider("masterScale", x_master)
         bias_slider("masterBias", x_master)
         mute_button("masterMute", x_master)
 
-        # s_lag = cf.normalized_slider(canvas,"lag",self.editor)
-        # s_delay = cf.normalized_slider(canvas,"delay",self.editor)
-        # self.add_control("lag", s_lag)
-        # self.add_control("delay", s_delay)
-        # s_delay.widget().place(x=x_master+120,y=y_slider, width=14, height=slider_height)
-        # s_lag.widget().place(x=x_master+180,y=y_slider, width=14, height=slider_height)
-        
+    def ledger_callback(self, event):
+        key = event.widget.index
+        var = self._ledger_vars[key]
+        self._set_annotation(key,var.get())
+
+    def annotation(self, key, text=None):
+        try:
+            var = self._ledger_vars[key]
+            if text != None:
+                var.set(text)
+                self._set_annotation(key, text)
+            return var.get()
+        except KeyError:
+            return None
