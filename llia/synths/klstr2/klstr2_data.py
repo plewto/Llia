@@ -106,7 +106,7 @@ def klstr2(slot, name, amp=0.1,
                      "external" : 0.0},       # external -> spread (0..1)
            cluster = {"n" : 0.0,              # Source signal mix, (0 <= n <= 4)
                       "env1" : 0.0,           # env1 -> cluster
-                      "lfo1" : 0.0,           # lfo1 ->cluster
+                      "lfo1" : 0.0,           # lfo1 -> cluster
                       "lfo2" : 0.0,           # lfo2 -> cluster
                       "external" : 0.0},      # external -> cluster
            pw = {"pw" : 0.5,                  # Pulse width (0.0 <= pw <= 1.0)
@@ -150,13 +150,13 @@ def klstr2(slot, name, amp=0.1,
     p = Klstr2(name)
     
     def fval(d,param,key,dflt=None,minmax=(0.0, 1.0)):
-        mn, mx = minmax
+        mn, mx = minmax[0],minmax[-1]
         dflt = dflt or mn
         v = min(mx,max(mn,d.get(key,dflt)))
         p[param] = float(v)
 
     def ival(d,param,key,dflt=0,minmax=(0,1)):
-        mn, mx = minmax
+        mn, mx = minmax[0],minmax[-1]
         dflt = dflt or mn
         v = min(mx,max(mn,d.get(key,dflt)))
         p[param] = int(v)
@@ -191,13 +191,13 @@ def klstr2(slot, name, amp=0.1,
     fval(pw,"pw_lfo1","lfo1")
     fval(pw,"pw_env1","env1")
     ival(harm1,"harm1","n",dflt=8,minmax=HARMONIC_COUNT_RANGE)
-    ival(harm1,"harm1_env1","env1",dflt=0,minmax=HARMONIC_MOD_RANGE) 
-    ival(harm1,"harm1_env2","env2",dflt=0,minmax=HARMONIC_MOD_RANGE)
-    ival(harm1,"harm1_lfo1","lfo1",dflt=0,minmax=(0,HARMONIC_MOD_RANGE[1]))
-    ival(harm1,"harm1_lfo2","lfo2",dflt=0,minmax=(0,HARMONIC_MOD_RANGE[1]))
+    ival(harm1,"harm1_env1","env1",dflt=0,minmax=POLAR_HARMONIC_MOD_RANGE) 
+    ival(harm1,"harm1_env2","env2",dflt=0,minmax=POLAR_HARMONIC_MOD_RANGE)
+    ival(harm1,"harm1_lfo1","lfo1",dflt=0,minmax=HARMONIC_MOD_RANGE)
+    ival(harm1,"harm1_lfo2","lfo2",dflt=0,minmax=HARMONIC_MOD_RANGE)
     ival(harm2,"harm2","n",dflt=8,minmax=HARMONIC_COUNT_RANGE)
-    ival(harm2,"harm2_env1","env1",dflt=0,minmax=HARMONIC_MOD_RANGE)
-    ival(harm2,"harm2_lfo1","lfo1",dflt=0,minmax=(0,HARMONIC_MOD_RANGE[1]))
+    ival(harm2,"harm2_env1","env1",dflt=0,minmax=POLAR_HARMONIC_MOD_RANGE)
+    ival(harm2,"harm2_lfo1","lfo1",dflt=0,minmax=HARMONIC_MOD_RANGE)
     ival(harm2,"harm2_external","external",dflt=0,minmax=HARMONIC_MOD_RANGE)
     fval(harm2,"harm2_lag","lag")
     ival(noise_filter,"noise_lowpass","lowpass",16000,minmax=LOWPASS_RANGE)
