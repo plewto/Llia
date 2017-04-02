@@ -8,6 +8,7 @@ import llia.synths.saw3.s3_proxy
 import llia.synths.orgn.orgn_proxy
 import llia.synths.masa.masa_proxy
 import llia.synths.klstr.klstr_proxy
+import llia.synths.klstr2.klstr2_proxy
 import llia.synths.rdrum.rdrum_proxy
 import llia.synths.fm2.fm2_proxy
 import llia.synths.algo.algo_proxy
