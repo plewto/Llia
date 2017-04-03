@@ -27,10 +27,10 @@ class Klstr2Proxy(SynthProxy):
 
 pallet = Pallet(default_pallet)
 #pallet["BACKGROUND"] =  
-#pallet["SLIDER-OUTLINE"] = 
+pallet["SLIDER-OUTLINE"] = "#113332"
 #pallet["SLIDER-TROUGH"] = 
 specs["constructor"] = Klstr2Proxy
-specs["description"] = "FIXME"
+specs["description"] = "Massed pulse wave synth"
 specs["help"] = "Klstr2"
 specs["pretty-printer"] = klstr2_pp
 specs["program-generator"] = klstr2_random

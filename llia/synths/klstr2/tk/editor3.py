@@ -27,8 +27,8 @@ class TkKlstr2ExternalPanel(TkSubEditor):
         self.norm_slider("spread_external",x0,y0)
         self.norm_slider("cluster_external",x0+60,y0)
 
-        msb_harm = self.msb("harm2_external",len(POLAR_HARMONIC_MOD_RANGE),x0+160,y0)
-        msb_filter = self.msb("f1_freq_external",len(FILTER_MOD_VALUES),x0+260,y0)
+        msb_harm = self.msb("harm2_external",len(POLAR_HARMONIC_MOD_RANGE),x0+120,y0)
+        msb_filter = self.msb("f1_freq_external",len(FILTER_MOD_VALUES),x0+120,y0+122)
         for i,n in enumerate(POLAR_HARMONIC_MOD_RANGE):
             fg = None
             self.msb_aspect(msb_harm,i,n,foreground=fg)
