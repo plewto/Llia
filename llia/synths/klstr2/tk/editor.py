@@ -14,7 +14,7 @@ def create_editor(parent):
 
 class TkKlstr2OscPanel(TkSubEditor):
 
-    NAME = "Klstr2"
+    NAME = "Tone"
     IMAGE_FILE = "resources/Klstr2/editor.png"
     TAB_FILE = "resources/Klstr2/tab.png"
 
@@ -95,29 +95,28 @@ class TkKlstr2OscPanel(TkSubEditor):
         msb_h1_lfo2.update_aspect()
         msb_h2_lfo1.update_aspect()
         self.norm_slider("harm2_lag",x_harm2+23, y1+74, height=75)
-        msb_noise_highpass = self.msb("noise_highpass",len(NOISE_HIGHPASS_FREQUENCIES),x_noise,y0)
-        msb_noise_lowpass = self.msb("noise_lowpass",len(NOISE_LOWPASS_FREQUENCIES),x_noise, y0+75)
-        for i,n in enumerate(NOISE_HIGHPASS_FREQUENCIES):
+        msb_noise_highpass = self.msb("noise_highpass",len(FILTER_FREQUENCIES),x_noise,y0)
+        msb_noise_lowpass = self.msb("noise_lowpass",len(FILTER_FREQUENCIES),x_noise, y0+75)
+        for i,n in enumerate(FILTER_FREQUENCIES):
             if n < 1000:
                 fg = None
             else:
                 fg = DEEP_MOD_DEPTH_COLOR
             self.msb_aspect(msb_noise_highpass,i,n,foreground=fg)
-        for i,n in enumerate(NOISE_LOWPASS_FREQUENCIES):
-            if n < 1000:
-                fg = None
-            else:
-                fg = DEEP_MOD_DEPTH_COLOR
             self.msb_aspect(msb_noise_lowpass,i,n,foreground=fg)
-        msb_noise_env = self.msb("noise_lowpass_env1",len(NOISE_FILTER_MOD_RANGE),x_noise,y0+150)
-        msb_noise_lfo = self.msb("noise_lowpass_lfo1",len(NOISE_FILTER_MOD_RANGE),x_noise,y0+225)
-        for i,n in enumerate(NOISE_FILTER_MOD_RANGE):
-            if n < 1000:
+        msb_noise_env = self.msb("noise_lowpass_env1",len(FILTER_MOD_VALUES),x_noise,y0+150)
+        msb_noise_lfo = self.msb("noise_lowpass_lfo1",len(FILTER_MOD_VALUES),x_noise,y0+225)
+        for i,n in enumerate(FILTER_MOD_VALUES):
+            if n>=0:
+                bg = POSITIVE_FILL_COLOR
+            else:
+                bg = NEGATIVE_FILL_COLOR
+            if abs(n) < 1000:
                 fg = None
             else:
                 fg = DEEP_MOD_DEPTH_COLOR
-            self.msb_aspect(msb_noise_env,i,n,foreground=fg)
-            self.msb_aspect(msb_noise_lfo,i,n,foreground=fg)
+            self.msb_aspect(msb_noise_env,i,n,foreground=fg,fill=bg)
+            self.msb_aspect(msb_noise_lfo,i,n,foreground=fg,fill=bg)
         msb_noise_highpass.update_aspect()
         msb_noise_lowpass.update_aspect()
         msb_noise_env.update_aspect()

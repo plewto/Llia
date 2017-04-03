@@ -44,8 +44,8 @@ class TkKlstr2ModPanel(TkSubEditor):
         msb_f1_lfo1 = self.msb("f1_freq_lfo1",len(FILTER_MOD_VALUES), x_f1, y0+150)
         msb_f1_lfo2 = self.msb("f1_freq_lfo2",len(FILTER_MOD_VALUES), x_f1, y0+225)
         msb_f2_env1 = self.msb("f2_freq_env1",len(FILTER_MOD_VALUES), x_f2, y0+75)
-        msb_f2_lfo1 = self.msb("f2_freq_lfo1",len(FILTER_MOD_VALUES), x_f2, y0+150)
-        msb_f2_lfo2 = self.msb("f2_freq_lfo2",len(FILTER_MOD_VALUES), x_f2, y0+225)
+        msb_f2_env2 = self.msb("f2_freq_env2",len(FILTER_MOD_VALUES), x_f2, y0+150)
+        msb_f2_lfo1 = self.msb("f2_freq_lfo1",len(FILTER_MOD_VALUES), x_f2, y0+225)
         for i,n in enumerate(FILTER_MOD_VALUES):
             if n < 0:
                 bg = NEGATIVE_FILL_COLOR
@@ -62,7 +62,7 @@ class TkKlstr2ModPanel(TkSubEditor):
             self.msb_aspect(msb_f1_lfo2,i,n,foreground=fg,fill=bg)
             self.msb_aspect(msb_f2_env1,i,n,foreground=fg,fill=bg)
             self.msb_aspect(msb_f2_lfo1,i,n,foreground=fg,fill=bg)
-            self.msb_aspect(msb_f2_lfo2,i,n,foreground=fg,fill=bg)
+            self.msb_aspect(msb_f2_env2,i,n,foreground=fg,fill=bg)
             
         msb_f1_freq.update_aspect()
         msb_f2_freq.update_aspect()

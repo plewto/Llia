@@ -56,6 +56,7 @@ prototype = {
     "balance_a" : 0.0,
     "balance_b" : 0.0,
     "balance_noise" : 0.0,
+    
     "f1_freq" : 16000,
     "f1_freq_env1" : 0,
     "f1_freq_lfo1" : 0,
@@ -64,10 +65,11 @@ prototype = {
     "f1_res" : 0.0,
     "f1_amp" : 1,
     "f1_pan" : 0.25,
+    
     "f2_freq" : 1000,
     "f2_freq_env1" : 0,
+    "f2_freq_env2" : 0,
     "f2_freq_lfo1" : 0,
-    "f2_freq_lfo2" : 0,
     "f2_freq_lag" : 0.0,
     "f2_res" : 0.0,
     "f2_amp" : 1,
@@ -141,8 +143,8 @@ def klstr2(slot, name, amp=0.1,
                        "pan" : 0.75},         # output pan (-1..+1)
            filter_2 = {"freq" : 3000,         # Filter 2 freq
                        "env1" : 0,            # env1 -> freq
+                       "env2" : 0,            # env2 -> freq
                        "lfo1" : 0,            # lfo1 -> freq
-                       "lfo2" : 0,            # lfo2 -> freq
                        "lag"  : 0.0,          # freq lag time (0..1)
                        "res"  : 0.0,          # resoance (0..1)
                        "mix"  : 1.0,          # output amp (0..2)
@@ -200,16 +202,16 @@ def klstr2(slot, name, amp=0.1,
     ival(harm2,"harm2_lfo1","lfo1",dflt=0,minmax=HARMONIC_MOD_RANGE)
     ival(harm2,"harm2_external","external",dflt=0,minmax=HARMONIC_MOD_RANGE)
     fval(harm2,"harm2_lag","lag")
-    ival(noise_filter,"noise_lowpass","lowpass",16000,minmax=LOWPASS_RANGE)
+    ival(noise_filter,"noise_lowpass","lowpass",16000,minmax=FILTER_RANGE)
     ival(noise_filter,"noise_lowpass_env1","env1",minmax=FILTER_MOD_RANGE)
     ival(noise_filter,"noise_lowpass_lfo1","lfo1",0,minmax=FILTER_MOD_RANGE)
-    ival(noise_filter,"noise_highpass","highpass",HIGHPASS_RANGE[0],HIGHPASS_RANGE)
+    ival(noise_filter,"noise_highpass","highpass",minmax=FILTER_RANGE)
     fval(mixer,"noise_amp","noise",0.0,minmax=(0.0, 2.0))
     fval(mixer,"balance_a","balance_a",-0.75,minmax=(-1.0,1.0))
     fval(mixer,"balance_b","balance_b",-0.75,minmax=(-1.0,1.0))
     fval(mixer,"balance_noise","balance_noise",-0.75,minmax=(-1.0,1.0))
     fval(mixer,"out2_lag","out2_lag")
-    ival(filter_1,"f1_ferq","freq",16000,minmax=LOWPASS_RANGE)
+    ival(filter_1,"f1_ferq","freq",16000,minmax=FILTER_RANGE)
     ival(filter_1,"f1_freq_env1","env1",0,minmax=FILTER_MOD_RANGE)
     ival(filter_1,"f1_freq_lfo1","lfo1",0,minmax=FILTER_MOD_RANGE)
     ival(filter_1,"f1_freq_lfo2","lfo2",0,minmax=FILTER_MOD_RANGE)
@@ -217,10 +219,10 @@ def klstr2(slot, name, amp=0.1,
     fval(filter_1,"f1_res","res")
     fval(filter_1,"f1_amp","amp",0.5,minmax=(0.0, 2.0))
     fval(filter_1,"f1_pan","pan",-0.75,minmax=(-1.0,1.0))
-    ival(filter_2,"f2_ferq","freq",16000,minmax=LOWPASS_RANGE)
+    ival(filter_2,"f2_ferq","freq",16000,minmax=FILTER_RANGE)
     ival(filter_2,"f2_freq_env1","env1",0,minmax=FILTER_MOD_RANGE)
+    ival(filter_2,"f2_freq_env2","env2",0,minmax=FILTER_MOD_RANGE)
     ival(filter_2,"f2_freq_lfo1","lfo1",0,minmax=FILTER_MOD_RANGE)
-    ival(filter_2,"f2_freq_lfo2","lfo2",0,minmax=FILTER_MOD_RANGE)
     fval(filter_2,"f2_freq_lag","lag")
     fval(filter_2,"f2_res","res")
     fval(filter_2,"f2_amp","amp",0.5,minmax=(0.0, 2.0))

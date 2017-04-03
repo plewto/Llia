@@ -60,7 +60,7 @@ _pmap = {"lfoFreq":"freq",
          "f2_freq":"freq",
          "f2_freq_env1":"env1",
          "f2_freq_lfo1":"lfo1",
-         "f2_freq_lfo2":"lfo2",
+         "f2_freq_env2":"env2",
          "f2_freq_lag":"lag",
          "f2_res":"res",
          "f2_amp":"amp",
@@ -175,7 +175,7 @@ def klstr2_pp(program,slot):
             acc += ',\n'
         else:
             acc += '},\n'
-    f2_params = ("f2_freq","f2_freq_env1","f2_freq_lfo1","f2_freq_lfo2")
+    f2_params = ("f2_freq","f2_freq_env1","f2_freq_env2","f2_freq_lfo1")
     acc += '       filter_2 = {'
     for p in f2_params:
         if p != f2_params[0]: acc += ' '*19
