@@ -19,28 +19,23 @@ ADSR = 1
 ASR = 2
 GATE = 3
 
-verbose = True
-
-def status(msg):
-    if verbose:
-        print(msg)
-
+verbose = False
 
 def pick_env_time_hint(is_percussive=False):
     if is_percussive:
         h = coin(0.74, SLOW, coin(0.67, MEDIUM, GLACIAL))
     else:
         h = coin(0.75,
-                 pick((ULTRA_FAST,FAST,MEDIUM)),
-                 pick((ULTRA_FAST,FAST,MEDIUM,SLOW,GLACIAL,FULL)))
-        return h
+                 pick((ULTRA_FAST,FAST,FAST, MEDIUM)),
+                 pick((FAST,MEDIUM,SLOW,GLACIAL,FULL)))
+    return h
 
 def pick_env_segment_time(hint=FULL, p_changeup=0.1):
     hint = coin(p_changeup, pick_env_time_hint(),hint)
     mn,mx = 0, MAX_ENV_SEGMENT_TIME
     try:
-        mn,mx = {ULTRA_FAST : (0.00, 0.01),
-                 FAST : (0.00, 0.10),
+        mn,mx = {ULTRA_FAST : (0.00, 0.05),
+                 FAST : (0.00, 0.20),
                  MEDIUM : (0.10, 1.00),
                  SLOW : (1.0, 4.0),
                  GLACIAL : (4.0, MAX_ENV_SEGMENT_TIME)}[hint]
@@ -58,7 +53,7 @@ def pick_env_times(hint=None,p_changeup=0.1):
 
 def pick_env_type_hint(hint=None, p_changeup=1.0):
     hint = hint or coin(0.8,
-                        coin(0.5, PERCUSSIVE,ADSR),
+                        coin(0.25, PERCUSSIVE,ADSR),
                         coin(0.67, ASR, GATE))
     if coin(p_changeup):
         return pick_env_type_hint(hint,0)
@@ -70,24 +65,20 @@ def round_env_values(envlist):
     return head
     
 def gate_envelope(*_):
-    status("gate_envelope")
     return [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0]
 
 def asr_envelope(time_hint):
-    status("asr_envelope")
     att,dcy1,dcy2,rel = pick_env_times(time_hint,0.0)
     bp = sus = 1.0
     return round_env_values([att,dcy1,dcy2,rel,bp,sus,0])
 
 def adsr_envelope(time_hint):
-    status("adsr_envelope")
     att,dcy1,dcy2,rel = pick_env_times(time_hint,0.0)
     sus = coin(0.75, 0.5+rnd(0.5),rnd())
     bp = coin(0.50, sus, sus+rnd(1-sus))
     return round_env_values([att,dcy1,dcy2,rel,bp,sus,0])
 
 def percussive_envelope(time_hint):
-    status("percussive_envelope")
     if time_hint < MEDIUM:
         time_hint = pick_env_time_hint(True)
     junk,dcy1,dcy2,rel = pick_env_times(time_hint,0.0)
@@ -175,7 +166,6 @@ def klstr2_random(slot, *_):
     noise_lowpass = pick(FILTER_FREQUENCIES)
     f1 = pick(FILTER_FREQUENCIES)
     f2 = pick(FILTER_FREQUENCIES)
-    
     p = klstr2(slot,"Random",amp=0.2,
                lfo = {"freq" : lfo_freq,
                       "ratio2" : pick_lfo_ratio(lfo_freq),
