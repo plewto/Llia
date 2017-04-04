@@ -79,6 +79,10 @@
 	f2_freq_lfo1 = 0
 	//f2_freq_lfo2 = 0
 	f2_freq_lag = 0.0
+
+	f2b_lag = 0.0
+	f2b_offset = 0
+	f2b_fade = 0.0
 	f2_res = 0.0
 	f2_amp = 1
 	f2_pan = -0.25
@@ -128,14 +132,18 @@
 	var f1_in = composite_a[1]+composite_b[1]+nse[1];
 	var f1freq = max(80, min(16000, f1_freq + (f1_freq_env1 * env1) + (f1_freq_lfo1 * lfo1) + (f1_freq_lfo2 * lfo2) + (f1_freq_external * x)));
 	var f1gain = f1_res.linlin(0,1,0,3.9);
-	var f1out = Pan2.ar(MoogFF.ar(f1_in,f1freq,f1gain)*f1_amp,f1_pan);
+	var f1_agc = min(3.0, f1_res.linexp(0,1,1,3));
+	var f1out = Pan2.ar(MoogFF.ar(f1_in,f1freq,f1gain)*f1_amp,f1_pan)*f1_agc;
 	var f2_in = composite_a[0]+composite_b[0]+nse[0];
 	var f2freq = max(80, min(16000, f2_freq + (f2_freq_env1 * env1) + (f2_freq_env2 * env2) + (f2_freq_lfo1 * lfo1)));
-	var f2rq = f2_res.linexp(0,1,1,0.01);
-	var f2Resonz = Resonz.ar(f2_in,f2freq,f2rq);
-	var f2Bpf = BPF.ar(f2_in,Lag2.kr(f2freq,f2_freq_lag),f2rq);
-	var f2out = Pan2.ar(f2Resonz+f2Bpf,f2_pan)*f2_amp;
-	//var f2out = Pan2.ar(Resonz.ar(f2_in,Lag2.kr(f2freq,f2_freq_lag.linlin(0,1,0,4)),f2rq)*f2_amp,f2_pan);
+	var f2rq = f2_res.linexp(0,1,1,0.05);
+	var f2a_agc = min(3.0, f2_res.linlin(0,1,1,3));
+
+	var f2b_agc = f2a_agc*2;
+	var f2a = Resonz.ar(f2_in,f2freq,f2rq)*f2a_agc;
+	var f2b = BPF.ar(f2_in,Lag2.kr(max(100, min(16000,f2freq+f2b_offset)),f2b_lag),f2rq)*f2b_agc;
+	var f2out = Pan2.ar(XFade2.ar(f2b,f2a,f2b_fade), f2_pan)*f2_amp;
+
 	var out1 = (f1out[0]+f2out[0])*env2;
 	var out2 = (f1out[1]+f2out[1])*Lag2.kr(env2,out2_lag.linlin(0,1,0,4));
 	Linen.kr(gate,0.01,1, env2_release, doneAction); // Voice hold env
