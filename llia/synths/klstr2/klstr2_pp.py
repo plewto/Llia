@@ -61,10 +61,13 @@ _pmap = {"lfoFreq":"freq",
          "f2_freq_env1":"env1",
          "f2_freq_lfo1":"lfo1",
          "f2_freq_env2":"env2",
-         "f2_freq_lag":"lag",
+         #"f2_freq_lag":"lag",
          "f2_res":"res",
          "f2_amp":"amp",
-         "f2_pan":"pan"}
+         "f2_pan":"pan",
+         "f2b_offset":"offset",
+         "f2b_lag":"lag",
+         "f2b_fade":"fade"}
 
 def klstr2_pp(program,slot):
     def fval(param):
@@ -175,12 +178,13 @@ def klstr2_pp(program,slot):
             acc += ',\n'
         else:
             acc += '},\n'
-    f2_params = ("f2_freq","f2_freq_env1","f2_freq_env2","f2_freq_lfo1")
+    f2_params = ("f2_freq","f2_freq_env1","f2_freq_env2","f2_freq_lfo1",
+                 "f2b_offset")
     acc += '       filter_2 = {'
     for p in f2_params:
         if p != f2_params[0]: acc += ' '*19
         acc += '"%s":%s,\n' % (_pmap[p],ival(p))
-    f2_params = ("f2_freq_lag","f2_res","f2_amp","f2_pan")
+    f2_params = ("f2b_lag","f2_res","f2_amp","f2_pan","f2b_offset","f2b_fade")
     for p in f2_params:
         acc += ' '*19 + '"%s":%s' % (_pmap[p],fval(p))
         if p != f2_params[-1]:

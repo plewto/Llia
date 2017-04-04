@@ -70,8 +70,11 @@ prototype = {
     "f2_freq_env1" : 0,
     "f2_freq_env2" : 0,
     "f2_freq_lfo1" : 0,
-    "f2_freq_lag" : 0.0,
+    #"f2_freq_lag" : 0.0,
     "f2_res" : 0.0,
+    "f2b_offset" : 0,    #  0, 100, 200, 400, 600, ...
+    "f2b_lag" : 0.0,     #  0.0 .. +1.0
+    "f2b_fade" : 0.0,    # -1.0 .. +1.0
     "f2_amp" : 1,
     "f2_pan" : -0.25}
 
@@ -145,8 +148,10 @@ def klstr2(slot, name, amp=0.1,
                        "env1" : 0,            # env1 -> freq
                        "env2" : 0,            # env2 -> freq
                        "lfo1" : 0,            # lfo1 -> freq
-                       "lag"  : 0.0,          # freq lag time (0..1)
                        "res"  : 0.0,          # resoance (0..1)
+                       "offset" : 0,          # filter b freq offset >=0
+                       "lag"  : 0.0,          # filter b freq lag time (0..1)
+                       "fade" : 0.0,          # fade bwteen a and b   (-1.0..+1.0)
                        "mix"  : 1.0,          # output amp (0..2)
                        "pan"  : -0.75}):      # output pan (-1..+1)
     p = Klstr2(name)
@@ -223,10 +228,13 @@ def klstr2(slot, name, amp=0.1,
     ival(filter_2,"f2_freq_env1","env1",0,minmax=FILTER_MOD_RANGE)
     ival(filter_2,"f2_freq_env2","env2",0,minmax=FILTER_MOD_RANGE)
     ival(filter_2,"f2_freq_lfo1","lfo1",0,minmax=FILTER_MOD_RANGE)
-    fval(filter_2,"f2_freq_lag","lag")
+    #fval(filter_2,"f2_freq_lag","lag")
     fval(filter_2,"f2_res","res")
     fval(filter_2,"f2_amp","amp",0.5,minmax=(0.0, 2.0))
     fval(filter_2,"f2_pan","pan",-0.75,minmax=(-1.0,1.0))
+    fval(filter_2,"f2b_offset","offset",0,minmax=(FILTER_2B_OFFSETS[0],FILTER_2B_OFFSETS[-1]))
+    fval(filter_2,"f2b_lag","lag")
+    fval(filter_2,"f2b_fade","fade")
     program_bank[slot] = p
     return p
 
@@ -872,3 +880,70 @@ klstr2(9,"Noisy9",amp=0.1122,
                    "res":0.4724,
                    "amp":0.7079,
                    "pan":-0.2500})
+klstr2(10,"Frank Bono",amp=0.1259,
+       lfo = {"freq":0.4910,
+              "ratio2":0.2500,
+              "vibrato":0.0000},
+       env1 = {"attack":0.0000,
+               "decay1":0.5605,
+               "decay2":0.8889,
+               "release":0.4805,
+               "breakpoint":0.7500,
+               "sustain":0.0000,
+               "mode":0},
+       env2 = {"attack":0.0000,
+               "decay1":8.9837,
+               "decay2":2.0286,
+               "release":2.3119,
+               "breakpoint":0.7353,
+               "sustain":0.0384,
+               "mode":0},
+       spread = {"n":0.0000,
+                 "env1":0.0090,
+                 "lfo1":0.0000,
+                 "external":0.0000},
+       cluster = {"n":0.3668,
+                  "env1":0.9246,
+                  "lfo1":0.0000,
+                  "lfo2":0.0000,
+                  "external":0.0000},
+       pw = {"pw":1.0000,
+             "lfo1":0.0000,
+             "env1":0.8693},
+       harm1 = {"n":64,
+                "env1":0,
+                "env2":-32,
+                "lfo1":0,
+                "lfo2":0},
+       harm2 = {"n":24,
+                "env1":-24,
+                "lfo1":0,
+                "external":0,
+                "lag":0.0000},
+       noise_filter = {"lowpass":67,
+                       "env1":0,
+                       "lfo1":0,
+                       "highpass":67},
+       mixer = {"noise":0.0000,
+                "balance_a":-0.7500,
+                "balance_b":0.4800,
+                "balance_noise":-0.7500},
+       filter_1 = {"freq":6000,
+                   "env1":0,
+                   "lfo1":0,
+                   "lfo2":0,
+                   "external":0,
+                   "res":0.2613,
+                   "amp":0.5000,
+                   "pan":-0.5000},
+       filter_2 = {"freq":6000,
+                   "env1":-12000,
+                   "env2":0,
+                   "lfo1":500,
+                   "offset":400,
+                   "lag":0.6432,
+                   "res":0.5427,
+                   "amp":0.5000,
+                   "pan":0.5000,
+                   "offset":400.0000,
+                   "fade":0.2100})

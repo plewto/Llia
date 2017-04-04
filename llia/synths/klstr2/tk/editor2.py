@@ -74,7 +74,15 @@ class TkKlstr2ModPanel(TkSubEditor):
         self.norm_slider("f2_res",x_f2,y1)
         self.volume_slider("f2_amp",x_f2+60,y1)
         self.linear_slider("f2_pan",(-1,1),x_f2+120,y1)
-        self.norm_slider("f2_freq_lag",x_f2+120,y0+75)
+        #self.norm_slider("f2_freq_lag",x_f2+120,y0+75)
+        x_2b = x_f2+75
+        msb_f2b_offset = self.msb("f2b_offset",len(FILTER_2B_OFFSETS),x_2b, y0)
+        for i,n in enumerate(FILTER_2B_OFFSETS):
+            self.msb_aspect(msb_f2b_offset,i,n)
+        msb_f2b_offset.update_aspect()
+        self.norm_slider("f2b_lag",x_2b+23,y0+75,height=75)
+        self.linear_slider("f2b_fade",(-1.0,1.0),x_2b+23,y0+200,height=75)
+        
         e1 = ADDSREditor(canvas,1,(x_env,y0),(400,250),
                          ("env1_attack","env1_decay1","env1_decay2",
                          "env1_release","env1_breakpoint","env1_sustain",
