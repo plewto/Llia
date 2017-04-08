@@ -6,7 +6,8 @@ import json
 from zlib import crc32
 
 from llia.generic import is_performance, dump, clone, is_list, hash_
-from llia.source_mapper import SourceMapper, CCMapper
+from llia.source_mapper import SourceMapper
+from llia.ccmapper import CCMapper
 
 class Performance(object):
 
