@@ -120,7 +120,7 @@ class Program(dict):
             raise TypeError(msg)
 
     def hash_(self):
-        return crc32(str(self.serialize()))
+        return crc32(str(self.__serialize()))
         
     def __eq__(self, other):
         if self is other:
@@ -137,7 +137,9 @@ class Program(dict):
         '''
         return self.data_format.lower()
 
-    def serialize(self):
+    # Old style serilization, prior to v0.1.3
+    # Still in use for hashing.
+    def __serialize(self):
         '''
         Convert self to serialized form.
         Returns tuple
@@ -155,41 +157,81 @@ class Program(dict):
         bcc = self.performance.serialize()
         return (acc, bcc)
 
+    # New style serilization, introduced v0.1.3
+    def serialize(self, params):
+        acc = ["llia.Program",
+               self.data_format,
+               self.name,
+               self.remarks,
+               len(self)]
+        for p in params:
+            v = self[p[0]]
+            acc.append(v)
+        acc.append(self.performance.serialize())
+        return acc
+
+    # Old style deserilization, prior to v0.1.3
+    # @staticmethod
+    # def deserialize(ser):
+    #     '''
+    #     Convert serialized data to new Program object.
+    #    
+    #     ARGS:
+    #       ser - tuple, must have same format as produced by 
+    #             serialize method.
+    #
+    #     RETURNS: Program
+    #
+    #     Raises TypeError if argument is not a list or tuple.
+    #     Raises ValueError if argument does not have the proper format.
+    #     '''
+    #     if is_list(ser) and len(ser) == 2:
+    #         prg, prf = ser
+    #         id = prg[0]
+    #         if id == "llia.Program":
+    #             frm, name, rem, count = prg[1:5]
+    #             keyset = {}
+    #             program = Program(name, frm, keyset)
+    #             for i in range(5, 5+count):
+    #                 p, v, dflt = prg[i]
+    #                 keyset[p] = dflt
+    #                 program[p] = v
+    #             program.remarks = rem
+    #             program.performance = Performance.deserialize(prf)
+    #             return program
+    #         else:
+    #             msg = "Program.deserialize did not find expected id."
+    #             raise ValueError(msg)
+    #     else:
+    #         msg = "Argument to Program.deserialize must be list or tuple. "
+    #         msg += "Encounters %s" % type(ser)
+    #         raise TypeError(msg)
+
+    # New style deserialize, introduced v0.1.3
     @staticmethod
-    def deserialize(ser):
-        '''
-        Convert serialized data to new Program object.
-        
-        ARGS:
-          ser - tuple, must have same format as produced by 
-                serialize method.
-
-        RETURNS: Program
-
-        Raises TypeError if argument is not a list or tuple.
-        Raises ValueError if argument does not have the proper format.
-        '''
-        if is_list(ser) and len(ser) == 2:
-            prg, prf = ser
-            id = prg[0]
-            if id == "llia.Program":
-                frm, name, rem, count = prg[1:5]
-                keyset = {}
-                program = Program(name, frm, keyset)
-                for i in range(5, 5+count):
-                    p, v, dflt = prg[i]
-                    keyset[p] = dflt
-                    program[p] = v
-                program.remarks = rem
-                program.performance = Performance.deserialize(prf)
-                return program
+    def deserialize(s, parameters, prototype):
+        id = s[0]
+        if id == "llia.Program":
+            data_format = s[1]
+            name = s[2]
+            remarks = s[3]
+            count = s[4]
+            prog = Program(name, data_format, prototype)
+            if count == len(parameters):
+                for i,p in enumerate(parameters):
+                    param = p[0]
+                    value = s[i+5]
+                    prog[param] = float(value)
+                prog.remarks = remarks
+                return prog
             else:
-                msg = "Program.deserialize did not find expected id."
+                msg = "Program.deserialize did not find expected data count: "
+                msg += "%s != %s" % (count,len(parameters))
                 raise ValueError(msg)
         else:
-            msg = "Argument to Program.deserialize must be list or tuple. "
-            msg += "Encounters %s" % type(ser)
-            raise TypeError(msg)
+            msg = "Program.deserialize did not find expected id."
+            raise ValueError(msg)
+        
     
     def save(self, filename):
         '''

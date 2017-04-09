@@ -272,7 +272,6 @@ class Performance(object):
             acc += self.keynumber_maps.dump(tab2)
             acc += self.controller_maps.dump(tab2)
         return acc
-        
 
 @is_performance.when_type(Performance)
 def _is_perf(obj):

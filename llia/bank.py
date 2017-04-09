@@ -30,6 +30,11 @@ class ProgramBank(list):
         self.template = template
         for i in range(BANK_LENGTH):
             list.append(self, clone(template))
+        # List parameters/default-values in order
+        # [(p1, dflt1),(p2,dflt2)...]
+        self._parameters = []
+        for p in sorted(template.keys()):
+            self._parameters.append((p,template[p]))
         self.current_slot = 0
         self.current_program = self[0]
         self.name = "%s Bank" % template.data_format
@@ -300,22 +305,7 @@ class ProgramBank(list):
         other.undostack.clear()
         return other
     
-    def serialize(self):
-        '''
-        Convert bank to serial data preparatory to saving it.
-        '''
-        acc = ["Llia.ProgramBank",
-               {"format" : self.template.data_format,
-                "name" : self.name,
-                "remarks" : self.remarks,
-                "count" : len(self),
-                "template" : self.template.serialize()}]
-        payload = []
-        for p in self:
-            payload.append(p.serialize())
-        acc.append(payload)
-        return acc
-
+ 
     def save(self, filename):
         '''
         Save bank contents to file.
@@ -330,47 +320,123 @@ class ProgramBank(list):
             json.dump(s, output, indent=4)
         self.filename = filename
 
+    # Old style serialization (prior t v0.1.3)
+    # def serialize(self):
+    #     '''
+    #     Convert bank to serial data preparatory to saving it.
+    #     '''
+    #     acc = ["Llia.ProgramBank",
+    #            {"format" : self.template.data_format,
+    #             "name" : self.name,
+    #             "remarks" : self.remarks,
+    #             "count" : len(self),
+    #             "template" : self.template.serialize()}]
+    #     payload = []
+    #     for p in self:
+    #         payload.append(p.serialize())
+    #     acc.append(payload)
+    #     return acc
+
+    # Old style deserilization (prior to v0.1.3)
+    # @staticmethod
+    # def deserialize(s):
+    #     '''
+    #     Convert serialized data to an instance of Bank.  deserialize
+    #     is used as part of the bank read operation.
+    #     ARGS:
+    #       s - List, 
+    #
+    #     RETURNS: 
+    #       ProgramBank
+    #
+    #     Raise TypeError if s is not a list
+    #     Raises ValueError if s does not have the proper format.
+    #     Raises IndexError if s is too short.
+    #     '''
+    #     try:
+    #         if is_list(s):
+    #             id = s[0]
+    #             if id == "Llia.ProgramBank":
+    #                 header, payload = s[1:3]
+    #                 count = header["count"]
+    #                 template = Program.deserialize(header["template"])
+    #                 bank = ProgramBank(template)
+    #                 for slot in range(count):
+    #                     ps = payload[slot]
+    #                     list.__setitem__(bank, slot, Program.deserialize(ps))
+    #                 bank.use(0)
+    #                 bank.name = header["name"]
+    #                 bank.remarks = header["remarks"]
+    #                 bank.undostack.clear()
+    #                 return bank
+    #             else:
+    #                 msg = "ProgramBank.deserialize did not find expected class id"
+    #                 raise ValueError(msg)
+    #         else:
+    #             msg = "ProgramBank.deserialize, wrong type: %s" % type(s)
+    #             raise TypeError(msg)
+    #     except IndexError:
+    #         msg = "ProgramBank.deserialize, IndexError"
+    #         raise IndexError(msg)
+
+    def serialize(self):
+        payload = []
+        previous = Program("Dummy","",{})
+        pid = previous.hash_()
+        for slot, prog in enumerate(self):
+            cid =prog.hash_()
+            if cid == pid:
+                payload.append("X")
+            else:
+                previous = prog
+                pid = previous.hash_()
+                payload.append(prog.serialize(self._parameters))
+        acc = ["Llia.ProgramBank",
+               {"format" : self.template.data_format,
+                "name" : self.name,
+                "remarks" : self.remarks,
+                "count" : len(self),
+                "parameters" : self._parameters,
+                "data" : payload}]
+        return acc
+                
+
+    # New style deserilization
     @staticmethod
     def deserialize(s):
-        '''
-        Convert serialized data to an instance of Bank.  deserialize
-        is used as part of the bank read operation.
-        ARGS:
-          s - List, 
-
-        RETURNS: 
-          ProgramBank
-
-        Raise TypeError if s is not a list
-        Raises ValueError if s does not have the proper format.
-        Raises IndexError if s is too short.
-        '''
         try:
-            if is_list(s):
-                id = s[0]
-                if id == "Llia.ProgramBank":
-                    header, payload = s[1:3]
-                    count = header["count"]
-                    template = Program.deserialize(header["template"])
-                    bank = ProgramBank(template)
-                    for slot in range(count):
-                        ps = payload[slot]
-                        list.__setitem__(bank, slot, Program.deserialize(ps))
-                    bank.use(0)
-                    bank.name = header["name"]
-                    bank.remarks = header["remarks"]
-                    bank.undostack.clear()
-                    return bank
-                else:
-                    msg = "ProgramBank.deserialize did not find expected class id"
-                    raise ValueError(msg)
+            id = s[0]
+            if id == "Llia.ProgramBank":
+                count = s[1]["count"]
+                name = s[1]["name"]
+                data_format = s[1]["format"]
+                remarks = s[1]["remarks"]
+                parameters = s[1]["parameters"]
+                prototype = {}
+                for a,b in parameters:
+                    prototype[a] = b
+                data = s[1]["data"]
+                template_program = Program("Init",data_format,prototype)
+                bank = ProgramBank(template_program)
+                previous = template_program
+                for slot in range(count):
+                    prog_data = data[slot]
+                    if prog_data == "X":
+                        bank[slot] = previous
+                    else:
+                        program = Program.deserialize(prog_data,parameters,prototype)
+                        bank[slot] = program
+                        previous = program
+                return bank
             else:
-                msg = "ProgramBank.deserialize, wrong type: %s" % type(s)
-                raise TypeError(msg)
+                msg = "ProgramBank.deserilize did not find exptected class id"
+                raise ValueError(msg)
         except IndexError:
-            msg = "ProgramBank.deserialize, IndexError"
+            msg = "ProgramBank.deserialize IndexError"
             raise IndexError(msg)
-
+            
+            
+    
     @staticmethod
     def read_bank(filename):
         '''
