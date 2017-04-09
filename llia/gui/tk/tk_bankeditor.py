@@ -194,7 +194,7 @@ class TkBankEditor(Frame):
                 try:
                     bnk.load(rs)
                     self.sync()
-                    self.status("Loaded bankfuile '%s'" % rs)
+                    self.status("Loaded bankfile '%s'" % rs)
                 except (ValueError, TypeError, IOError) as err:
                     msg = "Error while reading bank file '%s'" % rs
                     self.warning(msg)
