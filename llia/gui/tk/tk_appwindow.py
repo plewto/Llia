@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 from Tkinter import (Frame, Label, Menu, Tk, BOTH, Toplevel)
+from ttk import Progressbar
 import ttk
 import tkMessageBox
 from PIL import Image, ImageTk
@@ -21,6 +22,8 @@ from llia.gui.tk.graph.lliagraph import LliaGraph
 specs = SynthSpecs.global_synth_type_registry
 
 
+PROGRESSBAR_COLUMN = 3
+
 class TkApplicationWindow(AbstractApplicationWindow):
 
     def __init__(self, app):
@@ -37,29 +40,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._main = layout.BorderFrame(self.root)
         self._main.config(background=factory.bg())
         self._main.pack(anchor="nw", expand=True, fill=BOTH)
+        self._progressbar = None
         self._init_status_panel()
         self._init_menu()
         self._init_center_frame(self._main.center)
         self.root.minsize(width=665, height=375)
         self.group_windows = []
         self.add_synth_group()
-
         
-
-        
-    # def _init_status_panel(self):
-    #     south = self._main.south
-    #     south.configure(padx=4, pady=4)
-    #     self._lab_status = factory.label(south, "", modal=False)
-    #     b_panic = factory.panic_button(south)
-    #     ttip = "Clear status line"
-    #     b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
-    #     b_panic.grid(row=0, column=0, sticky="w")
-    #     b_clear_status.grid(row=0, column=1, sticky="w")
-    #     self._lab_status.grid(row=0,column=2, sticky="w", padx=8)
-    #     south.config(background=factory.bg())
-
-
     def _init_status_panel(self):
         south = self._main.south
         south.configure(padx=4, pady=4)
@@ -68,19 +56,14 @@ class TkApplicationWindow(AbstractApplicationWindow):
         b_down = factory.button(south, "-")
         b_up = factory.button(south, "+")
         b_panic.grid(row=0, column=0)
-        # b_down.grid(row=0,column=1)
-        # b_up.grid(row=0,column=2)
-        self._lab_status.grid(row=0,column=3, sticky='w')
+        self._progressbar = Progressbar(south,mode="indeterminate")
+        self._progressbar.grid(row=0,column=PROGRESSBAR_COLUMN, sticky='w', padx=8)
+        self._lab_status.grid(row=0,column=4, sticky='w')
         south.config(background=factory.bg())
         b_down.configure(command=lambda: self.root.lower())
         b_up.configure(command=lambda: self.root.lift())
-        # b_clear_status = factory.clear_button(south,command=self.clear_status,ttip=ttip)
-        # b_panic.grid(row=0, column=0, sticky="w")
-        # b_clear_status.grid(row=0, column=1, sticky="w")
-        # self._lab_status.grid(row=0,column=2, sticky="w", padx=8)
-        # south.config(background=factory.bg())
-
-
+        self.update_progressbar(100, 0)
+        
     def _tab_change_callback(self, event):
         self.llia_graph.sync()
     
@@ -339,3 +322,20 @@ class TkApplicationWindow(AbstractApplicationWindow):
         except (KeyError, IndexError):
             msg = "Can not find editor for %s" % sid
             self.warning(msg)
+
+    def update_progressbar(self, count, value):
+        self._progressbar.config(mode="determinate", maximum=count)
+        self._progressbar.step()
+        self.root.update_idletasks()
+            
+    def busy(self, flag, message=""):
+        if message:
+            self.status(message)
+        self._progressbar.config(mode="indeterminate")
+        if flag:
+            self._progressbar.grid(row=0, column=PROGRESSBAR_COLUMN, sticky='w', padx=8)
+            self._progressbar.start()
+        else:
+            self._progressbar.stop()
+            # self._progressbar.grid_remove()
+        self.root.update_idletasks()

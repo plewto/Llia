@@ -41,13 +41,32 @@ class AbstractApplicationWindow(object):
     @abc.abstractmethod
     def exit_gui(self):
         return None
-        
+
+    @abc.abstractmethod
+    def update_progressbar(self, count, value):
+        self.status("Progress %s/%s" % (value, count))
+    
+    @abc.abstractmethod
+    def busy(self, flag, message=""):
+        """
+        If flag indicate application is busy.
+        otherwise turn busy aspect off.
+        """ 
+        return None
+
     
 class DummyApplicationWindow(AbstractApplicationWindow):
 
     def __init__(self, app, *_):
         super(DummyApplicationWindow, self).__init__(app, None)
 
+    def busy(self, flag, message=""):
+        if flag:
+            self.status("BUSY %s ..." % message)
+        else:
+            self.status("NOT BUSY")
+        
+        
 def create_application_window(app):
     config = app.config
     gui = str(config.gui())

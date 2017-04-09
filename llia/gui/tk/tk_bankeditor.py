@@ -192,8 +192,10 @@ class TkBankEditor(Frame):
                                               title = title)
             if rs:
                 try:
-                    bnk.load(rs)
+                    self.parent_editor.busy(True,"Loading program bank")
+                    bnk.load(rs, self.parent_editor)
                     self.sync()
+                    self.parent_editor.busy(False)
                     self.status("Loaded bankfile '%s'" % rs)
                 except (ValueError, TypeError, IOError) as err:
                     msg = "Error while reading bank file '%s'" % rs

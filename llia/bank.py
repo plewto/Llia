@@ -402,8 +402,11 @@ class ProgramBank(list):
                 
 
     # New style deserilization
+    # ui - User interface
+    #      ui should implement update_progressbar(count, value)
+    #      where count is maximum number and value is current value.
     @staticmethod
-    def deserialize(s):
+    def deserialize(s, ui=None):
         try:
             id = s[0]
             if id == "Llia.ProgramBank":
@@ -420,6 +423,7 @@ class ProgramBank(list):
                 bank = ProgramBank(template_program)
                 previous = template_program
                 for slot in range(count):
+                    if ui: ui.update_progressbar(count, slot)
                     prog_data = data[slot]
                     if prog_data == "X":
                         bank[slot] = previous
@@ -436,9 +440,9 @@ class ProgramBank(list):
             raise IndexError(msg)
             
             
-    
+    # See deserialize for ui usage
     @staticmethod
-    def read_bank(filename):
+    def read_bank(filename, ui=None):
         '''
         Read bank file.
         
@@ -453,13 +457,14 @@ class ProgramBank(list):
         try:
             with open(filename, 'r') as input:
                 obj = json.load(input)
-                return ProgramBank.deserialize(obj)
+                return ProgramBank.deserialize(obj, ui)
         except(ValueError, TypeError, IOError) as err:
             msg = "Error while reading ProgramBank file '%s'" % filename
             msg = err.message + "\n" + msg
             raise IOError(msg)
 
-    def load(self, filename):
+    # See deserialize for ui usage.
+    def load(self, filename, ui=None):
         '''
         Load bank data from file into self.
 
@@ -470,7 +475,7 @@ class ProgramBank(list):
         '''
         try:
             self.push_undo("Load bank file '%s'" % filename)
-            other = ProgramBank.read_bank(filename)
+            other = ProgramBank.read_bank(filename, ui)
             self.copy_bank(other)
             self.current_slot = 0
             self.current_program = clone(self[0])

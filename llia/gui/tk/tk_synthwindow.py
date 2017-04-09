@@ -9,6 +9,9 @@ import llia.gui.pallet
 from llia.gui.tk.tk_bankeditor import TkBankEditor
 from llia.gui.tk.tk_busconnection_editor import TkBusConnectionEditor
 from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, delete_map_dialog
+from ttk import Progressbar
+
+PROGRESSBAR_COLUMN = 3
 
 class TkSynthWindow(Frame):
 
@@ -41,9 +44,12 @@ class TkSynthWindow(Frame):
         b_panic = factory.panic_button(south, command=self.panic)
         b_lower = factory.button(south, "-", command=self.lower_window)
         b_lift = factory.button(south, "+", command=self.lift_window)
-        self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
+        self._lab_status.grid(row=0, column=2, sticky='ew', padx=8)
         b_panic.grid(row=0, column=0)
-        self._lab_status.grid(row=0, column=3, sticky='w')
+        self._lab_status.grid(row=0, column=4, sticky='w')
+        self._progressbar = Progressbar(south,mode="indeterminate")
+        self._progressbar.grid(row=0,column=PROGRESSBAR_COLUMN, sticky='w', padx=8)
+        
         
         south.config(background=factory.bg())
         main.add(self.bank_editor)
@@ -60,7 +66,7 @@ class TkSynthWindow(Frame):
         self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
         self._init_map2_tab(self.notebook) # velocity, aftertouch, keynumber
         self._child_editors = {}
-        self.sync()
+        self.update_progressbar(100, 0)
 
     def panic(self):
         self.synth.osc_transmitter.x_all_notes_off()
@@ -144,7 +150,6 @@ class TkSynthWindow(Frame):
         grp = mw.group_windows[self.group_index]
         grp.lower()
         self.status("Lowewr window")
-
         
     def sync_program_tab(self):
         bnk = self.synth.bank()
@@ -505,3 +510,19 @@ class TkSynthWindow(Frame):
             if rs != None:
                 return rs
         return None
+
+    def update_progressbar(self, count, value):
+        self._progressbar.config(mode="determinate", maximum=count)
+        self._progressbar.step()
+        self.update_idletasks()
+    
+    def busy(self, flag, message=""):
+        if message:
+            self.status(message)
+        self._progressbar.config(mode="indeterminate")
+        if flag:
+            self._progressbar.grid(row=0,column=PROGRESSBAR_COLUMN, sticky='w', padx=8)
+            self._progressbar.start()
+        else:
+            self._progressbar.stop()
+        self.update_idletasks()
