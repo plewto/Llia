@@ -129,17 +129,6 @@ class ParameterMap(object):
         y = self.curve_fn(x)
         return y
 
-    def serialize(self):
-        acc = ["llia.ParameterMap",
-               {"source" : self.source,
-                "parameter" : self.parameter,
-                "curve" : self.curve_type,
-                "modifier" : self.curve_modifier,
-                "domain" : self.domain,
-                "range_" : self.range_,
-                "limits" : self.limits}]
-        return acc
-    
     def __eq__(self, other):
         return is_parameter_map(other) and hash_(self) == hash_(other)
                      
@@ -184,19 +173,58 @@ class ParameterMap(object):
         else:
             src = "%s " % self.source
         return src + self.__str_common()
-    
+
+    # Old style serilization (pre v 0.1.3)
+    # def serialize(self):
+    #     acc = ["llia.ParameterMap",
+    #            {"source" : self.source,
+    #             "parameter" : self.parameter,
+    #             "curve" : self.curve_type,
+    #             "modifier" : self.curve_modifier,
+    #             "domain" : self.domain,
+    #             "range_" : self.range_,
+    #             "limits" : self.limits}]
+    #     return acc
+
+    # Old style deserilization (pre v 0.1.3)
+    # @staticmethod
+    # def deserialize(obj):
+    #     cls = obj[0]
+    #     if cls == "llia.ParameterMap":
+    #         data = obj[1]
+    #         src = data["source"]
+    #         param = data["parameter"]
+    #         curve = data["curve"]
+    #         mod = data["modifier"]
+    #         dom = data["domain"]
+    #         codom = data["range_"]
+    #         lim = data["limits"]
+    #         return ParameterMap(src, param, curve, mod, dom, codom, lim)
+    #     else:
+    #         msg = "Can not read %s as Llia ParameterMap" % type(obj)
+    #         raise RunTimeError(msg)
+
+
+    # New style serilizatin introduced v0.1.3
+    # data is aprox 45% smaller.
+    def serialize(self):
+        acc = ["llia.ParameterMap",
+               [self.source,
+                self.parameter,
+                self.curve_type,
+                self.curve_modifier,
+                self.domain,
+                self.range_,
+                self.limits]]
+        return acc
+
+    # New style deserilization introduced v0.1.3
     @staticmethod
     def deserialize(obj):
         cls = obj[0]
         if cls == "llia.ParameterMap":
             data = obj[1]
-            src = data["source"]
-            param = data["parameter"]
-            curve = data["curve"]
-            mod = data["modifier"]
-            dom = data["domain"]
-            codom = data["range_"]
-            lim = data["limits"]
+            src,param,curve,mod,dom,codom,lim = data
             return ParameterMap(src, param, curve, mod, dom, codom, lim)
         else:
             msg = "Can not read %s as Llia ParameterMap" % type(obj)
@@ -211,12 +239,5 @@ def _is_parameter_map(obj):
 def _clone_pm(obj):
     return obj.clone()
 
-def test():
-    p1 = ParameterMap("Velocity", "detune")
-    p2 = ParameterMap("Velocity", "detune")
-    p3 = ParameterMap("Velocity", "vibrato")
-    print(p1)
-    print(p2)
-    print(p3)
-    print(p1 == p1, p1 == p2, p1 == p3)
+
     

@@ -119,31 +119,86 @@ class Performance(object):
         '''
         return "aprf"
 
+    # Old style serilizatin (prior to v0.1.3)
+    # def serialize(self):
+    #     '''
+    #     Convert self to serialized form.
+    #     Returns List
+    #     '''
+    #     acc = ["llia.Performance",
+    #            {"transpose" : self.transpose,
+    #             "key_range" : self._key_range,
+    #             "bend_range" : self.bend_range,
+    #             "bend_parameter" : self.bend_parameter,
+    #             "velocity_maps" : self.velocity_maps.serialize(),
+    #             "aftertouch_maps" : self.aftertouch_maps.serialize(),
+    #             "pitchwheel_maps" : self.pitchwheel_maps.serialize(),
+    #             "keynumber_maps" : self.keynumber_maps.serialize(),
+    #             "controller_maps" : self.controller_maps.serialize()}]
+    #     return acc
+
+    # Old style deserilization (prior to v0.1.3)
+    # @staticmethod
+    # def deserialize(ser):
+    #     '''
+    #     Convert serial form back to Performance
+    #
+    #     ARGS:
+    #       ser - list, must have the same format as produced by serialize
+    #
+    #     RETURNS:
+    #       Performance
+    #     '''
+    #     if is_list(ser):
+    #         id = ser[0]
+    #         if id == "llia.Performance":
+    #             other = Performance()
+    #             data = ser[1]
+    #             other.transpose = data["transpose"]
+    #             other._key_range = data["key_range"]
+    #             other.bend_range = data["bend_range"]
+    #             other.bend_parameter = data["bend_parameter"]
+    #             other.velocity_maps = SourceMapper.deserialize(data["velocity_maps"])
+    #             other.aftertouch_maps = SourceMapper.deserialize(data["aftertouch_maps"])
+    #             other.pitchwheel_maps = SourceMapper.deserialize(data["pitchwheel_maps"])
+    #             other.keynumber_maps = SourceMapper.deserialize(data["keynumber_maps"])
+    #             other.controller_maps = CCMapper.deserialize(data["controller_maps"])
+    #             return other
+    #         else:
+    #             msg = "Performance.deserialize did not find expected id."
+    #             raise ValueError(msg)
+    #     else:
+    #         msg = "Argument to Performance.deserialize must be a list or "
+    #         msg = msg + "tuple,  encountered %s" % type(ser)
+    #         raise TypeError(msg)
+
+
+    # New style serilizatin introduced v0.1.3
     def serialize(self):
         '''
         Convert self to serialized form.
         Returns List
         '''
-        acc = ["llia.Performance",
-               {"transpose" : self.transpose,
-                "key_range" : self._key_range,
-                "bend_range" : self.bend_range,
-                "bend_parameter" : self.bend_parameter,
-                "velocity_maps" : self.velocity_maps.serialize(),
-                "aftertouch_maps" : self.aftertouch_maps.serialize(),
-                "pitchwheel_maps" : self.pitchwheel_maps.serialize(),
-                "keynumber_maps" : self.keynumber_maps.serialize(),
-                "controller_maps" : self.controller_maps.serialize()}]
+        acc = ["llia.Performance", [self.transpose,
+                                    self._key_range,
+                                    self.bend_range,
+                                    self.bend_parameter,
+                                    self.velocity_maps.serialize(),
+                                    self.aftertouch_maps.serialize(),
+                                    self.pitchwheel_maps.serialize(),
+                                    self.keynumber_maps.serialize(),
+                                    self.controller_maps.serialize()]]
         return acc
 
+    # New style deserilization introduced v0.1.3
     @staticmethod
     def deserialize(ser):
         '''
         Convert serial form back to Performance
-
+    
         ARGS:
           ser - list, must have the same format as produced by serialize
-
+    
         RETURNS:
           Performance
         '''
@@ -152,15 +207,15 @@ class Performance(object):
             if id == "llia.Performance":
                 other = Performance()
                 data = ser[1]
-                other.transpose = data["transpose"]
-                other._key_range = data["key_range"]
-                other.bend_range = data["bend_range"]
-                other.bend_parameter = data["bend_parameter"]
-                other.velocity_maps = SourceMapper.deserialize(data["velocity_maps"])
-                other.aftertouch_maps = SourceMapper.deserialize(data["aftertouch_maps"])
-                other.pitchwheel_maps = SourceMapper.deserialize(data["pitchwheel_maps"])
-                other.keynumber_maps = SourceMapper.deserialize(data["keynumber_maps"])
-                other.controller_maps = CCMapper.deserialize(data["controller_maps"])
+                other.transpose = data[0]
+                other._key_range = data[1]
+                other.bend_range = data[2]
+                other.bend_parameter = data[3]
+                other.velocity_maps = SourceMapper.deserialize(data[4])
+                other.aftertouch_maps = SourceMapper.deserialize(data[5])
+                other.pitchwheel_maps = SourceMapper.deserialize(data[6])
+                other.keynumber_maps = SourceMapper.deserialize(data[7])
+                other.controller_maps = CCMapper.deserialize(data[8])
                 return other
             else:
                 msg = "Performance.deserialize did not find expected id."
@@ -234,26 +289,3 @@ def _clone_perf(obj):
 @hash_.when_type(Performance)
 def _hash_perf(obj):
     return obj.hash_()
-
-#  ---------------------------------------------------------------------- 
-#                                    Test
-
-# def test():
-#     p1 = Performance()
-#     dump(p1)
-#
-#     p1.velocity_maps.add_parameter("filterFreq", "exp", codomain=(1000, 9999))
-#     p1.velocity_maps.add_parameter("volume", "exp")
-#     p1.controller_maps.add_parameter(1, "vibrato")
-#     p1.controller_maps.add_parameter(4, "attack")
-#     dump(p1)
-#
-#     p2 = clone(p1)
-#     dump(p2)
-#     print("p1 == p2", p1 == p2, "  p1 is p2", p1 is p2)
-#
-#     print("\n*** serilization ***")
-#     s = p1.serialize()
-#     p3 = Performance.deserialize(s)
-#     dump(p3)
-#     print("p1 == p3", p1 == p3, "  p1 is p3", p1 is p3)

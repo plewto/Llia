@@ -134,17 +134,6 @@ class CCMapper(object):
             self._maps[ctrl] = clone(pm)
         return None
         
-    def serialize(self):
-        count = len(self._maps)
-        acc = ["llia.CCMapper",
-               {"domain" : self.domain,
-                "count" : count}]
-        maps = {}
-        for k,v in self._maps.items():
-            maps[k] = v.serialize()
-        acc.append(maps)
-        return acc
-        
     def dump(self, tab=0):
         pad = ' '*4*tab
         pad2 = pad+' '*4
@@ -162,6 +151,44 @@ class CCMapper(object):
                 acc += "%s\n" % pm
             return acc
 
+    # Old style serilizatin (prior to v0.1.3)
+    # def serialize(self):
+    #     count = len(self._maps)
+    #     acc = ["llia.CCMapper",
+    #            {"domain" : self.domain,
+    #             "count" : count}]
+    #     maps = {}
+    #     for k,v in self._maps.items():
+    #         maps[k] = v.serialize()
+    #     acc.append(maps)
+    #     return acc
+
+    # Old style deserilization (prior to v0.1.3)
+    # @staticmethod
+    # def deserialize(obj):
+    #     cls = obj[0]
+    #     if cls == "llia.CCMapper":
+    #         maps = obj[2]
+    #         ccm = CCMapper()
+    #         for ctrl, v in maps.items():
+    #             sm = SourceMapper.deserialize(v)
+    #             ccm._maps[ctrl] = sm
+    #         return ccm
+    #     else:
+    #         msg = "Can not read %s as CCMapper" % type(obj)
+    #         raise RuntimeError(msg)
+
+    # New style serialization (introduced v0.1.3)
+    def serialize(self):
+        count = len(self._maps)
+        acc = ["llia.CCMapper", [self.domain,count]]
+        maps = {}
+        for k,v in self._maps.items():
+            maps[k] = v.serialize()
+        acc.append(maps)
+        return acc
+
+    # New style deserilization (introduced v0.1.3 - no change over v.0.1.3)
     @staticmethod
     def deserialize(obj):
         cls = obj[0]
@@ -175,20 +202,7 @@ class CCMapper(object):
         else:
             msg = "Can not read %s as CCMapper" % type(obj)
             raise RuntimeError(msg)
-            
         
-@is_source_mapper.when_type(SourceMapper)
-def _is_source_mapper(obj):
-    return True
-
-@dump.when_type(SourceMapper)
-def _dump_sm(obj, tab=0, verbosity=None):
-    print(obj.dump(tab))
-
-@clone.when_type(SourceMapper)
-def _clone_sm(obj):
-    return obj.clone()
-
 @is_cc_mapper.when_type(CCMapper)
 def _is_cc_mapper(obj):
     return True
@@ -200,10 +214,6 @@ def _dump_ccm(obj, tab=0, verbosity=None):
 @clone.when_type(CCMapper)
 def _clone_ccm(obj):
     return obj.clone()
-
-@hash_.when_type(SourceMapper)
-def _hash_sm(obj):
-    return crc32(str(obj.serialize()).lower())
 
 @hash_.when_type(CCMapper)
 def _hash_ccm(obj):
