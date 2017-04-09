@@ -11,6 +11,16 @@ from llia.generic import is_source_mapper, is_cc_mapper, dump, clone, hash_
 import llia.constants as constants
 from llia.parameter_map import ParameterMap
 
+
+_DOMAIN_MAP = {"pitchwheel" : constants.PITCHWHEEL_DOMAIN,
+               "velocity" : constants.MIDI_7BIT_DOMAIN,
+               "aftertouch" : constants.MIDI_7BIT_DOMAIN,
+               "keynumber" : constants.MIDI_7BIT_DOMAIN}
+for i in range(128):
+    k = "cc-%03d" % i
+    _DOMAIN_MAP[k] = constants.MIDI_7BIT_DOMAIN
+               
+
 class SourceMapper(object):
 
     """
@@ -30,16 +40,8 @@ class SourceMapper(object):
                    velocity, aftertouch, keynumber, and MIDI controller. 
                    For pitchwheel domain defaults to (-8192, 8191).
         """
-        self.source = str(source).lower()
-        # self._transient = self.source in ("keynumber","aftertouch",
-        #                                   "velocity","pitchwheel")
-        if domain:
-            self.domain = domain
-        else:
-            if source == "pitchwheel":
-                self.domain = constants.PITCHWHEEL_DOMAIN
-            else:
-                self.domain = constants.MIDI_7BIT_DOMAIN
+        self.source = source
+        self.domain = domain or _DOMAIN_MAP[source]
         self._maps = {}
 
     def __len__(self):
