@@ -3,7 +3,8 @@
 Adds run-time editor annotation.
 Depreciated keyswitch feature.
 Adds Klstr2 synth
-
+Reduced size for ProgramBank files.
+	
 **************************************************** v 0.1.2    2017.03.23
 Multiple bug fixes
 Adds Scanner phase-shifter
