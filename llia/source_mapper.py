@@ -19,7 +19,8 @@ _DOMAIN_MAP = {"pitchwheel" : constants.PITCHWHEEL_DOMAIN,
 for i in range(128):
     k = "cc-%03d" % i
     _DOMAIN_MAP[k] = constants.MIDI_7BIT_DOMAIN
-               
+    k = "cc-%d" % i
+    _DOMAIN_MAP[k] = constants.MIDI_7BIT_DOMAIN               
 
 class SourceMapper(object):
 
