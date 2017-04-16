@@ -5,7 +5,8 @@ from __future__ import print_function
 from Tkinter import (Frame, Label, Menu, Tk, BOTH, Toplevel)
 from ttk import Progressbar
 import ttk
-import tkMessageBox
+import tkMessageBox,tkFileDialog
+
 from PIL import Image, ImageTk
 from llia.llerrors import LliaPingError
 from llia.gui.appwindow import AbstractApplicationWindow
@@ -47,6 +48,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.minsize(width=665, height=375)
         self.group_windows = []
         self.add_synth_group()
+        self._scene_filename = ""
         
     def _init_status_panel(self):
         south = self._main.south
@@ -343,9 +345,37 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.update_idletasks()
 
     def save_scene(self, *_):
-        filename = "/home/sj/t/test.llia"  # ISSUE OPEN DIALOG!!!!
-        self.app.ls_parser.save_scene(filename)
+        options = {'defaultextension' : '.llia',
+                   'filetypes' : [('Llia Scenes', '*.llia'),
+                                  ('all files', '*')],
+                   'initialfile' : self._scene_filename,
+                   'parent' : self.root,
+                   'title' : "Save Llia Scene"}
+        filename = tkFileDialog.asksaveasfilename(**options)
+        if filename:
+            try:
+                self.app.ls_parser.save_scene(filename)
+                self._scene_filename = filename
+                self.status("Scene saved as '%s'" % filename)
+            except Exception as ex:
+                self.warning(ex.message)
+        else:
+            self.status("Scene save canceld")    
 
     def load_scene(self, *_):
-        filename = "/home/sj/t/test.llia"  # ISSUE OPEN DIALOG
-        self.app.ls_parser.load_scene(filename)
+        options = {'defaultextension' : '.llia',
+                   'filetypes' : [('Llia Scenes', '*.llia'),
+                                  ('all files', '*')],
+                   'initialfile' : self._scene_filename,
+                   'parent' : self.root,
+                   'title' : "Load Llia Scene"}
+        filename = tkFileDialog.askopenfilename(**options)
+        if filename:
+            try:
+                self.app.ls_parser.load_scene(filename)
+                self.status("Scene '%s' loaded" % filename)
+                sele._scene_filename = filename
+            except Exception as ex:
+                self.warning(ex.message)
+        else:
+            self.status("Load scene canceld")
