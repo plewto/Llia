@@ -51,7 +51,6 @@ class SubEditor(object):
         for sed in self._sub_editors:
             sed.sync_ui()
 
-            
 @is_subeditor.when_type(SubEditor)
 def _is_subed(sed):
     return True

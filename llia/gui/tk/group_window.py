@@ -9,13 +9,16 @@ from __future__ import print_function
 from Tkinter import Toplevel, TclError
 
 import llia.gui.tk.tk_factory as factory
+import llia.util.trace as trace
 
 class GroupWindow(Toplevel):
 
     instance_counter = 0
     
     def __init__(self, app, root, name=""):
+        title = "LLia Group Window %s" % self.instance_counter
         Toplevel.__init__(self, root)
+        self.title(title)
         self.root = root
         main = factory.frame(self)
         main.pack(expand=True, fill="both")
@@ -48,3 +51,13 @@ class GroupWindow(Toplevel):
 
     def lower(self):
         Toplevel.lower(self, self.root)
+
+    def tabula_rasa(self):
+        trace.enter("GroupWindow.tabula_rasa")
+        GroupWindow.instance_counter = 0
+        for tid in self.notebook.tabs():
+            self.notebook.forget(tid)
+        self.destroy()
+        trace.exit()
+            
+    

@@ -15,7 +15,6 @@ from llia.generic import is_instrument, clone, dump
 from llia.osc_transmitter import OSCTransmitter
 from llia.locked_dictionary import LockedDictionary
 
-
 #  ---------------------------------------------------------------------- 
 #                               SynthSpecs class
 
@@ -945,7 +944,9 @@ class SynthProxy(object):
         acc += "Transpose %d\n" % perf.transpose
         acc += "Key range %s\n" % str(perf.key_range())
         return acc
-        
-        
+
+    @staticmethod
+    def tabula_rasa():
+        SynthProxy._synth_serial_number = 0
         
         

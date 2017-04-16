@@ -378,3 +378,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
                 self.warning(ex.message)
         else:
             self.status("Load scene canceld")
+
+    def tabula_rasa(self):
+        for grp in self.group_windows:
+            grp.tabula_rasa()

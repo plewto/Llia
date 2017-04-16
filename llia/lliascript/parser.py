@@ -12,6 +12,7 @@ from llia.lliascript.synthhelper import SynthHelper
 from llia.lliascript.graphhelper import GraphHelper
 from llia.lliascript.compose import Composer
 from llia.lliascript.scene import Scene
+import llia.constants as con
 
 class LsEntity(object):
 
@@ -110,6 +111,7 @@ class Parser(object):
             ns["test"] = self.test
             ns["save_scene"] = self.save_scene
             ns["load_scene"] = self.load_scene
+            ns["tabula_rasa"] = self.tabula_rasa
         
     def repl(self):
         print(BANNER)
@@ -214,8 +216,6 @@ class Parser(object):
         except KeyError:
             pass
 
-    def test(self):
-        self.load_python("~/t/test.py")
         
         
     def what_is(self, name):
@@ -484,4 +484,18 @@ class Parser(object):
         self.app.main_window().busy(False)
         self.status("Scene '%s' loaded" % filename)
                 
-        
+    def tabula_rasa(self):
+        self.app.tabula_rasa()
+        self.entities = {}
+        self.synthhelper.new_group()
+        for i in range(con.PROTECTED_AUDIO_OUTPUT_BUS_COUNT):
+            self.register_entity("out_%s" % i, "abus", {"channels" : 1})
+        for i in range(con.PROTECTED_AUDIO_INPUT_BUS_COUNT):
+            self.register_entity("in_%s" % i, "abus", {"channels" : 1})
+        self.register_entity("null_sink", "cbus", {"channels" : 1})
+        self.register_entity("null_source", "cbus", {"channels" : 1})
+    
+    def test(self):
+        print("Lliascript entities")
+        for k,v in self.entities.items():
+            print("[%-16s] -> %s" % (k,v))

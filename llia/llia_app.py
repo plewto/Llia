@@ -11,7 +11,6 @@ from llia.gui.appwindow import create_application_window
 from llia.lliascript.lliascript import lliascript_parser
 import llia.constants as con
 
-
 class LliaApp(object):
 
     def __init__(self, config, skip_mainloop=False):
@@ -125,3 +124,7 @@ class LliaApp(object):
     # def sync_all(self):
     #     self.proxy.sync_to_host()
     #     # print("LliaApp.sync_all is not completely implemented")
+
+    def tabula_rasa(self):
+        self.proxy.tabula_rasa()
+        self._main_window.tabula_rasa()

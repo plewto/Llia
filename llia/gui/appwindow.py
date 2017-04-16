@@ -54,6 +54,10 @@ class AbstractApplicationWindow(object):
         """ 
         return None
 
+    @abc.abstractmethod
+    def tabula_rasa(self):
+        pass
+
     
 class DummyApplicationWindow(AbstractApplicationWindow):
 

@@ -11,7 +11,7 @@ from llia.llerrors import (LliaPingError, LliaError, NoSuchSynthError,
                            NoSuchBusError, NoSuchBufferError)
 from llia.osc_transmitter import OSCTransmitter
 from llia.osc_receiver import OSCReceiver
-from llia.synth_proxy import SynthSpecs
+from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.generic import is_int
 from llia.bus import AudioBus, ControlBus
 #from llia.llia_buffer import BufferProxy
@@ -42,19 +42,10 @@ class LliaProxy(object):
         caddress, cport  = config["client"], config["client_port"]
         self.osc_receiver = OSCReceiver(self.global_osc_id(), caddress, cport)
         self._synths = {}
-        # initialize protected audio buses
-        self._audio_buses = {}
-        for i in range(con.PROTECTED_AUDIO_OUTPUT_BUS_COUNT):
-            bname = "out_%s" % i
-            self._audio_buses[bname] = AudioBus(bname, self.app)
-        for i in range(con.PROTECTED_AUDIO_INPUT_BUS_COUNT):
-            bname = "in_%s" % i
-            self._audio_buses[bname] = AudioBus(bname, self.app)
+        self._init_audio_buses()
+        self._init_control_buses()
         # initialize protected control buses
-        self._control_buses = {}
-        for i in ("source", "sink", "zero", "one"):
-            bname = "null_%s" % i
-            self._control_buses[bname] = ControlBus(bname, self.app)
+       
         
         # self._buffers = {}
         # for bname in con.PROTECTED_BUFFERS:
@@ -67,7 +58,8 @@ class LliaProxy(object):
         #     bobj["filename"] = ""
         #     bobj["index"] = -1
         #     self._buffers[bname] = bobj
-            
+
+  
             
         self._callback_message = {}
         for rmsg in ("ping-response", 
@@ -85,6 +77,21 @@ class LliaProxy(object):
         self.restart()
         #self.sync_to_host()
 
+    def _init_audio_buses(self):
+        self._audio_buses = {}
+        for i in range(con.PROTECTED_AUDIO_OUTPUT_BUS_COUNT):
+            bname = "out_%s" % i
+            self._audio_buses[bname] = AudioBus(bname, self.app)
+        for i in range(con.PROTECTED_AUDIO_INPUT_BUS_COUNT):
+            bname = "in_%s" % i
+            self._audio_buses[bname] = AudioBus(bname, self.app)
+
+    def _init_control_buses(self):
+        self._control_buses = {}
+        for i in ("source", "sink", "zero", "one"):
+            bname = "null_%s" % i
+            self._control_buses[bname] = ControlBus(bname, self.app)
+        
     def _expect_response(self, path, tags, args, source):
         self._callback_message = {"path" : path,
                                   "tags" : tags,
@@ -192,6 +199,13 @@ class LliaProxy(object):
         '''
         self._send("restart")
         rs = self.expect_osc_response("restarted")
+
+    def tabula_rasa(self):
+        self.restart()
+        self._synths = {}
+        self._init_audio_buses()
+        self._init_control_buses()
+        SynthProxy.tabula_rasa()
         
     def dump(self):
         self._send("dump")

@@ -526,3 +526,8 @@ class TkSynthWindow(Frame):
         else:
             self._progressbar.stop()
         self.update_idletasks()
+
+    # def tabula_rasa(self):
+    #     for tid in self.notebook.tabs():
+    #         self.notebook.forget(tid)
+            
