@@ -9,7 +9,6 @@ from __future__ import print_function
 from Tkinter import Toplevel, TclError
 
 import llia.gui.tk.tk_factory as factory
-import llia.util.trace as trace
 
 class GroupWindow(Toplevel):
 
@@ -53,11 +52,7 @@ class GroupWindow(Toplevel):
         Toplevel.lower(self, self.root)
 
     def tabula_rasa(self):
-        trace.enter("GroupWindow.tabula_rasa")
         GroupWindow.instance_counter = 0
         for tid in self.notebook.tabs():
             self.notebook.forget(tid)
         self.destroy()
-        trace.exit()
-            
-    

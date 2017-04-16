@@ -157,6 +157,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         # fmenu.add_separator()
         fmenu.add_command(label="New Synth Group", command = self._add_synth_group)
         fmenu.add_separator()
+        fmenu.add_command(label="Restart", command = self._interactive_tabula_rasa)
         fmenu.add_command(label="Quit", command = self.exit_app)
 
     def _init_osc_menu(self, iomenu):
@@ -382,3 +383,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def tabula_rasa(self):
         for grp in self.group_windows:
             grp.tabula_rasa()
+
+    def _interactive_tabula_rasa(self, *_):
+        # ISSUE: Check config and ask user confirmation before existing
+        self.app.ls_parser.tabula_rasa()

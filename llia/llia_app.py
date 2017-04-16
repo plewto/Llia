@@ -74,6 +74,7 @@ class LliaApp(object):
             self.status("Llia exits with code %s" % xcode)
         else:
             self.status("Exit...")
+        self.proxy.restart()
         self._main_window.exit_gui()
         self.ls_parser.exit_repl = True
         sys.exit(xcode)
