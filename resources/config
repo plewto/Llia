@@ -22,8 +22,8 @@ backend : mido.backends.rtmidi
 ; backend : midi.backends.portmidi
 enable-program-pp : True
 # enable-keyswitch : False    # DEPRECIATED
-keyswitch-channel : 10
-keyswitch-transpose : -40
+# keyswitch-channel : 10      # DEPRECIATED
+# keyswitch-transpose : -40   # DEPRECIATED
 trace-midi-reception : False
 
 [OSC]
