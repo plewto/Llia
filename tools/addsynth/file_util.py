@@ -1,6 +1,5 @@
 # tools/file_util
 
-
 from os import listdir,makedirs
 from os.path import exists,join
 import shutil
@@ -49,6 +48,7 @@ def copy_files(src,dst):
     
     Create destination directory as needed.
     """
+    print "copy_files '%s' -> '%s'" % (src, dst)
     if not exists(dst):
         makedirs(dst)
     for f in listdir(src):
