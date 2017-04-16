@@ -153,8 +153,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         fmenu.add_command(label="Save Scene", command = self.save_scene)
         fmenu.add_command(label="Load Scene", command = self.load_scene)
         fmenu.add_separator()
-        fmenu.add_command(label="Lliascript", command = self.show_history_editor)
-        fmenu.add_separator()
+        # fmenu.add_command(label="Lliascript", command = self.show_history_editor)
+        # fmenu.add_separator()
         fmenu.add_command(label="New Synth Group", command = self._add_synth_group)
         fmenu.add_separator()
         fmenu.add_command(label="Quit", command = self.exit_app)
@@ -172,7 +172,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
         mmenu.add_command(label = "Toggle MIDI Input Trace", command = self.toggle_midi_input_trace)
         mmenu.add_command(label = "Toggle MIDI Output Trace", command = self.toggle_midi_output_trace)
         mmenu.add_command(label = "Toggle Program Pretty Printer", command = self.toggle_program_pretty_printer)
-
         
     def _init_bus_menu(self, bmenu):
         bmenu.add_command(label="Audio", command=self.show_audiobus_dialog)
