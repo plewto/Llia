@@ -43,5 +43,3 @@ class Scene(Composer):
                 "current_slots" : current_slots}
         return data
 
-    # def deserialize(self, s):
-    #     pass

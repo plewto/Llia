@@ -467,6 +467,7 @@ class Parser(object):
         self.status("Scene saved to '%s'" % filename)
         
     def load_scene(self, filename):
+        self.tabula_rasa()
         self.app.main_window().busy(True, "Loading scene '%s'" % filename)
         scene = Scene(self)
         with open(filename, 'r') as input:
@@ -487,14 +488,15 @@ class Parser(object):
     def tabula_rasa(self):
         self.app.tabula_rasa()
         self.entities = {}
-        self.synthhelper.new_group()
         for i in range(con.PROTECTED_AUDIO_OUTPUT_BUS_COUNT):
             self.register_entity("out_%s" % i, "abus", {"channels" : 1})
         for i in range(con.PROTECTED_AUDIO_INPUT_BUS_COUNT):
             self.register_entity("in_%s" % i, "abus", {"channels" : 1})
         self.register_entity("null_sink", "cbus", {"channels" : 1})
         self.register_entity("null_source", "cbus", {"channels" : 1})
-    
+        self.synthhelper.new_group()
+        self.synthhelper.show_group()
+        
     def test(self):
         print("Lliascript entities")
         for k,v in self.entities.items():

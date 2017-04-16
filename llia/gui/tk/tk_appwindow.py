@@ -374,7 +374,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
             try:
                 self.app.ls_parser.load_scene(filename)
                 self.status("Scene '%s' loaded" % filename)
-                sele._scene_filename = filename
+                self._scene_filename = filename
             except Exception as ex:
                 self.warning(ex.message)
         else:
