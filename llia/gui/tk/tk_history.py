@@ -1,4 +1,4 @@
-# llia.gui.tk.tk_history
+# llia.gui.tk.tk_history  **DEPRECIATED**
 # 2016.05.29
 #
 # Defines basic lliascript text editor.
@@ -15,6 +15,7 @@ import llia.gui.tk.tk_factory as factory
 class TkHistoryEditor(Toplevel):
 
     def __init__(self, master, app):
+        print("DEPRECIATION WARNING: TkHistoryEditor is depreciated.")
         Toplevel.__init__(self, master)
         self.config(background=factory.bg())
         self.wm_title("Lliascript History")

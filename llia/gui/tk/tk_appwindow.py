@@ -220,10 +220,10 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def display_help(self, topic=None):
         pass
         
-    def show_history_editor(self):
-        from llia.gui.tk.tk_history import TkHistoryEditor
-        dialog = TkHistoryEditor(self.root, self.app)
-        self.root.wait_window(dialog)
+    # def show_history_editor(self):
+    #     from llia.gui.tk.tk_history import TkHistoryEditor
+    #     dialog = TkHistoryEditor(self.root, self.app)
+    #     self.root.wait_window(dialog)
 
     def ping_global(self):
         try:
