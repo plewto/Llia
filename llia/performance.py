@@ -81,7 +81,7 @@ class Performance(object):
         self.pitchwheel_maps = clone(other.pitchwheel_maps)
         self.keynumber_maps = clone(other.keynumber_maps)
         self.controller_maps = clone(other.controller_maps)
-
+        
     def hash_(self):
         return crc32(str(self.serialize()))
         

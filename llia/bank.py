@@ -457,7 +457,8 @@ class ProgramBank(list):
         try:
             with open(filename, 'r') as input:
                 obj = json.load(input)
-                return ProgramBank.deserialize(obj, ui)
+                rs = ProgramBank.deserialize(obj, ui)
+                return rs
         except(ValueError, TypeError, IOError) as err:
             msg = "Error while reading ProgramBank file '%s'" % filename
             msg = err.message + "\n" + msg

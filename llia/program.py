@@ -223,6 +223,7 @@ class Program(dict):
                     value = s[i+5]
                     prog[param] = float(value)
                 prog.remarks = remarks
+                prog.performance = Performance.deserialize(s[-1])
                 return prog
             else:
                 msg = "Program.deserialize did not find expected data count: "
