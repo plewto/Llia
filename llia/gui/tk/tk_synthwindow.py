@@ -170,7 +170,7 @@ class TkSynthWindow(Frame):
         self.bus_connection_editor = bct
         
     def _init_performance_tab(self, master):
-        img = factory.image("resources/Tabs/performance.png")
+        img = factory.image("resources/Tabs/midi.png")
         frame = factory.frame(master)
         master.add(frame, text = "Performance", image=img, compound="top")
         frame_channel = factory.label_frame(frame, "MIDI Channel")
