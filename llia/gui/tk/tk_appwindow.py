@@ -115,7 +115,6 @@ class TkApplicationWindow(AbstractApplicationWindow):
             b.bind("<Enter>", display_info_callback)
             b.bind("<Leave>", clear_info_callback)
             frame_controllers.add(b)
-
     
     @staticmethod
     def menu(master):
@@ -149,6 +148,9 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self._init_help_menu(help_menu)
 
     def _init_file_menu(self, fmenu):
+        fmenu.add_command(label="Save Scene", command = self.save_scene)
+        fmenu.add_command(label="Load Scene", command = self.load_scene)
+        fmenu.add_separator()
         fmenu.add_command(label="Lliascript", command = self.show_history_editor)
         fmenu.add_separator()
         fmenu.add_command(label="New Synth Group", command = self._add_synth_group)
@@ -339,3 +341,11 @@ class TkApplicationWindow(AbstractApplicationWindow):
             self._progressbar.stop()
             # self._progressbar.grid_remove()
         self.root.update_idletasks()
+
+    def save_scene(self, *_):
+        filename = "/home/sj/t/test.llia"  # ISSUE OPEN DIALOG!!!!
+        self.app.ls_parser.save_scene(filename)
+
+    def load_scene(self, *_):
+        filename = "/home/sj/t/test.llia"  # ISSUE OPEN DIALOG
+        self.app.ls_parser.load_scene(filename)

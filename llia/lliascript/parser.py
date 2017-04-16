@@ -2,7 +2,7 @@
 # 2016.05.14
 
 from __future__ import print_function
-import sys, os.path
+import sys, os.path, json
 
 from llia.lliascript.ls_constants import *
 from llia.llerrors import (LliaPingError, LliascriptParseError,
@@ -10,10 +10,8 @@ from llia.llerrors import (LliaPingError, LliascriptParseError,
 from llia.lliascript.ls_command import LsCommand
 from llia.lliascript.synthhelper import SynthHelper
 from llia.lliascript.graphhelper import GraphHelper
-
-
 from llia.lliascript.compose import Composer
-
+from llia.lliascript.scene import Scene
 
 class LsEntity(object):
 
@@ -110,6 +108,8 @@ class Parser(object):
             ns["what_is"] = self.what_is_interactive
             ns["exit"] = self.exit_
             ns["test"] = self.test
+            ns["save_scene"] = self.save_scene
+            ns["load_scene"] = self.load_scene
         
     def repl(self):
         print(BANNER)
@@ -376,6 +376,7 @@ class Parser(object):
             return False
             
     def sync_all(self):
+        # ISSUE: Broken app.sync_all not implemented.
         self.app.sync_all()
         return True
         
@@ -456,3 +457,31 @@ class Parser(object):
         code = rb.build()
         self._history = code
         print(code)
+
+    def save_scene(self, filename):
+        scene = Scene(self)
+        s = scene.serialize()
+        self.status("Saving scene file '%s'" % filename)
+        with open(filename,'w') as output:
+            json.dump(s, output, indent=4)
+        self.status("Scene saved to '%s'" % filename)
+        
+    def load_scene(self, filename):
+        self.app.main_window().busy(True, "Loading scene '%s'" % filename)
+        scene = Scene(self)
+        with open(filename, 'r') as input:
+            jobj = json.load(input)
+            script = jobj["script"]
+            self.batch(script)
+            banks = jobj["bank_data"]
+            self.app.main_window().busy(False)
+            for sid,bnkdata in banks.items():
+                sy = self.synthhelper.get_synth(sid)
+                bank = sy.bank()
+                bank.copy_bank(bank.deserialize(bnkdata, self.app.main_window()))
+                slot = jobj["current_slots"][sid]
+                self.synthhelper.use_program(slot,sid)
+        self.app.main_window().busy(False)
+        self.status("Scene '%s' loaded" % filename)
+                
+        

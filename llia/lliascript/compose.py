@@ -2,10 +2,9 @@
 # 2016.05.19
 
 from __future__ import print_function
+
+import llia.constants as con
 from llia.lliascript.synthhelper import SynthHelper
-
-
-#fill_outbus_args = SynthHelper.fill_outbus_args
 
 class Composer(object):
 
@@ -17,16 +16,18 @@ class Composer(object):
         return self.parser.app.proxy.get_synth(sid)
         
     def build(self):
+        code = "# Llia Compose script\n"
+        code += "# Version %s\n\n" % str(con.VERSION)
         code = "from __future__ import print_function\n\n"
-        code += self._build_channel_assignments()
-        code += self._build_controller_assignments()
-        code += self._build_audio_buses()
-        code += self._build_control_buses()
-        code += self._build_buffers()
-        code += self._build_synths()
-        code += self._build_bus_assignments()
-        code += self._build_buffer_assignments()
-        code += self._build_graph()
+        code += self.build_channel_assignments()
+        code += self.build_controller_assignments()
+        code += self.build_audio_buses()
+        code += self.build_control_buses()
+        code += self.build_buffers()
+        code += self.build_synths()
+        code += self.build_bus_assignments()
+        code += self.build_buffer_assignments()
+        code += self.build_graph()
         code += 'show_group("ALL")\n'
         return code
 
@@ -34,7 +35,7 @@ class Composer(object):
     def is_protected_audio_bus(name):
         return name[:4] == "out_" or name[:3] == "in_"
     
-    def _build_audio_buses(self):
+    def build_audio_buses(self):
         code = "# Audio buses\n"
         for e in self.parser.entities.values():
             if e.lstype == "abus":
@@ -49,7 +50,7 @@ class Composer(object):
     def is_protected_control_bus(name):
         return name.startswith("null_")
     
-    def _build_control_buses(self):
+    def build_control_buses(self):
         code = "# Control buses\n"
         for e in self.parser.entities.values():
             if e.lstype == "cbus":
@@ -59,7 +60,7 @@ class Composer(object):
         code += "\n"
         return code
 
-    def _build_buffers(self):
+    def build_buffers(self):
         code = "# Buffers\n"
         for e in self.parser.entities.values():
             if e.lstype == "buffer":
@@ -96,7 +97,7 @@ class Composer(object):
         bcc += 'program(%d)\n' % cp
         return bcc
     
-    def _build_synths(self):
+    def build_synths(self, load_banks=True):
         def predicate(obj):
             return obj.lstype == 'synth' or obj.lstype == 'group'
         acc = filter(predicate, self.parser.entities.values())
@@ -120,14 +121,15 @@ class Composer(object):
                 code += 'keytable("%s",silent=True)\n' % sy.keytable()
                 code += 'midi_input_channel(%d,silent=True)\n' % sy.midi_input_channel()
                 code += 'create_editor()\n'
-                code += self._load_bank(e)
+                if load_banks:
+                    code += self._load_bank(e)
                 ed = sy.synth_editor
                 for akey in ed.annotation_keys():
                     txt = ed.get_annotation(akey)
                     code += 'set_annotation("%s","%s")\n' % (akey,txt)
         return code
     
-    def _build_buffer_assignments(self):
+    def build_buffer_assignments(self):
         code = "# Buffer Assignments\n"
         for e in self.parser.entities.values():
             if e.lstype == "buffer-assignment":
@@ -138,7 +140,7 @@ class Composer(object):
         code += "\n"
         return code
   
-    def _build_bus_assignments(self):
+    def build_bus_assignments(self):
         proxy = self.parser.app.proxy
         aob = aib = cob = cib = ""
         for sy in proxy.get_all_synths():
@@ -168,7 +170,7 @@ class Composer(object):
         code += cib
         return code
     
-    def _build_channel_assignments(self):
+    def build_channel_assignments(self):
         code = "# MIDI Channel Assignments\n"
         config = self.parser.config
         for i in range(16):
@@ -181,7 +183,7 @@ class Composer(object):
         code += "\n"
         return code
                 
-    def _build_controller_assignments(self):
+    def build_controller_assignments(self):
         code = "# MIDI Controller Assignments\n"
         config = self.parser.config
         for ctrl in range(128):
@@ -193,7 +195,7 @@ class Composer(object):
         code += "\n"
         return code
 
-    def _build_graph(self):
+    def build_graph(self):
         gh = self.parser.graphhelper
         code = "# Create graph\n"
         code += "graph_sync()\n"   # Force graph creation 
