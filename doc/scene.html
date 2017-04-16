@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Lliascript">
+    <meta name="description" content="Scene">
     <meta name="robots" content="index,follow,archive">
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link rel="icon" href="images/llia_icon.png"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
     <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
     <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
-    <title>Lliascript</title>
+    <title>Scene</title>
 </head>
 <body>
 <div id="page_wrapper">
-        <!-- **** SECTION lliascript **** -->
-        <a id="lliascript"></a>
+        <!-- **** SECTION scene **** -->
+        <a id="scene"></a>
         <section>
         <div class="section">
-        <h1 class="small-banner">Lliascript</h1>
-    <a class="navigation" href="scene.html">Previous(&nbsp;Scene&nbsp;)</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Next(&nbsp;Synth Catalog&nbsp;)</a>
+        <h1 class="small-banner">Scene</h1>
+    <a class="navigation" href="compose.html">Previous(&nbsp;Compose&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="lliascript.html">Next(&nbsp;lliascript&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
@@ -30,30 +30,31 @@
             
             <p class="section-body">
             
-            Llia has a Python scripting feature.  With scripts synths, buses and the
-            connections between them may be programatically created or destroyed.
+            A Scene provides a method for saving the current state of Llia for later
+            recall.  Scenes supersede the <a href="compose.html">Compose</a> feature.
             </p>
             
             <p class="section-body">
             
-            <b class="warning">WARNING: Using lliascript it is possible to execute
-            arbitrary Python code, including code which may be malicious.  Only use
-            code from a trusted source.</b></p>
-            
-            <p class="section-body">
-            
-            The <a href="compose.html">compose</a> feature was a major motivation for
-            developing lliascript. 
+            The primary difference between Compose and Scene is that Scene saves all 
+            data to a single file. Compose is nothing more then a Python script.  
+            It makes an attempt to load bank data but each synth created by compose
+            requires a separate bank data file.  Worse if a bank file is moved 
+            Compose will be unable to locate it.  Compose is still important as it 
+            provides the scripting portion for Scene objects. 
             </p>
             
             <p class="section-body">
             
-            <b class="fixme">FIXME</b> add actual documentation.
+            Scenes are accessed by the "Save Scene" and "Load Scene" options under
+            the main File menu.  Depending on the complexity loading a Scene may take
+            several seconds or a minute or two. Be aware that loading a Scene 
+            completely replaces the current state of Llia. All unsaved data is deleted.
             </p>
             
             <hr class="section-head" />
-    <a class="navigation" href="scene.html">Previous(&nbsp;Scene&nbsp;)</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Next(&nbsp;Synth Catalog&nbsp;)</a>
+    <a class="navigation" href="compose.html">Previous(&nbsp;Compose&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="lliascript.html">Next(&nbsp;lliascript&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>

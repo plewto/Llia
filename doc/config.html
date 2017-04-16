@@ -139,9 +139,6 @@
               <li>output-port : </li>
               <li>backend : mido.backends.rtmidi</li>
               <li>enable-program-pp : True</li>
-              <li>enable-keyswitch : False</li>
-              <li>keyswitch-channel : 10</li>
-              <li>keyswitch-transpose : -40</li>
               <li>trace-midi-reception : False</li>
             </ul>
             
@@ -192,13 +189,6 @@
             with no ill effects.  pp may also be disabled from the MIDI menu of the
             main application window. The pp output also appears in the &#34;Info&#34; tab
             of the synth <a href="group.html">group window</a></p>
-            
-            
-            <p class="section-body">
-            <b>enable-keyswitch</b><br>
-            <b>keyswitch-channel</b><br>
-            <b>keyswitch-transpose</b><br>
-            See <a href="keyswitch.html">Keyswitch</a></p>
             
             <p class="section-body">
             
@@ -298,7 +288,9 @@
             <p class="section-body">
             
             <b>enable-active-updates</b> Flag which enables GUI components to be
-            updated in response to mapped MIDI values.  See <a href="performance.html">Performances</a>. 
+            updated in response to mapped MIDI values.  Use with care,
+            editor graphic updates may not be fast enough to keep up.<br>
+            See <a href="performance.html">Performances</a>. 
             </p>
             
         <a id="midi_channels"></a>

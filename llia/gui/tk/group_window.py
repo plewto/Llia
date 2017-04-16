@@ -53,6 +53,9 @@ class GroupWindow(Toplevel):
 
     def tabula_rasa(self):
         GroupWindow.instance_counter = 0
-        for tid in self.notebook.tabs():
-            self.notebook.forget(tid)
+        try:
+            for tid in self.notebook.tabs():
+                self.notebook.forget(tid)
+        except TclError:
+            pass
         self.destroy()

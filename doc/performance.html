@@ -65,8 +65,12 @@
             equal tempered scale with A = 440Hz.<br><br>
             </p>
             
+            <p class="footnote">
+            
+            The Perf tab was relabeld as 'MIDI" after version 0.1.3. </p>
+            
             <p class="section-body">
-            <b>Transpose</b> sets note transposition in MIDI key numbers.  Transpose may
+            <b>Transpose</b> sets note transposition in half steps.  Transpose may
             be up to &plusmn;36 semi-tones (3 octaves).</p>
             
             <p class="section-body">
@@ -154,11 +158,11 @@
             You add a new parameter map by clicking the [+]
             button in the appropriate section.  Similarly a parameter map is
             removed by clicking [-].  When removing a mapping the special value
-            &#34;ALL&#34; is be used to remove all maps from the give source.<br><br>
+            &#34;ALL&#34; removes all maps from the give source.<br><br>
             
             In the case of keynumber the mapping function is aware of the
             current key range and takes that into account when calculating the parameter
-            value. <br><br>
+            value. The low key in the range has a value of 0.0, the high key has value 1.0.<br><br>
             
             Pitchwheel maps are in addition to the normal pitch bend functions. To
             defeat normal pitch bending set the bend range to 0.  Pitchwheel

@@ -4,12 +4,14 @@ Adds run-time editor annotation.
 Depreciated keyswitch feature.
 Adds Klstr2 synth
 Reduced size for ProgramBank files.
-	
+Adds scene feature, saves synth states in single file.
+Adds better restart options.
+
 **************************************************** v 0.1.2    2017.03.23
 Multiple bug fixes
 Adds Scanner phase-shifter
 Adds Comb filter
-Increased size of splash screen
+Increased size of splash screen to accumodate more MIDI devices.
 
 **************************************************** v 0.1.0    2016.12.17
 Multiple bug fixes

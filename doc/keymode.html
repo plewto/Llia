@@ -130,11 +130,11 @@
             </p>
             
             <p class="section-body">
-            
-            The intended use is for MonoExclusive to be layered with another 
-            keymode to provide an accent on the first note played in a series 
-            of notes.  A real world example is on certain antique electric organs 
-            where a click is produced only on initial key presses.</p>
+             
+            The intended use is to layer MonoExclusive with another keymode.  This
+            allows the first note of a legato passage to have an alternate or accented
+            tone.  A real world example is on certain antique electric organs where a
+            click is produced only on initial key presses.</p>
             
             <hr class="section-head" />
             <p class="section-body">
@@ -142,7 +142,10 @@
             <b>Efx</b> is a specialized keymode for effects and control synths.   As
             with mono mode a single persistent server side synth object is created. 
             Efx mode passes the last keynumber, note frequency, and velocity to the
-            effect.   As long as any key is down the gate signal is high,  if all keys
+            effect, should it be interested. 
+            
+            
+            As long as any key is down the gate signal is high,  if all keys
             are up the gate signal goes low. 
             </p>
             
