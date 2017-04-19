@@ -15,6 +15,7 @@ import llia.synths.algo.algo_proxy
 import llia.synths.io.io_proxy    
 import llia.synths.corvus.corvus_proxy
 import llia.synths.m.m_proxy        
+import llia.synths.locus.locus_proxy
 # END SYNTH IMPORTS
 
 print("Importing effects:")

@@ -1,4 +1,4 @@
-# llia.synths.tk.editor2
+# llia.synths.klstr2.tk.editor2
 
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
