@@ -25,7 +25,6 @@
                  "lfo1.scd",
                  "lfo2.scd",
                  "lfo3.scd",
-                 "locus.scd",
                  "m.scd",
                  "masa.scd",
                  "mixer.scd",
