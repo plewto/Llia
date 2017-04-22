@@ -40,6 +40,7 @@
                  "saw3.scd",
                  "scanner.scd",
                  "snh.scd",
+                 "sol.scd",
                  "ss1.scd",
                  "tremolo.scd",
                  "xover.scd"];
