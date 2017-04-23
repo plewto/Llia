@@ -27,8 +27,8 @@ class SolProxy(SynthProxy):
 
 pallet = Pallet(default_pallet)
 #pallet["BACKGROUND"] =  
-#pallet["SLIDER-OUTLINE"] = 
-#pallet["SLIDER-TROUGH"] = 
+pallet["SLIDER-OUTLINE"] = "#777f86"
+pallet["SLIDER-TROUGH"] = "#2d242d"
 specs["constructor"] = SolProxy
 specs["description"] = "Vector Synth"
 specs["help"] = "Sol"

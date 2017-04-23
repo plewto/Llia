@@ -20,7 +20,7 @@ class TkSolPanel(TkSubEditor):
         self.tab_file = "resources/Sol/tab_%s.png" % stack
         frame = editor.create_tab(self.name,self.tab_file)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,1000,700,self.image_file)
+        canvas = factory.canvas(frame,900,550,self.image_file)
         canvas.pack()
         TkSubEditor.__init__(self,canvas,editor,self.name)
         editor.add_child_editor(self.name, self)

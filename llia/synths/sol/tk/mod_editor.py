@@ -14,7 +14,7 @@ class TkSolModEditor(TkSubEditor):
         self.tab_file = "resources/Sol/tab_mod.png"
         frame = editor.create_tab(self.name,self.tab_file)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,1200,700,self.image_file)
+        canvas = factory.canvas(frame,1100,580,self.image_file)
         canvas.pack()
         TkSubEditor.__init__(self,canvas,editor,self.name)
         editor.add_child_editor(self.name, self)
@@ -75,7 +75,7 @@ class TkSolVectorEditor(TkSubEditor):
         self.tab_file = "resources/Sol/tab_vector.png"
         frame = editor.create_tab(self.name,self.tab_file)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,1000,700,self.image_file)
+        canvas = factory.canvas(frame,820,570,self.image_file)
         canvas.pack()
         TkSubEditor.__init__(self,canvas,editor,self.name)
         editor.add_child_editor(self.name, self)
