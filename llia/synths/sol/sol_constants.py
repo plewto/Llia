@@ -4,6 +4,8 @@ from fractions import Fraction
 
 MAX_LFO_DELAY = 4.0
 MAX_ENV_SEGMENT_TIME = 16
+MOD_SCALES = (1,2,3,4,8,16,32,64,100,200,400,800,1000,2000,4000,8000) 
+
 
 def r(n,d):
     return Fraction(n,d)
