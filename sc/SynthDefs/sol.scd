@@ -174,7 +174,7 @@
 	var opa_mod_freq = f0*opa_mod_ratio;
 	var opa_mod_envsig = XFade2.kr(1.0,aenv,opa_mod_aenv.linlin(0,1,-1,1));
 	var opa_mod_lfosig = XFade2.kr(1.0,alfo,opa_mod_alfo.linlin(0,1,-1,1));
-	var opa_mod_amp = opa_mod_scale*opa_mod_envsig*opa_mod_lfosig*opa_car_freq;
+	var opa_mod_amp = opa_mod_scale*opa_mod_depth*opa_mod_envsig*opa_mod_lfosig*opa_car_freq;
 	var opa_fbsig = fm_feedback[0]*opa_feedback*opa_car_freq;
 	var opa_cross_fbsig = fm_feedback[1]*opa_cross_feedback*opa_car_freq;
 	var opa_modsig = LeakDC.ar(opa_fbsig + opa_cross_fbsig + SinOsc.ar(opa_mod_freq,0,opa_mod_amp));
@@ -184,19 +184,19 @@
 	var opb_mod_freq = f0*opb_mod_ratio;
 	var opb_mod_envsig = XFade2.kr(1.0,benv,opb_mod_benv.linlin(0,1,-1,1));
 	var opb_mod_lfosig = XFade2.kr(1.0,blfo,opb_mod_blfo.linlin(0,1,-1,1));
-	var opb_mod_amp = opb_mod_scale*opb_mod_envsig*opb_mod_lfosig*opb_car_freq;
+	var opb_mod_amp = opb_mod_scale*opb_mod_depth*opb_mod_envsig*opb_mod_lfosig*opb_car_freq;
 	var opb_fbsig = fm_feedback[1]*opb_feedback*opb_car_freq;
 	var opb_cross_fbsig = fm_feedback[0]*opb_cross_feedback*opb_car_freq;
 	var opb_modsig = LeakDC.ar(opb_fbsig + opb_cross_fbsig + SinOsc.ar(opb_mod_freq,0,opb_mod_amp));
 	var opb_sig = SinOsc.ar(opb_car_freq+opb_modsig);  // B carrier pre gain scale.
 	// Vector x  A <---> B
 	var x_control_sig = (xpos + (xlfo*xpos_xlfo) + (xenv*xpos_xenv) + (vxsig*xpos_vxbus)).min(1).max(-1);
-	var xsig = XFade2.ar(opa_sig*opa_amp,opb_sig*opb_amp,x_control_sig);
+	var xsig = LeakDC.ar(XFade2.ar(opa_sig*opa_amp,opb_sig*opb_amp,x_control_sig));
 	// OPC Saw/Pulse/Noise
-	var opc_saw_freq = f0*opc_saw_ratio;
+	var opc_saw_freq = (f0*opc_saw_ratio).max(20);
 	var opc_saw_sig = Saw.ar(opc_saw_freq);
 	var opc_tri_sig = LeakDC.ar(LPF.ar(abs(opc_saw_sig),(opc_saw_freq*6).min(16000)))*3;
-	var opc_pulse_freq = f0*opc_pulse_ratio;
+	var opc_pulse_freq = (f0*opc_pulse_ratio).max(20);
 	var opc_pw = opc_pulse_width + (opc_pulse_width_alfo * alfo * 0.5);
 	var opc_pulse_sig = Pulse.ar(opc_pulse_freq,opc_pw);
 	var opc_noise_sig = HPF.ar(WhiteNoise.ar(),2000)*2*opc_noise_amp;
@@ -207,10 +207,10 @@
 	var opc_filter_freq = (opc_saw_freq * (opc_filter_track + (aenv * opc_filter_aenv))).max(50).min(16000);
 	var opc_sig = LPF.ar(opc_filter_in,opc_filter_freq);
 	// OPD Saw/Pulse/Noise
-	var opd_saw_freq = f0*opd_saw_ratio;
+	var opd_saw_freq = (f0*opd_saw_ratio).max(20);
 	var opd_saw_sig = Saw.ar(opd_saw_freq);
 	var opd_tri_sig = LeakDC.ar(LPF.ar(abs(opd_saw_sig),(opd_saw_freq*6).min(16000)))*3;
-	var opd_pulse_freq = f0*opd_pulse_ratio;
+	var opd_pulse_freq = (f0*opd_pulse_ratio).max(20);
 	var opd_pw = opd_pulse_width + (opd_pulse_width_blfo * blfo * 0.5);
 	var opd_pulse_sig = Pulse.ar(opd_pulse_freq,opd_pw);
 	var opd_noise_sig = HPF.ar(WhiteNoise.ar(),2000)*2*opd_noise_amp;
