@@ -259,4 +259,23 @@ BUG 0021 2017.03.22
 addsynth script typo:
 Final line of <sname>_proxy.py EFX_TYPES should be EFFECT_TYPES
 
-2017.03.23 modified tools/sproxy.py 
+2017.03.23 modified tools/sproxy.py
+---------------------------------------------------------------------- Open 0022
+BUG 0022 2017.04.23
+
+New restart feature does not completely forget previous synths.
+To reproduce:
+   1) Create Mixer.
+   2) Create synth such as SS1 and connect to Mixer input using the Graph.
+   3) Select 'Restart' under File menu.
+
+The graph is not immediately cleared after restart and the following exception
+occurs.
+    Exception in Tkinter callback
+    Traceback (most recent call last):
+      File "/usr/lib/python2.7/lib-tk/Tkinter.py", line 1540, in __call__
+        return self.func(*args)
+      File "/home/sj/Documents/dev/Llia/llia/gui/tk/tk_appwindow.py", line 70, in _tab_change_callback
+        self.llia_graph.sync()
+      File "/home/sj/Documents/dev/Llia/llia/gui/tk/graph/lliagraph.py", line 486, in sync
+        sytoken = self.synth_tokens
