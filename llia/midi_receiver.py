@@ -17,7 +17,7 @@ class __MIDIReceiver(object):
     def __init__(self, port_name, trace=False):
         """
         Construct new MIDIReceiver object.
-        DO NOT instinate directly, use get_receiver function instead.
+        DO NOT instinate directly, use get_midi_receiver function instead.
 
         ARGS:
           port_name - String.
