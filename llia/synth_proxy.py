@@ -291,12 +291,11 @@ class SynthProxy(object):
         register_midi_handler("pitchwheel", self._pitchwheel_handler)
         register_midi_handler("control_change", self._cc_handler)
         register_midi_handler("program_change", self._program_change_handler)
-        # if app.config.keyswitch_enabled():
-        #     self._keyswitch_chan0 = app.config.keyswitch_channel()-1
-        #     self._keyswitch_transpose = app.config.keyswitch_transpose()
-        #     register_midi_handler("note_on", 
-        #                           self._keyswitch_handler, 
-        #                           "keyswitch.")
+        register_midi_handler("clock", self._dummy_handler)
+        register_midi_handler("start", self._dummy_handler)
+        register_midi_handler("stop", self._dummy_handler)
+        register_midi_handler("continue", self._dummy_handler)
+        register_midi_handler("reset", self._dummy_handler)
 
     def status(self, msg):
         '''
@@ -832,7 +831,11 @@ class SynthProxy(object):
         for param, val in program.items():
             if param[0] != "_":
                 self.x_param_change(param, val)
-    
+
+    # Place holder event hadler.
+    def _dummy_handler(self, msg):
+        pass
+                
     def _note_on_handler(self, mmsg):
         perf = self.current_performance()
         lower, upper = perf.key_range()
