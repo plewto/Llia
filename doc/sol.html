@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="sol">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Sol</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION sol **** -->
+        <a id="sol"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">SOL</h1>
+        <img class="center" src="images/synthcat/sol.png" alt="" />
+    <a class="navigation" href="saw3.html">Previous(&nbsp;Saw3&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="ss1.html">Next(&nbsp;SS1&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Sol is a <a href="https://en.wikipedia.org/wiki/Vector_synthesis">Vector Synth</a>
+            where the signal is produced by cross-mixing four component tones (A,&nbsp;B,&nbsp;C,&nbsp;D). 
+            Conceptually the tones are arranged at the compass points of a circle.</p>
+            
+        <img class="center" src="images/synthcat/sol_compass.png" alt="" />
+            <p class="section-body">
+            
+            The relative mix between tones A and B on the x-axis is independent of
+            y-axis mix of C and D.   Several control signals provide 
+            modulation of the current mix between the four tones.</p>
+            
+            
+            A Sol voice contains the following components:
+            <ul>
+              <li>8 Oscillators
+                  <ul>
+                      <li>2 each tones A and B used as FM modulator/carrier pairs</li>
+                      <li>2 each tones C and D. 1 saw/tri wave, 1 pulse wave.</li>
+                  </ul>
+              </li>
+              <li>2 noise sources, 1 each tones C and D.<br>
+                  A and B may produce noise via FM feedback.
+              </li>
+              <li>4 filters.
+                  <ul>
+                    <li>1 each vector axis X and Y.</li>
+                    <li>1 each tones C and D .</li>
+                  </ul>
+              </li>
+              <li>5 Envelopes.
+                  <ul>
+                    <li>2 ADSR dedicated to vector modulation.</li>
+                    <li>2 ADSR as general modulation sources.</li>
+                    <li>1 ADDSR as main output envelope.</li>
+                   </ul>
+               </li>
+               <li>5 LFOs.
+                  <ul>
+                     <li>2 dedicate to vector modulation.</li>
+                     <li>2 as general modulation sources.</li>
+                     <li>1 vibrato.</li>
+                  </ul>
+               </li>
+            </ul>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Tones A and B on the x-axis use simple FM modulator/carrier pairs. After
+            mixing the signal is sent through a common lowpass filter.</p>
+            
+        <img class="center" src="images/synthcat/sol_xaxis.png" alt="" />
+            <p class="section-body">
+            
+            The controls for A and B are identical with exception of the available
+            modulation sources.</p>
+            
+            
+            <ul>
+               <li>Modulator
+                   <ul>
+                     <li>Ratio - Modulator frequency ratio.</li>
+                     <li>Scale - Modulator amplitude scale, higher values produce deeper modulation.
+                         The scale value essentially sets the sensitivity of the following values.</li>
+                     <li>Depth - Modulation depth.
+                     <li>EnvA (EnvB) - Modulation depth from envelope A (tone A) or envelope B (tone B).</li>
+                     <li>LFOA (LFOB) - Modulation depth from LFO A (or B).</li>
+                    </ul>
+               </li>
+               <li>Carrier
+                   <ul>
+                     <li>Ratio - Carrier frequency ratio.</li>
+                     <li>Bias - Fixed value added to carrier frequency.</li>
+                     <li>Feedback - Amount of carrier output feed back to modulator.</li>
+                     <li>Cross Feed - Amount of signal from opposite tone used as modulator.<br>
+                         For tone A, Cross Feed uses the output of tone B as a modulation source of A.<br>
+                         Likewise, for tone B, Cross Feed uses output of A to modulate B.
+                     </li>
+                     <li>Amp - Tone output amplitude (up to 6db gain).</li>
+                   </ul>
+               </li>
+               <li>Filter.  The filter is applied to combined A B signal after the vector cross mixing stage.
+                   <ul>
+                      <li>Freq - Initial cutoff frequency.</li>
+                      <li>Track - Keyboard tracking (0, 0.5, 1 or 2).</li>
+                      <li>Res - Resonance</li>
+                      <li>EnvA - Amount envelope A applied to filter frequency.</li>
+                      <li>Env C - Amount main envelope applied to filter.</li>
+                      <li>LFOA - Amount LFO A applied to filter.</li>
+                      <li>LFOV - Amount vibrato signal is applied to filter.</li>
+                      Selecting the "Inv" check-boxes bellow each slider causes the corresponding signal to be 
+                      inverted."
+                    </ul>
+                 </li>
+            </ul>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Tones C and D on the y-axis are filtered sawtooth, triangle, pulse or noise.  The controls for each 
+            tone are identical with exception of modulation source.  The main filter section is identical to 
+            the A B filter again with exception of modulation sources.</p>
+            
+        <img class="center" src="images/synthcat/sol_yaxis.png" alt="" />
+            
+            <ul>
+               <li>Tune Saw/Tri - Sawtooth/triangle wave tuning.</li>
+               <li>Tune Pulse - Pulse wave tuning.</li>
+               <li>PW - Pulse Width - center is square wave.</li>
+               <li>PWM - Pulse Width Modulation be LFO (LFO A for tone C)(LFO B for tone D).</li>
+               <li>Wave - Waveform mix.</li>
+               <li>EnvA (EnvB) - Envelope applied to wave mix.</li>
+               <li>LFOA (LFOB) - LFO applied to wave mix.</li>
+               <li>Filter Track - Cutoff of tone filter relative to sawtooth frequency.
+                   The tone filter is separate from the primary filter  to the right.</li>
+               <li>Filter EnvA (EnvB) - Amount envelope applied to tone filter cutoff.</li>
+               <li>Amp - Tone output amplitude (up to 6db gain)</li>
+            </ul>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            The vector section is divided in to two independent sections: x-axis (tones A and B) 
+            and y-axis (tones C and D). Each section has dedicated LFO and ADSR envelopes.</p>
+            
+        <img class="center" src="images/synthcat/sol_vector.png" alt="" />
+            
+            <ul>
+               <li>LFO
+                   <ul>
+                     <li>Ratio - Relative LFO frequency.  The frequencies of all Sol LFOS are
+                         relative to a timebase value set on the modulation page. LFO times
+                         may be as low as 1/256 of the timebase value.</li>
+                     <li>Wave - LFO wave shape is triangular at center position and sawtooth at the extremes.</li>
+                     <li>Delay - LFO onset delay, up to 4 seconds.</li>
+                   </ul>
+                 </li>
+               <li>Env - The envelope is standard ADSR type with segment times up to 16 seconds.
+                         The envelope may be triggered either by the keyboard or the LFO.</li>
+               <li>Vector.
+                   <ul>
+                     <li>Init Pos - Initial position between -1 and +1.  Values at the extremes will completely 
+                         attenuate one or the other tones.  A position of 0.0 produces an equal mixture of both 
+                         tones.</li>
+                     <li>Env - Amount of envelope applied to vector position.</li>
+                     <li>LFO - Amount of LFO applied to vector position.</li>
+                     <li>External - Amount of external control signal applied to vector position.
+                          There are independent control buses for the x and y axis.</li>
+                     <li>Amp - Gain for axis tone.</li>
+                   </ul>
+                 </li>
+            </ul>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            The Modulation page contains controls for general modulation signals, and miscellaneous parameters. 
+            </p>
+            
+        <img class="center" src="images/synthcat/sol_modpage.png" alt="" />
+            
+            <ul>
+               <li>Timebase - All LFO frequencies are relative to the timebase value.</li>
+               <li>Port - Portamento time.</li>
+               <li>Vibrato.
+                   <ul>
+                     <li>Ratio - LFO frequency ratio.</li>
+                     <li>Delay - Onset delay.</li>
+                     <li>Sens - Sensitivity.</li>
+                     <li>Depth.</li>
+                     <li>External - Amount external signal applied to pitch modulation.</li>
+                    </ul>
+                 </li>
+                <li>LFO A (LFO B) - general sinewave sources.
+                    <ul>
+                       <li>Ratio - Frequency ratio.</li>
+                       <li>Delay - Onset delay.</li>
+                     </ul>
+                 </li>
+                <li>Env A (Env B) - general ADSR generators.
+                    Envelopes A and B may either be triggered by keyboard or LFO.
+                </li>
+                <li>Env C - Primary <a href="glossary.html#adsr">ADDSR</a> envelope.</li>
+            </ul>
+            <hr class="section-head" />
+            
+            Parameters:
+            <ul>
+            <li>port -  Portamento time (0..1)</li>
+            <li>amp -  Output gain (0..2)</li>
+            <li>timebase -  LFO timebase in (0..99.999) seconds</li>
+            <li>vratio -  Vibrato ratio</li>
+            <li>vsens -  Vibrato sensitivity (0..1)</li>
+            <li>vdepth -  Vibrato depth (0..1)</li>
+            <li>vdelay -  Vibrato delay (0..4) seconds</li>
+            <li>pitch_ctrlbus -  External pitch control (0..1)</li>
+            <li>xlfo_ratio -  X Vector LFO ratio</li>
+            <li>xlfo_wave -  X Vector LFO wave (0..1) 0.5=triangle</li>
+            <li>xlfo_delay -  X Vector LFO onset delay (0..4) seconds</li>
+            <li>xenv_attack -  X Vector env attack (0..16) seconds</li>
+            <li>xenv_decay -  X Vector env decay (0..16) seconds</li>
+            <li>xenv_sustain -  X Vector env sustain level (0..1)</li>
+            <li>xenv_release -  X Vector env release (0..16) seconds</li>
+            <li>xenv_lfo_trig -  X Vector env trig mode, 0=key gate, 1= XLFO</li>
+            <li>xpos -  X Vector initial position (-1..+1)</li>
+            <li>xpos_xlfo -  X Vector LFO mod depth (-1..+1)</li>
+            <li>xpos_xenv -  X Vector Env mod depth (-1..+1)</li>
+            <li>xpos_vxbus -  X Vector external mod depth (-1..+1)</li>
+            <li>xamp -  X Vector combined output amp (0..2)</li>
+            <li>ylfo_ratio -  Y Vector LFO ratio</li>
+            <li>ylfo_wave -  Y Vector LFO wave (0..1) 0.5=triangle</li>
+            <li>ylfo_delay -  Y Vector LFO onset delay (0..4) seconds</li>
+            <li>yenv_attack -  Y Vector env attack (0..16) seconds</li>
+            <li>yenv_decay -  Y Vector env decay (0..16) seconds</li>
+            <li>yenv_sustain -  Y Vector env sustain level (0..1)</li>
+            <li>yenv_release -  Y Vector env release (0..16) seconds</li>
+            <li>yenv_lfo_trig -  Y Vector env trig mode, 0=key gate, 1= YLFO</li>
+            <li>ypos -  Y Vector initial position (-1..+1)</li>
+            <li>ypos_ylfo -  Y Vector LFO mod depth (-1..+1)</li>
+            <li>ypos_yenv -  Y Vector Env mod depth (-1..+1)</li>
+            <li>ypos_vybus -  Y Vector external mod depth (-1..+1)</li>
+            <li>yamp -  Y Vector combined output amp (0..2)</li>
+            
+            <li>alfo_ratio -  LFO A frequency ratio</li>
+            <li>alfo_delay -  LFO A onset delay (0..4) seconds</li>
+            <li>blfo_ratio -  LFO B frequency ratio</li>
+            <li>blfo_delay -  LFO B onset delay (0..4) seconds</li>
+            <li>aenv_attack -  Env A attack time (0..16) seconds</li>
+            <li>aenv_decay -  Env A decay time (0..16) seconds</li>
+            <li>aenv_sustain -  Env A sustain level (0..1)</li>
+            <li>aenv_release -  Env A release time (0..16) seconds</li>
+            <li>aenv_lfo_trig -  Env A trig mode, 0=key gate, 1=LFO A</li>
+            
+            <li>benv_attack -  Env B attack time (0..16) seconds</li>
+            <li>benv_decay -  Env B decay time (0..16) seconds</li>
+            <li>benv_sustain -  Env B sustain level (0..1)</li>
+            <li>benv_release -  Env B release time (0..16) seconds</li>
+            <li>benv_lfo_trig -  Env B trig mode, 0=key gate, 1=LFO B</li>
+            
+            
+            <li>cenv_attack -  Env C attack time (0..16) seconds</li>
+            <li>cenv_decay1 -  Env C initial decay time (0..16) seconds</li>
+            <li>cenv_decay2 -  Env C second decay time (0..16) seconds</li>
+            <li>cenv_release -  Env C release time (0..16) seconds</li>
+            <li>cenv_breakpoint -  Env C decay breakpoint level (0..1)</li>
+            <li>cenv_sustain -  Env C sustain level (0..1)</li>
+            <li>cenv_trig_mode -  Env C trig mode, 0=gate, 1=trigger</li>
+            <li>opa_mod_ratio -  Tone A modulator frequency ratio</li>
+            <li>opa_mod_scale -  Tone A modulator scale factor</li>
+            <li>opa_mod_depth -  Tone A modulation depth (0..1)</li>
+            <li>opa_mod_alfo -  Tone A LFO to modulation depth (0..1)</li>
+            <li>opa_mod_aenv -  Tone A Env to modulation depth (0..1)</li>
+            <li>opa_car_ratio -  Tone A carrier frequency ratio</li>
+            <li>opa_car_bias -  Tone A carrier frequency bias</li>
+            <li>opa_feedback -  Tone A feedback amount (0..99)</li>
+            <li>opa_cross_feedback -  Tone A modulation depth from Tone B (0..99.999)</li>
+            <li>opa_amp -  Tone A amplitude (0..2)</li>
+            <li>opb_mod_ratio -  Tone B modulator frequency ratio</li>
+            <li>opb_mod_scale -  Tone B modulator scale factor</li>
+            <li>opb_mod_depth -  Tone B modulation depth (0..1)</li>
+            <li>opb_mod_alfo -  Tone B LFO to modulation depth (0..1)</li>
+            <li>opb_mod_aenv -  Tone B Env to modulation depth (0..1)</li>
+            <li>opb_car_ratio -  Tone B carrier frequency ratio</li>
+            <li>opb_car_bias -  Tone B carrier frequency bias</li>
+            <li>opb_feedback -  Tone B feedback amount (0..99)</li>
+            <li>opb_cross_feedback -  Tone B modulation depth from Tone B (0..99.999)</li>
+            <li>opb_amp -  Tone B amplitude (0..2)</li>
+            <li>opc_saw_ratio -  Tone C Sawtooth/Triangle frequency ratio</li>
+            <li>opc_pulse_ratio -  Tone C Pulse frequency ratio</li>
+            <li>opc_pulse_width -  Tone C Pulse width (0..1)</li>
+            <li>opc_pulse_width_alfo -  Tone C  Pulse Width Modulation by LFO (0..1)</li>
+            <li>opc_wave -  Tone C Wave max (0..1 0.0=tri, 0.35=pulse, 1.0=saw) </li>
+            <li>opc_wave_alfo -  Tone C LFO to wave (-1..+1)</li>
+            <li>opc_wave_aenv -  Tone C Env to wave (-1..+1)</li>
+            <li>opc_noise_amp -  Tone C Noise amplitude (0..2)</li>
+            <li>opc_filter_track -  Tone C filter frequency relative to sawtooth, (1,2,3,4,5,6,7,8,9,12,16,24,32,64)</li>
+            <li>opc_filter_aenv -  Tone C envelope modulation filter freq (0,1,2,3,...,24,32,64)</li>
+            <li>opc_amp -  Tone C amplitude (0..2)</li>
+            <li>opd_saw_ratio -  Tone D Sawtooth/Triangle frequency ratio</li>
+            <li>opd_pulse_ratio -  Tone D Pulse frequency ratio</li>
+            <li>opd_pulse_width -  Tone D Pulse width (0..1)</li>
+            <li>opd_pulse_width_blfo -  Tone D  Pulse Width Modulation by LFO (0..1)</li>
+            <li>opd_wave -  Tone D Wave max (0..1 0.0=tri, 0.35=pulse, 1.0=saw) </li>
+            <li>opd_wave_blfo -  Tone D LFO to wave (-1..+1)</li>
+            <li>opd_wave_benv -  Tone D Env to wave (-1..+1)</li>
+            <li>opd_noise_amp -  Tone D Noise amplitude (0..2)</li>
+            <li>opd_filter_track -  Tone D filter frequency relative to sawtooth, (1,2,3,4,5,6,7,8,9,12,16,24,32,64)</li>
+            <li>opd_filter_benv -  Tone D envelope modulation filter freq (0,1,2,3,...,24,32,64)</li>
+            <li>opd_amp -  Tone D amplitude (0..2)</li>
+            <li>xfilter_freq - X-axis filter (Tones A B) cutoff (0..16k)</li>
+            <li>xfilter_track - X-axis filter (Tones A B) key track (0,0.5,1,2)</li>
+            <li>xfilter_freq_aenv - X-axis filter (Tones A B)  Env A modulation depth (-16k..+16k)</li>
+            <li>xfilter_freq_cenv - X-axis filter (Tones A B)  Env C modulation depth (-16k..+16k)</li>
+            <li>xfilter_freq_alfo - X-axis filter (Tones A B)  LFO A modulation depth (-8k..+8k)</li>
+            <li>xfilter_freq_vlfo - X-axis filter (Tones A B)  LFO V modulation depth (-8k..+8k)</li>
+            <li>xfilter_res - X-axis filter (Tones A B) resonance (0..1) </li>
+            <li>yfilter_freq - Y-axis (Tones C D)  cutoff (0..16k)</li>
+            <li>yfilter_track - Y-axis (Tones C D)  key track (0,0.5,1,2)</li>
+            <li>yfilter_freq_benv - Y-axis (Tones C D)  Env B modulation depth (-16k..+16k)</li>
+            <li>yfilter_freq_cenv - Y-axis (Tones C D)  Env C modulation depth (-16k..+16k)</li>
+            <li>yfilter_freq_blfo - Y-axis (Tones C D)  LFO B modulation depth (-8k..+8k)</li>
+            <li>yfilter_freq_vlfo - Y-axis (Tones C D)  LFO V modulation depth (-8k..+8k)</li>
+            <li>yfilter_res - Y-axis (Tones C D)  resonance (0..1)</li>
+            </ul>
+            <hr class="section-head" />
+            
+            Buses:
+            <ul>
+              <li>Audio out buses:
+                  <ul>
+                    <li>outbus - Main output bus, combined x and y axis signals</li>
+                    <li>xout - x-axis (tones A and B) only</li>
+                    <li>yout - y-axis (tones C and D) only</li>
+                  </ul>
+               </li>
+               <li>Control input buses:
+                   <ul>
+                     <li>vxbus - Vector x-axis control.</li>
+                     <li>vybus - Vector y-axis control.</li>
+                     <li>ctrlbus - Pitch control.</li>
+                    </ul>
+                </li>
+            </ul>
+            <hr class="section-head" />
+    <a class="navigation" href="saw3.html">Previous(&nbsp;Saw3&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="ss1.html">Next(&nbsp;SS1&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>
