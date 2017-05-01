@@ -580,4 +580,10 @@ class LliaConfig(dict):
         '''
         ss = self.get_option("GENERAL", "startup-script")
         return ss
-        
+
+    def startup_scene(self):
+        '''
+        Returns filename for scene object to load on startup."
+        '''
+        ss = self.get_option("GENERAL", "startup-scene")
+        return ss
