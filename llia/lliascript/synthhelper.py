@@ -648,11 +648,15 @@ class SynthHelper(object):
     def new_group(self, grp_name=""):
         mw = self.parser.app.main_window()
         grp = mw.add_synth_group(grp_name)
-        data = {"name" : grp.name,
+        try:
+            grpname = grp.name
+        except AttributeError:
+            grpname = ""
+        data = {"name" : grpname,
                 "is-efx" : False,
                 "is-group" : True,
                 "serial-number" : self._synth_and_group_serial_number}
-        self.parser.register_entity(grp.name, "group", data)
+        self.parser.register_entity(grpname, "group", data)
         self._synth_and_group_serial_number+=1
 
     # deiconify group window(s)

@@ -7,6 +7,39 @@ import abc, sys
 
 from llia.gui.splash import TextSplashScreen
 
+class AbstractGroupWindow(object):
+
+    def __init__(self, app, root=None, name=""):
+        self.app = app
+        self.root=root
+        self.name = str(name)
+
+    @abc.abstractmethod
+    def on_closing(self, *args):
+        pass
+
+    @abc.abstractmethod
+    def show_synth_eduitor(self, sid):
+        pass
+
+    @abc.abstractmethod
+    def lift(self):
+        pass
+
+    @abc.abstractmethod
+    def deiconify(self):
+        pass
+    
+    @abc.abstractmethod
+    def lower(self):
+        pass
+
+    @abc.abstractmethod
+    def tabula_rasa(self):
+        pass
+
+    
+
 class AbstractApplicationWindow(object):
 
     def __init__(self, app, root):
@@ -58,17 +91,29 @@ class AbstractApplicationWindow(object):
     def tabula_rasa(self):
         pass
 
+    @abc.abstractmethod
+    def add_synth_group(self, name=""):
+        return None
+
+    @abc.abstractmethod
+    def display_synth_editor(self, sid):
+        pass
+    
     
 class DummyApplicationWindow(AbstractApplicationWindow):
 
     def __init__(self, app, *_):
         super(DummyApplicationWindow, self).__init__(app, None)
+        self.group_windows=[AbstractGroupWindow(app)]
 
     def busy(self, flag, message=""):
         if flag:
             self.status("BUSY %s ..." % message)
         else:
             self.status("NOT BUSY")
+
+    def add_synth_group(self, name=""):
+        pass
         
         
 def create_application_window(app):
