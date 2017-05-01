@@ -32,6 +32,8 @@ HM_GUI = "set GUI."
 HM_SKIP_MAINLOOP = "For testing, do not enter application main loop, load modules and exit"
 HM_NO_SPLASH = "Do not display initial splash menu"
 HM_NO_REPL = "Do not enter REPL"
+HM_SCENE = "Load scene on startup"
+
 
 USAGE='''
 Llia is an OSC client for SuperCollider.
@@ -157,6 +159,12 @@ Command line options:
         Do not enter REPL.  This option is primarily used for testing and 
         is positively useless if no GUI has been selected.
 
+
+    -s filename --scene filename
+     
+        Load scene file on startup, command line value overrides 
+        configuration.
+
 '''
 
 parser = ArgumentParser(description="Llia ~ An OSC client for SuperCollider.")
@@ -176,6 +184,7 @@ parser.add_argument("--gui", help=HM_GUI)
 parser.add_argument("--skip_mainloop", action="store_true", help = HM_SKIP_MAINLOOP)
 parser.add_argument("--nosplash", action="store_false", help = HM_NO_SPLASH)
 parser.add_argument("--norepl", action="store_false", help = HM_NO_REPL)
+parser.add_argument("-s", "--scene", help=HM_SCENE)
 
 args = parser.parse_args()
 if args.version:
@@ -209,7 +218,7 @@ config = LliaConfig.create_instance(args)
 import llia.manifest
 
 try:
-    app = LliaApp(config, args.skip_mainloop)
+    app = LliaApp(config, args.scene, args.skip_mainloop)
 except socket.error as err:
     bar = '*'*60
     print(bar)

@@ -13,7 +13,7 @@ import llia.constants as con
 
 class LliaApp(object):
 
-    def __init__(self, config, skip_mainloop=False):
+    def __init__(self, config, scene_file=None, skip_mainloop=False):
         '''
         Constructs top-level client application.
         
@@ -53,7 +53,7 @@ class LliaApp(object):
         if ss:
             print("Loading startup script '%s'" % ss)
             self.ls_parser.load_python(ss)
-        ss = config.startup_scene()
+        ss = scene_file or config.startup_scene()
         if ss:
             print("Loading startup scene '%s'" % ss)
             self.ls_parser.load_scene(ss)
