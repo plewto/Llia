@@ -279,3 +279,23 @@ occurs.
         self.llia_graph.sync()
       File "/home/sj/Documents/dev/Llia/llia/gui/tk/graph/lliagraph.py", line 486, in sync
         sytoken = self.synth_tokens
+
+---------------------------------------------------------------------- Open 0023
+BUG 0023 2017.05.03
+
+Loading a scene object does not always automatically display the synth
+group window.  At this point not sure how repeatable this is.  The problem
+occurred while loading a scene with 5 active synths, one of the
+synths had a fairly large program bank.
+
+Everything loaded properly and the graph was rendered as expected, but the
+synth group window did not appear.
+
+Temporary fix:
+Double clicking a synth icon on the graph causes the group window to
+appear.
+
+
+Amendment:
+Just noticed that an extra "spurious" group window was created when loading
+the scene.  
