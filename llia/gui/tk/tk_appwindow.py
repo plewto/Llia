@@ -19,9 +19,7 @@ from llia.gui.tk.tk_addsynth import TkAddSynthDialog
 from llia.synth_proxy import SynthSpecs
 from llia.gui.tk.group_window import GroupWindow
 from llia.gui.tk.graph.lliagraph import LliaGraph
-
 specs = SynthSpecs.global_synth_type_registry
-
 
 PROGRESSBAR_COLUMN = 3
 
@@ -379,7 +377,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
                 self.warning(ex.message)
         else:
             self.status("Load scene canceld")
-
+            
     def tabula_rasa(self):
         for grp in self.group_windows:
             grp.tabula_rasa()

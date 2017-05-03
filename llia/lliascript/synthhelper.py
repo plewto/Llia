@@ -62,6 +62,8 @@ class SynthHelper(object):
         ns["annotation_keys"] = self.annotation_keys
         ns["set_annotation"] = self.set_annotation
         ns["get_annotation"] = self.get_annotation
+        ns["bank_locked"] = self.bank_locked
+        ns["lock_bank"] = self.lock_bank
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -707,4 +709,12 @@ class SynthHelper(object):
         sy = self.get_synth(sid)
         ed = sy.synth_editor
         return ed.get_annotation(key)
-        
+
+    def bank_locked(self, sid=None):
+        sy = self.get_synth(sid)
+        return sy.bank().current_program_locked()
+
+    def lock_bank(self, flag, sid=None):
+        sy = self.get_synth(sid)
+        sy.bank().lock_current_program(flag)
+        return flag

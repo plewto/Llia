@@ -42,8 +42,14 @@ class ProgramBank(list):
         self.filename = ""
         self.undostack = UndoRedoStack()
         self.enable_undo = True
-        self.lock_current_program = False # if true ignore program changes
+        self._lock_current_program = False # if true ignore program changes
 
+    def lock_current_program(self, flag):
+        self._lock_current_program = flag
+
+    def current_program_locked(self):
+        return self._lock_current_program
+        
     def append(self, _):
         msg = "Can not append to ProgramBank"
         raise NotImplementedError(msg)
@@ -149,8 +155,8 @@ class ProgramBank(list):
         
     def use(self, slot, undo_action=None):
         '''
-        Mark slot as the 'current' slot, ignore if self.lock_current_program
-        is True.
+        Mark slot as the 'current' slot, ignore if self.current_program_locked() 
+        returns True.
         
         ARGS:
           slot - int, MIDI program number, 0 <= slot < 1
@@ -159,7 +165,7 @@ class ProgramBank(list):
         RETURNS:
           int - the current program slot.
         '''
-        if not self.lock_current_program:
+        if not self._lock_current_program:
             if not undo_action:
                 undo_action = "Recall slot %d" % self.current_slot
             self.push_undo(undo_action)

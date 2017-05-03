@@ -119,7 +119,7 @@ class TkBankEditor(Frame):
     def lock_current_program(self):
         flag = int(self._var_lock_current.get()) == 1
         bnk = self.synth.bank()
-        bnk.lock_current_program = flag
+        bnk.lock_current_program(flag)
         msg = "Current Program "
         if flag:
             msg += "locked"
@@ -148,7 +148,7 @@ class TkBankEditor(Frame):
         self.listbox.see(slot)
         txt = "%03d %-8s" % (slot, program.name[:8])
         self.big_label.config(text = txt)
-        if bnk.lock_current_program:
+        if bnk.current_program_locked():
             self._var_lock_current.set(1)
         else:
             self._var_lock_current.set(0)

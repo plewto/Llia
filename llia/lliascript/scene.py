@@ -33,13 +33,16 @@ class Scene(Composer):
         synths = self.parser.proxy.get_all_synths()
         bank_data = {}
         current_slots = {}
+        bank_locks = {}
         for sy in synths:
             sid = sy.sid
             bnk = sy.bank()
             bank_data[sid] = bnk.serialize()
             current_slots[sid] = bnk.current_slot
+            bank_locks[sid] = bnk.current_program_locked()
         data = {"script" : self.create_script(),
                 "bank_data" : bank_data,
-                "current_slots" : current_slots}
+                "current_slots" : current_slots,
+                "bank_locks" : bank_locks}
         return data
 

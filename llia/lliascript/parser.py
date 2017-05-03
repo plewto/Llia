@@ -481,10 +481,20 @@ class Parser(object):
                 bank = sy.bank()
                 bank.copy_bank(bank.deserialize(bnkdata, self.app.main_window()))
                 slot = jobj["current_slots"][sid]
+                locked = jobj["bank_locks"][sid]
                 self.synthhelper.use_program(slot,sid)
+                self.synthhelper.lock_bank(locked)
+                try:
+                    bed = sy.synth_editor.bank_editor
+                    bed.sync_no_propegate()
+                except AttributeError:
+                    # Bank editor does not exists,
+                    # Probably running without active GUI.
+                    pass
+                
         self.app.main_window().busy(False)
         self.status("Scene '%s' loaded" % filename)
-                
+        
     def tabula_rasa(self):
         self.app.tabula_rasa()
         self.entities = {}
