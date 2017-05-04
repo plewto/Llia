@@ -7,31 +7,29 @@ from llia.bank import ProgramBank
 from llia.performance_edit import performance
 from llia.util.lmath import coin,rnd,pick
 
-prototype = {
-    "amp" : 0.10,
-    "vfreq" : 7.0,
-    "vlock" : 1,
-    "vnoise" : 0.3,
-    "vdelay" : 1.0,
-    "vsens" : 0.1,
-    "vdepth" : 0.0,
-    "vibrato" : 0.0,
-    "xPitch" : 0.0,
-    "tremRatio" : 1.0,
-    "noiseRatio" : 1,
-    "chiffAttack" : 0.03,
-    "chiffDecay" : 0.2,
-    "chiffAmp" : 0.05,
-    "chiffVelocity" : 0.5,
-    "noiseAmp" : 1.0,
-    "blipAttack" : 0.03,
-    "blipDecay" : 0.1,
-    "blipDepth" : 0.0,
-    "blipVelocity" : 0.0,
-    "op4Ratio" : 1.0,
-    "op4Feedback" : 0.0,
-    "op4LFO" : 0.0,
-}
+prototype = {"amp" : 0.10,
+             "vfreq" : 7.0,
+             "vlock" : 1,
+             "vnoise" : 0.3,
+             "vdelay" : 1.0,
+             "vsens" : 0.1,
+             "vdepth" : 0.0,
+             "vibrato" : 0.0,
+             "xPitch" : 0.0,
+             "tremRatio" : 1.0,
+             "noiseRatio" : 1,
+             "chiffAttack" : 0.03,
+             "chiffDecay" : 0.2,
+             "chiffAmp" : 0.05,
+             "chiffVelocity" : 0.5,
+             "noiseAmp" : 1.0,
+             "blipAttack" : 0.03,
+             "blipDecay" : 0.1,
+             "blipDepth" : 0.0,
+             "blipVelocity" : 0.0,
+             "op4Ratio" : 1.0,
+             "op4Feedback" : 0.0,
+             "op4LFO" : 0.0}
 
 for op in (1,2,3):
     for p,v in {"op%dFormant" : 300,
@@ -51,9 +49,6 @@ for op in (1,2,3):
                 "op%dAmp" : 1.0,
                 "op%dX" : 0.0}.items():
         prototype[p%op] = v
-   
-
-        
 
 class Io(Program):
 
@@ -62,7 +57,6 @@ class Io(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Io("Init"))
-program_bank.enable_undo = False
 
 def vibrato(freq = 7.0,
             lock = 1,

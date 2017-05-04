@@ -8,16 +8,15 @@ from llia.bank import ProgramBank
 from llia.performance_edit import performance
 from llia.util.lmath import coin, rnd, pick
 
-prototype = {
-    "clockSource" : 0,     # 0 -> internal, 1 -> external
-    "clockRate" : 1.0,
-    "sawFreq" : 3.0,
-    "sawMix" : 0.0,
-    "noiseMix" : 1.0,
-    "externalMix" : 0.0,
-    "lag" : 0.0,
-    "scale" : 1.0,
-    "bias" : 0.0}
+prototype = {"clockSource" : 0,     # 0 -> internal, 1 -> external
+             "clockRate" : 1.0,
+             "sawFreq" : 3.0,
+             "sawMix" : 0.0,
+             "noiseMix" : 1.0,
+             "externalMix" : 0.0,
+             "lag" : 0.0,
+             "scale" : 1.0,
+             "bias" : 0.0}
 
 class SnH(Program):
 
@@ -26,7 +25,6 @@ class SnH(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(SnH("Init"))
-program_bank.enable_undo = False
 
 def snh(slot, name,
         clockSource = 0,

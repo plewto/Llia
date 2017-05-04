@@ -6,13 +6,12 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "fLow" : 400,
-    "fHigh" : 1200,
-    "bwScale" : 1.0,
-    "gainLow" : 0,
-    "gainCenter" : 0,
-    "gainHigh" : 0}
+prototype = {"fLow" : 400,
+             "fHigh" : 1200,
+             "bwScale" : 1.0,
+             "gainLow" : 0,
+             "gainCenter" : 0,
+             "gainHigh" : 0}
 
 class Prism(Program):
 
@@ -21,7 +20,6 @@ class Prism(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Prism("Init"))
-program_bank.enable_undo = False
 
 def prism(slot, name,
           fLow = 400,

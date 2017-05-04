@@ -6,15 +6,13 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "wave" : 0,                 # int [0,1,2] -> [none,abs,cube]
-    "polarityComp" : 0,         # int [0,1,2] -> [none, ->bipolr ->polar]
-    "clipMin" : -1.0,           # float, range -/+ 10
-    "clipMax" : 1.0,            # floaT, range -/+ 10
-    "lag" : 0.0,                # float, 0..1
-    "scale" : 1.0,              # float, -/+ 10
-    "bias" : 0.0                # float, -/+ 10
-}
+prototype = {"wave" : 0,                 # int [0,1,2] -> [none,abs,cube]
+             "polarityComp" : 0,         # int [0,1,2] -> [none, ->bipolr ->polar]
+             "clipMin" : -1.0,           # float, range -/+ 10
+             "clipMax" : 1.0,            # floaT, range -/+ 10
+             "lag" : 0.0,                # float, 0..1
+             "scale" : 1.0,              # float, -/+ 10
+             "bias" : 0.0}               # float, -/+ 10
 
 class CUtil(Program):
 
@@ -23,7 +21,6 @@ class CUtil(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(CUtil("Init"))
-program_bank.enable_undo = False
 
 def cutil(slot, name,
           wave = 0,

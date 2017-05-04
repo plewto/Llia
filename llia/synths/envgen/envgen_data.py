@@ -6,23 +6,22 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "aAttack" : 0.0,
-    "aDecay1" : 0.0,
-    "aDecay2" : 0.0,
-    "aRelease" : 0.0,
-    "aBreakpoint" : 1.0,
-    "aSustain" : 1.0,
-    "aEnvmode" : 0,
-    "aInvert" : 0,
-    "bAttack" : 0.0,
-    "bDecay1" : 0.0,
-    "bDecay2" : 0.0,
-    "bRelease" : 0.0,
-    "bBreakpoint" : 1.0,
-    "bSustain" : 1.0,
-    "bEnvmode" : 0,
-    "bInvert" : 0}
+prototype = {"aAttack" : 0.0,
+             "aDecay1" : 0.0,
+             "aDecay2" : 0.0,
+             "aRelease" : 0.0,
+             "aBreakpoint" : 1.0,
+             "aSustain" : 1.0,
+             "aEnvmode" : 0,
+             "aInvert" : 0,
+             "bAttack" : 0.0,
+             "bDecay1" : 0.0,
+             "bDecay2" : 0.0,
+             "bRelease" : 0.0,
+             "bBreakpoint" : 1.0,
+             "bSustain" : 1.0,
+             "bEnvmode" : 0,
+             "bInvert" : 0}
 
 class Envgen(Program):
 
@@ -31,7 +30,6 @@ class Envgen(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Envgen("Init"))
-program_bank.enable_undo = False
 
 def envgen(slot, name,
            aAttack = 0.0,

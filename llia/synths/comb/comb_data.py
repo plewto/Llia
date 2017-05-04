@@ -5,11 +5,10 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "delayScale" : 0.01,
-    "delay" : 0.50,
-    "phase" : -1,
-    "wet" : 1.0}
+prototype = {"delayScale" : 0.01,
+             "delay" : 0.50,
+             "phase" : -1,
+             "wet" : 1.0}
 
 class Comb(Program):
 
@@ -18,7 +17,6 @@ class Comb(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Comb("Init"))
-program_bank.enable_undo = False
 
 def comb(slot, name,
          delayScale = 0.01,     # 0.001|0.010|0.100

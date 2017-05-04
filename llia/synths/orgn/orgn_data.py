@@ -39,7 +39,6 @@ class Orgn(Program):
         super(Orgn, self).__init__(name, "Orgn", prototype)
 
 program_bank = ProgramBank(Orgn("Init"))
-program_bank.enable_undo = False
 
 def _fill(lst, template):
     acc = []

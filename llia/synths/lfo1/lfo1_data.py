@@ -32,21 +32,20 @@ FREQ_RATIOS = ((0.125,"1/8"),
                (12.0, "12"),
                (16.0, "16"))
 
-prototype = {
-	"lfoFreq" : 1.0,
-	"sineAmp" : 1.0,
-	"sineRatio" : 1.0,
-	"sawAmp" : 1.0,
-	"sawRatio" : 1.0,
-	"sawWidth" : 0.0,
-	"pulseAmp" : 1.0,
-	"pulseRatio" : 1.0,
-	"pulseWidth" : 0.5,
-	"lfoDelay" : 0.0,
-	"lfoHold" : 0.5,
-	"lfoBleed" : 0.0,
-	"lfoScale" : 1.0,
-	"lfoBias" : 0}
+prototype = {"lfoFreq" : 1.0,
+	     "sineAmp" : 1.0,
+	     "sineRatio" : 1.0,
+	     "sawAmp" : 1.0,
+	     "sawRatio" : 1.0,
+	     "sawWidth" : 0.0,
+	     "pulseAmp" : 1.0,
+	     "pulseRatio" : 1.0,
+	     "pulseWidth" : 0.5,
+	     "lfoDelay" : 0.0,
+	     "lfoHold" : 0.5,
+	     "lfoBleed" : 0.0,
+	     "lfoScale" : 1.0,
+	     "lfoBias" : 0}
 
 class LFO1(Program):
 
@@ -55,7 +54,6 @@ class LFO1(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(LFO1("Init"))
-program_bank.enable_undo = False
 
 def lfo1(slot, name,
          freq = 1.0,

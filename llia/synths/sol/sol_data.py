@@ -131,7 +131,6 @@ class Sol(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Sol("Init"))
-program_bank.enable_undo = False
 
 def fval(f, mn=0,mx=1):
     return min(max(float(f),mn),mx)

@@ -9,22 +9,20 @@ from llia.performance_edit import performance
 
 MAX_DELAY = 1.5
 
-prototype = {
-    "delayTime" : 0.125,     # mean delay time, seconds
-    "wow" : 0.0,             # periodic delay time modulation, normalized
-    "wowFreq" : 1.0,         # wow signal frequency, Hertz (0.1, 5)
-    "flutter" : 0.0,         # noise delay time modulation, normalized
-    "xDelayMod" : 0.0,       # external delay time modulation, normalized
-                             #   assuming (0..1) signal amplitude
-    "feedback" : 0.0,        # delay feedback, normalized
-    "gain" : 1.0,            # feedback path gain (pre-clipper) (0.5, 2)
-    "threshold" : 1.0,       # feedback clipping threshold, normalized
-    "lowcut" : 10000,        # feedback lowpass cutoff, Hertz
-    "highcut" : 100,         # feedback highpass cutoff, Hertz
-    "efxMix" : 0.5,          # wet/dry signal mix, 0 -> dry, 1 -> wet
-    "xEfxMix" : 0.0,         # external efx-mix modulation, normalized
-    "amp" : 1.0}             # overall gain
-
+prototype = {"delayTime" : 0.125,     # mean delay time, seconds
+             "wow" : 0.0,             # periodic delay time modulation, normalized
+             "wowFreq" : 1.0,         # wow signal frequency, Hertz (0.1, 5)
+             "flutter" : 0.0,         # noise delay time modulation, normalized
+             "xDelayMod" : 0.0,       # external delay time modulation, normalized
+                                      #   assuming (0..1) signal amplitude
+             "feedback" : 0.0,        # delay feedback, normalized
+             "gain" : 1.0,            # feedback path gain (pre-clipper) (0.5, 2)
+             "threshold" : 1.0,       # feedback clipping threshold, normalized
+             "lowcut" : 10000,        # feedback lowpass cutoff, Hertz
+             "highcut" : 100,         # feedback highpass cutoff, Hertz
+             "efxMix" : 0.5,          # wet/dry signal mix, 0 -> dry, 1 -> wet
+             "xEfxMix" : 0.0,         # external efx-mix modulation, normalized
+             "amp" : 1.0}             # overall gain
 
 class CarnalDelay(Program):
 
@@ -33,7 +31,6 @@ class CarnalDelay(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(CarnalDelay("Init"))
-program_bank.enable_undo = False
 
 MAX_DELAY = 1.5
 

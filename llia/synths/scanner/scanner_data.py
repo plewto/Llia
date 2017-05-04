@@ -5,17 +5,16 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "scanRate" : 5.0,
-    "wave" : 0.5,
-    "delay" : 0.01,
-    "modDepth" : 0.5,
-    "feedback" : 0.0,
-    "lowpass" : 16000,
-    "dryMix" : 0.5,
-    "wet1Mix" : 0.5,
-    "wet2Mix" : 0.5,
-    "xmodDepth" : 0.0}
+prototype = {"scanRate" : 5.0,
+             "wave" : 0.5,
+             "delay" : 0.01,
+             "modDepth" : 0.5,
+             "feedback" : 0.0,
+             "lowpass" : 16000,
+             "dryMix" : 0.5,
+             "wet1Mix" : 0.5,
+             "wet2Mix" : 0.5,
+             "xmodDepth" : 0.0}
 
 class Scanner(Program):
 
@@ -24,7 +23,6 @@ class Scanner(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Scanner("Init"))
-program_bank.enable_undo = False
 
 def scanner(slot, name,
             scanRate = 5.0,

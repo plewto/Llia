@@ -35,30 +35,24 @@ HARMONICS = ((0.125, "1/8"),
              (12, "12"),
              (16, "16"))
 
-prototype = {
-    "lfoScale" : 1.0,      # Common scale factor  (1/4 ... 4)
-    "lfoBias" : 0,         # Common bias (-4 ... +4)
-    "lfoFreq" : 1.0,       # Common frequency (0.01 ... 100)
-    "lfoModFreq" : 1,      # restric to harmonics
-    "lfoFM" : 0.0,         # MOD LFO -> FM depth (0 ... 4) 
-    "lfoAM" : 0.0,         # MOD LFO -> AM depth (0 ... 1)
-
-
-    "lfoDelay" : 0.0,      # env onset delay (0 ... 8)
-    "lfoAttack" : 0.0,     # env attack time (0 ... 8)
-    "lfoHold" : 1.0,       # env hold time (0 ... 8)
-    "lfoRelease" : 0.0,    # env release time (0 ... 8)
-    "lfoEnvToFreq" : 0.0,  # env -> LFO freq (0 ... 4)
-    "lfoBleed" : 1.0,      # amp envelope signal bleed (0 ... 1)
-
-    
-    "lfoRatioA" : 1.0,     # LFO A freq ratio (restric to harmonics)
-    "lfoRatioB" : 1.0,     # LFO B freq ratio (restric to harmonics)
-    "lfoRatioC" : 1.0,     # LFO C freq ratio (restric to harmonics)
-    "lfoAmpA" : 1.0,       # LFO A amp (0 ... 1)
-    "lfoAmpB" : 1.0,       # LFO B amp (0 ... 1)
-    "lfoAmpC" : 1.0        # LFO C amp (0 ... 1)
-}
+prototype = {"lfoScale" : 1.0,      # Common scale factor  (1/4 ... 4)
+             "lfoBias" : 0,         # Common bias (-4 ... +4)
+             "lfoFreq" : 1.0,       # Common frequency (0.01 ... 100)
+             "lfoModFreq" : 1,      # restric to harmonics
+             "lfoFM" : 0.0,         # MOD LFO -> FM depth (0 ... 4) 
+             "lfoAM" : 0.0,         # MOD LFO -> AM depth (0 ... 1)
+             "lfoDelay" : 0.0,      # env onset delay (0 ... 8)
+             "lfoAttack" : 0.0,     # env attack time (0 ... 8)
+             "lfoHold" : 1.0,       # env hold time (0 ... 8)
+             "lfoRelease" : 0.0,    # env release time (0 ... 8)
+             "lfoEnvToFreq" : 0.0,  # env -> LFO freq (0 ... 4)
+             "lfoBleed" : 1.0,      # amp envelope signal bleed (0 ... 1)
+             "lfoRatioA" : 1.0,     # LFO A freq ratio (restric to harmonics)
+             "lfoRatioB" : 1.0,     # LFO B freq ratio (restric to harmonics)
+             "lfoRatioC" : 1.0,     # LFO C freq ratio (restric to harmonics)
+             "lfoAmpA" : 1.0,       # LFO A amp (0 ... 1)
+             "lfoAmpB" : 1.0,       # LFO B amp (0 ... 1)
+             "lfoAmpC" : 1.0 }      # LFO C amp (0 ... 1)
 
 class Lfo3(Program):
 
@@ -67,7 +61,6 @@ class Lfo3(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Lfo3("Init"))
-program_bank.enable_undo = False
 
 def _fill(lst, template):
     acc = []
@@ -78,7 +71,6 @@ def _fill(lst, template):
             v = dflt
         acc.append(float(v))
     return acc
-                   
 
 def lfo3(slot, name,
          freq = 1.0,
@@ -150,8 +142,6 @@ def pp(program, slot=127):
     acc += '%sscale = %5.3f,\n' % (pad, fval('lfoScale'))
     acc += '%sbias = %5.3f)\n' % (pad, fval('lfoBias'))
     return acc
-
-
 
 lfo3(0, "Tripartite",
      freq = 1.000,

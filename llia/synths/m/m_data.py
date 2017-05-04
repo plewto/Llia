@@ -126,7 +126,6 @@ class M(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(M("Init"))
-program_bank.enable_undo = False
 
 def lfo(vFreq = 7.0,
         vSens = 0.1,

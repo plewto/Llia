@@ -7,14 +7,13 @@ from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp, amp_to_db, coin, rnd, random_sign, pick
 from llia.performance_edit import performance
 
-prototype = {
-    "lfoFreq" : 5.0,
-    "modDepth" : 0.0,
-    "limit" : 1.0,
-    "xDepth" : 0.0,
-    "xLfoAmp" : 0.0,
-    "xLfoFreq" : 0.0,
-    "amp" : 1.0} 
+prototype = {"lfoFreq" : 5.0,
+             "modDepth" : 0.0,
+             "limit" : 1.0,
+             "xDepth" : 0.0,
+             "xLfoAmp" : 0.0,
+             "xLfoFreq" : 0.0,
+             "amp" : 1.0} 
 
 class Tremolo(Program):
 
@@ -23,7 +22,6 @@ class Tremolo(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Tremolo("Init"))
-program_bank.enable_undo = False
 
 def trem(slot, name, amp=0,
          lfo = [5.0,  0.0],         # [freq, amp]

@@ -7,17 +7,16 @@ from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp, amp_to_db, coin, rnd, random_sign, pick
 from llia.performance_edit import performance
 
-prototype = {
-	"delay" : 0.5,
-	"xmodDepth" : 0.0,
-	"imodDepth" : 0.5,
-	"imodFreq" : 1.0,
-	"feedback" : 0.5,
-	"feedbackLowpass" : 10000,
-	"feedbackHighpass" : 10,
-	"efxMix" : 0.5,
-	"xmixScale" : 0.0,
-	"amp" : 1.00}
+prototype = {"delay" : 0.5,
+	     "xmodDepth" : 0.0,
+	     "imodDepth" : 0.5,
+	     "imodFreq" : 1.0,
+	     "feedback" : 0.5,
+	     "feedbackLowpass" : 10000,
+	     "feedbackHighpass" : 10,
+	     "efxMix" : 0.5,
+	     "xmixScale" : 0.0,
+	     "amp" : 1.00}
 
 class Flngr(Program):
 
@@ -26,8 +25,6 @@ class Flngr(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Flngr("Init"))
-program_bank.enable_undo = False
-
 
 def flngr(slot, name, amp=0,
           delay = 0.5,

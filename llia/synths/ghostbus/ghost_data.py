@@ -9,19 +9,18 @@ from llia.util.lmath import clip, coin, rnd, random_sign
 
 MAX_DELAY = 4
 
-prototype = {
-    "enableMod" : 0,
-    "enableHpA" : 0,
-    "lagA" : 0.0,
-    "scaleA" : 1.0,
-    "biasA" : 0.0,
-    "delay" : 1.0,
-    "feedback" : 0.0,
-    "lagDelay" : 0.0,
-    "enableHpDelay" : 0,
-    "scaleDelay" : 1.0,
-    "biasDelay" : 0.0}
-    
+prototype = {"enableMod" : 0,
+             "enableHpA" : 0,
+             "lagA" : 0.0,
+             "scaleA" : 1.0,
+             "biasA" : 0.0,
+             "delay" : 1.0,
+             "feedback" : 0.0,
+             "lagDelay" : 0.0,
+             "enableHpDelay" : 0,
+             "scaleDelay" : 1.0,
+             "biasDelay" : 0.0}
+
 class Ghostbus(Program):
 
     def __init__(self, name):
@@ -29,7 +28,6 @@ class Ghostbus(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Ghostbus("Init"))
-program_bank.enable_undo = False
 
 def ghostbus(slot, name,
              enableMod = 0,

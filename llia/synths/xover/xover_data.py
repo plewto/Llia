@@ -10,29 +10,28 @@ from llia.performance_edit import performance
 from llia.util.lmath import (coin,rnd,pick,random)
 import llia.synths.xover.xover_constants as xcon
 
-prototype = {
-    "lfoFreq" : 1.0,       # Common freq tumber (0,99.999)
-    "lfo2Ratio" : 1.0,     # MSB
-    "lfo2Wave" : 0.0,      # slider (-1,+1)
-    "lfoEnable" : 1.0,     # 1 enable, 0 disable
-    "res" : 0,             # norm slider
-    "xover" : 800,         # MSB
-    "lfoToXover" : 0.0,    # norm slider
-    "externToXover" : 0.0, # norm slider
-    "minXover" : 200,      # exp slider
-    "maxXover" : 20000,    # exp slider
-    "filterBMix" : 0.0,    # norm slider
-    "filterBRatio" : 1.0,  # MSB
-    "filterBLag" : 0.0,    # norm slider
-    "dryAmp" : 0.0,        # amp slider
-    "filterAAmp" : 1.0,    # amp slider
-    "filterBAmp" : 1.0,    # amp slider
-    "dryPan" : 0.0,        # bEDi slider
-    "filterAPan" : 0.0,    # bi slider
-    "filterBPan" : 0.0,    # bi slider
-    "xscale" : 1.0,        # linear slider (0,4)
-    "xbias" : 0.0,         # linear slider (-4,4)
-    "amp"   : 1.0}         # amp slider
+prototype = {"lfoFreq" : 1.0,       # Common freq tumber (0,99.999)
+             "lfo2Ratio" : 1.0,     # MSB
+             "lfo2Wave" : 0.0,      # slider (-1,+1)
+             "lfoEnable" : 1.0,     # 1 enable, 0 disable
+             "res" : 0,             # norm slider
+             "xover" : 800,         # MSB
+             "lfoToXover" : 0.0,    # norm slider
+             "externToXover" : 0.0, # norm slider
+             "minXover" : 200,      # exp slider
+             "maxXover" : 20000,    # exp slider
+             "filterBMix" : 0.0,    # norm slider
+             "filterBRatio" : 1.0,  # MSB
+             "filterBLag" : 0.0,    # norm slider
+             "dryAmp" : 0.0,        # amp slider
+             "filterAAmp" : 1.0,    # amp slider
+             "filterBAmp" : 1.0,    # amp slider
+             "dryPan" : 0.0,        # bEDi slider
+             "filterAPan" : 0.0,    # bi slider
+             "filterBPan" : 0.0,    # bi slider
+             "xscale" : 1.0,        # linear slider (0,4)
+             "xbias" : 0.0,         # linear slider (-4,4)
+             "amp"   : 1.0}         # amp slider
 
 class XOver(Program):
 
@@ -41,7 +40,6 @@ class XOver(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(XOver("Init"))
-program_bank.enable_undo = False
         
 def xover(slot, name,
           lfoFreq = 1.0,

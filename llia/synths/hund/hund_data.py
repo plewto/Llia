@@ -16,18 +16,15 @@ for v in (8,4,2):
 for v in (1,2,3,4,6,8,12,16):
     GAINS.append((v,str(v)))
 
-
-
-prototype = {
-    "pregain" : 1,        # [1/8,1/4,1/2, ..., 1, 2, ... 8]
-    "attack" : 0.01,      # 0.01 .. 0.25  
-    "release" : 0.01,     # 0.01 .. 0.25
-    "filterFreq" : 1000,  # msb [...]
-    "res" : 0.5,          # norm
-    "modDepth" : 0.0,     # bi-polar
-    "xmod" : 0.0,         # bi-polar
-    "dryamp" : 1.0,       # volume
-    "wetamp" : 1.0}       # volume
+prototype = {"pregain" : 1,        # [1/8,1/4,1/2, ..., 1, 2, ... 8]
+             "attack" : 0.01,      # 0.01 .. 0.25  
+             "release" : 0.01,     # 0.01 .. 0.25
+             "filterFreq" : 1000,  # msb [...]
+             "res" : 0.5,          # norm
+             "modDepth" : 0.0,     # bi-polar
+             "xmod" : 0.0,         # bi-polar
+             "dryamp" : 1.0,       # volume
+             "wetamp" : 1.0}       # volume
 
 class Hund(Program):
 
@@ -36,7 +33,6 @@ class Hund(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Hund("Init"))
-program_bank.enable_undo = False
 
 def hund(slot, name,
               pregain = 1,

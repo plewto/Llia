@@ -36,7 +36,6 @@ def _program_class(sname):
     code += '%ssuper(%s,self).__init__(name,%s,prototype)\n' % (pad2,sname,sname)
     code += '%sself.performance = performance()\n\n' % pad2
     code += 'program_bank = ProgramBank(%s("Init"))\n' % sname
-    code += 'program_bank.enable_undo = False\n\n'
     return code
 
 def _program_function_sans_params(sname):

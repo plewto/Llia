@@ -6,15 +6,14 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "gain" : 1.0,               # fold/wrap pregain 0..10?
-    "wave" : 0,                 # wave select [0,1,2] -> [None,Soft, Distort,Fold,Wrap]
-    "clockFreq" : 10000,        # sample clock frequency
-    "resampleEnable" : 1,       # 0 -> bypass, 1 -> resample
-    "low"  : 20000,             # low pass filter cutoff
-    "wet" : 0.5,                # wet signal amp
-    "dry" : 0.5,                # dry signal amp
-    "amp" : 1.0}                # overall amp
+prototype = {"gain" : 1.0,               # fold/wrap pregain 0..10?
+             "wave" : 0,                 # wave select [0,1,2] -> [None,Soft, Distort,Fold,Wrap]
+             "clockFreq" : 10000,        # sample clock frequency
+             "resampleEnable" : 1,       # 0 -> bypass, 1 -> resample
+             "low"  : 20000,             # low pass filter cutoff
+             "wet" : 0.5,                # wet signal amp
+             "dry" : 0.5,                # dry signal amp
+             "amp" : 1.0}                # overall amp
 
 class Crusher(Program):
 
@@ -23,7 +22,6 @@ class Crusher(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Crusher("Init"))
-program_bank.enable_undo = False
 
 def crusher(slot, name,
             gain = 1.0,

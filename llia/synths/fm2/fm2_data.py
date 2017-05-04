@@ -7,77 +7,71 @@ from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
 from llia.performance_edit import performance
 
-prototype = {
-    "amp" : 0.2,           # linear amplitude
-    "port" : 0.0,          # portamento time (0..1)
-    "xPitch" : 0.0,        # external signal -> pitch (0..1)
-    "xModDepth" : 0.0,     # external signal -> mod depth (0..1)
-    "xScale" : 1.0,        # external signal scale factor (0..4)
-    "xBias" : 0.0,         # external signal bias (-4..+4)
-    "lfoFreq" : 5.0,       # frequency in Hz, (0..100)
-    "lfoDelay" : 0.0,      # LFO onset delay in seconds (0..4)
-    "vsens" : 0.1,         # vibrato sensitivity (0..1)
-    "vdepth" : 0.0,        # programmed vibrato depth (0..1)
-    # OP1, carrier
-    "op1Enable" : 1,       # 0 -> disable  1 -> enable
-    "op1Ratio" : 1.0,      # frequency ratio  0 <= ratio <= 32
-    "op1Bias" : 0.0,       # frequency bias   0 <= bias <= 20
-    "op1Amp" : 1.0,        # linear amplitude (0..1)
-    "op1Attack" : 0.0,     # attack time (0..12)
-    "op1Decay1" : 0.0,     # initial decay time (0..12)
-    "op1Decay2" : 0.0,     # seconds decay time (0..12)
-    "op1Release" : 0.0,    # release time (0..12)
-    "op1Breakpoint" : 1.0, # envelope breakpoint level (0..1)
-    "op1Sustain" : 1.0,    # envelope sustain level (0..1)
-    "op1GateHold" : 0,     # envelope gate mode, 0 -> gated, 1 -> cycle
-    "op1Keybreak" : 60,    # keyscale key, MIDI key number
-    "op1LeftScale" : 0,    # left keyscale depth in db/octave
-    "op1RightScale" : 0,   # right keyscale depth in db/octave
-    "op1Lfo" : 0.0,        # LFO -> tremolo  0.0 .. 0.5 -> 0% .. 100%
-                           #                 0.5 .. 1.0 -> adds 2x freq 
-    "op1Velocity" : 0.0,   # velocity scale factor (0..1)
-    # OP2, modulator
-    "op2Enable" : 1,
-    "op2Ratio" : 1.0,
-    "op2Bias" : 0.0,
-    "op2Amp" : 1.0,        # modulation depth (0..10)
-    "op2AmpRange" : 1,     # modulation range (1,10,100,1000,10000)
-    "op2Attack" : 0.0,
-    "op2Decay1" : 0.0,
-    "op2Decay2" : 0.0,
-    "op2Release" : 0.0,
-    "op2Breakpoint" : 1.0,
-    "op2Sustain" : 1.0,
-    "op2GateHold" : 0,
-    "op2Keybreak" : 60,
-    "op2LeftScale" : 0,
-    "op2RightScale" : 0,
-    "op2Lfo" : 0.0,
-    "op2Velocity" : 0.0,
-    "op2Feedback": 0,
-
-    "efxMix" : 0.0,          # -1 -> flanger  +1 -> pitch-shifter
-    "efxAmp" : 0.0,          # (0..1) composed with op2 amp
-    "efxAttack" : 0.0,       # Combined envelope for flanger
-    "efxDecay1" : 0.0,       # and pitch-shifter
-    "efxDecay2" : 0.0,       
-    "efxRelease" : 0.0,
-    "efxBreakpoint" : 1.0,
-    "efxSustain" : 1.0,
-    "efxGateHold" : 0,
-    "efxLfoRatio" : 1.0,     # efx LFO freq as ratio to primary LFO
-    "flangerDelay" : 0.02,   # (0 .. 0.05)
-    "flangerLfoDepth" : 0.0, # (0..1)
-    "flangerFeedback" : 0.0, # (-1..+1)
-    "psRatio" : 2.0,         # (0..4)
-    "psPDispersion" : 0.0,   # (0..1)
-    "psTDispersion" : 0.0,   # (0..1)
-    "psLfoDepth" : 0.0       # (0..1) lfo -> pitch shift amp
-}
-
-
-
-
+prototype = {"amp" : 0.2,           # linear amplitude
+             "port" : 0.0,          # portamento time (0..1)
+             "xPitch" : 0.0,        # external signal -> pitch (0..1)
+             "xModDepth" : 0.0,     # external signal -> mod depth (0..1)
+             "xScale" : 1.0,        # external signal scale factor (0..4)
+             "xBias" : 0.0,         # external signal bias (-4..+4)
+             "lfoFreq" : 5.0,       # frequency in Hz, (0..100)
+             "lfoDelay" : 0.0,      # LFO onset delay in seconds (0..4)
+             "vsens" : 0.1,         # vibrato sensitivity (0..1)
+             "vdepth" : 0.0,        # programmed vibrato depth (0..1)
+             # OP1, carrier
+             "op1Enable" : 1,       # 0 -> disable  1 -> enable
+             "op1Ratio" : 1.0,      # frequency ratio  0 <= ratio <= 32
+             "op1Bias" : 0.0,       # frequency bias   0 <= bias <= 20
+             "op1Amp" : 1.0,        # linear amplitude (0..1)
+             "op1Attack" : 0.0,     # attack time (0..12)
+             "op1Decay1" : 0.0,     # initial decay time (0..12)
+             "op1Decay2" : 0.0,     # seconds decay time (0..12)
+             "op1Release" : 0.0,    # release time (0..12)
+             "op1Breakpoint" : 1.0, # envelope breakpoint level (0..1)
+             "op1Sustain" : 1.0,    # envelope sustain level (0..1)
+             "op1GateHold" : 0,     # envelope gate mode, 0 -> gated, 1 -> cycle
+             "op1Keybreak" : 60,    # keyscale key, MIDI key number
+             "op1LeftScale" : 0,    # left keyscale depth in db/octave
+             "op1RightScale" : 0,   # right keyscale depth in db/octave
+             "op1Lfo" : 0.0,        # LFO -> tremolo  0.0 .. 0.5 -> 0% .. 100%
+             #                 0.5 .. 1.0 -> adds 2x freq 
+             "op1Velocity" : 0.0,   # velocity scale factor (0..1)
+             # OP2, modulator
+             "op2Enable" : 1,
+             "op2Ratio" : 1.0,
+             "op2Bias" : 0.0,
+             "op2Amp" : 1.0,        # modulation depth (0..10)
+             "op2AmpRange" : 1,     # modulation range (1,10,100,1000,10000)
+             "op2Attack" : 0.0,
+             "op2Decay1" : 0.0,
+             "op2Decay2" : 0.0,
+             "op2Release" : 0.0,
+             "op2Breakpoint" : 1.0,
+             "op2Sustain" : 1.0,
+             "op2GateHold" : 0,
+             "op2Keybreak" : 60,
+             "op2LeftScale" : 0,
+             "op2RightScale" : 0,
+             "op2Lfo" : 0.0,
+             "op2Velocity" : 0.0,
+             "op2Feedback": 0,
+             
+             "efxMix" : 0.0,          # -1 -> flanger  +1 -> pitch-shifter
+             "efxAmp" : 0.0,          # (0..1) composed with op2 amp
+             "efxAttack" : 0.0,       # Combined envelope for flanger
+             "efxDecay1" : 0.0,       # and pitch-shifter
+             "efxDecay2" : 0.0,       
+             "efxRelease" : 0.0,
+             "efxBreakpoint" : 1.0,
+             "efxSustain" : 1.0,
+             "efxGateHold" : 0,
+             "efxLfoRatio" : 1.0,     # efx LFO freq as ratio to primary LFO
+             "flangerDelay" : 0.02,   # (0 .. 0.05)
+             "flangerLfoDepth" : 0.0, # (0..1)
+             "flangerFeedback" : 0.0, # (-1..+1)
+             "psRatio" : 2.0,         # (0..4)
+             "psPDispersion" : 0.0,   # (0..1)
+             "psTDispersion" : 0.0,   # (0..1)
+             "psLfoDepth" : 0.0 }     # (0..1) lfo -> pitch shift amp
 
 class FM2(Program):
 
@@ -86,8 +80,6 @@ class FM2(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(FM2("Init"))
-program_bank.enable_undo = False
-
 
 def _fill_external_params(d):
     rs = {"xPitch" : float(d.get("pitch", 0.0)),
@@ -95,7 +87,6 @@ def _fill_external_params(d):
           "xScale" : float(d.get("scale", 1.0)),
           "xBias" : float(d.get("bias", 0.0))}
     return rs
-
 
 def _fill_lfo_params(d):
     rs = {"lfoFreq" : float(d.get("freq", 5)),

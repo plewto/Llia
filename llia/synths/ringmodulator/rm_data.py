@@ -8,14 +8,12 @@ from llia.performance_edit import performance
 
 MAX_DELAY = 1
 
-prototype = {
-    "imodfreq" : 1000,           # internal modulator frequency
-    "imodamp" : 1.0,             # internal modulator linear amp
-    "xmodamp" : 0.0,             # external modulator amp
-    "xmodbleed" : 0.0,           # external mod bleed to output
-    "carbleed" : 0.0,            # carrier bleed to output
-    "amp"     : 1}               # main linear amplitude
-
+prototype = {"imodfreq" : 1000,           # internal modulator frequency
+             "imodamp" : 1.0,             # internal modulator linear amp
+             "xmodamp" : 0.0,             # external modulator amp
+             "xmodbleed" : 0.0,           # external mod bleed to output
+             "carbleed" : 0.0,            # carrier bleed to output
+             "amp"     : 1}               # main linear amplitude
 
 class RingModulator(Program):
 
@@ -24,7 +22,6 @@ class RingModulator(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(RingModulator("Init"))
-program_bank.enable_undo = False
 
 def rm(slot, name,
        imodfreq = 1000,

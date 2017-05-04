@@ -6,16 +6,15 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "lfoFreq" : 1.0,
-    "cFreq" : 1000,
-    "cFreqLfo" : 0,    # LFO -> freq
-    "cFreqX" : 0,      # External -> freq
-    "q" : 1,           # Filter Q
-    "qLfo" : 0,        # LFO -> Q
-    "qX" : 0,          # External -> Q
-    "filterGain" : 0,  # Filter gain in db
-    "bleed" : 0.0}     # dry signal bypass  0 -> filter 1 -> no filter
+prototype = {"lfoFreq" : 1.0,
+             "cFreq" : 1000,
+             "cFreqLfo" : 0,    # LFO -> freq
+             "cFreqX" : 0,      # External -> freq
+             "q" : 1,           # Filter Q
+             "qLfo" : 0,        # LFO -> Q
+             "qX" : 0,          # External -> Q
+             "filterGain" : 0,  # Filter gain in db
+             "bleed" : 0.0}     # dry signal bypass  0 -> filter 1 -> no filter
 
 class Bandpass(Program):
 
@@ -24,7 +23,6 @@ class Bandpass(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Bandpass("Init"))
-program_bank.enable_undo = False
 
 def bandpass(slot, name,
           lfoFreq = 1.0,

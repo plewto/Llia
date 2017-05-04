@@ -8,7 +8,6 @@ from zlib import crc32
 from llia.generic import clone, dump, name, is_bank, is_program, is_list, hash_
 from llia.constants import BANK_LENGTH
 from llia.program import Program
-from llia.util.undostack import UndoRedoStack
 
 class ProgramBank(list):
 
@@ -40,8 +39,7 @@ class ProgramBank(list):
         self.name = "%s Bank" % template.data_format
         self.remarks = ""
         self.filename = ""
-        self.undostack = UndoRedoStack()
-        self.enable_undo = True
+        #self.enable_undo = True          # Depreciated
         self._lock_current_program = False # if true ignore program changes
 
     def lock_current_program(self, flag):
@@ -59,40 +57,6 @@ class ProgramBank(list):
         Returns filename extension.
         '''
         return self.template.data_format.lower()
-
-    def push_undo(self, action):
-        '''
-        Pushes the current state of the bank to the undo stack.
-        The undo feature is not being used at this point.
-        '''
-        if self.enable_undo:
-            self.undostack.push_undo(action, clone(self))
-
-    def undo(self):
-        '''
-        Restore state of self from undo stack.
-        The undo feature is not currently being used.
-        '''
-        try:
-            obj = self.undostack.pop_undo()
-            self.undostack.push_redo(obj.action, clone(self))
-            self.copy_bank(obj.payload)
-        except IndexError:
-            msg = "Nothing to undo"
-            raise IndexError(msg)
-
-    def redo(self):
-        '''
-        Redo the previous undo.
-        Redo is not currently being used.
-        '''
-        try:
-            obj = self.undostack.pop_redo()
-            self.undostack.push_undo(obj.action, clone(self))
-            self.copy_bank(obj.payload)
-        except IndexError:
-            msg = "Nothing to redo"
-            raise IndexError(msg)
 
     def __getitem__(self, slot):
         '''
@@ -126,7 +90,6 @@ class ProgramBank(list):
         slot = slot or self.current_slot
         if is_program(obj):
             if obj.data_format == self.template.data_format:
-                self.push_undo("Store slot [%d] <-- '%s'" % (slot, obj.name))
                 list.__setitem__(self, slot, clone(obj))
             else:
                 msg = "Can not store %s program into %s bank"
@@ -160,15 +123,15 @@ class ProgramBank(list):
         
         ARGS:
           slot - int, MIDI program number, 0 <= slot < 1
-          undo_action - optional Sting sets undo message text.
+          undo_action - Depreciated value, ignore. 
 
         RETURNS:
           int - the current program slot.
         '''
         if not self._lock_current_program:
-            if not undo_action:
-                undo_action = "Recall slot %d" % self.current_slot
-            self.push_undo(undo_action)
+            # if not undo_action:
+            #     undo_action = "Recall slot %d" % self.current_slot
+            # self.push_undo(undo_action)
             self.current_slot = slot
             self.current_program = clone(self[slot])
         return self.current_program
@@ -201,7 +164,6 @@ class ProgramBank(list):
         frmt = self.template.data_format
         try:
             prog = clone(ProgramBank.clipboard[frmt])
-            self.push_undo("Paste")
             if slot is None:
                 self.current_program = prog
             else:
@@ -221,7 +183,6 @@ class ProgramBank(list):
         Raises TypeError if other is not a ProgramBank.
         Raises ValueError if other is a ProgramBank but has the wrong format.
         '''
-        # DOES NOT SAVE UNDO STATE
         if is_bank(other):
             frmt1 = self.template.data_format
             frmt2 = other.template.data_format
@@ -264,7 +225,6 @@ class ProgramBank(list):
                  the program.  If not specified use the current slot.
         '''
         p = self.create_program()
-        self.push_undo("Initialize slot [%s]" % slot)
         if slot == None:
             self.current_program = p
         else:
@@ -280,7 +240,6 @@ class ProgramBank(list):
                   specified end = start+1
         '''
         end = end or start + 1
-        self.push_undo("Initialize slot range")
         for i in range(slot, end):
             list.__setitem__(self, i, self.create_program())
 
@@ -288,7 +247,6 @@ class ProgramBank(list):
         '''
         Initialize the bank by filling it with default programs.
         '''
-        self.push_undo("Initialize Bank")
         for i in range(len(self)):
             list.__setitem__(self, i, self.create_program())
         self.name = "Init"
@@ -308,7 +266,6 @@ class ProgramBank(list):
         for slot, prog in enumerate(self):
             prog2 = clone(prog)
             list.__setitem__(other, slot, prog2)
-        other.undostack.clear()
         return other
     
  
@@ -373,7 +330,7 @@ class ProgramBank(list):
     #                 bank.use(0)
     #                 bank.name = header["name"]
     #                 bank.remarks = header["remarks"]
-    #                 bank.undostack.clear()
+    #                 # bank.undostack.clear()
     #                 return bank
     #             else:
     #                 msg = "ProgramBank.deserialize did not find expected class id"
@@ -445,7 +402,6 @@ class ProgramBank(list):
             msg = "ProgramBank.deserialize IndexError"
             raise IndexError(msg)
             
-            
     # See deserialize for ui usage
     @staticmethod
     def read_bank(filename, ui=None):
@@ -481,14 +437,12 @@ class ProgramBank(list):
         Raises IOError
         '''
         try:
-            self.push_undo("Load bank file '%s'" % filename)
             other = ProgramBank.read_bank(filename, ui)
             self.copy_bank(other)
             self.current_slot = 0
             self.current_program = clone(self[0])
             self.filename = filename
         except(ValueError, TypeError, IOError) as err:
-            self.undostack.pop_undo()
             msg = "Error while reading ProgramBank file '%s'" % filename
             raise IOError(msg)
 

@@ -20,39 +20,37 @@ CFILL = "black"
 CFOREGROUND = "white"
 COUTLINE = CFOREGROUND
 
-prototype = {
-    "port" : 0.0,
-    "vsens" : 0.1,
-    "vdepth" : 0.0,
-    "xPitch" : 0.0,
-    "chorus" : 0,
-    "lfoFreq" : 7.0,
-    "lfoWave" : 0,
-    "lfoDelay" : 0.0,
-    "lfoAmp" : 0.0,
-    "attack" : 0.0,
-    "decay" : 0.1,
-    "sustain" : 1.0,
-    "release" : 0.1,
-    "sawMix" : 0.0,
-    "pulseMix" : 0.5,
-    "subOctave" : 0,
-    "subMix" : 0.0,
-    "noiseSelect" : 0,
-    "noiseMix" : 0.0,
-    "wave" : 0.5,
-    "waveLFO" : 0.0,
-    "waveEnv" : 0.0,
-    "highPass" : 10,
-    "filterFreq" : 10000,
-    "filterTrack" : 0,
-    "filterLFO" : 0,
-    "filterEnv" : 0,
-    "xFilter" : 0,
-    "filterRes" : 0.0,
-    "gateMode" : 0,
-    "amp" : 0.3}
-
+prototype = {"port" : 0.0,
+             "vsens" : 0.1,
+             "vdepth" : 0.0,
+             "xPitch" : 0.0,
+             "chorus" : 0,
+             "lfoFreq" : 7.0,
+             "lfoWave" : 0,
+             "lfoDelay" : 0.0,
+             "lfoAmp" : 0.0,
+             "attack" : 0.0,
+             "decay" : 0.1,
+             "sustain" : 1.0,
+             "release" : 0.1,
+             "sawMix" : 0.0,
+             "pulseMix" : 0.5,
+             "subOctave" : 0,
+             "subMix" : 0.0,
+             "noiseSelect" : 0,
+             "noiseMix" : 0.0,
+             "wave" : 0.5,
+             "waveLFO" : 0.0,
+             "waveEnv" : 0.0,
+             "highPass" : 10,
+             "filterFreq" : 10000,
+             "filterTrack" : 0,
+             "filterLFO" : 0,
+             "filterEnv" : 0,
+             "xFilter" : 0,
+             "filterRes" : 0.0,
+             "gateMode" : 0,
+             "amp" : 0.3}
 
 class SS1(Program):
 
@@ -61,7 +59,6 @@ class SS1(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(SS1("Init"))
-program_bank.enable_undo = False
 
 def ss1(slot, name,
         port = 0.0,

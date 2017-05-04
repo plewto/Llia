@@ -6,27 +6,26 @@ from llia.program import Program
 from llia.bank import ProgramBank
 from llia.performance_edit import performance
 
-prototype = {
-    "hp" : 10,
-    "lp" : 20000,
-    "f1" : 220,
-    "q1" : 1,
-    "enable1" : 1,
-    "gain1" : 0,
-    "f2" : 660,
-    "q2" : 1,
-    "enable2" : 1,
-    "gain2" : 0,
-    "f3" : 990,
-    "q3" : 1,
-    "gain3" : 0,
-    "enable3" : 1,
-    "f4" : 1200,
-    "q4" : 1,
-    "gain4" : 0,
-    "enable4" : 1,
-    "bleed" : 0,
-    "amp" :0}
+prototype = {"hp" : 10,
+             "lp" : 20000,
+             "f1" : 220,
+             "q1" : 1,
+             "enable1" : 1,
+             "gain1" : 0,
+             "f2" : 660,
+             "q2" : 1,
+             "enable2" : 1,
+             "gain2" : 0,
+             "f3" : 990,
+             "q3" : 1,
+             "gain3" : 0,
+             "enable3" : 1,
+             "f4" : 1200,
+             "q4" : 1,
+             "gain4" : 0,
+             "enable4" : 1,
+             "bleed" : 0,
+             "amp" :0}
 
 class Formant(Program):
 
@@ -35,7 +34,6 @@ class Formant(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Formant("Init"))
-program_bank.enable_undo = False
 
 def band(n,freq=None,q=1,gain=0,enable=1):
     freq = freq or (n*440)

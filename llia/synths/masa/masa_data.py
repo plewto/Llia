@@ -7,54 +7,51 @@ from llia.bank import ProgramBank
 from llia.util.lmath import db_to_amp
 from llia.performance_edit import performance
 
-prototype = {
-	"amp" : 0.1,
-        "xBias" : 1.0,    
-	"xScale" : 0.5,   
-	"xToFreq" : 0.0,  
-	"vfreq" : 5.0,    
-	"vdelay" : 0.0,   
-	"vsens" : 0.01,   
-	"vdepth" : 0.0,   
-	"vibrato" : 0.0,  
-	"attack" : 0.01,  
-	"decay" : 0.20,   
-	"a1" : 1.00,      
-	"a2" : 0.00,      
-	"a3" : 0.00,
-	"a4" : 0.00,
-	"a5" : 0.00,
-	"a6" : 0.00,
-	"a7" : 0.00,
-	"a8" : 0.00,
-	"a9" : 0.00,
-	"x1" : 0.00,      
-	"x2" : 0.00,      
-	"x3" : 0.00,
-	"x4" : 0.00,
-	"x5" : 0.00,
-	"x6" : 0.00,
-	"x7" : 0.00,
-	"x8" : 0.00,
-	"x9" : 0.00,
-	"p1" : 0.00,      
-	"p2" : 0.00,      
-	"p3" : 0.00,      
-	"p4" : 0.00,      
-	"p5" : 0.00,
-	"p6" : 0.00,
-	"p7" : 0.00,
-	"p8" : 0.00,
-	"p9" : 0.00}
+prototype = {"amp" : 0.1,
+             "xBias" : 1.0,    
+	     "xScale" : 0.5,   
+	     "xToFreq" : 0.0,  
+	     "vfreq" : 5.0,    
+	     "vdelay" : 0.0,   
+	     "vsens" : 0.01,   
+	     "vdepth" : 0.0,   
+	     "vibrato" : 0.0,  
+	     "attack" : 0.01,  
+	     "decay" : 0.20,   
+	     "a1" : 1.00,      
+	     "a2" : 0.00,      
+	     "a3" : 0.00,
+	     "a4" : 0.00,
+	     "a5" : 0.00,
+	     "a6" : 0.00,
+	     "a7" : 0.00,
+	     "a8" : 0.00,
+	     "a9" : 0.00,
+	     "x1" : 0.00,      
+	     "x2" : 0.00,      
+	     "x3" : 0.00,
+	     "x4" : 0.00,
+	     "x5" : 0.00,
+	     "x6" : 0.00,
+	     "x7" : 0.00,
+	     "x8" : 0.00,
+	     "x9" : 0.00,
+	     "p1" : 0.00,      
+	     "p2" : 0.00,      
+	     "p3" : 0.00,      
+	     "p4" : 0.00,      
+	     "p5" : 0.00,
+	     "p6" : 0.00,
+	     "p7" : 0.00,
+	     "p8" : 0.00,
+	     "p9" : 0.00}
 
 class Masa(Program):
 
     def __init__(self, name):
         super(Masa, self).__init__(name, "MASA", prototype)
 
-
 program_bank = ProgramBank(Masa("Init"))
-program_bank.enable_undo = False
 
 def _fill_xbus(prog, xmap):
     prog["xBias"] = float(xmap.get("bias", 1.0))

@@ -8,73 +8,69 @@ from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
 from llia.performance_edit import performance, smap, ccmap
 
-prototype = {
-    #"outbus"          : 0     , # Main output bus number.
-    "amp"             : 0.1   , # Main linear amplitude.
-    "port"            : 0.0   , # Portamento time.
-    "env1Attack"      : 0.0   , # 
-    "env1Decay"       : 0.0   , # 
-    "env1Sustain"     : 1.0   , # 
-    "env1Release"     : 0.0   , # 
-    "env2Attack"      : 0.0   , # 
-    "env2Decay"       : 0.0   , # 
-    "env2Sustain"     : 1.0   , # 
-    "env2Release"     : 0.0   , # 
-    "vfreq"           : 5.0   , # Vibrato frequency in Hertz.
-    "vsens"           : 0.1   , # Vibrato sensitivity.
-    "vdelay"          : 0.0   , # Vibrato onset delay in seconds.
-    "vdepth"          : 0.0   , # Programmed vibrato depth.
-    "vibrato"         : 0.0   , # Manual vibrato depth.
-    "lfoFreq"         : 5.0   , # LFO frequency in Hertz.
-    "lfoDelay"        : 0.0   , # LFO onset delay in seconds 
-    "lfoDepth"        : 1.0   , # LFO output amplitude.
-    
-    "osc1Freq"        : 0.5   , # OSC1 frequency ratio.
-    "osc1Wave"        : 0.5   , # OSC1 waveshape, [0.0,1.0].
-    "osc1Wave_env1"   : 0.0   , # OSC1 waveshape mod by env1.
-    "osc1Wave_lfo"    : 0.0   , # OSC1 waveshape mod by lfo.
-    "osc1Amp"         : 1.0   , # OSC1 linear amplitude.
-    "osc1Amp_env1"    : 0.0   , # OSC1 amplitude mod by env1.
-    
-    "osc2Freq"        : 1.0   , # OSC2 frequency ratio.
-    "osc2Wave"        : 0.5   , # OSC2 pulse width [0.0, 1.0].
-    "osc2Wave_env1"   : 0.0   , # OSC2 PWM from env1.
-    "osc2Wave_lfo"    : 0.0   , # OSC2 PWM from lfo.
-    "osc2Amp"         : 1.0   , # OSC2 linear amplitude.
-    "osc2Amp_env1"    : 0.0   , # OSC2 amplitude mod by env1.
-    
-    "osc3Freq"        : 0.5   , # OSC3 frequency ratio.
-    "osc3Bias"        : 0     , # OSC3 frequency bias in Hertz.
-    "osc3Wave"        : 0.5   , # OSC3 sync frequency [0.0, 1.0].
-    "osc3Wave_env1"   : 0.0   , # OSC3 sync freq mod by env1.
-    "osc3Wave_lfo"    : 0.0   , # OSC3 sync freq mod by lfo.
-    "osc3WaveLag"     : 0.0   , # OSC3 sync freq mod lag time >= 0.
-    "osc3Amp"         : 1.0   , # OSC3 linear amplitude.
-    "osc3Amp_env1"    : 0.0   , # OSC3 amplitude mod by env1.
-    
-    "noiseFreq"       : 1.0   , # Noise filter frequency ratio.
-    "noiseBW"         : 0.5   , # Noise filter width [0.0, 1.0].
-    "noiseAmp"        : 0.0   , # Noise linear amplitude.
-    "noiseAmp_env1"   : 0.0   , # Noise amplitude mod by env1.
-    
-    "filterFreq"      : 10000 , # Filter frequency in Hertz.
-    "filterKeytrack"  : 0     , # Filter keyboard track (ratio)
-    "filterFreq_env1" : 0     , # Filter freq mod by env1 in Hertz.
-    "filterFreq_lfo"  : 0     , # Filter freq mod by lfo in Hertz.
-    "filterRes"       : 0.0   , # Filter resonance, [0.0, 1.0].
-    "filterRes_env1"  : 0.0   , # Resonance mod by env1.
-    "filterRes_lfo"   : 0.0   , # Resonance mod by lfo.
-    
-    "filterMix"       : 0.0   , # Filter mode mix [-1=lowpass, +1=bandpass].
-    "filterMix_lfo"   : 0.0   , # Filter mix mod by lfo.
-    "filterMix_env1"  : 0.0   , # Filter mix mod by env1.
-    
-    "bandpassOffset"  : 1.0   , # Bandpass filter frequency offset (ratio)
-    "bandpassLag"     : 0.0   , # Bandpass frequency mod lag time.
-    "xToPitch"        : 0.0   , # External control signal to pitch [0.0, 1.0]
-    "xToFilterFreq"   : 0.0     # External control signal to filter [0.0, 1.0]
-    
-}
+prototype = {"amp"             : 0.1   , # Main linear amplitude.
+             "port"            : 0.0   , # Portamento time.
+             "env1Attack"      : 0.0   , # 
+             "env1Decay"       : 0.0   , # 
+             "env1Sustain"     : 1.0   , # 
+             "env1Release"     : 0.0   , # 
+             "env2Attack"      : 0.0   , # 
+             "env2Decay"       : 0.0   , # 
+             "env2Sustain"     : 1.0   , # 
+             "env2Release"     : 0.0   , # 
+             "vfreq"           : 5.0   , # Vibrato frequency in Hertz.
+             "vsens"           : 0.1   , # Vibrato sensitivity.
+             "vdelay"          : 0.0   , # Vibrato onset delay in seconds.
+             "vdepth"          : 0.0   , # Programmed vibrato depth.
+             "vibrato"         : 0.0   , # Manual vibrato depth.
+             "lfoFreq"         : 5.0   , # LFO frequency in Hertz.
+             "lfoDelay"        : 0.0   , # LFO onset delay in seconds 
+             "lfoDepth"        : 1.0   , # LFO output amplitude.
+             
+             "osc1Freq"        : 0.5   , # OSC1 frequency ratio.
+             "osc1Wave"        : 0.5   , # OSC1 waveshape, [0.0,1.0].
+             "osc1Wave_env1"   : 0.0   , # OSC1 waveshape mod by env1.
+             "osc1Wave_lfo"    : 0.0   , # OSC1 waveshape mod by lfo.
+             "osc1Amp"         : 1.0   , # OSC1 linear amplitude.
+             "osc1Amp_env1"    : 0.0   , # OSC1 amplitude mod by env1.
+             
+             "osc2Freq"        : 1.0   , # OSC2 frequency ratio.
+             "osc2Wave"        : 0.5   , # OSC2 pulse width [0.0, 1.0].
+             "osc2Wave_env1"   : 0.0   , # OSC2 PWM from env1.
+             "osc2Wave_lfo"    : 0.0   , # OSC2 PWM from lfo.
+             "osc2Amp"         : 1.0   , # OSC2 linear amplitude.
+             "osc2Amp_env1"    : 0.0   , # OSC2 amplitude mod by env1.
+             
+             "osc3Freq"        : 0.5   , # OSC3 frequency ratio.
+             "osc3Bias"        : 0     , # OSC3 frequency bias in Hertz.
+             "osc3Wave"        : 0.5   , # OSC3 sync frequency [0.0, 1.0].
+             "osc3Wave_env1"   : 0.0   , # OSC3 sync freq mod by env1.
+             "osc3Wave_lfo"    : 0.0   , # OSC3 sync freq mod by lfo.
+             "osc3WaveLag"     : 0.0   , # OSC3 sync freq mod lag time >= 0.
+             "osc3Amp"         : 1.0   , # OSC3 linear amplitude.
+             "osc3Amp_env1"    : 0.0   , # OSC3 amplitude mod by env1.
+             
+             "noiseFreq"       : 1.0   , # Noise filter frequency ratio.
+             "noiseBW"         : 0.5   , # Noise filter width [0.0, 1.0].
+             "noiseAmp"        : 0.0   , # Noise linear amplitude.
+             "noiseAmp_env1"   : 0.0   , # Noise amplitude mod by env1.
+             
+             "filterFreq"      : 10000 , # Filter frequency in Hertz.
+             "filterKeytrack"  : 0     , # Filter keyboard track (ratio)
+             "filterFreq_env1" : 0     , # Filter freq mod by env1 in Hertz.
+             "filterFreq_lfo"  : 0     , # Filter freq mod by lfo in Hertz.
+             "filterRes"       : 0.0   , # Filter resonance, [0.0, 1.0].
+             "filterRes_env1"  : 0.0   , # Resonance mod by env1.
+             "filterRes_lfo"   : 0.0   , # Resonance mod by lfo.
+             
+             "filterMix"       : 0.0   , # Filter mode mix [-1=lowpass, +1=bandpass].
+             "filterMix_lfo"   : 0.0   , # Filter mix mod by lfo.
+             "filterMix_env1"  : 0.0   , # Filter mix mod by env1.
+             
+             "bandpassOffset"  : 1.0   , # Bandpass filter frequency offset (ratio)
+             "bandpassLag"     : 0.0   , # Bandpass frequency mod lag time.
+             "xToPitch"        : 0.0   , # External control signal to pitch [0.0, 1.0]
+             "xToFilterFreq"   : 0.0}    # External control signal to filter [0.0, 1.0]
 
 class Saw3(Program):
 
@@ -82,7 +78,6 @@ class Saw3(Program):
         super(Saw3, self).__init__(name, "Saw3", prototype)
 
 program_bank = ProgramBank(Saw3("Init"))
-program_bank.enable_undo = False
 
 def nclip(v):
     return float(clip(v, 0.0, 1.0))

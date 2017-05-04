@@ -7,23 +7,21 @@ from llia.bank import ProgramBank
 from llia.performance_edit import performance
 from llia.util.lmath import clip, coin, rnd, random_sign
 
-prototype = {
-    "scaleA" : 1.0,
-    "biasA" : 0.0,
-    "muteA" : 0,
-    "scaleB" : 1.0,
-    "biasB" : 0.0,
-    "muteB" : 0,
-    "scaleC" : 1.0,
-    "biasC" : 0.0,
-    "muteC" : 0,
-    "scaleD" : 1.0,
-    "biasD" : 0.0,
-    "muteD" : 0,
-    "masterScale" : 1.0,
-    "masterBias" : 0.0,
-    "masterMute" : 0}
-    
+prototype = {"scaleA" : 1.0,
+             "biasA" : 0.0,
+             "muteA" : 0,
+             "scaleB" : 1.0,
+             "biasB" : 0.0,
+             "muteB" : 0,
+             "scaleC" : 1.0,
+             "biasC" : 0.0,
+             "muteC" : 0,
+             "scaleD" : 1.0,
+             "biasD" : 0.0,
+             "muteD" : 0,
+             "masterScale" : 1.0,
+             "masterBias" : 0.0,
+             "masterMute" : 0}
 
 class Controlmixer(Program):
 
@@ -32,7 +30,6 @@ class Controlmixer(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Controlmixer("Init"))
-program_bank.enable_undo = False
 
 def controlmixer(slot,name,
                  scaleA = 1.0,

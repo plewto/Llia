@@ -7,28 +7,27 @@ from llia.bank import ProgramBank
 from llia.performance_edit import performance
 from llia.util.lmath import coin, rnd, pick
 
-prototype = {
-    "clkfreq" : 1.000,          # float 0..?
-    "clksrc" : 0,               # int, 0=internal, 1=external
-    "hold" : 1.0,               # float, ?..?
-    "n" : 8,                    # int, 7..32
-    "amp1" : 1.00,              # float, 0..1
-    "amp2" : 0.00,
-    "amp3" : 0.00,
-    "amp4" : 0.00,
-    "amp5" : 0.00,
-    "amp6" : 0.00,
-    "ampn" : 0.00,
-    "gate1" : 0,                # int, 0=not gated, 1=gated
-    "gate2" : 0,
-    "gate3" : 0,
-    "gate4" : 0,
-    "gate5" : 0,
-    "gate6" : 0,
-    "gaten" : 0,
-    "scale" : 1.0,              # float, 0..1
-    "bias" : 0,                 # float -4..+4
-    "lag" : 0.0}                # float 0..1
+prototype = {"clkfreq" : 1.000,          # float 0..?
+             "clksrc" : 0,               # int, 0=internal, 1=external
+             "hold" : 1.0,               # float, ?..?
+             "n" : 8,                    # int, 7..32
+             "amp1" : 1.00,              # float, 0..1
+             "amp2" : 0.00,
+             "amp3" : 0.00,
+             "amp4" : 0.00,
+             "amp5" : 0.00,
+             "amp6" : 0.00,
+             "ampn" : 0.00,
+             "gate1" : 0,                # int, 0=not gated, 1=gated
+             "gate2" : 0,
+             "gate3" : 0,
+             "gate4" : 0,
+             "gate5" : 0,
+             "gate6" : 0,
+             "gaten" : 0,
+             "scale" : 1.0,              # float, 0..1
+             "bias" : 0,                 # float -4..+4
+             "lag" : 0.0}                # float 0..1
 
 class Cascade(Program):
 
@@ -37,7 +36,6 @@ class Cascade(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Cascade("Init"))
-program_bank.enable_undo = False
 
 def _fill_amp_list(lst):
     template = [1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]

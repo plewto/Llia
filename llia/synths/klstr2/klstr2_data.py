@@ -7,76 +7,75 @@ from llia.performance_edit import performance
 
 from llia.synths.klstr2.klstr2_constants import *
 
-prototype = {
-    "amp" : 0.1,
-    "lfoFreq" : 1.0,          # Modulation LFO
-    "lfo2Ratio" : 1.0,        # Vibrato LFO
-    "vibrato" : 0.0,
-    "env1_attack" : 0.0,      # Modulation env
-    "env1_decay1" : 0.0,
-    "env1_decay2" : 0.0,
-    "env1_release" : 0.0,   
-    "env1_breakpoint" : 1.0,  
-    "env1_sustain" : 1.0,
-    "env1_mode" : 0,
-    "env2_attack" : 0.0,      # Amplitude env
-    "env2_decay1" : 0.0,
-    "env2_decay2" : 0.0,
-    "env2_release" : 0.0,
-    "env2_breakpoint" : 1.0,
-    "env2_sustain" : 1.0,
-    "env2_mode" : 0,
-    "spread" : 0.0,
-    "spread_env1" : 0.0,
-    "spread_lfo1" : 0.0,
-    "spread_external" : 0.0,
-    "cluster" : 0.0,
-    "cluster_env1" : 0.0,
-    "cluster_lfo1" : 0.0,
-    "cluster_lfo2" : 0.0,
-    "cluster_external" : 0.0,
-    "pw" : 0.5,
-    "pw_lfo1" : 0.0,
-    "pw_env1" : 0.0,
-    "harm1" : 4,
-    "harm1_env1" : 0,
-    "harm1_env2" : 0,
-    "harm1_lfo1" : 0,
-    "harm1_lfo2" : 0,
-    "harm2" : 4,
-    "harm2_env1" : 0,
-    "harm2_lfo1" : 0,
-    "harm2_external" : 0,
-    "harm2_lag" : 0.0,
-    "noise_lowpass" : 16000,
-    "noise_lowpass_env1" : 0,
-    "noise_lowpass_lfo1" : 0,
-    "noise_highpass" : 10,
-    "noise_amp" : 0.0,
-    "balance_a" : 0.0,
-    "balance_b" : 0.0,
-    "balance_noise" : 0.0,
-    
-    "f1_freq" : 16000,
-    "f1_freq_env1" : 0,
-    "f1_freq_lfo1" : 0,
-    "f1_freq_lfo2" : 0,
-    "f1_freq_external" : 0,
-    "f1_res" : 0.0,
-    "f1_amp" : 1,
-    "f1_pan" : 0.25,
-    
-    "f2_freq" : 1000,
-    "f2_freq_env1" : 0,
-    "f2_freq_env2" : 0,
-    "f2_freq_lfo1" : 0,
-    #"f2_freq_lag" : 0.0,
-    "f2_res" : 0.0,
-    "f2b_offset" : 0,    #  0, 100, 200, 400, 600, ...
-    "f2b_lag" : 0.0,     #  0.0 .. +1.0
-    "f2b_fade" : 0.0,    # -1.0 .. +1.0
-    "f2_amp" : 1,
-    "f2_pan" : -0.25}
+prototype = {"amp" : 0.1,
+             "lfoFreq" : 1.0,          # Modulation LFO
+             "lfo2Ratio" : 1.0,        # Vibrato LFO
+             "vibrato" : 0.0,
+             "env1_attack" : 0.0,      # Modulation env
+             "env1_decay1" : 0.0,
+             "env1_decay2" : 0.0,
+             "env1_release" : 0.0,   
+             "env1_breakpoint" : 1.0,  
+             "env1_sustain" : 1.0,
+             "env1_mode" : 0,
+             "env2_attack" : 0.0,      # Amplitude env
+             "env2_decay1" : 0.0,
+             "env2_decay2" : 0.0,
+             "env2_release" : 0.0,
+             "env2_breakpoint" : 1.0,
+             "env2_sustain" : 1.0,
+             "env2_mode" : 0,
+             "spread" : 0.0,
+             "spread_env1" : 0.0,
+             "spread_lfo1" : 0.0,
+             "spread_external" : 0.0,
+             "cluster" : 0.0,
+             "cluster_env1" : 0.0,
+             "cluster_lfo1" : 0.0,
+             "cluster_lfo2" : 0.0,
+             "cluster_external" : 0.0,
+             "pw" : 0.5,
+             "pw_lfo1" : 0.0,
+             "pw_env1" : 0.0,
+             "harm1" : 4,
+             "harm1_env1" : 0,
+             "harm1_env2" : 0,
+             "harm1_lfo1" : 0,
+             "harm1_lfo2" : 0,
+             "harm2" : 4,
+             "harm2_env1" : 0,
+             "harm2_lfo1" : 0,
+             "harm2_external" : 0,
+             "harm2_lag" : 0.0,
+             "noise_lowpass" : 16000,
+             "noise_lowpass_env1" : 0,
+             "noise_lowpass_lfo1" : 0,
+             "noise_highpass" : 10,
+             "noise_amp" : 0.0,
+             "balance_a" : 0.0,
+             "balance_b" : 0.0,
+             "balance_noise" : 0.0,
+             
+             "f1_freq" : 16000,
+             "f1_freq_env1" : 0,
+             "f1_freq_lfo1" : 0,
+             "f1_freq_lfo2" : 0,
+             "f1_freq_external" : 0,
+             "f1_res" : 0.0,
+             "f1_amp" : 1,
+             "f1_pan" : 0.25,
+             
+             "f2_freq" : 1000,
+             "f2_freq_env1" : 0,
+             "f2_freq_env2" : 0,
+             "f2_freq_lfo1" : 0,
+             #"f2_freq_lag" : 0.0,
+             "f2_res" : 0.0,
+             "f2b_offset" : 0,    #  0, 100, 200, 400, 600, ...
+             "f2b_lag" : 0.0,     #  0.0 .. +1.0
+             "f2b_fade" : 0.0,    # -1.0 .. +1.0
+             "f2_amp" : 1,
+             "f2_pan" : -0.25}
 
 class Klstr2(Program):
 
@@ -85,7 +84,6 @@ class Klstr2(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Klstr2("Init"))
-program_bank.enable_undo = False
 
 def klstr2(slot, name, amp=0.1,
            lfo = {"freq": 1.0,                # LFO1 frequency (>0)

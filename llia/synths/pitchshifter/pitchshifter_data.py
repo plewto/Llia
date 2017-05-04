@@ -9,19 +9,17 @@ from llia.performance_edit import performance
 
 MAX_DELAY = 1
 
-prototype = {
-    "pitchRatio" : 1.5,       # 0..4
-    "pitchDispersion" : 0.0,  # 0..1
-    "timeDispersion" : 0.0,   # 0..1
-    "delay" : 0.1,            # 0..1
-    "feedback" : 0,           # 0..1
-    "dryAmp" : 1.0,           # 0..2
-    "psAmp" : 1.0,            # 0..2
-    "delayAmp" : 0.0,         # 0..2
-    "dryPan" : 0.0,           # -1..+1
-    "psPan" : 0.0,            # -1..+1
-    "delayPan" : 0.0}         # -1..+1
-
+prototype = {"pitchRatio" : 1.5,       # 0..4
+             "pitchDispersion" : 0.0,  # 0..1
+             "timeDispersion" : 0.0,   # 0..1
+             "delay" : 0.1,            # 0..1
+             "feedback" : 0,           # 0..1
+             "dryAmp" : 1.0,           # 0..2
+             "psAmp" : 1.0,            # 0..2
+             "delayAmp" : 0.0,         # 0..2
+             "dryPan" : 0.0,           # -1..+1
+             "psPan" : 0.0,            # -1..+1
+             "delayPan" : 0.0}         # -1..+1
 
 class PitchShifter(Program):
 
@@ -30,7 +28,6 @@ class PitchShifter(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(PitchShifter("Init"))
-program_bank.enable_undo = False
 
 def pitchshifter(slot, name, **pmap):
     p = PitchShifter(name)

@@ -15,22 +15,20 @@ RANDOM_RATIOS = (0.125, 0.25, 0.5, 0.5, 0.75,
                  4, 4, 4, 5, 6, 6, 7, 8, 9,
                  10, 11, 12, 13, 14, 15, 16)
 
-prototype = {
-	"clkFreq" : 1.00, 
-	"clkPw" : 0.5,    
-	"clkAmp" : 0.0,   
-	"sawRatio" : 4.00,
-	"sawSlew" : 0.0,  
-	"sawAmp" : 1.0,   
-	"sawBleed" : 0.0, 
-	"pulseRatio" : 4.00,
-	"pulseWidth" : 0.5,
-	"pulseAmp" : 1.0,
-	"pulseBleed" : 0.0,
-	"lag" : 0.0,
-	"sawBias" : 0,
-	"pulseBias" : 0}
-
+prototype = {"clkFreq" : 1.00, 
+	     "clkPw" : 0.5,    
+	     "clkAmp" : 0.0,   
+	     "sawRatio" : 4.00,
+	     "sawSlew" : 0.0,  
+	     "sawAmp" : 1.0,   
+	     "sawBleed" : 0.0, 
+	     "pulseRatio" : 4.00,
+	     "pulseWidth" : 0.5,
+	     "pulseAmp" : 1.0,
+	     "pulseBleed" : 0.0,
+	     "lag" : 0.0,
+	     "sawBias" : 0,
+	     "pulseBias" : 0}
 
 class Lfo2(Program):
 
@@ -38,9 +36,7 @@ class Lfo2(Program):
         super(Lfo2, self).__init__(name, "LFO2", prototype)
         self.performance = performance()
 
-
 program_bank = ProgramBank(Lfo2("Init"))
-program_bank.enable_undo = False
 
 def _fill(lst, template):
     acc = []

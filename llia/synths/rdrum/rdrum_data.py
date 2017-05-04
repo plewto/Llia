@@ -7,31 +7,29 @@ from llia.bank import ProgramBank
 from llia.util.lmath import clip, db_to_amp
 from llia.performance_edit import performance
 
-prototype = {
-    "amp" : 0.1,           # linear overall amplitude,  0 <= amp <= 2  (+6db)                    
-    "aRatio" : 1.000,      # tone A freq ratio, 0.25 <= aRatio <= 8                            
-    "aAttack" : 0.001,     # tone A attack time,  0 <= aAttack <= 6                              
-    "aDecay" : 0.7500,     # tone A decay time, 0 <= aDecay <= 6                              
-    "aAmp" : 1.000,        # tone A relative linear amplitude,  0 <= amp <= 1
-    "aBend" : 0.000,       # tone A bend,  -1 <= aBend <= +1                                
-    "aTone" : 0.000,       # tone A wave,  0 = sine, 1 = clipped
-    "aVelocity" : 0.000,   # tone A velocity sensitivity 0 <= vsens <= 1
-    "bRatio" : 1.000,      # tone B freq ratio, 1 <= bRatio <= 8                             
-    "bAttack" : 0.001,     # tone B attack time, 0 <= bAttack <= 6                              
-    "bDecay" : 0.50,       # tone B decay time, 0 <= bDecay <= 6                            
-    "bAmp" : 0.750,        # tone B relative linear amplitude,  0 <= amp <= 1
-    "bBend" : 0.000,       # tone B bend, -1 <= bBend <= +1                              
-    "bTune" : 1.0,         # tone B Tune, 0 <= tune <= 4, 0= ~unison, 1=Risset, >1 other.
-    "bVelocity" : 0.000,   # tone B velocity sensitivity 0 <= vsens <= 1
-    "noiseRatio" : 1.000,  # noise filter track, 0 <= track <= 16                                  
-    "noiseBias" : 0,       # noise filer floor, HZ, 0 <= bias 9999
-    "noiseAttack" : 0.001, # noise attack time,  0 <= attack <= 6                                  
-    "noiseDecay" : 0.500,  # noise decay time,   0 <= decay <= 6                                 
-    "noiseAmp" : 0.000,    # noise relative linear amplitude, 0 <= amp <= 1
-    "noiseRes" : 0,        # noise filter resonance,  0 <= res <= 1                          
-    "noiseBend" : 0.00,     # noise filter modulation, -1 <= bend <= +1
-    "noiseVelocity" : 0.000,   # noise velocity sensitivity 0 <= vsens <= 1
-}
+prototype = {"amp" : 0.1,           # linear overall amplitude,  0 <= amp <= 2  (+6db)                    
+             "aRatio" : 1.000,      # tone A freq ratio, 0.25 <= aRatio <= 8                            
+             "aAttack" : 0.001,     # tone A attack time,  0 <= aAttack <= 6                              
+             "aDecay" : 0.7500,     # tone A decay time, 0 <= aDecay <= 6                              
+             "aAmp" : 1.000,        # tone A relative linear amplitude,  0 <= amp <= 1
+             "aBend" : 0.000,       # tone A bend,  -1 <= aBend <= +1                                
+             "aTone" : 0.000,       # tone A wave,  0 = sine, 1 = clipped
+             "aVelocity" : 0.000,   # tone A velocity sensitivity 0 <= vsens <= 1
+             "bRatio" : 1.000,      # tone B freq ratio, 1 <= bRatio <= 8                             
+             "bAttack" : 0.001,     # tone B attack time, 0 <= bAttack <= 6                              
+             "bDecay" : 0.50,       # tone B decay time, 0 <= bDecay <= 6                            
+             "bAmp" : 0.750,        # tone B relative linear amplitude,  0 <= amp <= 1
+             "bBend" : 0.000,       # tone B bend, -1 <= bBend <= +1                              
+             "bTune" : 1.0,         # tone B Tune, 0 <= tune <= 4, 0= ~unison, 1=Risset, >1 other.
+             "bVelocity" : 0.000,   # tone B velocity sensitivity 0 <= vsens <= 1
+             "noiseRatio" : 1.000,  # noise filter track, 0 <= track <= 16                                  
+             "noiseBias" : 0,       # noise filer floor, HZ, 0 <= bias 9999
+             "noiseAttack" : 0.001, # noise attack time,  0 <= attack <= 6                                  
+             "noiseDecay" : 0.500,  # noise decay time,   0 <= decay <= 6                                 
+             "noiseAmp" : 0.000,    # noise relative linear amplitude, 0 <= amp <= 1
+             "noiseRes" : 0,        # noise filter resonance,  0 <= res <= 1                          
+             "noiseBend" : 0.00,    # noise filter modulation, -1 <= bend <= +1
+             "noiseVelocity" : 0.000 }  # noise velocity sensitivity 0 <= vsens <= 1
 
 class Rdrum(Program):
 
@@ -39,8 +37,6 @@ class Rdrum(Program):
         super(Rdrum, self).__init__(name, "Rdrum", prototype)
 
 program_bank = ProgramBank(Rdrum("Init"))
-program_bank.enable_undo = False
-
 
 def fget(d, key, default, mn=0.0, mx=1):
     v = d.get(key, default)

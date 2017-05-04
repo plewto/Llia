@@ -42,8 +42,7 @@ prototype = {
     "xBias" : 0.0,
     "xToSpread" :  0.0,     # xternal signal to spread amount
     "xToNoise" : 0.0,
-    "xToFilter" : 0.0       # external to filter, normalized
-}
+    "xToFilter" : 0.0 }     # external to filter, normalized
 
 class Klstr(Program):
 
@@ -51,8 +50,6 @@ class Klstr(Program):
         super(Klstr, self).__init__(name, "Klstr", prototype)
 
 program_bank = ProgramBank(Klstr("Init"))
-program_bank.enable_undo = False
-
 
 def fget(d, key, default, mn=0.0, mx=1):
     v = d.get(key, default)

@@ -9,19 +9,16 @@ from llia.performance_edit import performance
 FILTER_VALUES = (1000,2000,5000,10000,20000)
 MAX_INPUT_GAIN_MAGNITUDE = 6
 
-prototype = {
-	"keyTrack" : 0.0,       # float 0..16  (tumbler)
-	"fixedFrequency" : 1.0, # int   0..8k  (tumbler)
-	"inputFilter" : 5000,   # int   msb
-	"inputGain" : 1.0,      # int msb powers of 10
-	"modDepth" : 1.0,       # norm
-	"attack" : 0.01,        # 0..4
-	"release" : 0.01,       # 0..4
-	"envelopeSelect" : 0,   # int 0->env follower, 1->ASR
-	"wetAmp" : 1.0,         # volume
-	"dryAmp" : 1.0          # volume
-}
-
+prototype = {"keyTrack" : 0.0,       # float 0..16  (tumbler)
+	     "fixedFrequency" : 1.0, # int   0..8k  (tumbler)
+	     "inputFilter" : 5000,   # int   msb
+	     "inputGain" : 1.0,      # int msb powers of 10
+	     "modDepth" : 1.0,       # norm
+	     "attack" : 0.01,        # 0..4
+	     "release" : 0.01,       # 0..4
+	     "envelopeSelect" : 0,   # int 0->env follower, 1->ASR
+	     "wetAmp" : 1.0,         # volume
+	     "dryAmp" : 1.0}         # volume
 
 class QMod(Program):
 
@@ -30,7 +27,6 @@ class QMod(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(QMod("Init"))
-program_bank.enable_undo = False
 
 def qmod(slot, name,
 	 keyTrack = 0.0,

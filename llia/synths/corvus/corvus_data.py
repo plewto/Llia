@@ -19,7 +19,6 @@ prototype = {
     "lfo2_ratio" : 0.5,   # msb
     "lfo2_delay" : 0.0}   # linear
 
-
 for op in (1,2,3,4):
     for p,dflt in (("op%d_enable" , 1),       # toggle
                    ("op%d_ratio" , 1.0),      # tumbler
@@ -69,7 +68,6 @@ prototype["pe_a4"] = float(0.0)
 prototype["pe_rnode"] = int(3)
 prototype["pe_loop"] = int(4)   
 
-
 class Corvus(Program):
 
     def __init__(self,name):
@@ -77,7 +75,6 @@ class Corvus(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Corvus("Init"))
-program_bank.enable_undo = False
 
 def pitch_env(levels = [0.0, 0.0, 0.0, 0.0, 0.0],
              times = [1.0, 1.0, 1.0, 1.0],
@@ -103,7 +100,6 @@ def pitch_env(levels = [0.0, 0.0, 0.0, 0.0, 0.0],
         p = "pe_t%d" % j
         map[p] = v
     return map
-             
 
 def op(n, 
        enable= 1,
@@ -158,7 +154,6 @@ def op(n,
         map["bzz4_env"] = int(bzz_env)
         map["bzz4_lfo2"] = int(bzz_lfo2)
         map["bzz4_mix"] = float(bzz_mix)
-            
     return map
 
 def fm(n,
@@ -222,7 +217,6 @@ def corvus(slot, name,
         copymap(m)
     program_bank[slot] = p
     return p
-
 
 corvus(0, "Nutcracker",
         port = 0.0000,

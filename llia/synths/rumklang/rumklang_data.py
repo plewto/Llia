@@ -8,18 +8,17 @@ from llia.bank import ProgramBank
 from llia.performance_edit import performance
 from llia.util.lmath import db_to_amp,amp_to_db
 
-prototype = {
-    "preDelay" : 0.01,
-    "roomSize" : 0.5,
-    "damp" : 0.5,
-    "lpcutoff" : 16000,
-    "hpcutoff" : 10,
-    "gatted" : 0,
-    "modDepth" : 0.0,
-    "wetAmp" : 1.0,
-    "wetPan" : 0.75,
-    "dryAmp" : 1.0,
-    "dryPan" : 0.25}
+prototype = {"preDelay" : 0.01,
+             "roomSize" : 0.5,
+             "damp" : 0.5,
+             "lpcutoff" : 16000,
+             "hpcutoff" : 10,
+             "gatted" : 0,
+             "modDepth" : 0.0,
+             "wetAmp" : 1.0,
+             "wetPan" : 0.75,
+             "dryAmp" : 1.0,
+             "dryPan" : 0.25}
 
 class Rumklang(Program):
 
@@ -28,8 +27,6 @@ class Rumklang(Program):
         self.performance = performance()
 
 program_bank = ProgramBank(Rumklang("Init"))
-program_bank.enable_undo = False
-
 
 MAX_DELAY = 0.33
 
