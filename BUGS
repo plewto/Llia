@@ -298,4 +298,66 @@ appear.
 
 Amendment:
 Just noticed that an extra "spurious" group window was created when loading
-the scene.  
+the scene.
+
+
+---------------------------------------------------------------------- Open 0024
+BUG 0024 2017.05.05
+
+After saving several programs to a bank the following error appeared.
+
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/lib-tk/Tkinter.py", line 1540, in __call__
+    return self.func(*args)
+  File "/home/sj/Documents/dev/Llia/llia/gui/tk/tk_bankeditor.py", line 406, in accept
+    bnk[a] = program
+  File "/home/sj/Documents/dev/Llia/llia/bank.py", line 93, in __setitem__
+    list.__setitem__(self, slot, clone(obj))
+  File "/home/sj/Documents/dev/Llia/llia/thirdparty/simplegeneric.py", line 66, in dispatch
+    return f(*args, **kw)
+  File "/home/sj/Documents/dev/Llia/llia/program.py", line 318, in _clone_program
+    return obj.clone()
+  File "/home/sj/Documents/dev/Llia/llia/program.py", line 92, in clone
+    other.performance = self.performance.clone()
+  File "/home/sj/Documents/dev/Llia/llia/performance.py", line 65, in clone
+    other.controller_maps = clone(self.controller_maps)
+  File "/home/sj/Documents/dev/Llia/llia/thirdparty/simplegeneric.py", line 66, in dispatch
+    return f(*args, **kw)
+  File "/home/sj/Documents/dev/Llia/llia/ccmapper.py", line 216, in _clone_ccm
+    return obj.clone()
+  File "/home/sj/Documents/dev/Llia/llia/ccmapper.py", line 37, in clone
+    other._maps[cc] = clone(sm)
+  File "/home/sj/Documents/dev/Llia/llia/thirdparty/simplegeneric.py", line 66, in dispatch
+    return f(*args, **kw)
+  File "/home/sj/Documents/dev/Llia/llia/source_mapper.py", line 257, in _clone_sm
+    return obj.clone()
+  File "/home/sj/Documents/dev/Llia/llia/source_mapper.py", line 60, in clone
+    other._maps[p] = clone(m)
+  File "/home/sj/Documents/dev/Llia/llia/thirdparty/simplegeneric.py", line 66, in dispatch
+    return f(*args, **kw)
+  File "/home/sj/Documents/dev/Llia/llia/parameter_map.py", line 240, in _clone_pm
+    return obj.clone()
+  File "/home/sj/Documents/dev/Llia/llia/parameter_map.py", line 139, in clone
+    other = ParameterMap(self.source, self.parameter)
+  File "/home/sj/Documents/dev/Llia/llia/parameter_map.py", line 72, in __init__
+    self.limits)
+  File "/home/sj/Documents/dev/Llia/llia/curves.py", line 211, in curve
+    xscale = linear_function(domain, (0.0, 1.0))
+  File "/home/sj/Documents/dev/Llia/llia/curves.py", line 100, in linear_function
+    a,b = linear_coefficients(domain, range_)
+  File "/home/sj/Documents/dev/Llia/llia/curves.py", line 80, in linear_coefficients
+    dx = float(x1 - x0)
+
+The error occurred after several hours of work while creating presets for the
+drawbar.llia scene. Specifically the error occurred while trying to save a
+program to MASA bank slot 45.  Active synths at the time: MASA, RDrum,
+ASplit, Scanner,Rumklang and Mixer.  Otherwise Llia appeared to continue
+to operate normally.
+
+After restarting Llia and reloading the scene I was able to store a program to
+the MASA bank. 
+                                                                       
+								       
+                                                                      
+								      
