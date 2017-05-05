@@ -483,7 +483,7 @@ class Parser(object):
                 slot = jobj["current_slots"][sid]
                 locked = jobj["bank_locks"][sid]
                 self.synthhelper.use_program(slot,sid)
-                self.synthhelper.lock_bank(locked)
+                self.synthhelper.lock_bank(locked,sid)
                 try:
                     bed = sy.synth_editor.bank_editor
                     bed.sync_no_propegate()

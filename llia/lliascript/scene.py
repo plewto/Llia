@@ -45,4 +45,3 @@ class Scene(Composer):
                 "current_slots" : current_slots,
                 "bank_locks" : bank_locks}
         return data
-
