@@ -280,7 +280,7 @@ occurs.
       File "/home/sj/Documents/dev/Llia/llia/gui/tk/graph/lliagraph.py", line 486, in sync
         sytoken = self.synth_tokens
 
----------------------------------------------------------------------- Open 0023
+---------------------------------------------------------------------- Closed 0023
 BUG 0023 2017.05.03
 
 Loading a scene object does not always automatically display the synth
@@ -300,6 +300,10 @@ Amendment:
 Just noticed that an extra "spurious" group window was created when loading
 the scene.
 
+
+2017.05.06 The TkApplicationWindow.tabula_rasa method was not initializing
+the group_windows list.  After loading a scene the previous groups
+were still resident. 
 
 ---------------------------------------------------------------------- Open 0024
 BUG 0024 2017.05.05

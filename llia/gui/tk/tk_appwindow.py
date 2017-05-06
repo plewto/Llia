@@ -381,6 +381,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def tabula_rasa(self):
         for grp in self.group_windows:
             grp.tabula_rasa()
+        self.group_windows = []
 
     def _interactive_tabula_rasa(self, *_):
         # ISSUE: Check config and ask user confirmation before existing
