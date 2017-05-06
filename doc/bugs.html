@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Bugs">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Bugs</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION bugs **** -->
+        <a id="bugs"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Bugs</h1>
+        <img class="center" src="images/synthcat/bugs.png" alt="" />
+    <a class="navigation" href="addsynth_demo1g.html">Previous(&nbsp;addsynth editor demo&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <hr class="section-head" />
+            <p class="section-body">
+            This page contains an overview of known issues.  It is not comprehensive
+            and only contains bugs which are most likely to cause confusion.   See the
+            file Llia/BUGS for more details.</p>
+            
+            
+            <ul>
+            <li><b>BUG 0017</b> Can not store program to slot 0.<br>
+                          At times a program can not be stored into bank slot 0.
+                          It is unknown exactly when this bug crops up.<br>
+                          <b>Possible Workaround:</b>
+                            <ol><li>Copy program to clipboard.</li>
+                                <li>Select program slot 0.</li>
+                                <li>Paste clipboard</li>
+                                <li>Store pasted program to slot 0.</li>
+                             </ol>
+            
+            <br></li>   
+            
+            <li><b>BUG 0022</b> Restart does not correctly 'forget' previous synths.<br>
+                         <b>Workaround</b>  Exit and restart Llia client.
+            <br>&nbsp;</li>
+            
+            <li><b>BUG 0023</b> Synth group window not being displayed after loading a scene file.<br>
+                        <b>Workaround</b> Open the graph display and double click a synth icon.
+            <br>&nbsp;</li>
+            
+            <li><b>BUG 0025</b> Performance MIDI CC maps are not correctly loaded after being 
+                          saved to a bank or scene file.  There is currently no workaround.
+            <br>&nbsp;</li>
+            
+            <li><b>BUG 0026</b> Graph does not display audio path to output buses. <br>
+            This appears to be strictly a GUI issue and audio output works properly.
+            It is not known exactly when the bug occurs but it first popped up after
+            loading a scene file.
+            <br>&nbsp;</li>
+            </ul>
+            <hr class="section-head" />
+    <a class="navigation" href="addsynth_demo1g.html">Previous(&nbsp;addsynth editor demo&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="synth_catalog.html">Synth Catalog</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>
