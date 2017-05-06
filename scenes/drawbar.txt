@@ -1,0 +1,11 @@
+The drawbar scene is a MASA based organ with RDrum for percussive
+elements. Scanner and Rumklang provide effects.
+
+MIDI CC Maps (but see BUG 0025)
+
+cc 01   -> MASA vibrato depth.
+cc 25   -> MASA amp.
+cc 26   -> Percussive amp.
+cc 27   -> Scanner effects level
+cc 28   -> Reverb effects level.
+
