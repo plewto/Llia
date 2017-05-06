@@ -45,8 +45,6 @@ class LliaProxy(object):
         self._init_audio_buses()
         self._init_control_buses()
         # initialize protected control buses
-       
-        
         # self._buffers = {}
         # for bname in con.PROTECTED_BUFFERS:
         #     bobj = BufferProxy(bname)
@@ -58,8 +56,6 @@ class LliaProxy(object):
         #     bobj["filename"] = ""
         #     bobj["index"] = -1
         #     self._buffers[bname] = bobj
-
-  
             
         self._callback_message = {}
         for rmsg in ("ping-response", 

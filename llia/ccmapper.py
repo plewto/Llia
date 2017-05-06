@@ -127,7 +127,7 @@ class CCMapper(object):
             self[ctrl].update_synths(x, instrument)
         except KeyError:
             pass
-            
+        
     def copy_ccmapper(self, other):
         self.reset()
         for ctrl,pm in other._maps.items():
@@ -197,7 +197,7 @@ class CCMapper(object):
             ccm = CCMapper()
             for ctrl, v in maps.items():
                 sm = SourceMapper.deserialize(v)
-                ccm._maps[ctrl] = sm
+                ccm._maps[int(ctrl)] = sm
             return ccm
         else:
             msg = "Can not read %s as CCMapper" % type(obj)

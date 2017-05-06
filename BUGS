@@ -362,8 +362,9 @@ to operate normally.
 After restarting Llia and reloading the scene I was able to store a program to
 the MASA bank. 
                                                                        
----------------------------------------------------------------------- Open 0025
+---------------------------------------------------------------------- Closed 0025
 BUG 0025 2017.05.06
+CLOSED
 
 Performance CC maps do not survive saving bank data files or scene objects.
 To reproduce:
@@ -376,9 +377,15 @@ To reproduce:
 The CC mapping appears in the listing but has no effect. It is also not
 possible to remove the mapping (at least not from the TK gui dialog).
 
-
 Other Performance values appear to be OK.  Test were made with both
 key-range and velocity maps, both were saved and recalled as expected. 
+
+
+Closed 2017.05.06 
+The CC MIDI dispatch functions expect int controller numbers for map keys.
+When the Performance was saved and reloaed the controller keys where 
+replaced by Strings.  Once locatred it was a simple matter of casting
+the Strings back to int. 
 
 ---------------------------------------------------------------------- Open 0026
 BUG 0026 2017.05.06
@@ -390,4 +397,9 @@ The Mixer is connected to audio buses out_0 and out_1. Yet there are no
 lines on the graph indicating this.  The buses are obviously connected as there
 is audio output.  While mousing over the bus icons there is also no indication
 in the info area that they are connected.   All other bus connections are
-drawn correctly. 
+drawn correctly.
+
+2017.05.06  Using the same scene file as before with a freshly restarted
+Llia, all graph paths were rendered correctly.  However loading a different
+scene file, none of the graph paths were rendered.  Suspect the graph
+system is not being properly initialized by tabula_rasa. 

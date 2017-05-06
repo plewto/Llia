@@ -362,7 +362,6 @@ class ProgramBank(list):
                 "parameters" : self._parameters,
                 "data" : payload}]
         return acc
-                
 
     # New style deserilization
     # ui - User interface

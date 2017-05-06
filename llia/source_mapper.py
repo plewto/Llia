@@ -10,7 +10,7 @@ from zlib import crc32
 from llia.generic import is_source_mapper, is_cc_mapper, dump, clone, hash_
 import llia.constants as constants
 from llia.parameter_map import ParameterMap
-
+import llia.util.trace as trace
 
 _DOMAIN_MAP = {"pitchwheel" : constants.PITCHWHEEL_DOMAIN,
                "velocity" : constants.MIDI_7BIT_DOMAIN,
