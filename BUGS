@@ -358,6 +358,21 @@ to operate normally.
 After restarting Llia and reloading the scene I was able to store a program to
 the MASA bank. 
                                                                        
-								       
-                                                                      
-								      
+---------------------------------------------------------------------- Open 0025
+BUG 0025 2017.05.06
+
+Performance CC maps do not survive saving bank data files or scene objects.
+To reproduce:
+   Create synth
+   Create mapping for MIDI controller, store in bank
+   Save bank file or scene object.
+   Restart Llia
+   Load the above file.
+
+The CC mapping appears in the listing but has no effect. It is also not
+possible to remove the mapping (at least not from the TK gui dialog).
+
+
+Other Performance values appear to be OK.  Test were made with both
+key-range and velocity maps, both were saved and recalled as expected. 
+
