@@ -179,6 +179,13 @@ class TkSubEditor(Frame):
         s.layout((x,y),height=height,checkbutton_offset=checkbutton)
         return s
 
+    def third_octave_slider(self,param,x,y,height=150):
+        s = cf.third_octave_slider(self.canvas,param,self.parent)
+        s.widget().place(x=x,y=y,height=height)
+        self.add_control(param,s)
+        return s
+
+    
     def volume_slider(self,param,x,y,height=150):
         '''
         Adds volume slider to canvas.  A volume slider is calibrated in 
