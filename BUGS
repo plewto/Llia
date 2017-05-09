@@ -138,7 +138,7 @@ LliaHandler.restart does not free synths
 FIX:
 Added code to reinitialize synths dictionary in LliaHandler.
 
----------------------------------------------------------------------- OPEN 0011 *priority
+---------------------------------------------------------------------- OPEN 0011
 BUG 0011 2016.09.21
 
 
@@ -188,7 +188,7 @@ FIX 2016.11.07
 On sclang Keymode class added call to _set method from setBusParameter.
 
 
----------------------------------------------------------------------- OPEN 0014
+---------------------------------------------------------------------- OPEN 0014 *priority*
 BUG 0014 2016.11.06
 
 

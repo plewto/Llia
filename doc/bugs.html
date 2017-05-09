@@ -32,6 +32,16 @@
             
             
             <ul>
+            
+            <li><b>BUG 0014</b> Poly1 synths not being freed.<br>
+            As notes are played Poly1 creates server-side synth objects on the fly.<br>
+            As notes are released the corresponding synth should be freed once it's envelopes have ended.<br>
+            This is not always happening, at times a synth is never freed.  Eventually these build<br>
+            up causing performance problems with the SC server.<br>
+            Currently it is not know exactly why these synths are never freed.<br> <br></li>
+            
+            
+            
             <li><b>BUG 0017</b> Can not store program to slot 0.<br>
                           At times a program can not be stored into bank slot 0.
                           It is unknown exactly when this bug crops up.<br>
