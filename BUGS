@@ -188,7 +188,7 @@ FIX 2016.11.07
 On sclang Keymode class added call to _set method from setBusParameter.
 
 
----------------------------------------------------------------------- OPEN 0014 *priority*
+---------------------------------------------------------------------- Closed 0014 
 BUG 0014 2016.11.06
 
 
@@ -199,6 +199,22 @@ all envelopes have stopped, and for the most part they are.  However some
 synths are not freed, these "zombie" synths gradually build up.  At some
 point audio output is degraded, further along the system as a whole becomes
 sluggish.
+
+FIX 2017.05.11
+
+The sc Poly1 class maintained a flat array of active synths, one slot per
+MIDI note number.  In response to MIDI note-on events, this array was
+checked for any previous synths paying the note note.  If one was found,
+it's gate parameter was set to zero and the synth object disposed.  A new
+synth object was created and placed in the array.  This worked most of the
+time. It always worked whenever there was a gap between the previous note
+and the current note.  It failed a certain percentage of the time when the
+note-on of the new note arrived prior to the note-off of the previous
+note.
+
+The solution was to replace the flat array with an array of LinkedList.
+Note-on events place a new synth at the head of the list for that key
+number.  Note-off events pops synths from the list tail. 
 
 
 ---------------------------------------------------------------------- Closed 0015
