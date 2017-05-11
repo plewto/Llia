@@ -736,15 +736,15 @@
                     [
                         "llia.Program", 
                         "Mixer", 
-                        "Aeoline", 
-                        "\n\n\n\n\n\n\n\n\n\n", 
+                        "Dulciana 8", 
+                        "\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.03162277660168379, 
-                        0.03548133892335755, 
+                        0.06309573444801933, 
+                        0.0707945784384138, 
                         1.0, 
                         0.0, 
-                        0.0, 
-                        0.0, 
+                        0.5011872336272722, 
+                        0.44668359215096315, 
                         0.0, 
                         0.0, 
                         0.0, 
@@ -6262,14 +6262,14 @@
                         "llia.Program", 
                         "Mixer", 
                         "Jimmy Smith", 
-                        "\n\n\n\n\n\n\n\n", 
+                        "\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.0707945784384138, 
-                        0.0707945784384138, 
+                        0.06309573444801933, 
+                        0.05623413251903491, 
                         1.0, 
                         0.5623413251903491, 
                         0.5623413251903491, 
-                        0.251188643150958, 
+                        0.28183829312644537, 
                         0.0, 
                         0.0, 
                         0.0, 
@@ -6483,14 +6483,14 @@
                         "llia.Program", 
                         "Mixer", 
                         "Bro Jack", 
-                        "\n\n\n\n\n\n\n\n\n", 
+                        "\n\n\n\n\n\n\n\n\n\n", 
                         18, 
                         0.03548133892335755, 
                         0.03548133892335755, 
                         0.7079457843841379, 
                         1.0, 
                         0.5623413251903491, 
-                        0.251188643150958, 
+                        0.7079457843841379, 
                         0.0, 
                         0.0, 
                         0.0, 
@@ -9577,231 +9577,10 @@
                         "llia.Program", 
                         "Mixer", 
                         "Basic Wave", 
-                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
-                        18, 
-                        0.05623413251903491, 
-                        0.06309573444801933, 
-                        1.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
-                        [
-                            "llia.Performance", 
-                            [
-                                0, 
-                                [
-                                    0, 
-                                    127
-                                ], 
-                                200, 
-                                "detune", 
-                                [
-                                    "llia.SourceMapper", 
-                                    [
-                                        "velocity", 
-                                        [
-                                            0, 
-                                            127
-                                        ], 
-                                        0
-                                    ]
-                                ], 
-                                [
-                                    "llia.SourceMapper", 
-                                    [
-                                        "aftertouch", 
-                                        [
-                                            0, 
-                                            127
-                                        ], 
-                                        0
-                                    ]
-                                ], 
-                                [
-                                    "llia.SourceMapper", 
-                                    [
-                                        "pitchwheel", 
-                                        [
-                                            -8192, 
-                                            8191
-                                        ], 
-                                        0
-                                    ]
-                                ], 
-                                [
-                                    "llia.SourceMapper", 
-                                    [
-                                        "keynumber", 
-                                        [
-                                            0, 
-                                            127
-                                        ], 
-                                        0
-                                    ]
-                                ], 
-                                [
-                                    "llia.CCMapper", 
-                                    [
-                                        [
-                                            0, 
-                                            127
-                                        ], 
-                                        4
-                                    ], 
-                                    {
-                                        "25": [
-                                            "llia.SourceMapper", 
-                                            [
-                                                "cc-25", 
-                                                [
-                                                    0, 
-                                                    127
-                                                ], 
-                                                1
-                                            ], 
-                                            [
-                                                "llia.ParameterMap", 
-                                                [
-                                                    "cc-25", 
-                                                    "gainA", 
-                                                    "linear", 
-                                                    1.0, 
-                                                    [
-                                                        0, 
-                                                        127
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ]
-                                                ]
-                                            ]
-                                        ], 
-                                        "26": [
-                                            "llia.SourceMapper", 
-                                            [
-                                                "cc-26", 
-                                                [
-                                                    0, 
-                                                    127
-                                                ], 
-                                                1
-                                            ], 
-                                            [
-                                                "llia.ParameterMap", 
-                                                [
-                                                    "cc-26", 
-                                                    "gainB", 
-                                                    "linear", 
-                                                    1.0, 
-                                                    [
-                                                        0, 
-                                                        127
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ]
-                                                ]
-                                            ]
-                                        ], 
-                                        "27": [
-                                            "llia.SourceMapper", 
-                                            [
-                                                "cc-27", 
-                                                [
-                                                    0, 
-                                                    127
-                                                ], 
-                                                1
-                                            ], 
-                                            [
-                                                "llia.ParameterMap", 
-                                                [
-                                                    "cc-27", 
-                                                    "gainB", 
-                                                    "linear", 
-                                                    1.0, 
-                                                    [
-                                                        0, 
-                                                        127
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ]
-                                                ]
-                                            ]
-                                        ], 
-                                        "28": [
-                                            "llia.SourceMapper", 
-                                            [
-                                                "cc-28", 
-                                                [
-                                                    0, 
-                                                    127
-                                                ], 
-                                                1
-                                            ], 
-                                            [
-                                                "llia.ParameterMap", 
-                                                [
-                                                    "cc-28", 
-                                                    "gainB", 
-                                                    "linear", 
-                                                    1.0, 
-                                                    [
-                                                        0, 
-                                                        127
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ], 
-                                                    [
-                                                        0.0, 
-                                                        2.0
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    }
-                                ]
-                            ]
-                        ]
-                    ], 
-                    [
-                        "llia.Program", 
-                        "Mixer", 
-                        "Basic Wave", 
                         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.06309573444801933, 
-                        0.0707945784384138, 
+                        0.35481338923357547, 
+                        0.31622776601683794, 
                         1.0, 
                         0.0, 
                         0.0, 
@@ -10021,8 +9800,229 @@
                         "Basic Wave", 
                         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.05623413251903491, 
-                        0.05623413251903491, 
+                        0.35481338923357547, 
+                        0.31622776601683794, 
+                        1.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        [
+                            "llia.Performance", 
+                            [
+                                0, 
+                                [
+                                    0, 
+                                    127
+                                ], 
+                                200, 
+                                "detune", 
+                                [
+                                    "llia.SourceMapper", 
+                                    [
+                                        "velocity", 
+                                        [
+                                            0, 
+                                            127
+                                        ], 
+                                        0
+                                    ]
+                                ], 
+                                [
+                                    "llia.SourceMapper", 
+                                    [
+                                        "aftertouch", 
+                                        [
+                                            0, 
+                                            127
+                                        ], 
+                                        0
+                                    ]
+                                ], 
+                                [
+                                    "llia.SourceMapper", 
+                                    [
+                                        "pitchwheel", 
+                                        [
+                                            -8192, 
+                                            8191
+                                        ], 
+                                        0
+                                    ]
+                                ], 
+                                [
+                                    "llia.SourceMapper", 
+                                    [
+                                        "keynumber", 
+                                        [
+                                            0, 
+                                            127
+                                        ], 
+                                        0
+                                    ]
+                                ], 
+                                [
+                                    "llia.CCMapper", 
+                                    [
+                                        [
+                                            0, 
+                                            127
+                                        ], 
+                                        4
+                                    ], 
+                                    {
+                                        "25": [
+                                            "llia.SourceMapper", 
+                                            [
+                                                "cc-25", 
+                                                [
+                                                    0, 
+                                                    127
+                                                ], 
+                                                1
+                                            ], 
+                                            [
+                                                "llia.ParameterMap", 
+                                                [
+                                                    "cc-25", 
+                                                    "gainA", 
+                                                    "linear", 
+                                                    1.0, 
+                                                    [
+                                                        0, 
+                                                        127
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ]
+                                                ]
+                                            ]
+                                        ], 
+                                        "26": [
+                                            "llia.SourceMapper", 
+                                            [
+                                                "cc-26", 
+                                                [
+                                                    0, 
+                                                    127
+                                                ], 
+                                                1
+                                            ], 
+                                            [
+                                                "llia.ParameterMap", 
+                                                [
+                                                    "cc-26", 
+                                                    "gainB", 
+                                                    "linear", 
+                                                    1.0, 
+                                                    [
+                                                        0, 
+                                                        127
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ]
+                                                ]
+                                            ]
+                                        ], 
+                                        "27": [
+                                            "llia.SourceMapper", 
+                                            [
+                                                "cc-27", 
+                                                [
+                                                    0, 
+                                                    127
+                                                ], 
+                                                1
+                                            ], 
+                                            [
+                                                "llia.ParameterMap", 
+                                                [
+                                                    "cc-27", 
+                                                    "gainB", 
+                                                    "linear", 
+                                                    1.0, 
+                                                    [
+                                                        0, 
+                                                        127
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ]
+                                                ]
+                                            ]
+                                        ], 
+                                        "28": [
+                                            "llia.SourceMapper", 
+                                            [
+                                                "cc-28", 
+                                                [
+                                                    0, 
+                                                    127
+                                                ], 
+                                                1
+                                            ], 
+                                            [
+                                                "llia.ParameterMap", 
+                                                [
+                                                    "cc-28", 
+                                                    "gainB", 
+                                                    "linear", 
+                                                    1.0, 
+                                                    [
+                                                        0, 
+                                                        127
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ], 
+                                                    [
+                                                        0.0, 
+                                                        2.0
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ]
+                    ], 
+                    [
+                        "llia.Program", 
+                        "Mixer", 
+                        "Basic Wave", 
+                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
+                        18, 
+                        0.35481338923357547, 
+                        0.31622776601683794, 
                         1.0, 
                         0.0, 
                         0.0, 
@@ -10463,8 +10463,8 @@
                         "Basic Wave", 
                         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.05623413251903491, 
-                        0.05623413251903491, 
+                        0.35481338923357547, 
+                        0.31622776601683794, 
                         1.0, 
                         0.0, 
                         0.0, 
@@ -10684,8 +10684,8 @@
                         "Basic Wave", 
                         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.06309573444801933, 
-                        0.06309573444801933, 
+                        0.35481338923357547, 
+                        0.31622776601683794, 
                         1.0, 
                         0.0, 
                         0.0, 
@@ -10905,8 +10905,8 @@
                         "Basic Wave", 
                         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.06309573444801933, 
-                        0.06309573444801933, 
+                        0.35481338923357547, 
+                        0.31622776601683794, 
                         1.0, 
                         0.0, 
                         0.0, 
@@ -11124,10 +11124,10 @@
                         "llia.Program", 
                         "Mixer", 
                         "Basic Wave", 
-                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
+                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.0707945784384138, 
-                        0.06309573444801933, 
+                        0.35481338923357547, 
+                        0.31622776601683794, 
                         1.0, 
                         0.0, 
                         0.0, 
@@ -11344,15 +11344,15 @@
                     [
                         "llia.Program", 
                         "Mixer", 
-                        "Basic Wave", 
-                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
+                        "8 + 1 ft", 
+                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         18, 
-                        0.0707945784384138, 
-                        0.06309573444801933, 
+                        0.35481338923357547, 
+                        0.35481338923357547, 
                         1.0, 
-                        0.0, 
-                        0.0, 
-                        0.0, 
+                        0.28183829312644537, 
+                        0.5623413251903491, 
+                        0.0707945784384138, 
                         0.0, 
                         0.0, 
                         0.0, 
@@ -16931,15 +16931,15 @@
                     [
                         "llia.Program", 
                         "<class 'llia.synths.scanner.scanner_data.Scanner'>", 
-                        "1 Hz Phasor", 
-                        "\n\n\n", 
+                        "Light Vibrato", 
+                        "\n\n\n\n\n\n\n\n\n", 
                         10, 
-                        0.01, 
+                        0.013000000000000001, 
                         0.0, 
-                        -0.3366, 
-                        16000.0, 
-                        0.0, 
-                        1.0, 
+                        -0.4455, 
+                        11215.131210000001, 
+                        0.04020100502512563, 
+                        6.0, 
                         0.49748743718592964, 
                         1.0, 
                         0.0, 
@@ -20963,18 +20963,18 @@
                     [
                         "llia.Program", 
                         "<class 'llia.synths.scanner.scanner_data.Scanner'>", 
-                        "Light Vibrato", 
-                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
+                        "Very Slow", 
+                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         10, 
-                        0.013000000000000001, 
+                        0.0125, 
                         0.0, 
-                        -0.4455, 
-                        11215.131210000001, 
-                        0.04020100502512563, 
-                        6.0, 
+                        0.7226999999999999, 
+                        8957.45041, 
+                        0.8190954773869347, 
+                        0.11, 
                         0.49748743718592964, 
                         1.0, 
-                        0.0, 
+                        1.0, 
                         0.0, 
                         [
                             "llia.Performance", 
@@ -27123,18 +27123,18 @@
                     [
                         "llia.Program", 
                         "MASA", 
-                        "Aeoline", 
-                        "\n\n\n", 
+                        "Dulciana 8", 
+                        "\n\n\n\n", 
                         38, 
                         0.0, 
                         0.0, 
-                        0.5175879396984925, 
                         1.0, 
                         1.0, 
-                        1.0, 
-                        1.0, 
-                        1.0, 
-                        0.5175879396984925, 
+                        0.7989949748743719, 
+                        0.5025125628140703, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
                         1.0, 
                         0.010000000000000002, 
                         0.20000000000003762, 
@@ -30748,18 +30748,18 @@
                     [
                         "llia.Program", 
                         "MASA", 
-                        "Aeoline", 
-                        "\n\n\n", 
+                        "Jimmy Smith", 
+                        "\n\n\n\n", 
                         38, 
+                        1.0, 
+                        1.0, 
+                        1.0, 
                         0.0, 
                         0.0, 
-                        0.5175879396984925, 
-                        1.0, 
-                        1.0, 
-                        1.0, 
-                        1.0, 
-                        1.0, 
-                        0.5175879396984925, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
+                        0.0, 
                         1.0, 
                         0.010000000000000002, 
                         0.20000000000003762, 
@@ -30776,7 +30776,7 @@
                         0.0, 
                         6.919200000000001, 
                         0.0, 
-                        0.12562814070351758, 
+                        0.12060301507537688, 
                         0.0, 
                         0.0, 
                         0.0, 
@@ -34084,7 +34084,7 @@
                         "llia.Program", 
                         "MASA", 
                         "8 + 1 Ft", 
-                        "\n", 
+                        "\n\n", 
                         38, 
                         0.02512562814070352, 
                         0.0, 
@@ -34095,7 +34095,7 @@
                         0.0, 
                         0.0, 
                         0.914572864321608, 
-                        0.11220184543019636, 
+                        0.12589254117941673, 
                         0.01, 
                         0.2, 
                         0.0, 
@@ -34107,11 +34107,11 @@
                         0.0, 
                         0.0, 
                         0.0, 
-                        0.0, 
-                        0.0, 
+                        0.78, 
+                        0.2914572864321608, 
                         5.0, 
                         0.0, 
-                        0.01, 
+                        0.07035175879396985, 
                         0.0, 
                         0.0, 
                         0.0, 
@@ -40316,13 +40316,13 @@
                     [
                         "llia.Program", 
                         "Rdrum", 
-                        "1 Ft Perc", 
-                        "\n\n\n\n\n\n\n\n\n\n\n\n", 
+                        "1 Ft Perc2", 
+                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 
                         23, 
                         1.0, 
                         0.0009999999999996234, 
                         -0.005025125628140725, 
-                        2.0, 
+                        0.5120957500000001, 
                         8.0, 
                         0.0, 
                         1.0, 
@@ -41262,11 +41262,11 @@
     }, 
     "current_slots": {
         "ASplit_3": 0, 
-        "Mixer_0": 68, 
-        "Scanner_2": 55, 
-        "Rumklang_1": 56, 
-        "MASA_4": 56, 
-        "RDrum_5": 56
+        "Mixer_0": 27, 
+        "Scanner_2": 27, 
+        "Rumklang_1": 27, 
+        "MASA_4": 27, 
+        "RDrum_5": 27
     }, 
     "bank_locks": {
         "ASplit_3": true, 
@@ -41276,5 +41276,5 @@
         "MASA_4": false, 
         "RDrum_5": false
     }, 
-    "script": "# LLia Scene\n# Version (0, 1, 3, 'Beta', '2017.03.23')\n\nfrom __future__ import print_function\n\n# MIDI Channel Assignments\n\n# MIDI Controller Assignments\ncontroller_name(1, \"ModWheel\", silent=True)\ncontroller_name(2, \"Breath\", silent=True)\ncontroller_name(4, \"Pedal\", silent=True)\ncontroller_name(7, \"Volume\", silent=True)\ncontroller_name(21, \"LK1\", silent=True)\ncontroller_name(22, \"LK2\", silent=True)\ncontroller_name(23, \"LK3\", silent=True)\ncontroller_name(24, \"LK4\", silent=True)\ncontroller_name(25, \"LK5\", silent=True)\ncontroller_name(26, \"LK6\", silent=True)\ncontroller_name(27, \"LK7\", silent=True)\ncontroller_name(28, \"LK8\", silent=True)\n\n# Audio buses\nabus(\"A1\")\nabus(\"A0\")\nabus(\"A3\")\nabus(\"A2\")\nabus(\"A5\")\nabus(\"A4\")\nabus(\"A7\")\nabus(\"A6\")\n\n# Control buses\n\n# Buffers\n\n# Synths\ngroup(\"Group_0\")\nefx(\"Mixer\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(1,silent=True)\ncreate_editor()\nset_annotation(\"IN_D\",\"Reverb\")\nset_annotation(\"IN_A\",\"Masa\")\nset_annotation(\"IN_B\",\"Perc\")\nset_annotation(\"IN_C\",\"Scanner\")\nset_annotation(\"OUT_1\",\"Out 1\")\nset_annotation(\"OUT_2\",\"Out 2\")\nefx(\"Rumklang\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(1,silent=True)\ncreate_editor()\nefx(\"Scanner\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(1,silent=True)\ncreate_editor()\nefx(\"ASplit\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(1,silent=True)\ncreate_editor()\nset_annotation(\"OUT_D\",\"\")\nset_annotation(\"MAIN\",\"MAIN\")\nset_annotation(\"OUT_A\",\"\")\nset_annotation(\"OUT_B\",\"\")\nset_annotation(\"OUT_C\",\"\")\nsynth(\"MASA\",\"Poly1\",8)\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(1,silent=True)\ncreate_editor()\nsynth(\"RDrum\",\"PolyN\",6)\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(1,silent=True)\ncreate_editor()\n\n# Audio bus assignments\nassign_audio_output(\"outbusA\",\"A4\",\"ASplit_3\")\nassign_audio_output(\"outbusB\",\"A5\",\"ASplit_3\")\nassign_audio_output(\"outbusC\",\"A3\",\"ASplit_3\")\nassign_audio_output(\"outbusD\",\"A2\",\"ASplit_3\")\nassign_audio_output(\"outbus1\",\"out_0\",\"Mixer_0\")\nassign_audio_output(\"outbus2\",\"out_1\",\"Mixer_0\")\nassign_audio_output(\"outbus1\",\"A1\",\"Scanner_2\")\nassign_audio_output(\"outbus2\",\"A1\",\"Scanner_2\")\nassign_audio_output(\"outbus\",\"A7\",\"RDrum_5\")\nassign_audio_output(\"outbus\",\"A6\",\"MASA_4\")\nassign_audio_output(\"outbus1\",\"A0\",\"Rumklang_1\")\nassign_audio_output(\"outbus2\",\"A0\",\"Rumklang_1\")\nassign_audio_input(\"inbus\",\"A6\",\"ASplit_3\")\nassign_audio_input(\"inbusA\",\"A4\",\"Mixer_0\")\nassign_audio_input(\"inbusB\",\"A7\",\"Mixer_0\")\nassign_audio_input(\"inbusC\",\"A1\",\"Mixer_0\")\nassign_audio_input(\"inbusD\",\"A0\",\"Mixer_0\")\nassign_audio_input(\"inbus\",\"A3\",\"Scanner_2\")\nassign_audio_input(\"inbus\",\"A2\",\"Rumklang_1\")\n\n# Control bus assignments\nassign_control_output(\"lfobus\",\"null_source\",\"Scanner_2\")\nassign_control_input(\"xbus\",\"null_sink\",\"Mixer_0\")\nassign_control_input(\"xbus\",\"null_sink\",\"Scanner_2\")\nassign_control_input(\"xbus\",\"null_sink\",\"MASA_4\")\nassign_control_input(\"xbus\",\"null_sink\",\"Rumklang_1\")\n# Buffer Assignments\n\n# Create graph\ngraph_sync()\ngraph_move_token(\"ASplit_3\",217,102,sync=False)\ngraph_move_token(\"Mixer_0\",935,94,sync=False)\ngraph_move_token(\"Scanner_2\",485,164,sync=False)\ngraph_move_token(\"Rumklang_1\",485,322,sync=False)\ngraph_move_token(\"MASA_4\",56,104,sync=False)\ngraph_move_token(\"RDrum_5\",739,49,sync=False)\ngraph_move_token(\"in_2\",30,300,sync=False)\ngraph_move_token(\"in_3\",30,340,sync=False)\ngraph_move_token(\"A1\",572,155,sync=False)\ngraph_move_token(\"A0\",550,248,sync=False)\ngraph_move_token(\"A3\",315,128,sync=False)\ngraph_move_token(\"A2\",315,168,sync=False)\ngraph_move_token(\"A5\",235,147,sync=False)\ngraph_move_token(\"A4\",317,92,sync=False)\ngraph_move_token(\"A7\",803,29,sync=False)\ngraph_move_token(\"A6\",160,69,sync=False)\ngraph_move_token(\"out_4\",176,322,sync=False)\ngraph_move_token(\"out_5\",166,352,sync=False)\ngraph_move_token(\"out_6\",156,403,sync=False)\ngraph_move_token(\"out_7\",158,433,sync=False)\ngraph_move_token(\"in_0\",30,380,sync=False)\ngraph_move_token(\"in_1\",30,420,sync=False)\ngraph_move_token(\"out_2\",157,472,sync=False)\ngraph_move_token(\"out_3\",143,510,sync=False)\ngraph_move_token(\"in_4\",30,460,sync=False)\ngraph_move_token(\"in_5\",30,500,sync=False)\ngraph_move_token(\"in_6\",30,540,sync=False)\ngraph_move_token(\"in_7\",30,580,sync=False)\ngraph_move_token(\"out_0\",1040,97,sync=False)\ngraph_move_token(\"out_1\",1059,148,sync=False)\ngraph_move_token(\"null_one\",300,300,sync=False)\ngraph_move_token(\"null_source\",300,340,sync=False)\ngraph_move_token(\"null_sink\",300,380,sync=False)\ngraph_move_token(\"null_zero\",300,420,sync=False)\ngraph_sync()\nshow_group(\"ALL\")\n"
+    "script": "# LLia Scene\n# Version (0, 1, 3, 'Beta', '2017.03.23')\n\nfrom __future__ import print_function\n\n# MIDI Channel Assignments\n\n# MIDI Controller Assignments\ncontroller_name(1, \"ModWheel\", silent=True)\ncontroller_name(2, \"Breath\", silent=True)\ncontroller_name(4, \"Pedal\", silent=True)\ncontroller_name(7, \"Volume\", silent=True)\ncontroller_name(21, \"LK1\", silent=True)\ncontroller_name(22, \"LK2\", silent=True)\ncontroller_name(23, \"LK3\", silent=True)\ncontroller_name(24, \"LK4\", silent=True)\ncontroller_name(25, \"LK5\", silent=True)\ncontroller_name(26, \"LK6\", silent=True)\ncontroller_name(27, \"LK7\", silent=True)\ncontroller_name(28, \"LK8\", silent=True)\n\n# Audio buses\nabus(\"A1\")\nabus(\"A0\")\nabus(\"A3\")\nabus(\"A2\")\nabus(\"A5\")\nabus(\"A4\")\nabus(\"A7\")\nabus(\"A6\")\n\n# Control buses\n\n# Buffers\n\n# Synths\ngroup(\"Group_0\")\nefx(\"Mixer\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(14,silent=True)\ncreate_editor()\nset_annotation(\"IN_D\",\"Reverb\")\nset_annotation(\"IN_A\",\"Masa\")\nset_annotation(\"IN_B\",\"Perc\")\nset_annotation(\"IN_C\",\"Scanner\")\nset_annotation(\"OUT_1\",\"Out 1\")\nset_annotation(\"OUT_2\",\"Out 2\")\nefx(\"Rumklang\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(14,silent=True)\ncreate_editor()\nefx(\"Scanner\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(14,silent=True)\ncreate_editor()\nefx(\"ASplit\")\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(14,silent=True)\ncreate_editor()\nset_annotation(\"OUT_D\",\"\")\nset_annotation(\"MAIN\",\"MAIN\")\nset_annotation(\"OUT_A\",\"\")\nset_annotation(\"OUT_B\",\"\")\nset_annotation(\"OUT_C\",\"\")\nsynth(\"MASA\",\"Poly1\",8)\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(14,silent=True)\ncreate_editor()\nsynth(\"RDrum\",\"PolyN\",6)\nkeytable(\"EQ12\",silent=True)\nmidi_input_channel(14,silent=True)\ncreate_editor()\n\n# Audio bus assignments\nassign_audio_output(\"outbusA\",\"A4\",\"ASplit_3\")\nassign_audio_output(\"outbusB\",\"A5\",\"ASplit_3\")\nassign_audio_output(\"outbusC\",\"A3\",\"ASplit_3\")\nassign_audio_output(\"outbusD\",\"A2\",\"ASplit_3\")\nassign_audio_output(\"outbus1\",\"out_0\",\"Mixer_0\")\nassign_audio_output(\"outbus2\",\"out_1\",\"Mixer_0\")\nassign_audio_output(\"outbus1\",\"A1\",\"Scanner_2\")\nassign_audio_output(\"outbus2\",\"A1\",\"Scanner_2\")\nassign_audio_output(\"outbus\",\"A7\",\"RDrum_5\")\nassign_audio_output(\"outbus\",\"A6\",\"MASA_4\")\nassign_audio_output(\"outbus1\",\"A0\",\"Rumklang_1\")\nassign_audio_output(\"outbus2\",\"A0\",\"Rumklang_1\")\nassign_audio_input(\"inbus\",\"A6\",\"ASplit_3\")\nassign_audio_input(\"inbusA\",\"A4\",\"Mixer_0\")\nassign_audio_input(\"inbusB\",\"A7\",\"Mixer_0\")\nassign_audio_input(\"inbusC\",\"A1\",\"Mixer_0\")\nassign_audio_input(\"inbusD\",\"A0\",\"Mixer_0\")\nassign_audio_input(\"inbus\",\"A3\",\"Scanner_2\")\nassign_audio_input(\"inbus\",\"A2\",\"Rumklang_1\")\n\n# Control bus assignments\nassign_control_output(\"lfobus\",\"null_source\",\"Scanner_2\")\nassign_control_input(\"xbus\",\"null_sink\",\"Mixer_0\")\nassign_control_input(\"xbus\",\"null_sink\",\"Scanner_2\")\nassign_control_input(\"xbus\",\"null_sink\",\"MASA_4\")\nassign_control_input(\"xbus\",\"null_sink\",\"Rumklang_1\")\n# Buffer Assignments\n\n# Create graph\ngraph_sync()\ngraph_move_token(\"ASplit_3\",217,102,sync=False)\ngraph_move_token(\"Mixer_0\",935,94,sync=False)\ngraph_move_token(\"Scanner_2\",485,164,sync=False)\ngraph_move_token(\"Rumklang_1\",485,322,sync=False)\ngraph_move_token(\"MASA_4\",56,104,sync=False)\ngraph_move_token(\"RDrum_5\",739,49,sync=False)\ngraph_move_token(\"out_2\",157,472,sync=False)\ngraph_move_token(\"out_3\",143,510,sync=False)\ngraph_move_token(\"A1\",572,155,sync=False)\ngraph_move_token(\"A0\",550,248,sync=False)\ngraph_move_token(\"A3\",315,128,sync=False)\ngraph_move_token(\"A2\",315,168,sync=False)\ngraph_move_token(\"A5\",235,147,sync=False)\ngraph_move_token(\"A4\",317,92,sync=False)\ngraph_move_token(\"A7\",803,29,sync=False)\ngraph_move_token(\"A6\",160,69,sync=False)\ngraph_move_token(\"in_4\",30,460,sync=False)\ngraph_move_token(\"out_5\",166,352,sync=False)\ngraph_move_token(\"in_6\",30,540,sync=False)\ngraph_move_token(\"in_7\",30,580,sync=False)\ngraph_move_token(\"out_0\",1040,97,sync=False)\ngraph_move_token(\"out_1\",1059,148,sync=False)\ngraph_move_token(\"in_2\",30,300,sync=False)\ngraph_move_token(\"in_3\",30,340,sync=False)\ngraph_move_token(\"out_4\",176,322,sync=False)\ngraph_move_token(\"in_5\",30,500,sync=False)\ngraph_move_token(\"out_6\",156,403,sync=False)\ngraph_move_token(\"out_7\",158,433,sync=False)\ngraph_move_token(\"in_0\",30,380,sync=False)\ngraph_move_token(\"in_1\",30,420,sync=False)\ngraph_move_token(\"null_one\",300,300,sync=False)\ngraph_move_token(\"null_source\",300,340,sync=False)\ngraph_move_token(\"null_sink\",300,380,sync=False)\ngraph_move_token(\"null_zero\",300,420,sync=False)\ngraph_sync()\nshow_group(\"ALL\")\n"
 }
