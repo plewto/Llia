@@ -77,15 +77,15 @@ scanner(1,"Phasor 1",
         xmodDepth = 0.0000)
 
 scanner(2,"Vibrato",
-        scanRate = 7.9590,
-        wave = 0.5000,
-        delay = 0.0090,
-        modDepth = 0.3065,
-        feedback = -0.0198,
+        scanRate = 6.000,
+        wave = 0.5,
+        delay = 0.5090,
+        modDepth = 0.1,
+        feedback = -0.70,
         lowpass = 8000,
         dryMix = 1.0000,
-        wet1Mix = 0.7079,
-        wet2Mix = 0.7079,
+        wet1Mix = 0.60,
+        wet2Mix = 0.60,
         xmodDepth = 0.0000)
 
 scanner(3,"Slight Mod",

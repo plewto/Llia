@@ -31,7 +31,8 @@ class TkScannerPanel(TkSubEditor):
 
         self.tumbler("scanRate",5,0.001,x_lfo,y_tumbler)
         self.norm_slider("wave",x_wave,y0)
-        self.norm_slider("modDepth",x_depth,y0)
+        #self.norm_slider("modDepth",x_depth,y0)
+        self.exp_slider("modDepth",1.0,x_depth,y0)
         self.norm_slider("xmodDepth",x_xdepth,y0)
         
         # Delay
