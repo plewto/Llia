@@ -24,7 +24,7 @@ class TkSplashWindow(Toplevel):
         self.title("Llia Setup")
         self.maxsize(800,870)
         self.app = app
-        self.config = app.config
+        self.config = app.config()
         main = VFrame(self)
         main.pack(anchor="nw", expand=True, fill=BOTH)
         image = Image.open("resources/logos/llia_logo_medium.png")

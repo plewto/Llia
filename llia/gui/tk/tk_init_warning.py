@@ -15,7 +15,7 @@ import tkMessageBox
 #    without asking. 
 
 def init_warning(msg, app):
-    if app.config.warn_on_initialize():
+    if app.config().warn_on_initialize():
         user = tkMessageBox.askokcancel("Initialize Warning", msg)
         return user
     else:

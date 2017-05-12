@@ -276,9 +276,9 @@ class SynthProxy(object):
         for bs in specs["control-input-buses"]:
             self._control_input_buses[bs[0]] = bs[1]
         self._buffers = {}
-        host_and_port = app.config.host_and_port()
+        host_and_port = app.config().host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
-        trace_osc = app.config.osc_transmission_trace_enabled()
+        trace_osc = app.config().osc_transmission_trace_enabled()
         self.osc_transmitter = OSCTransmitter(self.oscID, 
                                               host_and_port,
                                               trace_osc)
@@ -770,7 +770,7 @@ class SynthProxy(object):
 
         ARGS:
           ctrl - String or int,  either MIDI controller number or assigned
-                 controller name (See app.config.controller_assignments).
+                 controller name (See app.config().controller_assignments).
           param    - Same usage as with add_source_map.
           curve    - Same usage as with add_source_map.
           modifier - Same usage as with add_source_map.

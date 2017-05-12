@@ -16,7 +16,7 @@ class ASplitProxy(SynthProxy):
         self.app = app
         
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.asplit.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -41,5 +41,4 @@ specs["audio-output-buses"] = [["outbusA", "out_0"],
                                ["outbusC", "out_2"],
                                ["outbusD", "out_3"]]
 specs["audio-input-buses"] = [["inbus", "in_1"]]
-print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

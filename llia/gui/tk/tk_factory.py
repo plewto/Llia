@@ -384,7 +384,7 @@ def control_bus_combobox(master, app):
 
 
 def controller_combobox(master, app):
-    values = app.config.formatted_controller_names()
+    values = app.config().formatted_controller_names()
     ttip = "MIDI controllers"
     return combobox(master, values, ttip)
 

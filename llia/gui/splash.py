@@ -18,7 +18,7 @@ class TextSplashScreen(object):
 
     def __init__(self, app):
         self.app = app
-        self.config = app.config
+        self.config = app.config()
         self.main_menu()
         
     def main_menu(self):

@@ -18,7 +18,7 @@ class RdrumProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.rdrum.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -37,5 +37,4 @@ specs["program-generator"] = gen_rdrum_program
 specs["help"] = "rdrum"
 specs["pallet"] = rdrum_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"]]
-print("\t%s" % specs["format"])
 llia.constants.SYNTH_TYPES.append(specs["format"])

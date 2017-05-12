@@ -17,7 +17,7 @@ class ControlmixerProxy(SynthProxy):
         
     def create_subeditors(self):
         pass
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.controlmixer.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -43,5 +43,4 @@ specs["control-input-buses"] = [["inbusA","null_sink"],
                                 ["inbusC","null_sink"],
                                 ["inbusD","null_sink"]]
 specs["control-output-buses"] = [["outbus","null_source"]]
-print("\t%s" % specs["format"])
 llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

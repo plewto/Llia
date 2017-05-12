@@ -16,7 +16,7 @@ class CUtilProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.cutil.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -25,7 +25,6 @@ class CUtilProxy(SynthProxy):
             return parent_editor
             
 cutil_pallet = Pallet(default_pallet)
-
 specs["constructor"] = CUtilProxy
 specs["is-efx"] = False
 specs["is-controller"] = True
@@ -38,5 +37,4 @@ specs["audio-output-buses"] = []
 specs["audio-input-buses"] = []
 specs["control-output-buses"] = [["outbus","null_source"]]
 specs["control-input-buses"] = [["inbus","null_sink"]]
-print("\t%s" % specs["format"])
 llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

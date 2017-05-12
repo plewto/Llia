@@ -7,7 +7,6 @@ from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.envgen.envgen_data import program_bank,pp
 
-
 specs = SynthSpecs("Envgen")
 
 class EnvgenProxy(SynthProxy):
@@ -17,7 +16,7 @@ class EnvgenProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.envgen.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -26,7 +25,6 @@ class EnvgenProxy(SynthProxy):
             return parent_editor
             
 envgen_pallet = Pallet(default_pallet)
-
 specs["constructor"] = EnvgenProxy
 specs["is-efx"] = False
 specs["is-controller"] = True
@@ -40,5 +38,4 @@ specs["audio-input-buses"] = []
 specs["control-output-buses"] = [["outbusA", "null_source"],
                                  ["outbusB", "null_source"]]
 specs["control-input-buses"] = []
-print("\t%s" % specs["format"])
 llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

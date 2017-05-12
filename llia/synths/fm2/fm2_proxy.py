@@ -19,7 +19,7 @@ class FM2Proxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.fm2.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -31,8 +31,6 @@ fm2_pallet = Pallet(default_pallet)
 fm2_pallet["BG"] = BG
 fm2_pallet["SLIDER-TROUGH"] =  SLIDER_TROUGH
 fm2_pallet["SLIDER-OUTLINE"] = SLIDER_OUTLINE
-
-
 specs["constructor"] = FM2Proxy
 specs["description"] = "A 2-Operator FM Synth"
 specs["keymodes"] = ('PolyN','PolyRotate', 'Poly1', 'PolyRotate', 'Mono1', 'MonoExclusive')
@@ -42,5 +40,4 @@ specs["help"] = "FM2"
 specs["pallet"] = fm2_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["control-input-buses"] = [["xbus", "null_sink"]]
-print("\t%s" % specs["format"])
 llia.constants.SYNTH_TYPES.append(specs["format"])

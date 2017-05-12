@@ -16,7 +16,7 @@ class RumklangProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.rumklang.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -25,8 +25,6 @@ class RumklangProxy(SynthProxy):
             return parent_editor
             
 rumklang_pallet = Pallet(default_pallet)        
-
-
 specs["constructor"] = RumklangProxy
 specs["is-efx"] = True
 specs["description"] = "Stereo Reverb Effect"
@@ -35,10 +33,8 @@ specs["pretty-printer"] = pp
 #specs["program-generator"] = gen_rumklang_program
 specs["help"] = "rumklang"
 specs["pallet"] = rumklang_pallet
-
 specs["audio-input-buses"] = [["inbus", "in_0"]]
 specs["audio-output-buses"] = [["outbus1","out_0"],
                                ["outbus2","out_1"]]
 specs["control-input-buses"] = [["xbus","null_sink"]]
-print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

@@ -34,7 +34,7 @@ class Parser(object):
     def __init__(self, app):
         self.app = app
         self.proxy = app.proxy
-        self.config = app.config
+        self.config = app.config()
         self.exit_repl = False
         self._prompt = "Llia> "
         self.entities = {}

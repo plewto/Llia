@@ -9,7 +9,6 @@ from llia.synths.io.io_data import program_bank  #,pp,io_random
 from llia.synths.io.io_pp import pp_io
 from llia.synths.io.io_random import io_random
 
-
 specs = SynthSpecs("Io")
 
 class IoProxy(SynthProxy):
@@ -19,7 +18,7 @@ class IoProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.io.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -42,5 +41,4 @@ specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = []
 specs["control-output-buses"] = [["xbus", "null_sink"]]
 specs["control-input-buses"] = []
-print("\t%s" % specs["format"])
 llia.constants.SYNTH_TYPES.append(specs["format"])

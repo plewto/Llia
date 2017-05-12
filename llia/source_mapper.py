@@ -151,7 +151,7 @@ class SourceMapper(object):
           x - int, The source value
           instrument - An instance of Instrument
         """
-        active_update = instrument.app.config.active_updates_enabled()
+        active_update = instrument.app.config().active_updates_enabled()
         for pm in self._maps.values():
             value = pm.map_value(x)
             param = pm.parameter

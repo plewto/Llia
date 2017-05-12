@@ -31,7 +31,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         self.root.config(background=factory.bg())
         super(TkApplicationWindow, self).__init__(app, self.root)
         self.root.withdraw()
-        if app.config["enable-splash"]:
+        if app.config()["enable-splash"]:
             splash = TkSplashWindow(self.root, app)
         self.root.deiconify()
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)

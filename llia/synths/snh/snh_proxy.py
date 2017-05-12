@@ -17,18 +17,16 @@ class SnHProxy(SynthProxy):
         
     def create_subeditors(self):
         pass
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.snh.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
-            
 
 snh_pallet = Pallet(default_pallet)
 snh_pallet["SLIDER-TROUGH"] = "#070064"
 snh_pallet["SLIDER-OUTLINE"] = "#63002b"
-
 specs["constructor"] = SnHProxy
 specs["is-efx"] = True
 specs["is-controller"] = True
@@ -38,12 +36,10 @@ specs["pretty-printer"] = pp
 specs["program-generator"] = random_snh
 specs["help"] = "SnH"
 specs["pallet"] = snh_pallet
-
 specs["control-output-buses"] = [["outbus", "null_source"],
                                  ["sawbus", "null_source"],
                                  ["noisebus","null_source"],
                                  ["clockoutbus", "null_source"]]
 specs["control-input-buses"] = [["clockbus", "null_sink"],
                                 ["xbus", "null_sink"]]
-print("\t%s" % specs["format"])
 llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

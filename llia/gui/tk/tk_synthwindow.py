@@ -263,7 +263,7 @@ class TkSynthWindow(Frame):
 
     def sync_performance_tab(self):
         self.list_channel.delete(0, "end")
-        for c in self.app.config.channel_assignments.formatted_list():
+        for c in self.app.config().channel_assignments.formatted_list():
             self.list_channel.insert("end", c)
         mic = self.synth.midi_input_channel()-1
         self.list_channel.selection_set(mic)

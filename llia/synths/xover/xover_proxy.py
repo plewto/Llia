@@ -17,7 +17,7 @@ class XOverProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.xover.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -28,7 +28,6 @@ xover_pallet = Pallet(default_pallet)
 xover_pallet["BG"] = "#131313"
 xover_pallet["SLIDER-TROUGH"] = "#0a1414"
 xover_pallet["SLIDER-OUTLINE"] = "#3d1e29"
-
 specs["constructor"] = XOverProxy
 specs["description"] = "Crossover Filter Effect"
 specs["keymodes"] = ("EFX",)
@@ -44,7 +43,4 @@ specs["control-output-buses"] = [["lfo1aOutbus", "null_source"],
                                  ["lfo1bOutbus", "null_source"],
                                  ["lfo2Outbus", "null_source"]]
 specs["control-input-buses"] = [["xbus", "null_sink"]]
-
-                               
-print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

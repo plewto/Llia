@@ -17,7 +17,7 @@ class MasaProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             pass
             from llia.synths.masa.tk.editor import create_editor
@@ -36,5 +36,4 @@ specs["pallet"] = masa_pallet
 specs["help"] = "masa"
 specs["audio-output-buses"] = [["outbus","out_0"]]
 specs["control-input-buses"] = [["xbus","null_sink"]]
-print("\t%s" % specs["format"])
 llia.constants.SYNTH_TYPES.append(specs["format"])

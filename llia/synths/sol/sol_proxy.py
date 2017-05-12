@@ -17,7 +17,7 @@ class SolProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.sol.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -38,9 +38,12 @@ specs["pallet"] = pallet
 specs["is-efx"] = False
 specs["is-controller"] = False
 specs["keymodes"] = ("PolyN","PolyRotate","Poly1","Mono1","MonoExclusive")
-specs["audio-output-buses"] = [["outbus","out_0"],["xout","out_2"],["yout","out_2"]]
+specs["audio-output-buses"] = [["outbus","out_0"],
+                               ["xout","out_2"],
+                               ["yout","out_2"]]
 specs["audio-input-buses"] = []
 specs["control-output-buses"] = []
-specs["control-input-buses"] = [["vxbus","null_sink"],["vybus","null_sink"],["ctrlbus","null_sink"]]
-print("\t%s" % specs["format"])
+specs["control-input-buses"] = [["vxbus","null_sink"],
+                                ["vybus","null_sink"],
+                                ["ctrlbus","null_sink"]]
 llia.constants.SYNTH_TYPES.append(specs["format"])

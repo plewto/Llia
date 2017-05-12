@@ -17,18 +17,16 @@ class CrusherProxy(SynthProxy):
         self.app = app
         
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.crusher.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
 
-
 crusher_pallet = Pallet(default_pallet)
 crusher_pallet["SLIDER-TROUGH"] = "black"
 crusher_pallet["SLIDER-OUTLINE"] = "blue"
-
 specs["constructor"] = CrusherProxy
 specs["is-efx"] = True
 specs["description"] = "Sample degrade & distortion effect"
@@ -39,5 +37,4 @@ specs["help"] = "crusher"
 specs["pallet"] = crusher_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = [["inbus","in_0"]]
-print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

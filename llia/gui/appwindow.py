@@ -45,7 +45,7 @@ class AbstractApplicationWindow(object):
     def __init__(self, app, root):
         self.app = app
         self.root = root
-        self.config = app.config
+        self.config = app.config()
         self._synth_editors = {}  # Active synth editors. synth SID used as key
         
     def __setitem__(self, sid, sed):
@@ -117,7 +117,7 @@ class DummyApplicationWindow(AbstractApplicationWindow):
         
         
 def create_application_window(app):
-    config = app.config
+    config = app.config()
     gui = str(config.gui())
     if gui.upper() == "NONE":
         if str(config["enable-splash"]).upper() != "FALSE":

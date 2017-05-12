@@ -6,7 +6,6 @@ import llia.constants
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.qmod.qmod_data import program_bank,pp
-#from llia.synths.qmod.qmod_random import qmod_random
 
 specs = SynthSpecs("QMod")
 
@@ -17,7 +16,7 @@ class QModProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.qmod.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -40,5 +39,4 @@ specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = [["inbus","in_0"]]
 specs["control-output-buses"] = []
 specs["control-input-buses"] = []
-print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

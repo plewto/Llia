@@ -17,18 +17,16 @@ class GhostbusProxy(SynthProxy):
         
     def create_subeditors(self):
         pass
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.ghostbus.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
-            
 
 ghostbus_pallet = Pallet(default_pallet)
 ghostbus_pallet["SLIDER-TROUGH"] = "#432703"
 ghostbus_pallet["SLIDER-OUTLINE"] = "#42033E"
-
 specs["constructor"] = GhostbusProxy
 specs["description"] = "Reads and modifies control bus values"
 specs["keymodes"] = ("EFX", )
@@ -41,5 +39,4 @@ specs["pallet"] = ghostbus_pallet
 specs["control-input-buses"] = [["inbus","null_sink"],
                                 ["xbus","null_sink"]]
 specs["control-output-buses"] = [["outbus","null_source"]]
-print("\t%s" % specs["format"])
 llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

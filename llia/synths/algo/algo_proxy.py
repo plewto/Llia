@@ -18,7 +18,7 @@ class AlgoProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.algo.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -44,5 +44,4 @@ specs["audio-output-buses"] = [["outbus", "out_0"],
 specs["audio-input-buses"] = []
 specs["control-output-buses"] = []
 specs["control-input-buses"] = [["xbus","null_sink"]]
-print("\t%s" % specs["format"])
 llia.constants.SYNTH_TYPES.append(specs["format"])

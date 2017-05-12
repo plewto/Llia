@@ -16,7 +16,7 @@ class CarnalProxy(SynthProxy):
         self.app = app
         
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.carnal.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -27,7 +27,6 @@ class CarnalProxy(SynthProxy):
 crnl_pallet = Pallet(default_pallet)
 crnl_pallet["SLIDER-TROUGH"] = "#400137"
 crnl_pallet["SLIDER-OUTLINE"] = "#10400A"
-
 specs["constructor"] = CarnalProxy
 specs["is-efx"] = True
 specs["description"] = "An unclean delay"
@@ -36,10 +35,7 @@ specs["pretty-printer"] = pp
 specs["program-generator"] = random_program
 specs["help"] = "carnalDelay"
 specs["pallet"] = crnl_pallet
-
-
 specs["audio-output-buses"] = [["outbus", "out_0"]]
 specs["audio-input-buses"] = [["inbus", "in_0"]]
 specs["control-input-buses"] = [["efxbus","null_sink"],["dlybus", "null_sink"]]
-print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

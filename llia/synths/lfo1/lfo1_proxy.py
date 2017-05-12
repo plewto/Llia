@@ -17,18 +17,16 @@ class Lfo1Proxy(SynthProxy):
         
     def create_subeditors(self):
         pass
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.lfo1.tk.editor import create_editor
             appwin = self.app.main_window()
             parent_editor = appwin[self.sid]
             create_editor(parent_editor)
-            
 
 lfo1_pallet = Pallet(default_pallet)
 lfo1_pallet["SLIDER-TROUGH"] = "#301319"
 lfo1_pallet["SLIDER-OUTLINE"] = "#13302d"
-
 specs["constructor"] = Lfo1Proxy
 specs["description"] = "Simple sine LFO"
 specs["keymodes"] = ("EFX", )
@@ -42,5 +40,4 @@ specs["control-output-buses"] = [["sineout","null_source"],
                                  ["sawout","null_source"],
                                  ["pulseout","null_source"],
                                  ["outbus","null_source"]]
-print("\t%s" % specs["format"])
 llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])

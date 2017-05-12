@@ -15,7 +15,7 @@ class TkControllerNameEditor(Toplevel):
         self.config(background=factory.pallet("DIALOG-BG"))
         self.wm_title = "MIDI Controllers"
         self.app = app
-        self.config = app.config
+        self.config = app.config()
         self.parser = app.ls_parser
         self._current_controller=0
         self._save_backup()

@@ -15,7 +15,7 @@ class TkChannelNameEditor(Toplevel):
         Toplevel.__init__(self, master)
         self.wm_title = "MIDI Channels"
         self.app = app
-        self.config = app.config
+        self.config = app.config()
         self.parser = app.ls_parser
         self._current_index=0
         self._save_backup()

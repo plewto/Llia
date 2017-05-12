@@ -16,7 +16,7 @@ class FlngrProxy(SynthProxy):
         self._editor = None
 
     def create_subeditors(self):
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.flngr.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -40,5 +40,4 @@ specs["audio-input-buses"] = [["inbus", "in_1"]]
 specs["control-input-buses"] = [["delaybus","null_sink"],
                                 ["mixbus","null_sink"]]
 specs["control-output-buses"] = [["lfoOutbus", "null_source"]]
-print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

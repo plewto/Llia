@@ -23,7 +23,7 @@ class LliaApp(object):
                           intended for testing.
         '''
         super(LliaApp, self).__init__()
-        self.config = config
+        self._config = config
         self.pp_enabled = config.program_pp_enabled()
         self.proxy = LliaProxy(config, self)
         self._main_window = create_application_window(self)
@@ -59,13 +59,16 @@ class LliaApp(object):
             self.ls_parser.load_scene(ss)
         if not skip_mainloop:
             self.start_main_loop()
-        
+
+    def config(self):
+        return self._config
+            
     def global_osc_id(self):
         '''
         Returns String, thr global OSC id.   
         The OSC id MUST match between the client and server applications.
         '''
-        return self.config.global_osc_id()
+        return self._config.global_osc_id()
     
     def exit_(self, xcode=0):
         '''
@@ -118,7 +121,7 @@ class LliaApp(object):
         self.exit(errnum)
 
     def start_main_loop(self):
-        if self.config["enable-repl"]:
+        if self._config["enable-repl"]:
             self._repl_thread = threading.Thread(target = self.ls_parser.repl)
             self._repl_thread.start()
         else:

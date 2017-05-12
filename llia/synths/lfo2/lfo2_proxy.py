@@ -18,7 +18,7 @@ class Lfo2Proxy(SynthProxy):
         
     def create_subeditors(self):
         pass
-        gui = self.app.config["gui"].upper()
+        gui = self.app.config()["gui"].upper()
         if gui == "TK":
             from llia.synths.lfo2.tk.editor import create_editor
             appwin = self.app.main_window()
@@ -29,7 +29,6 @@ class Lfo2Proxy(SynthProxy):
 lfo2_pallet = Pallet(default_pallet)
 lfo2_pallet["SLIDER-TROUGH"] = "#432703"
 lfo2_pallet["SLIDER-OUTLINE"] = "#42033E"
-
 specs["constructor"] = Lfo2Proxy
 specs["description"] = "Multi wave LFO"
 specs["keymodes"] = ("EFX", )
@@ -41,5 +40,4 @@ specs["help"] = "LFO2"
 specs["pallet"] = lfo2_pallet
 specs["control-output-buses"] = [["outbusSaw","null_source"],
                                  ["outbusPulse","null_source"]]
-print("\t%s" % specs["format"])
 llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])
