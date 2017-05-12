@@ -42,6 +42,7 @@
                  "snh.scd",
                  "sol.scd",
                  "ss1.scd",
+                 "ss2.scd",
                  "tremolo.scd",
                  "xover.scd"];
 ~llia_manifest.do({|fname|

@@ -4,6 +4,7 @@
 
 print("Importing instrumental synths:")
 import llia.synths.ss1.ss1_proxy    
+import llia.synths.ss2.ss2_proxy
 import llia.synths.saw3.s3_proxy
 import llia.synths.orgn.orgn_proxy
 import llia.synths.masa.masa_proxy
