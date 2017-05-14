@@ -30,7 +30,7 @@ pallet = Pallet(default_pallet)
 #pallet["SLIDER-OUTLINE"] = 
 #pallet["SLIDER-TROUGH"] = 
 specs["constructor"] = SlugProxy
-specs["description"] = "FIXME"
+specs["description"] = "Hybrid synth"
 specs["help"] = "Slug"
 specs["pretty-printer"] = slug_pp
 specs["program-generator"] = slug_random
@@ -38,9 +38,8 @@ specs["pallet"] = pallet
 specs["is-efx"] = False
 specs["is-controller"] = False
 specs["keymodes"] = ("PolyN","PolyRotate","Poly1","Mono1","MonoExclusive")
-specs["audio-output-buses"] = [["outbus","out_0"]] # FIXME
+specs["audio-output-buses"] = [["outbus","out_0"]]
 specs["audio-input-buses"] = []
-specs["control-output-buses"] = []
-specs["control-input-buses"] = []  # FIXME
-print("\t%s" % specs["format"])
+specs["control-output-buses"] = [["xbus","null_sink"]]
+specs["control-input-buses"] = []
 llia.constants.SYNTH_TYPES.append(specs["format"])

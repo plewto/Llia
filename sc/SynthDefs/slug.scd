@@ -1,5 +1,28 @@
 /*
-** Slug
+** Slug is a hybrid instrument with many performance controls.
+**
+** Tone consist of 4 elements:
+**      Filtered pulse.
+**      Pluck (Karplus Strong)
+**      2 FM "stacks"   [modulator]-->[carrier]
+**
+** The pluck signal may frequency modulate any of the FM components.
+**
+** Control signals:
+**      Single LFO with optional noise and onset delay.
+**      2 ADSR envelopes
+**      2 Percussive envelopes.
+**
+** Performance controls:
+**      velocity  --> portamento time
+**                --> ADSR attack times
+** 	              --> pulse filter
+** 		          --> FM modulation depths
+** 	              --> amplitude
+**      key-track --> ADSR attack times
+**                --> pulse filter
+** 		          --> FM modulation depth
+** 		          --> amplitude
 */
 
 (SynthDef (\Slug, {
@@ -15,7 +38,7 @@
 	port = 0.00            // Portemento 0..1
 	velocity_port = 0.00   // Velocity to port time
 	break_key = 60         // MIDI key number
-	amp = 0.333            // Main amplitude
+	amp = 0.100            // Main amplitude
 	// LFO
 	vfreq = 5.00           // Vibrato frequency
 	vdelay = 0.00          // Vibrato onset delay 0..2
@@ -24,7 +47,6 @@
 	vibrato = 0.00         // Vibrato depth 0..1
 	vnoise = 0.00          // Vibrato low freq noise amp 0..1 (noise always delayed)
 	xpitch = 0.00          // xbus -> pitch 0..1
-
 	// Env 1 (modulation)
 	env_mode = 0           // Common envelope mode. 0=gate, 1=trig.
 	env1_attack = 0.01     // 0..4
@@ -42,7 +64,6 @@
 	env2_velocity_attack = 0
 	env2_key_attack = 0
 	penv2_decay = 1.00
-
 	// Pulse tone
 	pulse_ratio = 1.00           // >0 (tune)
 	pulse_width = 0.5            // 0..1
@@ -60,25 +81,19 @@
 	pulse_amp_env = 1.00         // cross mix env2 and penv2,  0=env2, 1=penv2
 	pulse_amp = 1.00
 	pulse_enable = 1             // 0=off, 1=on
-
 	// Karplus Strong tone
 	pluck_ratio = 1.00           // >0 (tune)
 	pluck_decay = 3.00           // >0
 	pluck_harmonic = 1           // (1,2,3,...,16?)
-	pluck_width = 0.5            // 0|1  0=50%  1=75%
+	pluck_width = 1              // 0|1  0=50%  1=75%
 	pluck_excite = 0.0           // Excitation signal 0=pulse, 1=white noise
-	pluck_mute = 0.5             // 0..1
+	pluck_damp = 0.5             // 0..1
 	pluck_velocity = 0.00        // 0..1 velocity -> pluck amp
 	pluck_left_scale = 0         // left key scale in db/oct
 	pluck_right_scale = 0        // right key scale in db/oct
 	pluck_amp = 1.00             // 0..2
     pluck_enable = 1             // 0=off, 1=on
-
-	/*
-	**  FM pair 1
-	**  [pluck]---+--->[mod1]---+--->[car1]---> out
-	**            +-------------+
-	*/
+    // FM 1
 	car1_ratio = 0.5             // 0 <= ratio <= 16
 	car1_bias = 0                // 0 <= bias <= 999  in Hz.
 	car1_velocity = 0.0          // velocity -> car1 amp
@@ -90,6 +105,7 @@
 	car1_mod_pluck = 0.0         // FM depth pluck -> car1
 	car1_amp_env = 0.00          // main amp env cross mix, 0=env2, 1=penv2
 	car1_enable = 1              // 0=off, 1=on
+	car1_amp = 1.00              // 0..2
 	mod1_ratio = 0.5             // 0 < ratio <= 16
 	mod1_mod_pluck = 0.0         // 0..1 pluck -> mod1 FM
 	mod1_velocity = 0.00         // 0..1
@@ -97,12 +113,7 @@
 	mod1_right_scale = 0         // db/octave
 	mod1_env = 0.00              // 0=env1, 1=penv1
 	mod1_enable = 1              // 0=off, 1=on
-
-    /*
-	** FM pair 2
-	** [pluck]----+--->[mod2]----+--->[car2]
-	**            +--------------+
-	*/
+    // FM 2
 	car2_ratio = 0.5             // 0 <= ratio <= 16
 	car2_bias = 0                // 0 <= bias <= 999  in Hz.
 	car2_velocity = 0.0          // velocity -> car2 amp
@@ -114,6 +125,7 @@
 	car2_mod_pluck = 0.0         // FM depth pluck -> car2
 	car2_amp_env = 0.00          // main amp env cross mix, 0=env2, 1=penv2
 	car2_enable = 1              // 0=off, 1=on
+	car2_amp = 1.000             // 0..2
 	mod2_ratio = 0.5             // 0 < ratio <= 16
 	mod2_mod_pluck = 0.0         // 0..1 pluck -> mod2 FM
 	mod2_velocity = 0.00         // 0..1
@@ -122,13 +134,11 @@
 	mod2_env = 0.00              // 0=env1, 1=penv1
 	mod2_enable = 1              // 0=off, 1=on
     |
-
 	var xsig = In.kr(xbus);
 	var left_key_diff = (break_key-keynumber).max(0);
 	var left_key_octave = left_key_diff/12;
 	var right_key_diff = (keynumber-break_key).max(0);
 	var right_key_octave = right_key_diff/12;
-
 	var env_floor = 0.001;
 	// Env1
 	var env1_gate = Select.kr(env_mode,[gate,Trig.kr(gate,env1_attack+env1_decay+env1_release)]);
@@ -180,11 +190,11 @@
 	var ks_excite_pw = Select.kr(pluck_width,[0.5,0.75]);
 	var ks_excite = LinXFade2.ar(Pulse.ar(ks_freq*pluck_harmonic,ks_excite_pw),
 		BrownNoise.ar(), pluck_excite.linlin(0,1,-1,1));
-	var ks_coef = pluck_mute.linlin(0,1,0.05,0.9).max(0.05).min(0.9);
+	var ks_coef = pluck_damp.linlin(0,1,0.05,0.9).max(0.05).min(0.9);
 	var ks_amp = LinXFade2.kr(1,velocity,pluck_velocity.linlin(0,1,-1,1)) *
 	dbamp(pluck_left_scale*left_key_octave) *
 	dbamp(pluck_right_scale*right_key_octave);
-	var ks_sig = LeakDC.ar(Pluck.ar(ks_excite,gate, ks_max_delay,ks_delay,pluck_decay*5, ks_coef)*ks_amp*pluck_enable);
+	var ks_sig = LeakDC.ar(Pluck.ar(ks_excite,gate, ks_max_delay,ks_delay,pluck_decay*2, ks_coef)*ks_amp*pluck_enable);
 	// FM Pair 1
 	var car1_freq = ((f0*car1_ratio)+car1_bias)*vsig;
 	var mod1_freq = (f0*mod1_ratio)*vsig*(1 + (ks_sig*mod1_mod_pluck));
@@ -192,14 +202,14 @@
 	dbamp(mod1_left_scale*left_key_octave) *
 	dbamp(mod1_right_scale*right_key_octave);
 	var mod1 = LeakDC.ar(SinOsc.ar(mod1_freq,0,LinXFade2.kr(env1,penv1,mod1_env.linlin(0,1,-1,1))*mod1_amp*mod1_enable));
-	var car1_amp = LinXFade2.kr(1,velocity,car1_velocity.linlin(0,1,-1,1)) *
+	var car1_amp2 = LinXFade2.kr(1,velocity,car1_velocity.linlin(0,1,-1,1)) *
 	dbamp(car1_left_scale*left_key_octave) *
 	dbamp(car1_right_scale*right_key_octave) *
-	car1_enable;
+	car1_enable * car1_amp;
 	var car1_mod_sig = (car1_freq * car1_mod_scale * LinXFade2.kr(1,xsig,car1_xmod_depth.linlin(0,1,-1,1))) *
 	(1 + (mod1 * car1_mod_depth)) *
 	(1 + (ks_sig * car1_mod_pluck));
-	var car1_sig = SinOsc.ar(car1_freq+car1_mod_sig,0,car1_amp*LinXFade2.kr(env2,penv2,car1_amp_env.linlin(0,1,-1,1)));
+	var car1_sig = SinOsc.ar(car1_freq+car1_mod_sig,0,car1_amp2*LinXFade2.kr(env2,penv2,car1_amp_env.linlin(0,1,-1,1)));
 	// FM Pair 2
 	var car2_freq = ((f0*car2_ratio)+car2_bias)*vsig;
 	var mod2_freq = (f0*mod2_ratio)*vsig*(1 + (ks_sig*mod2_mod_pluck));
@@ -207,14 +217,15 @@
 	dbamp(mod2_left_scale*left_key_octave) *
 	dbamp(mod2_right_scale*right_key_octave);
 	var mod2 = LeakDC.ar(SinOsc.ar(mod2_freq,0,LinXFade2.kr(env1,penv1,mod2_env.linlin(0,1,-1,1))*mod2_amp*mod2_enable));
-	var car2_amp = LinXFade2.kr(1,velocity,car2_velocity.linlin(0,1,-1,1)) *
+	var car2_amp2 = LinXFade2.kr(1,velocity,car2_velocity.linlin(0,1,-1,1)) *
 	dbamp(car2_left_scale*left_key_octave) *
 	dbamp(car2_right_scale*right_key_octave) *
-	car2_enable;
+	car2_enable*car2_amp;
 	var car2_mod_sig = (car2_freq * car2_mod_scale * LinXFade2.kr(1,xsig,car2_xmod_depth.linlin(0,1,-1,1))) *
 	(1 + (mod2 * car2_mod_depth)) *
 	(1 + (ks_sig * car2_mod_pluck));
-	var car2_sig = SinOsc.ar(car2_freq+car2_mod_sig,0,car2_amp*LinXFade2.kr(env2,penv2,car2_amp_env.linlin(0,1,-1,1)));
-	var sig = (car1_sig+car2_sig+(pls_sig*pulse_amp)+(ks_sig*ks_amp))*amp;
+	var car2_sig = SinOsc.ar(car2_freq+car2_mod_sig,0,car2_amp2*LinXFade2.kr(env2,penv2,car2_amp_env.linlin(0,1,-1,1)));
+	var sig = (car1_sig+car2_sig+(pls_sig*pulse_amp)+(ks_sig*ks_amp));
+	sig = HPF.ar(sig,30)*amp;
 	Out.ar(outbus,sig);
 }).load)
