@@ -80,7 +80,7 @@
 	pulse_filter_right_track = 0 // -+ Hz (per octave)
 	pulse_amp_env = 1.00         // cross mix env2 and penv2,  0=env2, 1=penv2
 	pulse_amp = 1.00
-	pulse_enable = 1             // 0=off, 1=on
+	//pulse_enable = 1             // 0=off, 1=on
 	// Karplus Strong tone
 	pluck_ratio = 1.00           // >0 (tune)
 	pluck_decay = 3.00           // >0
@@ -92,7 +92,7 @@
 	pluck_left_scale = 0         // left key scale in db/oct
 	pluck_right_scale = 0        // right key scale in db/oct
 	pluck_amp = 1.00             // 0..2
-    pluck_enable = 1             // 0=off, 1=on
+    //pluck_enable = 1             // 0=off, 1=on
     // FM 1
 	car1_ratio = 0.5             // 0 <= ratio <= 16
 	car1_bias = 0                // 0 <= bias <= 999  in Hz.
@@ -104,7 +104,7 @@
 	car1_mod_depth = 1.0         // FM depth mod1 -> car1
 	car1_mod_pluck = 0.0         // FM depth pluck -> car1
 	car1_amp_env = 0.00          // main amp env cross mix, 0=env2, 1=penv2
-	car1_enable = 1              // 0=off, 1=on
+	//car1_enable = 1              // 0=off, 1=on
 	car1_amp = 1.00              // 0..2
 	mod1_ratio = 0.5             // 0 < ratio <= 16
 	mod1_mod_pluck = 0.0         // 0..1 pluck -> mod1 FM
@@ -112,7 +112,7 @@
 	mod1_left_scale = 0          // db/octave
 	mod1_right_scale = 0         // db/octave
 	mod1_env = 0.00              // 0=env1, 1=penv1
-	mod1_enable = 1              // 0=off, 1=on
+	//mod1_enable = 1              // 0=off, 1=on
     // FM 2
 	car2_ratio = 0.5             // 0 <= ratio <= 16
 	car2_bias = 0                // 0 <= bias <= 999  in Hz.
@@ -124,7 +124,7 @@
 	car2_mod_depth = 1.0         // FM depth mod1 -> car2
 	car2_mod_pluck = 0.0         // FM depth pluck -> car2
 	car2_amp_env = 0.00          // main amp env cross mix, 0=env2, 1=penv2
-	car2_enable = 1              // 0=off, 1=on
+	//car2_enable = 1              // 0=off, 1=on
 	car2_amp = 1.000             // 0..2
 	mod2_ratio = 0.5             // 0 < ratio <= 16
 	mod2_mod_pluck = 0.0         // 0..1 pluck -> mod2 FM
@@ -132,7 +132,7 @@
 	mod2_left_scale = 0          // db/octave
 	mod2_right_scale = 0         // db/octave
 	mod2_env = 0.00              // 0=env1, 1=penv1
-	mod2_enable = 1              // 0=off, 1=on
+	//mod2_enable = 1              // 0=off, 1=on
     |
 	var xsig = In.kr(xbus);
 	var left_key_diff = (break_key-keynumber).max(0);
@@ -142,21 +142,21 @@
 	var env_floor = 0.001;
 	// Env1
 	var env1_gate = Select.kr(env_mode,[gate,Trig.kr(gate,env1_attack+env1_decay+env1_release)]);
-	var env1_vel_scale = velocity.linlin(0,1,0,env1_velocity_attack);
+	var env1_vel_scale = velocity.linlin(0,1,0,env1_velocity_attack)*env1_attack*1.5;
 	var env1_left_scale = left_key_octave.linlin(0,5,0,env1_key_attack);
 	var env1_right_scale = right_key_octave.linlin(0,5,0,-1*env1_key_attack);
 	var env1_attack_time = (env1_attack+env1_vel_scale+env1_left_scale+env1_right_scale).max(0);
 	var env1 = EnvGen.kr(Env([env_floor,1,env1_sustain.max(env_floor),env_floor],
-		[env1_attack,env1_decay,env1_release],\exp,2),env1_gate)-env_floor;
+		[env1_attack_time,env1_decay,env1_release],\exp,2),env1_gate)-env_floor;
 	var penv1 = EnvGen.kr(Env.perc(0.01,penv1_decay),gate);  // Percussive version of env1
 	// Env2
 	var env2_gate = Select.kr(env_mode,[gate,Trig.kr(gate,env2_attack+env2_decay+env2_release)]);
-	var env2_vel_scale = velocity.linlin(0,1,0,env2_velocity_attack);
+	var env2_vel_scale = velocity.linlin(0,1,0,env2_velocity_attack)*env2_attack*1.5;
 	var env2_left_scale = left_key_octave.linlin(0,5,0,env2_key_attack);
 	var env2_right_scale = right_key_octave.linlin(0,5,0,-1*env2_key_attack);
 	var env2_attack_time = (env2_attack+env2_vel_scale+env2_left_scale+env2_right_scale).max(0);
 	var env2 = EnvGen.kr(Env([env_floor,1,env2_sustain.max(env_floor),env_floor],
-		[env2_attack,env2_decay,env2_release],\exp,2),env2_gate,1,0,1,doneAction)-env_floor;
+		[env2_attack_time,env2_decay,env2_release],\exp,2),env2_gate,1,0,1,doneAction)-env_floor;
 	var penv2 = EnvGen.kr(Env.perc(0.01,penv2_decay),gate);  // Percussive version of env2
 	// LFO
 	var venv = EnvGen.kr(Env([0,0,1,0],[vdelay,vdelay,1.1*env2_release],\lin,2),env2_gate);
@@ -166,7 +166,9 @@
 	var lfo = (slfo+nlfo) * (vibrato+(vdepth*venv));
 	var vsig = 1+(vsens.linlin(0,1,0,0.05)*(lfo + (xsig*xpitch)));
 	// Portamento & Primary freq.
-	var ptime = port+(velocity.linlin(0,1,1,0)*velocity_port);
+	var port_coef = 0.5;
+	var pcomp = velocity_port*velocity*port*port_coef;
+	var ptime = ((port*port_coef)-pcomp).max(0);
 	var f0 = Lag2.kr(freq,ptime)*detune;
 	// Pulse signal
 	var pls_width = pulse_width + (env1 * pulse_width_env1) + (lfo * pulse_width_lfo);
@@ -182,7 +184,7 @@
 	var pls_filter_agc = 1.0;
 	var pls_raw = Pulse.ar(f0*pulse_ratio,pls_width);
 	var pls_env = LinXFade2.kr(env2,penv2,pulse_amp_env.linlin(0,1,-1,1));
-	var pls_sig = RLPF.ar(Pulse.ar(f0*pulse_ratio,pls_width),pls_ffreq,pls_filter_rq)*pls_filter_agc*pls_env*pulse_enable;
+	var pls_sig = RLPF.ar(Pulse.ar(f0*pulse_ratio,pls_width),pls_ffreq,pls_filter_rq)*pls_filter_agc*pls_env;
 	// Karplus Strong signal
 	var ks_max_delay = 0.2;
 	var ks_freq = (f0*pluck_ratio*vsig).max(16);
@@ -194,21 +196,21 @@
 	var ks_amp = LinXFade2.kr(1,velocity,pluck_velocity.linlin(0,1,-1,1)) *
 	dbamp(pluck_left_scale*left_key_octave) *
 	dbamp(pluck_right_scale*right_key_octave);
-	var ks_sig = LeakDC.ar(Pluck.ar(ks_excite,gate, ks_max_delay,ks_delay,pluck_decay*2, ks_coef)*ks_amp*pluck_enable);
+	var ks_sig = LeakDC.ar(Pluck.ar(ks_excite,gate, ks_max_delay,ks_delay,pluck_decay*2, ks_coef)*ks_amp);
 	// FM Pair 1
 	var car1_freq = ((f0*car1_ratio)+car1_bias)*vsig;
 	var mod1_freq = (f0*mod1_ratio)*vsig*(1 + (ks_sig*mod1_mod_pluck));
 	var mod1_amp = LinXFade2.kr(1,velocity,mod1_velocity.linlin(0,1,-1,1)) *
 	dbamp(mod1_left_scale*left_key_octave) *
 	dbamp(mod1_right_scale*right_key_octave);
-	var mod1 = LeakDC.ar(SinOsc.ar(mod1_freq,0,LinXFade2.kr(env1,penv1,mod1_env.linlin(0,1,-1,1))*mod1_amp*mod1_enable));
+	var mod1 = LeakDC.ar(SinOsc.ar(mod1_freq,0,LinXFade2.kr(env1,penv1,mod1_env.linlin(0,1,-1,1))*mod1_amp));
 	var car1_amp2 = LinXFade2.kr(1,velocity,car1_velocity.linlin(0,1,-1,1)) *
 	dbamp(car1_left_scale*left_key_octave) *
-	dbamp(car1_right_scale*right_key_octave) *
-	car1_enable * car1_amp;
-	var car1_mod_sig = (car1_freq * car1_mod_scale * LinXFade2.kr(1,xsig,car1_xmod_depth.linlin(0,1,-1,1))) *
-	(1 + (mod1 * car1_mod_depth)) *
-	(1 + (ks_sig * car1_mod_pluck));
+	dbamp(car1_right_scale*right_key_octave);
+	var car1_mod_sig = LeakDC.ar((car1_freq * car1_mod_scale * LinXFade2.kr(1,xsig,car1_xmod_depth.linlin(0,1,-1,1))) *
+		(1 + (mod1 * car1_mod_depth)) *
+		(1 + (ks_sig * car1_mod_pluck)));
+
 	var car1_sig = SinOsc.ar(car1_freq+car1_mod_sig,0,car1_amp2*LinXFade2.kr(env2,penv2,car1_amp_env.linlin(0,1,-1,1)));
 	// FM Pair 2
 	var car2_freq = ((f0*car2_ratio)+car2_bias)*vsig;
@@ -216,16 +218,15 @@
 	var mod2_amp = LinXFade2.kr(1,velocity,mod2_velocity.linlin(0,1,-1,1)) *
 	dbamp(mod2_left_scale*left_key_octave) *
 	dbamp(mod2_right_scale*right_key_octave);
-	var mod2 = LeakDC.ar(SinOsc.ar(mod2_freq,0,LinXFade2.kr(env1,penv1,mod2_env.linlin(0,1,-1,1))*mod2_amp*mod2_enable));
+	var mod2 = LeakDC.ar(SinOsc.ar(mod2_freq,0,LinXFade2.kr(env1,penv1,mod2_env.linlin(0,1,-1,1))*mod2_amp));
 	var car2_amp2 = LinXFade2.kr(1,velocity,car2_velocity.linlin(0,1,-1,1)) *
 	dbamp(car2_left_scale*left_key_octave) *
-	dbamp(car2_right_scale*right_key_octave) *
-	car2_enable*car2_amp;
-	var car2_mod_sig = (car2_freq * car2_mod_scale * LinXFade2.kr(1,xsig,car2_xmod_depth.linlin(0,1,-1,1))) *
-	(1 + (mod2 * car2_mod_depth)) *
-	(1 + (ks_sig * car2_mod_pluck));
+	dbamp(car2_right_scale*right_key_octave);
+	var car2_mod_sig = LeakDC.ar((car2_freq * car2_mod_scale * LinXFade2.kr(1,xsig,car2_xmod_depth.linlin(0,1,-1,1))) *
+		(1 + (mod2 * car2_mod_depth)) *
+		(1 + (ks_sig * car2_mod_pluck)));
 	var car2_sig = SinOsc.ar(car2_freq+car2_mod_sig,0,car2_amp2*LinXFade2.kr(env2,penv2,car2_amp_env.linlin(0,1,-1,1)));
-	var sig = (car1_sig+car2_sig+(pls_sig*pulse_amp)+(ks_sig*ks_amp));
+	var sig = (car1_sig+car2_sig+(pls_sig*pulse_amp)+(ks_sig*pluck_amp*2));
 	sig = HPF.ar(sig,30)*amp;
 	Out.ar(outbus,sig);
 }).load)

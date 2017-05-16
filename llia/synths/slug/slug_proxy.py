@@ -26,9 +26,9 @@ class SlugProxy(SynthProxy):
             return parent_editor
 
 pallet = Pallet(default_pallet)
-#pallet["BACKGROUND"] =  
-#pallet["SLIDER-OUTLINE"] = 
-#pallet["SLIDER-TROUGH"] = 
+pallet["BACKGROUND"] = "#2d292d"
+pallet["SLIDER-OUTLINE"] = "#464646"
+pallet["SLIDER-TROUGH"] = "#66879c"
 specs["constructor"] = SlugProxy
 specs["description"] = "Hybrid synth"
 specs["help"] = "Slug"

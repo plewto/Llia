@@ -29,10 +29,9 @@ def adsr(program,n):
     
 def pulse(fval,ival):
     pad, pad2 = ' '*5, ' '*19
-    bcc = '%spulse = pulse(enable=%s, amp=%s, tune=%s,\n' % (pad,
-                                                    ival("pulse_enable"),
-                                                    fval("pulse_amp"),
-                                                    fval("pulse_ratio"))
+    bcc = '%spulse = pulse(amp=%s, tune=%s,\n' % (pad,
+                                                  fval("pulse_amp"),
+                                                  fval("pulse_ratio"))
     bcc += '%swidth=%s, width_env1=%s, width_lfo=%s,\n' % (pad2,
                                                            fval("pulse_width"),
                                                            fval("pulse_width_env1"),
@@ -60,9 +59,8 @@ def pulse_filter(fval,ival):
 
 def pluck(fval, ival):
     pad, pad2 = ' '*5, ' '*19
-    frmt = '%spluck = pluck(enable=%s, amp=%s, tune=%s, decay=%s,\n'
+    frmt = '%spluck = pluck(amp=%s, tune=%s, decay=%s,\n'
     bcc = frmt % (pad,
-                  ival("pluck_enable"),
                   fval("pluck_amp"),
                   fval("pluck_ratio"),
                   fval("pluck_decay"))
@@ -89,9 +87,8 @@ def carrier(n, program):
         param = "car%d_%s" % (n, key)
         i = int(program[param])
         return "%d" % i
-    frmt = '%scar%d = carrier(%d, enable=%s, amp=%s, tune=%s, bias=%s,\n'
+    frmt = '%scar%d = carrier(%d, amp=%s, tune=%s, bias=%s,\n'
     bcc = frmt % (pad, n,n,
-                  ival("enable"),
                   fval("amp"),
                   fval("ratio"),
                   fval("bias"))
@@ -119,9 +116,8 @@ def modulator(n, program):
         param = "mod%d_%s" % (n, key)
         i = int(program[param])
         return "%d" % i
-    frmt = '%smod%d = modulator(%d, enable=%s, tune=%s, pluck=%s,\n'
+    frmt = '%smod%d = modulator(%d, tune=%s, pluck=%s,\n'
     bcc = frmt % (pad,n,n,
-                  ival("enable"),
                   fval("ratio"),
                   fval("mod_pluck"))
     frmt = '%svelocity=%s, left_scale=%s, right_scale=%s, env=%s)'

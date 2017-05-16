@@ -45,7 +45,6 @@ def pick_pluck_mod():
     rs = coin(0.25, 0, coin(0.75, rnd(4), rnd(MAX_PLUCK_MOD)))
     return rs
 
-
 def slug_random(slot,*_):
     etime_hint = pick_env_time_hint()
     a1 = pick_env_segment_time(etime_hint)
@@ -58,7 +57,6 @@ def slug_random(slot,*_):
     s2 = rnd()
     r2 = 2*pick_env_segment_time(etime_hint)
     p2 = 2*pick_env_segment_time(etime_hint)
-
     is_harmonic = coin(0.75, True, False)
     ffreq = pick([100,200,400,800,1600,3200,
                   6400,8000,10000,12000,16000])
@@ -88,8 +86,7 @@ def slug_random(slot,*_):
                             key_scale = coin(0.75, 0, rnd())),
                 pdecay1 = p1,
                 pdecay2 = p2,
-                pulse = pulse(enable=coin(0.75, 1, 0),
-                              amp = coin(0.50, 1.0, rnd()),
+                pulse = pulse(amp = coin(0.50, 1.0, rnd()),
                               tune = pick_fratio(is_harmonic),
                               width = coin(0.75, 0.25+rnd(0.5), rnd()),
                               width_env1 = coin(0.25, rnd(), 0),
@@ -104,8 +101,7 @@ def slug_random(slot,*_):
                                             velocity=ffvel,
                                             left_track=0,
                                             right_track=0),
-                pluck = pluck(enable=coin(0.75, 1, 0),
-                              amp = coin(0.50, 1.0, rnd()),
+                pluck = pluck(amp = coin(0.50, 1.0, rnd()),
                               tune = pick_fratio(is_harmonic),
                               decay = coin(0.5, 2*rnd(), rnd(MAX_PLUCK_DECAY)),
                               width = coin(0.5, 1, 0),
@@ -117,7 +113,7 @@ def slug_random(slot,*_):
                               velocity = coin(0.75, 0, rnd()),
                               left_scale = coin(0.75, 0, rsign(pick([3,6,9]))),
                               right_scale = coin(0.75, 0, rsign(pick([3,6,9])))),
-                car1 = carrier(1, enable=coin(0.75, 1, 0),
+                car1 = carrier(1, 
                                amp = coin(0.50, 0.5+rnd(), rnd()),
                                tune = pick_fratio(is_harmonic),
                                bias = coin(0.75, coin(0.90, rnd(2), rnd(999))),
@@ -128,7 +124,7 @@ def slug_random(slot,*_):
                                xmod=0.0,
                                fm=coin(0.75, rnd(), 0),
                                pluck=pick_pluck_mod()),
-                car2 = carrier(2, enable=coin(0.75, 1, 0),
+                car2 = carrier(2,
                                amp = coin(0.50, 0.5+rnd(), rnd()),
                                tune = pick_fratio(is_harmonic),
                                bias = coin(0.75, coin(0.90, rnd(2), rnd(999))),
@@ -139,13 +135,13 @@ def slug_random(slot,*_):
                                xmod=0.0,
                                fm=coin(0.75, rnd(), 0),
                                pluck=pick_pluck_mod()),
-                mod1 = modulator(1, enable=coin(0.75, 1, 0),
+                mod1 = modulator(1,
                                  tune=pick_fratio(is_harmonic),
                                  pluck=pick_pluck_mod(),
                                  velocity=coin(0.75, 0, rnd()),
                                  left_scale=0, right_scale=0,
                                  env=rnd()),
-                mod2 = modulator(2, enable=coin(0.75, 1, 0),
+                mod2 = modulator(2,
                                  tune=pick_fratio(is_harmonic),
                                  pluck=pick_pluck_mod(),
                                  velocity=coin(0.75, 0, rnd()),
