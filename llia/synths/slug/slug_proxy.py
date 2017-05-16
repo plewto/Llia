@@ -38,7 +38,8 @@ specs["pallet"] = pallet
 specs["is-efx"] = False
 specs["is-controller"] = False
 specs["keymodes"] = ("PolyN","PolyRotate","Poly1","Mono1","MonoExclusive")
-specs["audio-output-buses"] = [["outbus","out_0"]]
+specs["audio-output-buses"] = [["outbus1","out_0"],["outbus2","out_1"]]
+    
 specs["audio-input-buses"] = []
 specs["control-output-buses"] = [["xbus","null_sink"]]
 specs["control-input-buses"] = []

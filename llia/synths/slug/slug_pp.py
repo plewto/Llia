@@ -36,7 +36,7 @@ def pulse(fval,ival):
                                                            fval("pulse_width"),
                                                            fval("pulse_width_env1"),
                                                            fval("pulse_width_lfo"))
-    bcc += '%senv = %s),\n' % (pad2, fval("pulse_amp"))
+    bcc += '%senv=%s, pan=%s ),\n' % (pad2, fval("pulse_amp"),fval("pulse_pan"))
     return bcc
 
 def pulse_filter(fval,ival):
@@ -70,11 +70,12 @@ def pluck(fval, ival):
                    ival("pluck_width"),
                    fval("pluck_damp"),
                    fval("pluck_excite"))
-    frmt = '%svelocity=%s, left_scale=%s, right_scale=%s),\n'
+    frmt = '%svelocity=%s, left_scale=%s, right_scale=%s, pan=%s),\n'
     bcc += frmt % (pad2,
                    fval("pluck_velocity"),
                    ival("pluck_left_scale"),
-                   ival("pluck_right_scale"))
+                   ival("pluck_right_scale"),
+                   fval("pluck_pan"))
     return bcc
                    
 def carrier(n, program):
@@ -98,12 +99,13 @@ def carrier(n, program):
                    ival("left_scale"),
                    ival("right_scale"),
                    fval("amp_env"))
-    frmt = '%smod_scale=%s, xmod=%s, fm=%s, pluck=%s),\n'
+    frmt = '%smod_scale=%s, xmod=%s, fm=%s, pluck=%s, pan=%s),\n'
     bcc += frmt % (pad2,
                    ival("mod_scale"),
                    fval("xmod_depth"),
                    fval("mod_depth"),
-                   fval("mod_pluck"))
+                   fval("mod_pluck"),
+                   fval("pan"))
     return bcc
                    
 def modulator(n, program):
@@ -145,8 +147,8 @@ def slug_pp(program,slot):
                                                ival("break_key"),
                                                ival("env_mode"))
     acc += '%sport=%s, port_velocity=%s,\n' % (pad,
-                                                  fval("port"),
-                                                  fval("velocity_port"))
+                                               fval("port"),
+                                               fval("velocity_port"))
     acc += lfo(fval)+adsr(program,1)+adsr(program,2)
     acc += '%spdecay1 = %s,\n' % (pad,fval("penv1_decay"))
     acc += '%spdecay2 = %s,\n' % (pad,fval("penv2_decay"))

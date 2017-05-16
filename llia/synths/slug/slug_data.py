@@ -48,7 +48,7 @@ prototype = {
     "pulse_filter_right_track" : 0, # -+ Hz (per octave)
     "pulse_amp_env" : 1.00,         # cross mix env2 and penv2,  0=env2, 1=penv2
     "pulse_amp" : 1.00,             # 0..2
-    #"pulse_enable" : 1,             # 0=off, 1=on
+    "pulse_pan" : 0.5,
     "pluck_ratio" : 1.00,           # >0 (tune)
     "pluck_decay" : 3.00,           # >0
     "pluck_harmonic" : 1,           # (1,2,3,...,16?)
@@ -59,7 +59,7 @@ prototype = {
     "pluck_left_scale" : 0,         # left key scale in db/oct
     "pluck_right_scale" : 0,        # right key scale in db/oct
     "pluck_amp" : 1.00,             # 0..2
-    #"pluck_enable" : 1,             # 0=off, 1=on
+    "pluck_pan" : 0.5,
     "car1_ratio" : 0.5,             # 0 <= ratio <= 16
     "car1_bias" : 0,                # 0 <= bias <= 999  in Hz.
     "car1_velocity" : 0.0,          # velocity -> car1 amp
@@ -70,7 +70,7 @@ prototype = {
     "car1_mod_depth" : 1.0,         # FM depth mod1 -> car1
     "car1_mod_pluck" : 0.0,         # FM depth pluck -> car1
     "car1_amp_env" : 0.00,          # main amp env cross mix, 0:env2, 1=penv2
-    #"car1_enable" : 1,              # 0=off, 1=on
+    "car1_pan" : 0.5,
     "car1_amp" : 1.0,               # 0..2
     "mod1_ratio" : 0.5,             # 0 < ratio <= 16
     "mod1_mod_pluck" : 0.0,         # 0..1 pluck -> mod1 FM
@@ -78,7 +78,6 @@ prototype = {
     "mod1_left_scale" : 0,          # db/octave
     "mod1_right_scale" : 0,         # db/octave
     "mod1_env" : 0.00,              # 0:env1, 1=penv1
-    #"mod1_enable" : 1,              # 0=off, 1=on
     "car2_ratio" : 0.5,             # 0 <= ratio <= 16
     "car2_bias" : 0,                # 0 <= bias <= 999  in Hz.
     "car2_velocity" : 0.0,          # velocity -> car2 amp
@@ -89,7 +88,7 @@ prototype = {
     "car2_mod_depth" : 1.0,         # FM depth mod1 -> car2
     "car2_mod_pluck" : 0.0,         # FM depth pluck -> car2
     "car2_amp_env" : 0.00,          # main amp env cross mix, 0=env2, 1=penv2
-    #"car2_enable" : 1,              # 0=off, 1=on
+    "car2_pan" : 0.5,
     "car2_amp" : 1.0,               # 0..2
     "mod2_ratio" : 0.5,             # 0 < ratio <= 16
     "mod2_mod_pluck" : 0.0,         # 0..1 pluck -> mod2 FM
@@ -97,7 +96,6 @@ prototype = {
     "mod2_left_scale" : 0,          # db/octave
     "mod2_right_scale" : 0,         # db/octave
     "mod2_env" : 0.00}              # 0=env1, 1=penv1
-    #"mod2_enable" : 1}              # 0=off, 1=on
 
 class Slug(Program):
 
@@ -129,14 +127,15 @@ def adsr(n, a=0.1, d=1.0, s=1.0, r=0.1,
 
 def pulse(amp=1.0, tune=1.0,
           width=0.5, width_env1=0.0, width_lfo=0.0,x=0.0,
-          env=0.0):
+          env=0.0,pan=0.5):
     return {"pulse_ratio" : float(tune),
             "pulse_width" : float(width),
             "pulse_width_env1" : float(width_env1),
             "pulse_width_lfo" : float(width_lfo),
             "pulse_filter_x" : float(x),
             "pulse_amp_env" : float(env),
-            "pulse_amp" : float(amp)}
+            "pulse_amp" : float(amp),
+            "pulse_pan" : float(pan)}
 
 def pulse_filter(res=0.75, cutoff=16000,
                  env1=0, penv1=0, lfo=0, x=0,
@@ -152,7 +151,7 @@ def pulse_filter(res=0.75, cutoff=16000,
 
 def pluck(amp=1.00, tune=1.000, decay=3.0,
           harmonic=1, width=1, damp=0.5, noise=0.5,
-          velocity=0.00, left_scale=0, right_scale=0):
+          velocity=0.00, left_scale=0, right_scale=0,pan=0.5):
     return {"pluck_ratio" : float(tune),
             "pluck_decay" : float(decay),
             "pluck_harmonic" : int(harmonic),
@@ -162,11 +161,12 @@ def pluck(amp=1.00, tune=1.000, decay=3.0,
             "pluck_velocity" : float(velocity),
             "pluck_left_scale" : int(left_scale),
             "pluck_right_scale" : int(right_scale),
-            "pluck_amp" : float(amp)}
+            "pluck_amp" : float(amp),
+            "pluck_pan" : float(pan)}
 
 def carrier(n, amp=1.0, tune=1.0, bias=0.0,
             velocity=0.0, left_scale=0, right_scale=0,
-            mod_scale=1, xmod=0.0, fm=0.0, pluck=0.0,env=0.0):
+            mod_scale=1, xmod=0.0, fm=0.0, pluck=0.0,env=0.0,pan=0.5):
     def param(suffix):
         return "car%d_%s" % (n,suffix)
     return {param("ratio") : float(tune),
@@ -179,7 +179,8 @@ def carrier(n, amp=1.0, tune=1.0, bias=0.0,
             param("mod_depth") : float(fm),
             param("mod_pluck") : float(pluck),
             param("amp_env") :float(env),
-            param("amp") : float(amp)}
+            param("amp") : float(amp),
+            param("pan") : float(pan)}
             
 def modulator(n, tune=1.0, pluck=0.0,
               velocity=0.0, left_scale=0, right_scale=0,
