@@ -11,6 +11,7 @@ def create_editor(parent):
     TkSlugKSPanel(parent)
     TkSlugFMPanel(parent)
     TkSlugEnvPanel(parent)
+    TkSlugInfoPanel(parent)
     
 class TkSlugKSPanel(TkSubEditor):
 
@@ -30,12 +31,9 @@ class TkSlugKSPanel(TkSubEditor):
         xfilter = x0+130
         xvelocity = xfilter+360
         xscale = xfilter+420
-
-        
         y0 = 75
         y1 = y0+80
         y2 = y0+250
-
         # Pulse controls
         self.tumbler("pulse_ratio",5,0.001,x0,y0)
         self.norm_slider("pulse_width", xpw, y1, height=75)
@@ -60,13 +58,11 @@ class TkSlugKSPanel(TkSubEditor):
             self.msb_aspect(msb_right,i,v,text=txt)
         msb_left.update_aspect()
         msb_right.update_aspect()
-        #self.toggle("pulse_enable",xfilter+420,y0+120)   
         self.norm_slider("pulse_amp_env",xfilter+520,y0)
-        
         # KS Controls
         xexcite = x0-10
         yexcite = y2+80
-        #xdecay = x0+120
+        ykeyscale = y2+15
         self.tumbler("pluck_ratio",5,0.001,x0,y2)
         msb_harmonic = self.msb("pluck_harmonic", len(PLUCK_HARMONICS),xexcite, yexcite)
         for i,v in enumerate(PLUCK_HARMONICS):
@@ -78,11 +74,26 @@ class TkSlugKSPanel(TkSubEditor):
         self.exp_slider("pluck_decay",MAX_PLUCK_DECAY,xfilter+60,y2)
         self.norm_slider("pluck_velocity",xvelocity,y2)
         count = len(DB_KEY_SCALES)
-        msb_left = self.msb("pluck_left_scale",count,xscale,y2)
-        msb_right = self.msb("pluck_right_scale",count,xscale,y2+60)
+        msb_left = self.msb("pluck_left_scale",count,xscale,ykeyscale)
+        msb_right = self.msb("pluck_right_scale",count,xscale,ykeyscale+60)
         for i,v in enumerate(DB_KEY_SCALES):
             self.msb_aspect(msb_left,i,v)
             self.msb_aspect(msb_right,i,v)
         msb_left.update_aspect()
         msb_right.update_aspect()
-        #self.toggle("pluck_enable",xscale,y2+120)   
+
+
+
+class TkSlugInfoPanel(TkSubEditor):
+
+    NAME = "Slug Info"
+    IMAGE_FILE = "resources/Slug/block.png"
+    TAB_FILE = "resources/Slug/tab_block.png"
+
+    def __init__(self,editor):
+        frame = editor.create_tab(self.NAME,self.TAB_FILE)
+        frame.config(background=factory.bg())
+        canvas = factory.canvas(frame,541,505,self.IMAGE_FILE)
+        canvas.pack()
+        TkSubEditor.__init__(self,canvas,editor,self.NAME)
+        editor.add_child_editor(self.NAME, self)

@@ -229,3 +229,7 @@ def slug(slot, name, amp=0.1,
     p.update(mod2)
     program_bank[slot] = p
     return p
+
+
+slug(0,"Dummy",
+     pulse_filter=pulse_filter(cutoff=250,env1=120,penv1=60,lfo=30))

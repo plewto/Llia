@@ -21,7 +21,6 @@ class TkSlugFMPanel(TkSubEditor):
         x0 = 75
         xmod = x0
         xcar = x0+390
-
         for n in (1,2):
             y = {1:75, 2:325}[n]
             # modulator
@@ -31,14 +30,13 @@ class TkSlugFMPanel(TkSubEditor):
             self.linear_slider(mod("mod_pluck"),(0,8),xmod+100,y)
             self.norm_slider(mod("velocity"),xmod+160,y)
             count = len(DB_KEY_SCALES)
-            msb_left = self.msb(mod("left_scale"),count,xmod+220,y)
-            msb_right = self.msb(mod("right_scale") ,count,xmod+220,y+50)
+            msb_left = self.msb(mod("left_scale"),count,xmod+235,y)
+            msb_right = self.msb(mod("right_scale") ,count,xmod+235,y+50)
             for i,v in enumerate(DB_KEY_SCALES):
                 self.msb_aspect(msb_left,i,v)
                 self.msb_aspect(msb_right,i,v)
                 msb_left.update_aspect()
                 msb_right.update_aspect()
-            #self.toggle(mod("enable"),xmod+220,y+150)   
             self.norm_slider(mod("env"),xmod+320,y)
             # carrier
             def car(suffix):
@@ -58,5 +56,4 @@ class TkSlugFMPanel(TkSubEditor):
                 self.msb_aspect(msb_right,i,v)
                 msb_left.update_aspect()
                 msb_right.update_aspect()
-            # self.toggle(car("enable"),xcmod+300,y+150)   
             self.norm_slider(car("amp_env"),xcmod+400,y)

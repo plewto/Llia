@@ -14,7 +14,7 @@ class TkSlugEnvPanel(TkSubEditor):
     def __init__(self,editor):
         frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,842,598,self.IMAGE_FILE)
+        canvas = factory.canvas(frame,845,599,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self,canvas,editor,self.NAME)
         editor.add_child_editor(self.NAME, self)
@@ -50,7 +50,7 @@ class TkSlugEnvPanel(TkSubEditor):
         xmisc = xlfo
         self.norm_slider("port",xmisc,y1)
         self.norm_slider("velocity_port",xmisc+60,y1)
-        msb_break = self.msb("break_key",len(BREAK_KEYS),xmisc,y1+200)
+        msb_break = self.msb("break_key",len(BREAK_KEYS),xmisc+7,y1+220)
         for i,p in enumerate(BREAK_KEYS):
             v,txt = p
             self.msb_aspect(msb_break,i,v,text=txt)
@@ -60,7 +60,9 @@ class TkSlugEnvPanel(TkSubEditor):
         y = y1
         for p in ("pulse_","pluck_","car1_","car2_"):
             param = "%samp" % p
-            self.volume_slider(param,x,y)
+            pparam = "%span" % p
+            self.volume_slider(param,x,y, height=100)
+            self.linear_slider(pparam,(-1,1),x,y+130,height=75)
             x += 60
-        self.volume_slider("amp", xlfo+300, y0)
+        self.volume_slider("amp", xlfo+319, y0)
         
