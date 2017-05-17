@@ -186,10 +186,11 @@
 	var pls_sig = RLPF.ar(Pulse.ar(f0*pulse_ratio,pls_width),pls_ffreq,pls_filter_rq)*pls_filter_agc*pls_env;
 	// Karplus Strong signal
 	var ks_max_delay = 0.2;
-	var ks_freq = (f0*pluck_ratio*vsig).max(16);
+	var ks_freq = (f0*pluck_ratio*vsig).max(16).min(8000);
 	var ks_delay = (1/ks_freq).min(ks_max_delay);
 	var ks_excite_pw = Select.kr(pluck_width,[0.5,0.75]);
-	var ks_excite = LinXFade2.ar(Pulse.ar(ks_freq*pluck_harmonic,ks_excite_pw),
+	var ks_excite_freq = (ks_freq*pluck_harmonic).max(16).min(8000);
+	var ks_excite = LinXFade2.ar(Pulse.ar(ks_excite_freq,ks_excite_pw),
 		BrownNoise.ar(), pluck_excite.linlin(0,1,-1,1));
 	var ks_coef = pluck_damp.linlin(0,1,0.05,0.9).max(0.05).min(0.9);
 	var ks_amp = LinXFade2.kr(1,velocity,pluck_velocity.linlin(0,1,-1,1)) *
@@ -228,8 +229,8 @@
 	var sig = HPF.ar(Pan2.ar(car1_sig,car1_pan)+
 		Pan2.ar(car2_sig,car2_pan)+
 		Pan2.ar(pls_sig*pulse_amp,pulse_pan)+
-		Pan2.ar(ks_sig*pluck_amp*2,pluck_pan),30)*amp;
-	//Out.ar([outbus1,outbus2],sig);
+		Pan2.ar(ks_sig*pluck_amp*2,pluck_pan),
+		30)*amp;
 	Out.ar(outbus1,sig[0]);
 	Out.ar(outbus2,sig[1]);
 }).load)
