@@ -42,7 +42,7 @@
 	xfeedback2 = 0.0|
 	var maxdelay = 1.00;
 	var drysig = In.ar([inbus1,inbus2]);
-	var lfo = LFCub.kr([lfoRatio1,lfoRatio2]*timebase,[0,0.667],0.1*maxdelay*[modDepth1,modDepth2]);
+	var lfo = LFCub.kr([lfoRatio1,lfoRatio2]*timebase,[0,0.667],0.5*[delayTime1,delayTime2]*[modDepth1,modDepth2]);
 	var xsig = In.kr(xbus)*(0.1*maxdelay*[xmodDepth1,xmodDepth2]);
 	var delayTime = ([delayTime1,delayTime2]+lfo+xsig).min(maxdelay).max(0);
 	var fbsig = LocalIn.ar(2)*[feedback1,feedback2];

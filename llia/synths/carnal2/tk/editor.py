@@ -17,7 +17,7 @@ class TkCarnal2Panel(TkSubEditor):
     def __init__(self,editor):
         frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,1000,700,self.IMAGE_FILE)
+        canvas = factory.canvas(frame,847,620,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self,canvas,editor,self.NAME)
         editor.add_child_editor(self.NAME, self)
@@ -37,8 +37,12 @@ class TkCarnal2Panel(TkSubEditor):
                 value,text = pair
                 self.msb_aspect(msb,i,value,text=text)
             msb.update_aspect()
-            self.norm_slider(param("modDepth"),xmod,y)
-            self.norm_slider(param("xmodDepth"),xmod+60,y)
+            # self.norm_slider(param("modDepth"),xmod,y)
+            # self.norm_slider(param("xmodDepth"),xmod+60,y)
+
+            self.exp_slider(param("modDepth"),1.0,xmod,y,degree=3)
+            self.exp_slider(param("xmodDepth"),1.0,xmod+60,y,degree=3)
+            
             self.linear_slider(param("feedback"),(-1,1),xfb,y)
             self.linear_slider(param("xfeedback"),(-1,1),xfb+60,y)
             self.exp_slider(param("lowcut"),16000,xfb+120,y,degree=3)

@@ -26,8 +26,8 @@ class Carnal2Proxy(SynthProxy):
 
 pallet = Pallet(default_pallet)
 #pallet["BACKGROUND"] =  
-#pallet["SLIDER-OUTLINE"] = 
-#pallet["SLIDER-TROUGH"] = 
+pallet["SLIDER-TROUGH"] = "#400137"
+pallet["SLIDER-OUTLINE"] = "#10400A"
 specs["constructor"] = Carnal2Proxy
 specs["description"] = "2 Channel version of Carnal Delay"
 specs["help"] = "Carnal2"
