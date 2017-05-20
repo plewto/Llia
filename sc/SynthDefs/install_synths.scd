@@ -6,6 +6,7 @@
                  "asplit.scd",
                  "bandpass.scd",
                  "carnal.scd",
+                 "carnal2.scd",
                  "cascade.scd",
                  "chronos.scd",
                  "comb.scd",

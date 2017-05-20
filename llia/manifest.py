@@ -40,6 +40,7 @@ import llia.synths.formant.formant_proxy
 import llia.synths.xover.xover_proxy
 import llia.synths.comb.comb_proxy
 import llia.synths.scanner.scanner_proxy
+import llia.synths.carnal2.carnal2_proxy
 # END EFX IMPORTS
 
 print("Importing controller synths:")
