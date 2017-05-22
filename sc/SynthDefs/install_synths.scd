@@ -46,6 +46,7 @@
                  "sol.scd",
                  "ss1.scd",
                  "tremolo.scd",
+                 "ttone.scd",
                  "xover.scd"];
 ~llia_manifest.do({|fname|
     postf("Installing '%'\n", fname);
