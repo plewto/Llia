@@ -40,6 +40,6 @@ specs["is-controller"] = False
 specs["keymodes"] = ("PolyN","PolyRotate","Poly1","Mono1","MonoExclusive")
 specs["audio-output-buses"] = [["outbus1","out_0"],["outbus2","out_1"]]
 specs["audio-input-buses"] = []
-specs["control-output-buses"] = [["xbus","null_sink"]]
-specs["control-input-buses"] = []
+specs["control-input-buses"] = [["xbus","null_sink"]]
+specs["control-output-buses"] = []
 llia.constants.SYNTH_TYPES.append(specs["format"])
