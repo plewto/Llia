@@ -23,6 +23,7 @@ print("Importing effects:")
 import llia.synths.carnal.crnl_proxy
 import llia.synths.carnal2.carnal2_proxy
 import llia.synths.flngr.flngr_proxy
+import llia.synths.flngr2.flngr2_proxy
 import llia.synths.tremolo.trm_proxy
 import llia.synths.mixer.mixer_proxy
 import llia.synths.panner.panner_proxy

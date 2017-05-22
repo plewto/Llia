@@ -16,6 +16,7 @@
                  "cutil.scd",
                  "envgen.scd",
                  "flngr.scd",
+                 "flngr2.scd",
                  "fm2.scd",
                  "formant.scd",
                  "ghostbus.scd",
