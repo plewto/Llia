@@ -27,7 +27,7 @@ class CombProxy(SynthProxy):
 
 pallet = Pallet(default_pallet)
 #pallet["BACKGROUND"] =  
-#pallet["SLIDER-OUTLINE"] = 
+pallet["SLIDER-OUTLINE"] = "#0aa167"
 #pallet["SLIDER-TROUGH"] = 
 specs["constructor"] = CombProxy
 specs["description"] = "Simple Comb Filter"

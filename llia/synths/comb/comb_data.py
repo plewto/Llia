@@ -8,7 +8,8 @@ from llia.performance_edit import performance
 prototype = {"delayScale" : 0.01,
              "delay" : 0.50,
              "phase" : -1,
-             "wet" : 1.0}
+             "wet" : 1.0,
+             "amp" : 1.0}
 
 class Comb(Program):
 
@@ -18,7 +19,7 @@ class Comb(Program):
 
 program_bank = ProgramBank(Comb("Init"))
 
-def comb(slot, name,
+def comb(slot, name, amp=1.0,
          delayScale = 0.01,     # 0.001|0.010|0.100
          delay = 0.50,          # 0.0 .. 1.0
          phase = -1,            # -1 .. +1
@@ -26,6 +27,7 @@ def comb(slot, name,
     def fval(x):
         return round(float(x),4)
     p = Comb(name)
+    p["amp"] = fval(amp)
     p["delayScale"] = fval(delayScale)
     p["delay"] = fval(delay)
     p["phase"] = int(phase)
