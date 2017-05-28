@@ -21,7 +21,7 @@ class TkSirisPanel(TkSubEditor):
     def __init__(self,editor):
         frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,1000,700,self.IMAGE_FILE)
+        canvas = factory.canvas(frame,900,605,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self,canvas,editor,self.NAME)
         editor.add_child_editor(self.NAME, self)
@@ -34,7 +34,7 @@ class TkSirisPanel(TkSubEditor):
         yenv = 200
         # LFO
         self.tumbler("timebase",5, 0.001, x0,y0)
-        self.norm_slider("port",x0,y1);
+        self.norm_slider("port",x0+30,y1);
         self.tumbler("vratio",5,0.001,x_vib,y0)
         self.linear_slider("vdelay",(0,2),x_vib+100, y0)
         self.exp_slider("vsens",1,x_vib+160,y0)

@@ -27,12 +27,14 @@ prototype = {
     "ex1_pw" : 0.5,              # pulse width 0..1
     "ex1_pwm_lfo" : 0,           # exLFO -> pw
     "ex1_pwm_env" : 0,           # exEnv -> pw
+    "ex1_amp" : 0,               # ex1 -> main out amp
     "ex2_harmonic" : 1,          # int 1,2,3,...
     "ex2_harmonic_lfo" : 0,      # exLFO -> harmonic
     "ex2_harmonic_env" : 0,      # exEnv -> harmonic
     "ex2_pw" : 0.5,              # pulse width 0..1
     "ex2_pwm_lfo" : 0,           # exLFO -> pw
     "ex2_pwm_env" : 0,           # exEnv -> pw
+    "ex2_amp" : 0,               # ex2 -> main out amp
     "ks1_excite1" : 1.0,         # excite1 pulse -> ks1
     "ks1_excite2" : 0.0,         # excite2 pulse -> ks1
     "ks1_excite_noise" : 0.0,    # noise -> ks1 excite pulse

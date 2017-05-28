@@ -13,7 +13,7 @@ class TkSirisKSPanel(TkSubEditor):
     def __init__(self,editor):
         frame = editor.create_tab(self.NAME,self.TAB_FILE)
         frame.config(background=factory.bg())
-        canvas = factory.canvas(frame,1000,700,self.IMAGE_FILE)
+        canvas = factory.canvas(frame,909,633,self.IMAGE_FILE)
         canvas.pack()
         TkSubEditor.__init__(self,canvas,editor,self.NAME)
         editor.add_child_editor(self.NAME, self)

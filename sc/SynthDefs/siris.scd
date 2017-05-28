@@ -3,7 +3,9 @@
 */
 
 (SynthDef (\Siris, {
-	|outbus = 0
+	|outbus = 0               // Audio out
+	trigbus1 = 1024           // External trigger
+	trigbus2 = 1024
 	gate = 1
 	freq = 440
 	detune = 1.0
@@ -34,6 +36,7 @@
 	ex1_pw = 0.5              // pulse width 0..1
 	ex1_pwm_lfo = 0           // exLFO -> pw
 	ex1_pwm_env = 0           // exEnv -> pw
+	ex1_amp = 0               // ex1 -> main out mix
     // Excitation pulse 2
 	ex2_harmonic = 1          // int 1,2,3,...
 	ex2_harmonic_lfo = 0      // exLFO -> harmonic
@@ -41,6 +44,7 @@
 	ex2_pw = 0.5              // pulse width 0..1
 	ex2_pwm_lfo = 0           // exLFO -> pw
 	ex2_pwm_env = 0           // exEnv -> pw
+	ex2_amp = 0               // ex2 -> main out mix
 	// KS line 1
 	ks1_excite1 = 1.0         // excite1 pulse -> ks1
 	ks1_excite2 = 0.0         // excite2 pulse -> ks1
@@ -49,7 +53,7 @@
 	ks1_ratio = 1.0           // Tuning
 	ks1_decay = 3             //
 	ks1_coef = 0.3            // ks feedback coeficienat 0..1
-	ks1_trig_mode = 0         // 0=gate, 1=trem, 2=continuous
+	ks1_trig_mode = 0         // 0=gate, 1=trem, 2=continuous, 3=external (trigbus1)
 	ks1_trig_ratio = 1        // trig LFO frequency relative to timebase.
 	ks1_clip_enable = 0       // 0=disable, 1=enable
 	ks1_clip_gain = 1         // pre-clipler gain
@@ -66,7 +70,7 @@
 	ks2_ratio = 1.0           // Tuning
 	ks2_decay = 3             //
 	ks2_coef = 0.3            // ks feedback coeficienat 0..1
-	ks2_trig_mode = 0         // 0=gate, 1=trem, 2=continuous
+	ks2_trig_mode = 0         // 0=gate, 1=trem, 2=continuous, 3=external (trigbus2)
 	ks2_trig_ratio = 1        // trig LFO frequency relative to timebase.
 	ks2_clip_enable = 0       // 0=disable, 1=enable
 	ks2_clip_gain = 1         // pre-clipler gain
@@ -111,14 +115,15 @@
 	var white = WhiteNoise.ar();
 	var nsenv = EnvGen.kr(Env.asr(nse_attack,1,nse_decay),gate);
 	var nsamp = XFade2.kr(1,velocity,nse_velocity.linlin(0,1,-1,1))*nse_amp;
-	var nssig = LPF.ar(HPF.ar(white,nse_highpass),nse_lowpass,nsenv*nsamp);
+
+	var nssig = LPF.ar(HPF.ar(white+(ex1*ex1_amp)+(ex2*ex2_amp),nse_highpass),nse_lowpass,nsenv*nsamp);
 	// Karplus-Strong 1
 	var ks1_freq = f0*ks1_ratio;
 	var ks1_nse = Select.ar(ks1_excite_white, [pink, white]);
 	var ks1_excite = LeakDC.ar((ex1*ks1_excite1) + (ex2*ks1_excite2) + (ks1_nse * ks1_excite_noise));
 	var ks1_trem = LFPulse.ar(timebase*ks1_trig_ratio);
 	var ks1_sus = LFPulse.ar(0.9*ks1_freq);
-	var ks1_trig = Select.ar(ks1_trig_mode, [K2A.ar(gate),ks1_trem,ks1_sus]);
+	var ks1_trig = Select.ar(ks1_trig_mode, [K2A.ar(gate),ks1_trem,ks1_sus,K2A.ar(In.kr(trigbus1))]);
 	var ks1a = Pluck.ar(ks1_excite, ks1_trig, 0.2, 1/ks1_freq, ks1_decay, ks1_coef);
 	var ks1b = Select.ar(ks1_trig_mode, [ks1a,ks1a,ks1a.clip2(1)]);
 	var ks1c = (ks1b*ks1_clip_gain).clip2(ks1_clip_threshold);
@@ -132,7 +137,8 @@
 	var ks2_excite = LeakDC.ar((ex1*ks2_excite1) + (ex2*ks2_excite2) + (ks2_nse * ks2_excite_noise));
 	var ks2_trem = LFPulse.ar(timebase*ks2_trig_ratio);
 	var ks2_sus = LFPulse.ar(0.9*ks2_freq);
-	var ks2_trig = DelayL.ar(Select.ar(ks2_trig_mode, [K2A.ar(gate),ks2_trem,ks2_sus]), ks2_max_delay,ks2_delay.min(ks2_max_delay));
+	var ks2_trig = DelayL.ar(Select.ar(ks2_trig_mode, [K2A.ar(gate),ks2_trem,ks2_sus, K2A.ar(In.kr(trigbus2))]),
+		ks2_max_delay,ks2_delay.min(ks2_max_delay));
 	var ks2a = Pluck.ar(ks2_excite, ks2_trig, 0.2, 1/ks2_freq, ks2_decay, ks2_coef);
 	var ks2b = Select.ar(ks2_trig_mode, [ks2a,ks2a,ks2a.clip2(1)]);
 	var ks2c = (ks2b*ks2_clip_gain).clip2(ks2_clip_threshold);

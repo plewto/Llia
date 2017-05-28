@@ -26,9 +26,9 @@ class SirisProxy(SynthProxy):
             return parent_editor
 
 pallet = Pallet(default_pallet)
-#pallet["BACKGROUND"] =  
-#pallet["SLIDER-OUTLINE"] = 
-#pallet["SLIDER-TROUGH"] = 
+pallet["BACKGROUND"] = "#2d292d"
+pallet["SLIDER-OUTLINE"] = "#1f4737"
+pallet["SLIDER-TROUGH"] = "#371f47"
 specs["constructor"] = SirisProxy
 specs["description"] = "Dual Karplus-Strong Plucked String Synth"
 specs["help"] = "Siris"
