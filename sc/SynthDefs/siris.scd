@@ -116,7 +116,9 @@
 	var nsenv = EnvGen.kr(Env.asr(nse_attack,1,nse_decay),gate);
 	var nsamp = XFade2.kr(1,velocity,nse_velocity.linlin(0,1,-1,1))*nse_amp;
 
-	var nssig = LPF.ar(HPF.ar(white+(ex1*ex1_amp)+(ex2*ex2_amp),nse_highpass),nse_lowpass,nsenv*nsamp);
+	var nssig = LPF.ar(HPF.ar((white*nsamp)+(ex1*ex1_amp)+(ex2*ex2_amp),
+		nse_highpass.max(20).min(16000)),
+		nse_lowpass.max(20).min(16000),nsenv);
 	// Karplus-Strong 1
 	var ks1_freq = f0*ks1_ratio;
 	var ks1_nse = Select.ar(ks1_excite_white, [pink, white]);
