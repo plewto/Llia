@@ -203,7 +203,7 @@ class TkSubEditor(Frame):
         self.add_control(param,s)
         s.widget().place(x=x,y=y,height=height)
 
-    def tumbler(self,param,digits,scale,x,y):
+    def tumbler(self,param,digits,scale,x,y,range_=None):
         '''
         Adds digital tumbler to canvas.
         
@@ -213,12 +213,14 @@ class TkSubEditor(Frame):
           scale  - float, numeric scale factor.
           x      - int, x coordinate
           y      - int, y coordinate
-
+          
         RETURNS: Tumbler
         '''
+        range_ = range_ or (0, 10**digits)
         t = Tumbler(self.canvas,param,self.parent,
                     digits = digits,
-                    scale = scale)
+                    scale = scale,
+                    range_ = range_)
         self.add_control(param,t)
         t.layout((x,y))
         return t
