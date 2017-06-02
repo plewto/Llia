@@ -1,5 +1,8 @@
 
-
+Adds Extremely simple TestTone synth.
+Adds Sol "Vector" synth.
+Updates Pitchshifter effect.
+Adds 2-channel versions of Carnal and Flngr effects.
 Adds run-time editor annotation.
 Depreciated keyswitch feature.
 Adds Klstr2 synth
