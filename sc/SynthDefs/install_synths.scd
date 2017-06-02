@@ -41,8 +41,6 @@
                  "rumklang.scd",
                  "saw3.scd",
                  "scanner.scd",
-                 "siris.scd",
-                 "slug.scd",
                  "snh.scd",
                  "sol.scd",
                  "ss1.scd",
