@@ -268,7 +268,7 @@ class TkSubEditor(Frame):
         if update: msb.update_aspect()
         return d
     
-    def msb(self,param,count,x,y):
+    def msb(self,param,count,x,y,width=60,height=27):
         '''
         Adds Multi State Button to the canvas.   In order for the button to 
         be useful, two or more aspects must be defined.  The update_aspect()
@@ -285,7 +285,7 @@ class TkSubEditor(Frame):
         '''
         b = MSB(self.canvas,param,self.parent,count)
         self.add_control(param,b)
-        b.layout((x,y))
+        b.layout((x,y),width=width,height=height)
         return b
 
     def toggle(self,param,x,y,
