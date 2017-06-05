@@ -166,7 +166,8 @@
 	f2_pan = 0|
 	var white = WhiteNoise.ar();
 	var pink = PinkNoise.ar(4);
-	var lfnoise = LFNoise0.kr(3);
+	var lfnoise1 = LFNoise0.kr(3);
+	var lfnoise2 = LFNoise0.kr(2.5);
 	var xsig = In.kr([xbus1,xbus2]);
 	var venv = EnvGen.kr(Env([0,0,1,1],[vdelay,vdelay,env3_release],\lin,2),gate);
 	var lfov = LFCub.kr(vfreq,0,vibrato+(vdepth*venv));
@@ -180,8 +181,10 @@
 	var lfo2p = lfo2.linlin(-1,1,0,1);
 	var clk = LFPulse.kr([clk1_ratio,clk2_ratio]*vfreq);
 	var hold_times = [env1_attack+env1_decay, env2_attack+env2_decay, env3_attack+env3_decay];
-	var trig_sources = [gate,gate*clk[0],gate*clk[1],gate*lfo1,gate*lfo2,gate*xsig[0],gate*xsig[1],lfnoise*gate,
-		clk[0],clk[1],lfo1,lfo2,xsig[0],xsig[1],lfnoise];
+
+	var trig_sources = [gate,gate*clk[0],gate*clk[1],gate*lfo1,gate*lfo2,gate*xsig[0],gate*xsig[1],lfnoise1*gate,lfnoise2*gate,
+		clk[0],clk[1],lfo1,lfo2,xsig[0],xsig[1],lfnoise1,lfnoise2];
+
 	var e1_trigsrc = Select.kr(env1_trig_src, trig_sources);
 	var e1_gate = Select.kr(env1_trig_mode, [e1_trigsrc, Trig1.kr(e1_trigsrc,hold_times[0])]);
 	var env1 = EnvGen.kr(Env.adsr(env1_attack,env1_decay,env1_sustain,env1_release),e1_gate);

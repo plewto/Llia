@@ -138,14 +138,12 @@ prototype = {
     "f2_res" : 0,
     "f2_pan" : 0}
 
-
 class Sandcat(Program):
 
     def __init__(self,name):
         super(Sandcat,self).__init__(name,Sandcat,prototype)
         self.performance = performance()
 program_bank = ProgramBank(Sandcat("Init"))
-
 
 def fval(f):
     return round(float(f),4)
@@ -193,7 +191,6 @@ def excite(n, harmonic=1, lfo=0, env=0, pw=0.5, pwm=0.0, noise=0, mix=0):
             pwm_param : float(pwm),
             param("noise_select") : int(noise),
             param("source_mix") : fval(mix)}
-
 
 def pluck(n, ratio=1.0, decay=3, coef=0.5, trig=0, velocity=0.0):
     def param(suffix):
@@ -284,10 +281,8 @@ def sandcat(slot, name, amp=0.1,
                        env_mode=0, lfo=0.0, velocity=0.0, left=0, right=0),
             car2 = car(2, ratio=2.0, bias=0.0, mod1=0.0, mod2=1.0, ks=0.0,
                        env_mode=0, lfo=0.0, velocity=0.0, left=0, right=0),
-
             f1_cutoff=16000, f1_track=0.0, f1_env3=0,
             f1_lfo1=0, f1_lfov=0, f1_velocity=0, f1_res=0.0,f1_pan=0.0,
-
             f2_cutoff=16000, f2_track=0.0, f2_env4=0,
             f2_lfo2=0, f2_lfov=0, f2_velocity=0, f2_res=0.0,f2_pan=0.0,
             mixer = mixer(),
@@ -302,7 +297,6 @@ def sandcat(slot, name, amp=0.1,
     p["f1_velocity"] = int(f1_velocity)
     p["f1_res"] = int(f1_res)
     p["f1_pan"] = int(f1_pan)
-
     p["f2_cutoff"] = int(f2_cutoff)
     p["f2_track"] = int(f2_track)
     p["f2_env4"] = int(f2_env4)

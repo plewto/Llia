@@ -47,7 +47,6 @@ class TkStackPanel(TkSubEditor):
         x0 = 75
         xex = x0
         y0, y1, y2 = 75, 350, 575
-
         msb_harmonic = self.msb(ex("harmonic"),len(EX_HARMONICS),xex,y0)
         msb_lfo = self.msb(ex("lfo%d" % n),len(EX_HARMONICS_MOD),xex,y0+75)
         msb_env = self.msb(ex("env%d" % n),len(EX_HARMONICS_MOD),xex,y0+150)
@@ -98,26 +97,6 @@ class TkStackPanel(TkSubEditor):
         self.norm_slider(car("lfo%d" % n), xenv+60, y1)
         self.norm_slider(mod("velocity"), xenv+120, y0)
         self.norm_slider(car("velocity"), xenv+120, y1)
-        # msb_break = self.msb(stack("break_key"),len(BREAK_KEYS),xfm+75,y0+212)
-        # for i,pair in enumerate(BREAK_KEYS):
-        #     v,text = pair
-        #     self.msb_aspect(msb_break,i,v,text=text)
-        # msb_break.update_aspect()
-        # msb_mleft = self.msb(mod("left_scale"),len(KEY_SCALES),xfm, y0+192)
-        # msb_cleft = self.msb(car("left_scale"),len(KEY_SCALES),xfm, y1-72)
-        # msb_mright = self.msb(mod("right_scale"),len(KEY_SCALES),xfm+150, y0+192)
-        # msb_cright = self.msb(car("right_scale"),len(KEY_SCALES),xfm+150, y1-72)
-        # for i,v in enumerate(KEY_SCALES):
-        #     text = "%d db" % v
-        #     if v>0: text = "+"+text
-        #     self.msb_aspect(msb_mleft,i,v,text=text)
-        #     self.msb_aspect(msb_cleft,i,v,text=text)
-        #     self.msb_aspect(msb_mright,i,v,text=text)
-        #     self.msb_aspect(msb_cright,i,v,text=text)
-        # msb_mleft.update_aspect()
-        # msb_cleft.update_aspect()
-        # msb_mright.update_aspect()
-        # msb_cright.update_aspect()
         # ADSR
         xadsr = x0
         yadsr = y1
@@ -143,7 +122,6 @@ class TkStackPanel(TkSubEditor):
         xright = xleft + 300
         msb_mleft = self.msb(mod("left_scale"),len(KEY_SCALES),xleft, y2)
         msb_mright = self.msb(mod("right_scale"),len(KEY_SCALES),xleft+75, y2)
-
         msb_cleft = self.msb(car("left_scale"),len(KEY_SCALES),xright, y2)
         msb_cright = self.msb(car("right_scale"),len(KEY_SCALES),xright+75, y2)
         for i,v in enumerate(KEY_SCALES):
@@ -157,7 +135,6 @@ class TkStackPanel(TkSubEditor):
         msb_cleft.update_aspect()
         msb_mright.update_aspect()
         msb_cright.update_aspect()
-
         msb_break = self.msb(stack("break_key"),len(BREAK_KEYS),xleft+188,y2)
         for i,pair in enumerate(BREAK_KEYS):
             v,text = pair
