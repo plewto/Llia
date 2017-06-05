@@ -44,9 +44,9 @@ class TkFilterPanel(TkSubEditor):
             self.exp_slider("f%d_lfov" % n, MAX_FILTER_MOD, xf+240, y,degree=FILTER_SLIDER_DEGREE)
             self.norm_slider("f%d_res" % n, xf+300, y)
             self.linear_slider("f%d_pan" % n, (-1,1), xf+360, y)
-        self.volume_slider("amp",xvib+60,y0)
+        self.volume_slider("amp",xvib+93,y0)
         # # Vibrato
-        self.tumbler("vfreq",5,0.001,xvib+92,yvib)
+        self.tumbler("vfreq",5,0.001,xvib+63,yvib)
         self.linear_slider("vdelay",(0,2),xvib,yvib+50)
         self.norm_slider("vsens",xvib+60,yvib+50)
         self.norm_slider("vdepth",xvib+120,yvib+50)

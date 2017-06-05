@@ -16,8 +16,8 @@ import llia.synths.io.io_proxy
 import llia.synths.corvus.corvus_proxy
 import llia.synths.m.m_proxy        
 import llia.synths.sol.sol_proxy
-import llia.synths.ttone.ttone_proxy
 import llia.synths.sandcat.sandcat_proxy
+import llia.synths.ttone.ttone_proxy
 # END SYNTH IMPORTS
 
 print("Importing effects:")

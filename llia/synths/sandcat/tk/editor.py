@@ -19,6 +19,7 @@ def create_editor(parent):
     TkStackPanel(parent, 1)
     TkStackPanel(parent, 2)
     TkFilterPanel(parent, trigger_msb_factory)
+    TkBlockDiagram(parent)
 
 
 class TkStackPanel(TkSubEditor):
@@ -162,3 +163,19 @@ class TkStackPanel(TkSubEditor):
             v,text = pair
             self.msb_aspect(msb_break,i,v,text=text)
         msb_break.update_aspect()
+
+
+
+class TkBlockDiagram(TkSubEditor):
+
+    def __init__(self,editor):
+        name = "Block Diagram"
+        tabfile = "resources/Sandcat/tab.png"
+        image_file = "resources/Sandcat/block_diagram.png"
+        frame = editor.create_tab(name,tabfile)
+        frame.config(background=factory.bg())
+        canvas = factory.canvas(frame,1500,700,image_file)
+        canvas.pack()
+        TkSubEditor.__init__(self,canvas,editor,name)
+        editor.add_child_editor(name, self)
+     

@@ -27,8 +27,8 @@ class SandcatProxy(SynthProxy):
 
 pallet = Pallet(default_pallet)
 #pallet["BACKGROUND"] =  
-pallet["SLIDER-OUTLINE"] = "white"
-pallet["SLIDER-TROUGH"] = "#1f4737"
+pallet["SLIDER-OUTLINE"] = "#1e4738"
+pallet["SLIDER-TROUGH"] = "#2e1428"
 specs["constructor"] = SandcatProxy
 specs["description"] = "Hybrid Karplus-Strong/FM Synth."
 specs["help"] = "Sandcat"
