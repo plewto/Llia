@@ -16,12 +16,13 @@ startup-script :
 startup-scene : 
 
 [MIDI]
-# input-port : Launchkey Mini:Launchkey Mini MIDI 1 28:0
-input-port : UM-1SX:UM-1SX MIDI 1 28:0
-output-port : Launchkey Mini 28:0
+# input-port : Launchkey Mini:Launchkey Mini MIDI 1 16:0
+input-port : UM-1SX:UM-1SX MIDI 1 20:0
+#output-port : Launchkey Mini 28:0
+output-port : UM-1SX:UM-1SX MIDI 1 20:0
 backend : mido.backends.rtmidi
 # backend : midi.backends.portmidi
-enable-program-pp : False
+enable-program-pp : True
 trace-midi-reception : False
 
 [OSC]
@@ -34,7 +35,7 @@ trace-osc-transmission : False
 
 [GUI]
 gui : Tk
-no-splash : False
+no-splash : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
 warn-on-exit : False

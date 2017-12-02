@@ -419,3 +419,27 @@ drawn correctly.
 Llia, all graph paths were rendered correctly.  However loading a different
 scene file, none of the graph paths were rendered.  Suspect the graph
 system is not being properly initialized by tabula_rasa. 
+
+
+---------------------------------------------------------------------- Open 0027
+BUG 0027 2017.06.12
+
+Creating bus kills OSC comunication.
+
+To reproduce.
+1) Start Server and client.
+2) Test OSC by clicking Ping.
+3) Create an audio or control bus.
+4) Try ping again.
+
+Observations:
+The server does recive the Ping request.
+Comunications can be restored by manipuilating the client windows. Moving an
+icon on the graph is sufficient. 
+
+
+---------------------------------------------------------------------- Open 0028
+BUG 0028 2017.06.12
+
+PolyN keymode drops note.
+
