@@ -151,8 +151,8 @@ class TkApplicationWindow(AbstractApplicationWindow):
         fmenu.add_command(label="Save Scene", command = self.save_scene)
         fmenu.add_command(label="Load Scene", command = self.load_scene)
         fmenu.add_separator()
-        # fmenu.add_command(label="Lliascript", command = self.show_history_editor)
-        # fmenu.add_separator()
+        fmenu.add_command(label="Lliascript (Legacy)", command = self.show_history_editor)
+        fmenu.add_separator()
         fmenu.add_command(label="New Synth Group", command = self._add_synth_group)
         fmenu.add_separator()
         fmenu.add_command(label="Restart", command = self._interactive_tabula_rasa)
@@ -219,10 +219,10 @@ class TkApplicationWindow(AbstractApplicationWindow):
     def display_help(self, topic=None):
         pass
         
-    # def show_history_editor(self):
-    #     from llia.gui.tk.tk_history import TkHistoryEditor
-    #     dialog = TkHistoryEditor(self.root, self.app)
-    #     self.root.wait_window(dialog)
+    def show_history_editor(self):
+        from llia.gui.tk.tk_history import TkHistoryEditor
+        dialog = TkHistoryEditor(self.root, self.app)
+        self.root.wait_window(dialog)
 
     def ping_global(self):
         try:
