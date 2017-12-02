@@ -39,7 +39,6 @@
                  "rdrum.scd",
                  "ringmodulator.scd",
                  "rumklang.scd",
-                 "sandcat.scd",
                  "saw3.scd",
                  "scanner.scd",
                  "snh.scd",
