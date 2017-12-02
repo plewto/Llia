@@ -19,6 +19,7 @@
                  "flngr2.scd",
                  "fm2.scd",
                  "formant.scd",
+                 "galvaniser.scd",
                  "ghostbus.scd",
                  "hund.scd",
                  "io.scd",

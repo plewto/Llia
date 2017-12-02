@@ -1,42 +1,42 @@
-
-Adds Extremely simple TestTone synth.
-Adds Sol "Vector" synth.
+Added Galvinizer effect.
+Added Extremely simple TestTone synth.
+Added Sol "Vector" synth.
 Updates Pitchshifter effect.
-Adds 2-channel versions of Carnal and Flngr effects.
-Adds run-time editor annotation.
+Added 2-channel versions of Carnal and Flngr effects.
+Added run-time editor annotation.
 Depreciated keyswitch feature.
-Adds Klstr2 synth
+Added Klstr2 synth
 Reduced size for ProgramBank files.
-Adds scene feature, saves synth states in single file.
-Adds better restart options.
+Added scene feature, saves synth states in single file.
+Added better restart options.
 	
 **************************************************** v 0.1.2    2017.03.23
 Multiple bug fixes
-Adds Scanner phase-shifter
-Adds Comb filter
+Added Scanner phase-shifter
+Added Comb filter
 Increased size of splash screen to accumodate more MIDI devices.
 
 **************************************************** v 0.1.0    2016.12.17
 Multiple bug fixes
 Documentation
 Implements addsynth script to partially automate new synth creation.
-Adds control widget creation methods to TkSubEditor.
+Added control widget creation methods to TkSubEditor.
 Extends compose feature to include program banks and graph layout.
-Adds Bandpass and Notch filter effects.
-Adds parametric EQ effect.
-Adds M synth.
+Added Bandpass and Notch filter effects.
+Added parametric EQ effect.
+Added M synth.
 Extends FM2 synth.
-Adds SS1 synth.
-Adds IO synth.
-Adds Corvus synth.
-Adds PolyN keymode.
-Adds MonoExclusive keymode.
-Adds Algo synth.
-Adds QMod effect.
-Adds Grayhound effect.
-Adds Crusher effect.
-Adds RingModulator effect.
-Adds Ghostbus controller effect.
-Adds ControlMixer effect.
-Adds Cascade pulse generator.
+Added SS1 synth.
+Added IO synth.
+Added Corvus synth.
+Added PolyN keymode.
+Added MonoExclusive keymode.
+Added Algo synth.
+Added QMod effect.
+Added Grayhound effect.
+Added Crusher effect.
+Added RingModulator effect.
+Added Ghostbus controller effect.
+Added ControlMixer effect.
+Added Cascade pulse generator.
 
