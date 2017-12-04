@@ -19,6 +19,7 @@
                  "flngr2.scd",
                  "fm2.scd",
                  "formant.scd",
+                 "fxstack.scd",
                  "galvaniser.scd",
                  "ghostbus.scd",
                  "hund.scd",
