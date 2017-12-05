@@ -27,7 +27,7 @@ class FxstackProxy(SynthProxy):
 
 pallet = Pallet(default_pallet)
 #pallet["BACKGROUND"] =  
-#pallet["SLIDER-OUTLINE"] = 
+pallet["SLIDER-OUTLINE"] = "#5a5c63"
 #pallet["SLIDER-TROUGH"] = 
 specs["constructor"] = FxstackProxy
 specs["description"] = "Integrated Effects Stack"
