@@ -133,7 +133,7 @@
 
 	// Reverb
 	var reverbIn = Pan2.ar([dly1Out,dly2Out],[delay1Pan,delay2Pan]);
-	var reverbMod = 1 + (env*reverbEnv) + (lfo2*reverbLfo2);
+	var reverbMod = (1 + (env*reverbEnv) + (lfo2*reverbLfo2)).abs.min(1);
 	var reverbWet = FreeVerb.ar(reverbIn,1.0,reverbRoomSize,reverbDamping)*reverbMod;
 	var reverbOut = XFade2.ar(reverbIn,reverbWet,reverbMix.linlin(0,1,-1,1));
 	// var reverbOut = dly1Out;     // ISSUE: Reverb Bypass
