@@ -124,22 +124,5 @@
 	var fbsig0 = LPF.ar(dly1Wet,delay1Lowpass.linexp(0,1,minFilter,maxFilter));
 	var fbsig1 = HPF.ar(dly2Wet,delay2Highpass.linexp(0,1,20,maxFilter));
 	LocalOut.ar([fbsig0,fbsig1]);
-	Out.ar(0,reverbOut*1.0);
+	Out.ar(0,reverbOut*outputGain);
 }).load)
-
-/* *** START TEST *** */
-
-
-(
-q.free;
-q = Synth(\Fxstack, [\ttfreq, 100]);
-q.set(\delay1Time, 0.333, \delay1Feedback,  0.10, \delay1XFeedback,  0.20, \delay1Mix, 0.5);
-q.set(\delay2Time, 0.567, \delay2Feedback, -0.10, \delay2XFeedback,  0.10, \delay2Mix, 0.5);
-q.set(\reverbMix, 0.5, \reverbRoomSize, 1.0);
-q.set(\filterMix, 0.5, \filterLfo2, 0.5, \filterRes, 0.5);
-)
-
-
-
-
-
