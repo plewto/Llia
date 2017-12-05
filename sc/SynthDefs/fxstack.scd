@@ -14,7 +14,7 @@
 	inputGain = 1.0
 	outputGain = 1.0
 	// Envelope Follower
-	envGain = 1.0   // 1..400?
+	envGain = 1.0   // 1..100?
 	attack = 0.0    // 0..2
 	release = 0.0   // 0..2
 	// LFOs
@@ -63,7 +63,7 @@
 	var maxFilter = 20000;
 	var insig = In.ar(inbus);
 	// Envelope Follower
-	var envTrig = insig*envGain;
+	var envTrig = insig.abs.min(0.25)*envGain;
 	var env = Lag2.kr(Amplitude.kr(envTrig,attack,release),0.05);
 	// LFOs
 	var lfo1 = LFCub.kr(lfo1Freq);

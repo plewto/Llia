@@ -8,15 +8,17 @@ from llia.performance_edit import performance
 prototype = {
  	"inputGain" : 1.0,          #  0..2
 	"outputGain" : 1.0,         #  0..2
-	"envGain" : 1.0,            #  1..400
+	"envGain" : 1.0,            #  1..100
 	"attack" : 0.0,             #  0..2
 	"release" : 0.0,            #  0..2
-	"lfo1Freq" : 1.0,           #  0..15
-	"lfo2Freq" : 1.0,           #  0..15
+	"lfo1Freq" : 1.0,           #  0..99.999
+	"lfo2Freq" : 1.0,           #  0..99.999
 	"lfo2Mod" : 0.0,            #  0..1
-	"clipDrive" : 1.0,          #  0..1
+
+        "clipDrive" : 1.0,          #  0..1
 	"clipLfo1" : 0.0,           #  0..1
 	"clipMix" : 0.0,            #  0..1
+    
 	"filterFreq" : 0.5,         #  0..1
 	"filterEnv" : 0.0,          #  0..1
 	"filterLfo2" : 0.0,         #  0..1
@@ -68,13 +70,13 @@ def gain(input=1.00, output=1.00):
             "outputGain" : fval(output,0,2)}
 
 def env(gain=1, attack=0, release=0):
-    return {"envGain": fval(gain,mx=400),
+    return {"envGain": fval(gain,mx=100),
             "attack" : fval(attack),
             "release" : fval(release)}
 
 def lfo(freq1=1.00, freq2=1.00, mod2=0.00):
-    return {"lfo1Freq":fval(freq1,0,15),
-            "lfo2Freq":fval(freq2,0,15),
+    return {"lfo1Freq":fval(freq1,0,99.999),
+            "lfo2Freq":fval(freq2,0,99.999),
             "lfo2Mod":fval(mod2)}
 
 def clipper(drive=1, lfo1=0.00, mix=0.00):
