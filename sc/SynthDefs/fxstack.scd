@@ -64,9 +64,9 @@
 	var insig = In.ar(inbus);
 
 	// Envelope Follower
-/*	var envTrig = insig.abs.min(0.25)*envGain;
-	var env = Lag2.kr(Amplitude.kr(envTrig,attack,release),0.05); */
-	var env=0;  // Env Bypass
+	var envTrig = insig.abs.min(0.25)*envGain;
+	var env = Lag2.kr(Amplitude.kr(envTrig,attack,release),0.05);
+	// var env=0;  // Env Bypass
 
 	// LFOs
 	var lfo1 = LFCub.kr(lfo1Freq);
