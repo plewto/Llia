@@ -146,16 +146,102 @@ def fxstack(slot, name,
     program_bank[slot] = p
     return p
 
-fxstack(0,"Init")
+fxstack(0,"Bypass",
+        gain(input=1.0000, output=1.0000),
+        env(gain=1.0000, attack=0.0000, release=0.0000),
+        lfo(freq1=1.0000, freq2=4.0000, mod2=0.0000),
+        clipper(drive=1.0000, lfo1=0.0000, mix=0.0000),
+        wha(freq=0.5000, env=0.4975, lfo2=0.0000, res=0.2965, mix=0.0000),
+        flanger(delay1=0.5000, delay2=0.5477, lfo1=0.2000, feedback=-0.2000, mix=0.0000),
+        delay1(delay=0.1000, lfo1=0.0000, fb=0.0000, xfb=0.0000, lowpass=1.0000, mix=0.0000, pan=0.0000),
+        delay2(delay=0.1000, lfo2=0.0000, fb=0.0000, xfb=0.0000, highpass=1.0000, mix=0.0000, pan=0.0000),
+        reverb(room=0.5000, damping=0.5000, env=0.0000, lfo2=0.0000, mix=0.0000))
 
+fxstack(1,"Simple Clipping",
+        gain(input=1.0000, output=1.0000),
+        env(gain=1.0000, attack=0.0000, release=0.0000),
+        lfo(freq1=1.0000, freq2=4.0000, mod2=0.0000),
+        clipper(drive=0.7990, lfo1=0.0000, mix=0.7839),
+        wha(freq=0.4975, env=0.4975, lfo2=0.0000, res=0.2965, mix=0.0000),
+        flanger(delay1=0.4975, delay2=0.5477, lfo1=0.1960, feedback=-0.2000, mix=0.0000),
+        delay1(delay=0.1000, lfo1=0.0000, fb=0.0000, xfb=0.0000, lowpass=1.0000, mix=0.0000, pan=0.0000),
+        delay2(delay=0.1000, lfo2=0.0000, fb=0.0000, xfb=0.0000, highpass=1.0000, mix=0.0000, pan=0.0000),
+        reverb(room=0.4975, damping=0.4975, env=0.0000, lfo2=0.0000, mix=0.2663))
 
-fxstack(1,"Init",
+fxstack(2,"Env Follow",
+        gain(input=1.0000, output=1.0000),
+        env(gain=76.2400, attack=0.0000, release=0.0000),
+        lfo(freq1=1.0000, freq2=1.0000, mod2=0.0000),
+        clipper(drive=0.2613, lfo1=0.0000, mix=0.7085),
+        wha(freq=0.1106, env=0.4020, lfo2=0.0000, res=0.7387, mix=0.8392),
+        flanger(delay1=0.4975, delay2=0.5980, lfo1=0.0000, feedback=0.0000, mix=0.0000),
+        delay1(delay=0.1000, lfo1=0.0000, fb=0.0000, xfb=0.0000, lowpass=1.0000, mix=0.0000, pan=-0.7500),
+        delay2(delay=0.1000, lfo2=0.0000, fb=0.0000, xfb=0.0000, highpass=0.0000, mix=0.0000, pan=0.7500),
+        reverb(room=0.5000, damping=0.5000, env=0.0000, lfo2=0.0000, mix=0.0000))
+
+fxstack(3,"Light Flanging",
         gain(input=1.0000, output=1.0000),
         env(gain=1.0000, attack=0.0000, release=0.0000),
         lfo(freq1=1.0000, freq2=1.0000, mod2=0.0000),
         clipper(drive=1.0000, lfo1=0.0000, mix=0.0000),
-        wha(freq=0.5000, env=0.0000, lfo2=0.0000, res=0.0000, mix=0.0000),
+        wha(freq=0.4975, env=0.0000, lfo2=0.0000, res=0.0000, mix=0.0000),
+        flanger(delay1=0.5000, delay2=0.6000, lfo1=0.1558, feedback=-0.1700, mix=0.8392),
+        delay1(delay=0.1000, lfo1=0.0000, fb=0.0000, xfb=0.0000, lowpass=1.0000, mix=0.0000, pan=-0.7500),
+        delay2(delay=0.1000, lfo2=0.0000, fb=0.0000, xfb=0.0000, highpass=0.0000, mix=0.0000, pan=0.7500),
+        reverb(room=0.5000, damping=0.1256, env=0.0000, lfo2=0.0000, mix=0.3668))
+
+fxstack(4,"Chorusing",
+        gain(input=1.0000, output=1.0000),
+        env(gain=1.0000, attack=0.0000, release=0.0000),
+        lfo(freq1=2.0000, freq2=6.0000, mod2=0.0000),
+        clipper(drive=1.0000, lfo1=0.0000, mix=0.0000),
+        wha(freq=0.5477, env=0.0000, lfo2=0.3367, res=0.5729, mix=0.4925),
+        flanger(delay1=0.2915, delay2=0.6000, lfo1=0.1558, feedback=-0.2500, mix=0.5176),
+        delay1(delay=0.0100, lfo1=0.2513, fb=0.4800, xfb=-0.4400, lowpass=0.7387, mix=0.5276, pan=-0.7500),
+        delay2(delay=0.0230, lfo2=0.7236, fb=0.5800, xfb=-0.4400, highpass=0.2261, mix=0.4925, pan=0.7500),
+        reverb(room=0.8643, damping=0.2965, env=0.0000, lfo2=0.0000, mix=0.5327))
+
+fxstack(5,"Mod4",
+        gain(input=1.0000, output=1.0000),
+        env(gain=1.0000, attack=0.0000, release=0.0000),
+        lfo(freq1=1.1000, freq2=4.0000, mod2=0.4874),
+        clipper(drive=0.1709, lfo1=0.9447, mix=0.7538),
+        wha(freq=0.3166, env=0.0000, lfo2=0.3668, res=0.5327, mix=0.5678),
+        flanger(delay1=0.4975, delay2=0.6000, lfo1=0.0000, feedback=0.0000, mix=0.0000),
+        delay1(delay=0.1000, lfo1=0.0000, fb=-0.4800, xfb=0.5000, lowpass=0.7940, mix=0.3065, pan=-0.7500),
+        delay2(delay=0.1250, lfo2=0.0000, fb=0.5200, xfb=-0.5600, highpass=0.2613, mix=0.2412, pan=0.7500),
+        reverb(room=0.8543, damping=0.4975, env=0.0000, lfo2=0.4221, mix=0.5126))
+
+fxstack(6,"Simple Tremolo",
+        gain(input=1.0000, output=1.0000),
+        env(gain=1.0000, attack=0.0000, release=0.0000),
+        lfo(freq1=6.0000, freq2=1.0000, mod2=0.0000),
+        clipper(drive=0.0000, lfo1=0.4724, mix=0.4774),
+        wha(freq=0.4975, env=0.0000, lfo2=0.0000, res=0.0000, mix=0.0000),
         flanger(delay1=0.5000, delay2=0.6000, lfo1=0.0000, feedback=0.0000, mix=0.0000),
         delay1(delay=0.1000, lfo1=0.0000, fb=0.0000, xfb=0.0000, lowpass=1.0000, mix=0.0000, pan=-0.7500),
         delay2(delay=0.1000, lfo2=0.0000, fb=0.0000, xfb=0.0000, highpass=0.0000, mix=0.0000, pan=0.7500),
         reverb(room=0.5000, damping=0.5000, env=0.0000, lfo2=0.0000, mix=0.0000))
+
+fxstack(7,"Heavy Clip",
+        gain(input=1.0000, output=1.0000),
+        env(gain=100.0000, attack=0.0000, release=0.0000),
+        lfo(freq1=1.0000, freq2=1.0000, mod2=0.0000),
+        clipper(drive=1.0000, lfo1=0.0000, mix=1.0000),
+        wha(freq=0.4975, env=0.0000, lfo2=0.0000, res=0.0000, mix=0.0000),
+        flanger(delay1=0.4975, delay2=0.5980, lfo1=0.0000, feedback=0.0000, mix=0.0000),
+        delay1(delay=0.1000, lfo1=0.0000, fb=0.0000, xfb=0.0000, lowpass=1.0000, mix=0.0000, pan=-0.7500),
+        delay2(delay=0.1000, lfo2=0.0000, fb=0.0000, xfb=0.0000, highpass=0.0000, mix=0.0000, pan=0.7500),
+        reverb(room=0.9497, damping=0.4975, env=1.0000, lfo2=0.4874, mix=0.5176))
+
+fxstack(8,"Cross Delay",
+        gain(input=1.0000, output=1.0000),
+        env(gain=1.0000, attack=0.0000, release=0.0000),
+        lfo(freq1=4.0000, freq2=0.1000, mod2=0.0000),
+        clipper(drive=1.0000, lfo1=0.0000, mix=0.0000),
+        wha(freq=0.5000, env=0.0000, lfo2=0.0000, res=0.0000, mix=0.0000),
+        flanger(delay1=0.5000, delay2=0.5980, lfo1=0.0000, feedback=0.0000, mix=0.0000),
+        delay1(delay=0.5000, lfo1=0.1407, fb=0.8000, xfb=-0.6600, lowpass=0.3317, mix=0.0000, pan=0.0000),
+        delay2(delay=0.2540, lfo2=0.1508, fb=0.8000, xfb=-0.5200, highpass=0.4322, mix=0.4925, pan=-0.0200),
+        reverb(room=0.5000, damping=0.8543, env=0.0000, lfo2=0.0000, mix=0.4774))
+
