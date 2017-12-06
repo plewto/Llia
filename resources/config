@@ -17,9 +17,12 @@ startup-scene :
 
 [MIDI]
 # input-port : Launchkey Mini:Launchkey Mini MIDI 1 16:0
-input-port : UM-1SX:UM-1SX MIDI 1 16:0
-#output-port : Launchkey Mini 28:0
-output-port : UM-1SX:UM-1SX MIDI 1 16:0
+# input-port : UM-1SX:UM-1SX MIDI 1 24:0
+# output-port : Launchkey Mini 28:0
+# output-port : UM-1SX:UM-1SX MIDI 1 24:0
+
+input-port:
+output-port:
 backend : mido.backends.rtmidi
 # backend : midi.backends.portmidi
 enable-program-pp : True
