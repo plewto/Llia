@@ -37,12 +37,12 @@ client-port : 58000
 trace-osc-transmission : False
 
 [GUI]
-#gui : Tk
-gui : None
+gui : Tk
+#gui : None
 no-splash : True
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
-warn-on-exit : False
+warn-on-exit : False            ; Currently not implemented
 enable-active-update : True     ; Enable MIDI controller changes to update GUI
 
 [MIDI-CHANNELS]

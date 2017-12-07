@@ -23,6 +23,7 @@ specs = SynthSpecs.global_synth_type_registry
 
 PROGRESSBAR_COLUMN = 3
 
+
 class TkApplicationWindow(AbstractApplicationWindow):
 
     def __init__(self, app):
@@ -191,8 +192,11 @@ class TkApplicationWindow(AbstractApplicationWindow):
         except:
             pass
 
+    def confirm_exit(self):
+        return True
+        
+        
     def exit_app(self):
-        # ISSUE: Check config and ask user confirmation before existing
         self.app.exit_()
 
     def as_widget(self):

@@ -86,15 +86,20 @@ class LliaApp(object):
         ARGS:
           xcode - int exit code, non-zero indicates an error.
         '''
-        if xcode != 0:
-            self.status("Llia exits with code %s" % xcode)
+        if self._config.warn_on_exit():
+            flag = self._main_window.confirm_exit()
         else:
-            self.status("Exit...")
-        self.proxy.restart()
-        self._main_window.exit_gui()
-        self.ls_parser.exit_repl = True
-        sys.exit(xcode)
-
+            flag = True
+        if flag:
+            print("Llia exit code: %s" % xcode)
+            self.proxy.restart()
+            self._main_window.exit_gui()
+            self.ls_parser.exit_repl = True
+            sys.exit(xcode)
+        else:
+            print("Exit aborted.")
+            
+            
     def main_window(self):
         '''
         Returns the application's main window. 

@@ -103,7 +103,10 @@ class AbstractApplicationWindow(object):
     @abc.abstractmethod
     def display_synth_editor(self, sid):
         pass
-    
+
+    @abc.abstractmethod
+    def confirm_exit(self):
+        return True
     
 class DummyApplicationWindow(AbstractApplicationWindow):
 

@@ -30,13 +30,16 @@ class GroupWindow(Toplevel, AbstractGroupWindow):
         GroupWindow.instance_counter += 1
         self.notebook = factory.notebook(main)
         self.notebook.pack(expand=True, fill="both")
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.protocol("WM_DELETE_WINDOW", self._on_closing)
         self.bind("<Destroy>", self.on_closing)
         self.withdraw() # hide initially
         
-    def on_closing(self, *args):
-        pass
+    def _on_closing(self, *args):
+        #self.app.exit_()
+        #print("DEBUG group window exit")
+        self.app.exit_()
 
+        
     def show_synth_editor(self, sid):
         try:
             mw = self.app.main_window()
