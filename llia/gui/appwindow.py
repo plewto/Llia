@@ -13,11 +13,6 @@ class AbstractGroupWindow(object):
         self.app = app
         self.root=root
         self.name = str(name)
-        self._group = app.current_synth_group()
-        self._group.group_window = self
-
-    def group(self):
-        return self._group
         
     @abc.abstractmethod
     def on_closing(self, *args):

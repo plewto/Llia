@@ -275,7 +275,6 @@ class SynthHelper(object):
             self.update_prompt()
             sy.keymode = keymode
             sy.voice_count = voice_count
-            grp = self.parser.app.current_synth_group().add(sy)
         return sy
 
     def add_efx(self, stype):
@@ -649,8 +648,6 @@ class SynthHelper(object):
         return buffers
 
     def new_group(self, grp_name=""):
-        print("DEBUG synthhelper.new_group executing")
-        grp = self.parser.app.add_synth_group(grp_name)
         mw = self.parser.app.main_window()
         grpwin = mw.add_synth_group(grp_name)
         try:

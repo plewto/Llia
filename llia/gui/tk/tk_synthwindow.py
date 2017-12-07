@@ -7,7 +7,7 @@ from llia.generic import is_list
 import llia.gui.tk.tk_factory as factory
 import llia.gui.pallet
 from llia.gui.tk.tk_bankeditor import TkBankEditor
-from llia.gui.tk.tk_busconnection_editor import TkBusConnectionEditor
+# from llia.gui.tk.tk_busconnection_editor import TkBusConnectionEditor
 from llia.gui.tk.tk_sourcemap_dialog import add_map_dialog, delete_map_dialog
 from ttk import Progressbar
 
@@ -33,13 +33,7 @@ class TkSynthWindow(Frame):
         self.notebook.pack(anchor="nw", expand=True, fill="both")
         south = factory.frame(east)
         south.pack(after=self.notebook, anchor="w", expand=True, fill="x")
-        # b_panic = factory.panic_button(south, command=self.panic)
-        # b_clear_status = factory.clear_button(south, command=self.clear_status)
-        # self._lab_status = factory.label(south, "<status>")
-        # b_panic.grid(row=0, column=0, sticky='w')
-        # b_clear_status.grid(row=0, column=1, sticky='w')
-        # self._lab_status.grid(row=0, column=2, sticky='w', padx=8)
-
+    
         self._lab_status = factory.label(south, "<status>")
         b_panic = factory.panic_button(south, command=self.panic)
         b_lower = factory.button(south, "-", command=self.lower_window)
@@ -154,51 +148,6 @@ class TkSynthWindow(Frame):
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
     
-    # def _init_busconnection_tab(self, master):
-    #     img = factory.image("resources/Tabs/bus.png")
-    #     bct = TkBusConnectionEditor(master, self, self.synth)
-    #     master.add(bct, text = "Buses", image=img,compound="top")
-    #     self.bus_connection_editor = bct
-        
-    # def _init_midi_tab(self, master):
-    #     img = factory.image("resources/Tabs/midi.png")
-    #     frame = factory.frame(master)
-    #     master.add(frame, text = "Performance", image=img, compound="top")
-    #     frame_channel = factory.label_frame(frame, "MIDI Channel")
-    #     frame_keytab = factory.label_frame(frame, "Key Table")
-    #     lab_transpose = factory.label(frame, "Transpose")
-    #     lab_keyrange = factory.label(frame, "Key Range")
-    #     lab_bend = factory.label(frame, "Bend Range")
-    #     self.list_channel = factory.listbox(frame_channel)
-    #     sb_channel = factory.scrollbar(frame_channel)
-    #     sb_channel.config(command=self.list_channel.yview)
-    #     self.list_channel.config(yscrollcommand=sb_channel.set)
-    #     self.list_keytab = factory.listbox(frame_keytab)
-    #     sb_keytab = factory.scrollbar(frame_keytab)
-    #     sb_keytab.config(command=self.list_keytab.yview)
-    #     self.list_keytab.config(yscrollcommand=sb_keytab.set)
-    #     spin_transpose = factory.int_spinbox(frame,self.var_transpose,-36,36)
-    #     spin_keylow = factory.int_spinbox(frame,self.var_keyrange_low,0,127)
-    #     spin_keyhigh = factory.int_spinbox(frame,self.var_keyrange_high,0,127)
-    #     spin_bendrange = factory.int_spinbox(frame,self.var_bendrange, 0, 2400)
-    #     factory.padding_label(frame).grid(row=0)
-    #     frame_channel.grid(row=1, column=0, rowspan=4, columnspan=2)
-    #     self.list_channel.pack(side="left", expand=True, fill="both")
-    #     sb_channel.pack(after=self.list_channel, side="right", 
-    #                     expand=True, fill="y")
-    #     frame_keytab.grid(row=1, column=2, rowspan=4, columnspan=2)
-    #     self.list_keytab.pack(side="left", expand=True, fill="both")
-    #     sb_keytab.pack(after=self.list_keytab, side="right", 
-    #                    expand=True, fill="y")
-    #     factory.padding_label(frame).grid(row=6)
-    #     lab_transpose.grid(row=7, column=0, sticky="w", padx=4, pady=4)
-    #     spin_transpose.grid(row=7, column=1, padx=4)
-    #     lab_keyrange.grid(row=8, column=0, sticky="w", padx=4, pady=4)
-    #     spin_keylow.grid(row=8, column=1, padx=4)
-    #     spin_keyhigh.grid(row=8, column=2, padx=4)
-    #     lab_bend.grid(row=9, column=0, sticky="w", padx=4, pady=4)
-    #     spin_bendrange.grid(row=9, column=1, padx=4)
-
 
     def _init_midi_tab(self, master):
         img = factory.image("resources/Tabs/midi.png")
@@ -222,13 +171,11 @@ class TkSynthWindow(Frame):
         spin_keyhigh = factory.int_spinbox(frame,self.var_keyrange_high,0,127)
         spin_bendrange = factory.int_spinbox(frame,self.var_bendrange, 0, 2400)
         factory.padding_label(frame).grid(row=0)
-
         lab_channel = factory.label(frame,"MIDI Input Channel")
         lab_channel.grid(row=0,column=0,columnspan=2, pady=8)
         frame_channel.grid(row=1, column=0, rowspan=4, columnspan=2,padx=8,pady=8)
         self.list_channel.pack(side="left", expand=True, fill="both")
         sb_channel.pack(after=self.list_channel, side="right", expand=True, fill="y")
-
         lab_ktab = factory.label(frame, "Key Table")
         lab_ktab.grid(row=0,column=2,columnspan=2,pady=8)
         frame_keytab.grid(row=1, column=2, rowspan=4, columnspan=2,padx=8,pady=8)
