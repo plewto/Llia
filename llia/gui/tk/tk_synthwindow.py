@@ -113,31 +113,21 @@ class TkSynthWindow(Frame):
         sh.destroy_editor(sid)
         sh.remove_synth(sid, force=True)
         self.status("Removed synth: %s" % sid)
-    
+
     def _init_info_tab(self, master):
         img = factory.image("resources/Tabs/info.png")
         frame = factory.frame(master)
         inner_frame = factory.frame(frame)
         master.add(frame, text="Info", image=img,compound="top")
         text_widget = factory.text_widget(inner_frame)
-        text_widget.config(width=90, height=40)
+        text_widget.config(width=120, height=40)
         vsb = factory.scrollbar(inner_frame, orientation='vertical')
         vsb.config(command=text_widget.yview)
-        hsb = factory.scrollbar(inner_frame, orientation='horizontal')
-        hsb.config(command=text_widget.xview)
-        text_widget.config(yscrollcommand=vsb.set, xscrollcommand=hsb.set,
-                           wrap='word',)
-        text_widget.grid(row=0, column=0, rowspan=8, columnspan=8)
-        vsb.grid(row=0, column=9, rowspan=8, columnspan=1, sticky='ns')
-        hsb.grid(row=9, column=0, rowspan=1, columnspan=8, stick='we')
-        inner_frame.grid(row=0, column=0, rowspan=8, columnspan=8)
-        b_update = factory.button(frame, "Update",
-                                  command=self.sync_program_tab)
-        b_update.grid(row=9, column=0, sticky='ew', pady=8)
-        b_remove = factory.button(frame, "Remove Synth", command=self.remove_synth)
-        b_remove.grid(row=9, column=1, sticky='ew', pady=8)
+        text_widget.config(yscrollcommand=vsb.set, wrap='word',)
+        text_widget.grid(row=0, column=0,sticky="ewns")
+        vsb.grid(row=0, column=1, sticky='ns')
+        inner_frame.grid(row=0, column=0, rowspan=8, columnspan=8, sticky="ewns")
         self._info_text_widget = text_widget
-        # TODO: Add clipboard copy or save button.
 
     def lift_window(self):
         mw = self.app.main_window()
