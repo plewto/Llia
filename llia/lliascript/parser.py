@@ -508,6 +508,6 @@ class Parser(object):
         self.synthhelper.show_group()
         
     def test(self):
-        print("Lliascript entities")
-        for k,v in self.entities.items():
-            print("[%-16s] -> %s" % (k,v))
+        fname = "/home/sj/dev/Llia/scenes/organ.llia"
+        self.load_scene(fname)
+    
