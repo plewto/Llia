@@ -313,7 +313,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
         
     def add_synth_group(self, name=None):
         gw = GroupWindow(self.app, self.root, name)
-        gw.transient(self.root)
+        # gw.transient(self.root)  # If executed keeps main app window behind all other windows.
         self.group_windows.append(gw)
         self.status("Added new Synth Group Window")
         return gw
