@@ -1,6 +1,5 @@
-Llia is a framework for controlling SuperCollider synths over OSC.
-It provides a comprehensive MIDI implementation and comes bundled
-with several instruments and effects.
+Llia is an OSC client for SuperCollider with comprehensive MIDI support.
+It comes pre bundled with several synthesizers and effects. 
 
 
 Features:

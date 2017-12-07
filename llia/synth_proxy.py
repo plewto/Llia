@@ -189,6 +189,8 @@ BEND_SCALE, BEND_BIAS = curves.linear_coefficients(con.PITCHWHEEL_DOMAIN,
         
 class SynthProxy(object):
 
+    IS_SYNTH_PROXY = True
+    
     '''
     SynthProxy is a client side representation of an active synth(s).
     '''

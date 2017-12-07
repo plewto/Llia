@@ -9,6 +9,7 @@ from llia.midi_receiver import get_midi_receiver
 from llia.keytab.registry import KeyTableRegistry
 from llia.gui.appwindow import create_application_window
 from llia.lliascript.lliascript import lliascript_parser
+from llia.synth_group import SynthGroup
 import llia.constants as con
 
 class LliaApp(object):
@@ -24,6 +25,7 @@ class LliaApp(object):
         '''
         super(LliaApp, self).__init__()
         self._config = config
+        self._grpups = [SynthGroup()]
         self.pp_enabled = config.program_pp_enabled()
         self.proxy = LliaProxy(config, self)
         self._main_window = create_application_window(self)
@@ -60,6 +62,13 @@ class LliaApp(object):
         if not skip_mainloop:
             self.start_main_loop()
 
+    def synth_group(self, index=-1):
+        return self._groups[index]
+
+    def add_synth_group(self):
+        self._groups.append(SynthGroup())
+        return self.synth_group()
+            
     def config(self):
         return self._config
             
