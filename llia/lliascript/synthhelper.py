@@ -700,15 +700,24 @@ class SynthHelper(object):
         return ed.annotation_keys()
 
     # Ignore if key is not a defined annotation.
+    # Ignore if annotation not enabled.
     def set_annotation(self, key, text, sid=None):
         sy = self.get_synth(sid)
         ed = sy.synth_editor
-        ed.set_annotation(key, text)
+        try:
+            ed.set_annotation(key, text)
+        except AttributeError:
+            print("Editor anotation not enabled.")
 
+    # Return annotation text.
+    # Return empty string "" if annotatin is not enabled.
     def get_annotation(self, key, sid=None):
         sy = self.get_synth(sid)
         ed = sy.synth_editor
-        return ed.get_annotation(key)
+        try:
+            return ed.get_annotation(key)
+        except AttributeError:
+            return ""
 
     def bank_locked(self, sid=None):
         sy = self.get_synth(sid)
