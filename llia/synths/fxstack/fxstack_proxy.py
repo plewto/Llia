@@ -42,5 +42,5 @@ specs["audio-output-buses"] = [["outbus0","out_0"],["outbus1","out_1"]]
 specs["audio-input-buses"] = [["inbus","in_0"]]
 specs["control-output-buses"] = []
 specs["control-input-buses"] = []
-print("\t%s" % specs["format"])
+# print("\t%s" % specs["format"])
 llia.constants.EFFECT_TYPES.append(specs["format"])

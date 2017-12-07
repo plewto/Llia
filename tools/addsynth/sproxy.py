@@ -28,7 +28,7 @@ def _proxy_boilerplate(stype,sname):
     code += '        super(%sProxy,self).__init__(app,specs,program_bank)\n' % capname
     code += '        self._editor = None\n\n'
     code += '    def create_subeditors(self):\n'
-    code += '        gui = self.app.config["gui"].upper()\n'
+    code += '        gui = self.app.config()["gui"].upper()\n'
     code += '        if gui == "TK":\n'
     code += '            from llia.synths.%s.tk.editor import create_editor\n' % lcname
     code += '            appwin = self.app.main_window()\n'
@@ -53,8 +53,8 @@ def _proxy_boilerplate(stype,sname):
         code += 'specs["audio-input-buses"] = [["inbus","in_0"]] # FIXME\n'
         code += 'specs["control-output-buses"] = [] # FIXME\n'
         code += 'specs["control-input-buses"] = []  # FIXME\n'
-        code += 'print("\\t%s" % specs["format"])\n'
-        code += 'llia.constants.EFFECTS_TYPES.append(specs["format"])\n'
+        #code += 'print("\\t%s" % specs["format"])\n'
+        code += 'llia.constants.EFFECT_TYPES.append(specs["format"])\n'
     elif stype == "controller":
         code += 'specs["is-efx"] = True\n'
         code += 'specs["is-controller"] = True\n'
@@ -63,7 +63,7 @@ def _proxy_boilerplate(stype,sname):
         code += 'specs["audio-input-buses"] = []\n'
         code += 'specs["control-output-buses"] = [] # FIXME\n'
         code += 'specs["control-input-buses"] = []  # FIXME\n'
-        code += 'print("\\t%s" % specs["format"])\n'
+        #code += 'print("\\t%s" % specs["format"])\n'
         code += 'llia.constants.CONTROLLER_SYNTH_TYPES.append(specs["format"])\n'
     else:
         code += 'specs["is-efx"] = False\n'
@@ -73,7 +73,7 @@ def _proxy_boilerplate(stype,sname):
         code += 'specs["audio-input-buses"] = []\n'
         code += 'specs["control-output-buses"] = []\n'
         code += 'specs["control-input-buses"] = []  # FIXME\n'
-        code += 'print("\\t%s" % specs["format"])\n'
+        #code += 'print("\\t%s" % specs["format"])\n'
         code += 'llia.constants.SYNTH_TYPES.append(specs["format"])\n'
     return code
 
