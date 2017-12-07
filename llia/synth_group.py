@@ -9,8 +9,9 @@ from __future__ import print_function
 
 class SynthGroup(object):
 
-    def __init__(self):
+    def __init__(self, name=""):
         super(SynthGroup,self).__init__()
+        self.name = name
         self._members = []
 
     def add(self, synth):
@@ -21,6 +22,15 @@ class SynthGroup(object):
             msg = "Can not add %s to SynthGroup." % type(synth)
             raise TypeError(msg)
 
+    def __str__(self):
+        return "SynthGroup '%s'" % self.name
+
+    def dump(self):
+        print("SynthGroup '%s'" % str(self))
+        for q in self._members:
+            print("\t%s" % q)
+        print()
+        
     @property
     def members(self):
         return self._members[:]

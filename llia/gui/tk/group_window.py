@@ -9,14 +9,16 @@ from __future__ import print_function
 from Tkinter import Toplevel, TclError
 
 import llia.gui.tk.tk_factory as factory
+from llia.gui.appwindow import AbstractGroupWindow
 
-class GroupWindow(Toplevel):
+class GroupWindow(Toplevel, AbstractGroupWindow):
 
     instance_counter = 0
     
     def __init__(self, app, root, name=""):
         title = "LLia Group Window %s" % self.instance_counter
         Toplevel.__init__(self, root)
+        AbstractGroupWindow.__init__(self, app,root,name)
         self.title(title)
         self.root = root
         main = factory.frame(self)
@@ -59,3 +61,8 @@ class GroupWindow(Toplevel):
         except TclError:
             pass
         self.destroy()
+
+    def sync(self):
+        pass
+
+    

@@ -25,7 +25,7 @@ class LliaApp(object):
         '''
         super(LliaApp, self).__init__()
         self._config = config
-        self._grpups = [SynthGroup()]
+        self._groups = [SynthGroup()]
         self.pp_enabled = config.program_pp_enabled()
         self.proxy = LliaProxy(config, self)
         self._main_window = create_application_window(self)
@@ -62,12 +62,13 @@ class LliaApp(object):
         if not skip_mainloop:
             self.start_main_loop()
 
-    def synth_group(self, index=-1):
+    def current_synth_group(self, index=-1):
         return self._groups[index]
 
-    def add_synth_group(self):
-        self._groups.append(SynthGroup())
-        return self.synth_group()
+    def add_synth_group(self, name=""):
+        print("DEBUG LliaApp.add_synth_group '%s' executed" % name)
+        self._groups.append(SynthGroup(name))
+        return self.current_synth_group()
             
     def config(self):
         return self._config
