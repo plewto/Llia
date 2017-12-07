@@ -60,11 +60,12 @@ class TkSynthWindow(Frame):
         self.var_keyrange_low = StringVar()
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
-        self._init_info_tab(self.notebook)
-        self._init_busconnection_tab(self.notebook)
+
+        #self._init_busconnection_tab(self.notebook)
         self._init_performance_tab(self.notebook)
         self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
         self._init_map2_tab(self.notebook) # velocity, aftertouch, keynumber
+        self._init_info_tab(self.notebook)
         self._child_editors = {}
         self.update_progressbar(100, 0)
 
@@ -153,11 +154,11 @@ class TkSynthWindow(Frame):
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
     
-    def _init_busconnection_tab(self, master):
-        img = factory.image("resources/Tabs/bus.png")
-        bct = TkBusConnectionEditor(master, self, self.synth)
-        master.add(bct, text = "Buses", image=img,compound="top")
-        self.bus_connection_editor = bct
+    # def _init_busconnection_tab(self, master):
+    #     img = factory.image("resources/Tabs/bus.png")
+    #     bct = TkBusConnectionEditor(master, self, self.synth)
+    #     master.add(bct, text = "Buses", image=img,compound="top")
+    #     self.bus_connection_editor = bct
         
     def _init_performance_tab(self, master):
         img = factory.image("resources/Tabs/midi.png")
@@ -473,7 +474,7 @@ class TkSynthWindow(Frame):
     
     def sync(self, *ignore):
         self.sync_program_tab()
-        self.bus_connection_editor.sync()
+        # self.bus_connection_editor.sync()
         self.sync_performance_tab()
         self.sync_map1_tab()
         self.sync_map2_tab()
