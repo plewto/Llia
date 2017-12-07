@@ -163,7 +163,7 @@ class LliaConfig(dict):
             env = os.environ["LLIA_GUI"]
         except KeyError:
             env = None
-        sources = (args.gui, self._parser.get("GUI", "gui"), env, "tk")
+        sources = (self._parser.get("GUI", "gui"), env, "tk")
         gui = None
         for s in sources:
             if s:

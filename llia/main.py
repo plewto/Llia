@@ -28,7 +28,7 @@ HM_PORT = "set OSC server port."
 HM_CLIENT = "set ip address where Llia is running."
 HM_CLIENT_PORT = "set port number Llia is listing to."
 HM_LISTGUI = "list available GUI systems and exit."
-HM_GUI = "set GUI."
+#HM_GUI = "set GUI."
 HM_SKIP_MAINLOOP = "For testing, do not enter application main loop, load modules and exit"
 HM_NO_SPLASH = "Do not display initial splash menu"
 HM_NO_REPL = "Do not enter REPL"
@@ -135,13 +135,13 @@ Command line options:
           If none of these values are set the default client port is
           58000.
 
-  --gui GUI
-
-          Selects the GUI system.  Use --listgui for a list of possible
-          values.  The GUI system is selected first by this command line
-          option, next by the configuration file, and then by the 
-          environmental variable LLIA_GUI.  If none of these values are
-          defined the TK GUI system is used.
+  # --gui GUI  (Depreciated as command line option)
+  #
+  #         Selects the GUI system.  Use --listgui for a list of possible
+  #         values.  The GUI system is selected first by this command line
+  #         option, next by the configuration file, and then by the 
+  #         environmental variable LLIA_GUI.  If none of these values are
+  #         defined the TK GUI system is used.
 
   --skip_main
    
@@ -180,7 +180,7 @@ parser.add_argument("--port", help=HM_PORT)
 parser.add_argument("--client", help=HM_CLIENT)
 parser.add_argument("--client_port", help=HM_CLIENT_PORT)
 parser.add_argument("-g", "--listgui", action="store_true", help=HM_LISTGUI)
-parser.add_argument("--gui", help=HM_GUI)
+# parser.add_argument("--gui", help=HM_GUI)
 parser.add_argument("--skip_mainloop", action="store_true", help = HM_SKIP_MAINLOOP)
 parser.add_argument("--nosplash", action="store_false", help = HM_NO_SPLASH)
 parser.add_argument("--norepl", action="store_false", help = HM_NO_REPL)
