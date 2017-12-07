@@ -123,9 +123,9 @@ def canvas(master, width, height, image_file=None,
 #  ---------------------------------------------------------------------- 
 #                                   Labels
 
-def label(master, text, var=None, modal=False):
+def label(master, text, var=None, modal=False, justify=LEFT):
     w = Label(master, text=text)
-    w.config(justify=LEFT)
+    w.config(justify=justify)
     if var:
         w.config(textvariable=var)
     if modal:
@@ -273,13 +273,14 @@ def checkbutton(master, text, var=None,
 #
 # NOTE: Listbox is not a ttk widget
 #
-def listbox(master, command=None, ttip=""):
+def listbox(master, command=None, ttip="",rows=17,columns=24):
     lbx = Listbox(master)
     lbx.config(selectmode="SINGLE", exportselection=0)
     if command:
         lbx.bind("<<ListboxSelect>>", command)
     tooltip(lbx, ttip)
     lbx.config(background=bg(), foreground=fg())
+    lbx.config(width=columns,height=rows)
     return lbx
 
 #  ---------------------------------------------------------------------- 
