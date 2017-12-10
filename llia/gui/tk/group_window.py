@@ -37,8 +37,8 @@ class GroupWindow(Toplevel, AbstractGroupWindow):
     def _on_closing(self, *args):
         #self.app.exit_()
         #print("DEBUG group window exit")
-        self.app.exit_()
-
+        #self.app.exit_()
+        self.app.main_window().exit_app()
         
     def show_synth_editor(self, sid):
         try:

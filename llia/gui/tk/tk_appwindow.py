@@ -193,8 +193,7 @@ class TkApplicationWindow(AbstractApplicationWindow):
             pass
 
     def confirm_exit(self):
-        return True
-        
+        return tkMessageBox.askyesno("Exit Llia", "Exit Llia?")
         
     def exit_app(self):
         self.app.exit_()
