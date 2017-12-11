@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia synths">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Scenes</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION scenes **** -->
+        <a id="scenes"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Scenes</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="lliascript.html">Previous: lliascript</a></td>
+      <td><a href="addsynth.html">Next: Adding New Synths</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            A <b>Scene</b> is the current state of Llia.
+            </p>
+            
+            
+            Scene functions are accessible under the main window's File menu.
+            <ul>
+               <li><b>Save Scene</b>.<br> 
+                    Saves the current state of Llia to a scene file. 
+                    Scene files have the extension '.llia'
+               </li>
+               <li><b>Load Scene</b>.<br>  
+                    Reloads a previous scene file.  Only a single scene may be resident
+                    at any one time.<br>
+                    Loading a previous scene will reinitialize Llia, all unsaved data will be lost.<br> 
+                    Depending on their complexity, scenes may take several seconds to load.
+               </li>
+            </ul>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Scenes are based on a previous feature called &#34;Compose&#34;, and were
+            developed in response to frustrations using Compose in an actual production
+            environment.  The main problem with Compose is that it relies on multiple
+            data files in specific locations.  Scene solves this problem by aggregating
+            all data to a single file.  Compose is still important because it provides
+            the scripting background on which scenes are built.  
+            </p>
+            
+            <p class="section-body">
+            
+            Compose may still be accessed using the legacy &#34;lliascript&#34; option under
+            the File menu.
+            </p>
+            
+            <p class="section-body">
+            
+            <b class="warning">WARNING: Scene files execute embedded Python code and have the same security
+            concerns as lliascript.  Only load trusted scene files.</b>
+            </p>
+            
+            <hr class="section-head" />
+            
+            The directory &lt;install&gt;/scenes/ contains two predefined scene files.
+            <ul>
+               <li><b>organ</b>  combines MASA organ and RDrum percussive synth with Scanner
+                     vibrato and reverb effects.
+               </li>
+               <li><b>solalgo</b>  combines the Algo and Sol synths with the Fxstack
+                   effect and the Cascade pulse generator.
+               </li>
+            </ul> 
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="lliascript.html">Previous: lliascript</a></td>
+      <td><a href="addsynth.html">Next: Adding New Synths</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

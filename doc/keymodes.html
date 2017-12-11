@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia synths">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Keymodes</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION keymodes **** -->
+        <a id="keymodes"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Keymodes</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="group.html">Previous: Group</a></td>
+      <td><a href="config.html">Next: Config</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            Each synth has a keymode which determines how it responds to
+            MIDI note messages.  The keymode is selected when the synth is created and
+            it is not possible to change it later.  Each keymode has a set of
+            advantages and disadvantages which makes one keymode more suitable then
+            another depending on its use.  The following is a list of the currently
+            available keymodes.</p>
+            
+            <p class="footnote">
+            
+            The term "voice" is used interchangeably with an active server-side synth
+            running in SuperCollider. </p>
+            
+            
+            <ul>
+               <li><b>PolyN</b>.  The PolyN mode creates a finite number of server side
+                 synths (voices) when the instrument is created.  When a new note is played, PolyN
+                 first checks to see if there are any available voices.  If so, one of the
+                 available voices is tasked with creating the new note.  If no voices are
+                 available, then the voice which has been down the longest is stolen for the
+                 new note.
+                  <ul>
+                    <li>Pros: 
+                         <ul>
+                           <li>Fast - voices do not need to be created on the fly.</li>
+                           <li>Fixed resource load.</li>
+                           <li>Limited portamento is supported.</li>
+                         </ul>
+                    </li>
+                    <li>Cons:
+                        <ul>
+                           <li>Complex</li>
+                           <li>Limited polyphony</li>
+                        </ul>
+                     </li>
+                  </ul>
+            
+               <li><b>PolyRotate</b>.  Like PolyN, PolyRotate creates a fixed number of
+                 voices when the synthesizer is created.  These voices are used in
+                 strict rotation.  Generally PolyN would be the better choice.
+                 <ul>
+                   <li>Pros:
+                       <ul>
+                          <li>Fast - voices do not need to be created on the fly.</li>
+                          <li>Fixed resource load.</li>
+                          <li>Limited portamento support.</li>
+                          <li>Simpler then PolyN.</li>
+                        </ul>
+                    </li>
+                    <li>Cons:
+                       <ul>
+                          <li>Limited Polyphony.</li>
+                          <li>Not possible to hold a note while playing notes above it.</li>
+                       </ul>
+                    </li>
+                 </ul>
+            
+               <li><b>Poly1</b>.  Poly1 does not create any voices ahead of time.  Instead voices are 
+                    created on the fly as needed for incoming notes.
+                    <ul>
+                      <li>Pros:
+                        <ul>
+                           <li>Simple</li>
+                           <li>Unlimited polyphony, at least if system resource allow it.</li>
+                           <li>Poly1 instruments may be used with any effect without regard to the order the effect and synths were created.</li>
+                        </ul>
+                      </li>
+                      <li>Cons:
+                        <ul>
+                            <li>Complex synths may take too long to instantiate.</li>
+                            <li>Resources can be exhausted, particularly with complex synths, or with long release tails.</li>
+                            <li>Can not use effects which require continuity between voices, such as portamento.</li>
+                        </ul>
+                      </li>
+                    </ul>
+                 </li>
+            
+               <li><b>Mono1</b>.   Mono1 is a monophonic mode with last note priority.
+                   <ul>
+                     <li>Pros:
+                        <ul>
+                           <li>Simple and fast, a single voice is created ahead of time and reused for all notes.</li>
+                           <li>Fixed resource load</li>
+                           <li>Supports portamento.</li>
+                        </ul>
+                    </li>
+                   <li>Cons:  ? </li>
+                 </ul>
+              </li>
+            
+               <li><b>MonoExclusive</b>.   MonoExclusive is a monophonic mode where only the first note of a legato passage is articulated.
+                   <ul>
+                     <li>Pros:
+                        <ul>
+                           <li>Simple</li>
+                           <li>Fixed resource load</li>
+                         </ul>
+                     </li>
+                         <li>Cons: Highly limited application.</li>
+                 </ul>
+              </li>
+            
+              <li><b>EFX</b>.   EFX is a specialized mode used only with effects and controllers.   It passes key gate, last key number and velocity 
+                     to the effects synth should it be interested in such things.  In some ways it is like MonoExclusive, a single synth instance is 
+                     created when the effect is created.
+               </li>
+            
+            </ul>
+            
+            
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="group.html">Previous: Group</a></td>
+      <td><a href="config.html">Next: Config</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia Installation">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Installation</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION install **** -->
+        <a id="install"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Llia Installation</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="index.html">Previous: Home</a></td>
+      <td><a href="quickstart1.html">Next: Quick Start 1</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            
+            Llia consist of two major compoentns:
+            <ol>
+              <li>Python client application.  Most user interaction ocures with the client.</li>
+              <li>Code executing within SuperCollider.</li>
+            </ol>
+            <p class="footnote">
+            The term <i>server</i> is overloaded.  For simplicity the term "server" in this documentation
+            refers to code running in SuperCollider as a whole.  Unless otherwise noted it does not specifically 
+            indicate the SuperCollider server proper. </p>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Copy the top level Llia folder to a convenient location. Henceforth this
+            location will be called the <em>&lt;install&gt;</em> directory.
+            </p>
+            
+            
+            <b>Install SuperCollider code:</b>
+            <ol>
+              <li>Copy contents of &lt;install&gt;/sc/Extensions/Classes/ 
+                to the SuperCollider extensions folder.
+                <ul>
+                  <li>Linux:
+            	<ul>
+            	  <li>system-wide /usr/local/share/SuperCollider/Extensions/</li>
+            	  <li>per-user ~/.local/share/SuperCollider/Extensions/</li>
+            	</ul>
+                  </li>
+                  <li>OSX:
+            	<ul>
+            	  <li>system-wide /Library/Application Support/SuperCollider/Extensions/</li>
+            	  <li>per-user ~/Library/Application Support/SuperCollider/Extensions/</li>
+            	</ul>
+                  </li>
+                  <li>Windows:
+            	<ul>
+            	  <li>?</li>
+            	</ul>
+                </ul>
+              </li>
+              <li>From a terminal navigate to the directory &lt;install&gt;/sc/SynthDefs/</li>
+              <li>Start the SuperCollider ide with the command: scide<br>
+                <p class="footnote">At this point the new Llia classes will be compiled into the SuperCollider library.
+                  Great care has been taken to eliminate any errors, however if an error should occur
+                  SuperCollider will fail to start properly.   
+                  The only remedy is to either remove or repair the offending file.</p>
+              </li>
+              <li>From the SuperCollider ide load and execute the file
+                &lt;install&gt;/sc/SynthDefs/install_synths.scd<br><br>
+                <p class="footnote">install_synths.scd should be run each time new Llia synths are available.</p>
+              </li>
+              
+            </ol>
+            
+            <hr class="section-head" />
+            
+            <b>Resolve python dependencies:</b><br><br>
+            Llia requires the following Python modules:
+            <ol>
+              <li>numpy</li>
+              <li>pillow</li>
+              <li>python-image-tk</li>
+              <li>mido
+                <p class="footnote">The mido package requires either rtmidi (preferred) or portmidi as a MIDI backend.</p>
+              </li>
+              <li>For OSX only, install ActiveTcl (see <a href="https://www.python.org/download/mac/tcltk/">tkinter with Tcl/Tk on MacOS</a>)</li>
+            </ol>
+            
+            <hr class="section-head" />
+            
+            <b>Install client:</b>
+            <ol>
+              <li>Copy configuration file &lt;install&gt;/resources/config to the appropriate location:
+                <ul>
+                  <li>Linux ~/.config/Llia/</li>
+                  <li>OSX ~/.config/Llia/</li>
+                  <li>Windows ?</li>
+                </ul>
+              </li>
+              <li>Edit above configuration file for the installed MIDI backend.<br>
+                Locate the "backend" value in the [MIDI] section and change it to read
+                either.
+                <ul>
+                  <li>backend : mido.backends.rtmidi</li>
+                  <li>backend : midi.backends.portmidi</li>
+                </ul>
+                Whichever is appropriate for your system.
+              </li>
+              <li>While editing the config file, make sure the following two lines appear under the [GUI]
+                section:
+                <ul>
+                  <li>gui : tk</li>
+                  <li>no-splash : False</li>
+                </ul>
+              </li>
+            </ol>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="index.html">Previous: Home</a></td>
+      <td><a href="quickstart1.html">Next: Quick Start 1</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Glossary">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Glossary</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION fm2 **** -->
+        <a id="fm2"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Glossary</h1>
+            <a href="index.html">Home</a>
+            
+            <hr class="section-head" />
+            <a id="addsr"></a>
+            
+        <h4 class="heading">ADDSR Envelope</h4>
+        <img class="center" src="images/glossary/addsr.png" alt="" />
+            
+            A 5-stage envelope<br>
+            <ul>
+            <li>Attack</li>
+            <li>Decay1, initial decay</li>
+            <li>Decay2, second decay</li>
+            <li>Sustain</li>
+            <li>Release</li>
+            </ul>
+            
+            <p class="section-body">
+            
+            <b>Gate</b> button. In gate mode the envelope cycles through the Attack,
+            Decay1 and Decay2 segments and then holds at the Sustain level until the
+            key is released.  Once the key is released the envelope immediately enters
+            the Release stage regardless of it's current state.  
+            </p>
+            
+            <p class="section-body">
+            
+            If Gate is disabled the envelope is in &#34;Trigger&#34; mode.  In trigger
+            mode the envelope cycles through the Attack, Decay1, Decay2 and Release
+            segments no matter how long the key is depressed.  The Sustain stage is
+            skipped. 
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Init</b>, initialize envelope<br>
+            <b>Copy</b>, copy envelope to clipboard.<br>
+            <b>Paste</b>, paste envelope from clipboard.  The envelope may be copied
+            and pasted to <i>ADDSR</i> envelope, even across synths and synth-types.
+            </p>
+            
+            
+            <p>
+            <b>X1</b>, button sets zoom level. Zooming allows finer grained adjustments
+            to the attack time. The possible zoom levels are:</p>
+            <ul>
+            <li>X1</li>
+            <li>X10</li>
+            <li>X100</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <a id="env-time-slider"></a>
+            
+        <h4 class="heading">Envelope Segment Time Slider</h4>
+        <img class="center" src="images/glossary/envtime.png" alt="" />
+            <p class="section-body">
+            
+            Most envelope time sliders are non-linear.  This is a compromise between
+            maximum possible time and resolution.  The sliders are finer-grained for
+            short durations then for longer duration.
+            </p>
+            
+            <hr class="section-head" />
+            <a id="msb"></a>
+            
+        <h4 class="heading">Multi State Button (MSB)</h4>
+        <img class="center" src="images/glossary/msb.png" alt="" />
+            <p class="section-body">
+            
+            A <i>Multi State Button</i> is a button which may be in two or more
+            states. Left-clicking advances through the states, right-clicking moves to
+            the previous state.  In most cases once the button reaches its
+            final/initial state, further clicking wraps the state to the opposite end.
+            </p>
+            
+            <hr>
+            <a id="operator"></a>
+            <p class="section-body"><b>Operator</b></p>
+            <p class="section-body">
+            
+            In <a href="https://en.wikipedia.org/wiki/Frequency_modulation_synthesis">FM synthesis</a>
+            an <em>operator</em> is an integrated oscillator and envelope
+            generator. Operators may function either as a modulator or a carrier.
+            Modulators do not directly contribute to the instruments output.  In
+            practice operators may differ wildly in terms of the oscillator waveform
+            (often sine wave only), envelope capabilities, and other modulation
+            features, such as keyboard scaling, LFO, and velocity.  
+            
+            </p>
+            
+        <img class="center" src="images/glossary/operator.png" alt="" />
+            <hr class="section-head" />
+            <a id="sid"></a>
+            
+        <h4 class="heading">Synth ID or &#34;SID&#34;</h4>
+            
+            <p class="section-body">
+               Each active synth is assigned a unique identification of the form
+            </p>
+            <pre>    
+                 stype_n
+            </pre>
+            <p class="section-body">
+               Where stype is the synth type and n is an unique serial number.
+               No two synths will have the same SID and specifically no two synths will
+               have the same serial number.   The serial number is useful in determining 
+               the relative creation times of two synths.   Synths with higher serial number
+               may serve as inputs to those with lower numbers, but not the other way around.
+            </p>
+            
+            <hr class="section-head" />
+            <a id="synth"></a>
+            
+        <h4 class="heading">Synth</h4>
+            
+            <p class="section-body">
+              The term <em>synth</em> is heavily overloaded.  On the client side synths
+              come in three flavors:
+            </p>
+            <ol>
+              <li>Synth - a playable instrument, as in a synthesizer</li>
+              <li>Effect - an audio processor such as a delay line or reverb</li>
+              <li>Controller - a control rate processor or generator, such as an LFO</li>
+            </ol>
+            
+            <p class="section-body">
+               When used by itself the word &#34synth&#34; may apply to any one of
+               these three usages, hopefully the context will make it clear which synth
+               type is intended.
+            </p>
+            
+            <p class="section-body">
+               SuperCollider defines another separate, but related, usage for the word 
+               &#34;Synth&#34;.  Technically Llia synths are proxies for synth
+               objects on the SuperCollider server.  Effect and Control synths
+               correspond directly one-to-one with server sides synths.   Instrumental
+               synths may correspond to several server side synths depending on key
+               mode, voice count, and the number of notes playing.
+            </p>
+            
+            <p class="section-body">
+              Fortunately for the most part these distinctions may largely be ignored.
+              Unless explicitly stated otherwise, the term <em>synth</em> applies to 
+              a Llia client side object and will be one of the three types above.
+            </p>
+            
+            <hr class="section-head" />
+            <a id="tumbler"></a>
+            
+        <h4 class="heading">Tumbler Widget</h4>
+        <img class="center" src="images/glossary/tumbler.png" alt="" />
+            <p class="section-body">
+            
+            A tumbler is a set of numeric <a href="#msb">multi state buttons</a>.  Left
+            clicking any digit increments it, right-clicking decrements it.  Whenever a
+            digit is incremented past 9 or decremented below 0, the digit wraps
+            around.
+            </p>
+            
+            <p class="footnote">
+            
+            It would be nice to have the digits carry/borrow whenever they overflow.  At
+            the moment they do not.
+             </p>
+            
+            <hr class="section-head" />
+            <a id="volume-slider"></a>
+            
+        <h4 class="heading">Volume Slider</h4>
+        <img class="center" src="images/glossary/volume.png" alt="" />
+            <p class="section-body">
+            
+            Most audio amplitude values are set with a volume slider.  These sliders
+            are calibrated in db and have non-linear response.
+            </p>
+            
+            <p class="section-body">
+            
+            There are several distinct ranges.  For positive values the slider is
+            discrete and may be either +3 or +6 db.  Roughly half of the slider is
+            dedicated to the range 0db to -12db.  Below -12db the attenuation falls off
+            at a quicker rate to -48db just above the bottom.   At the very bottom the
+            attenuation is &#45;&infin;
+            </p>
+            
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

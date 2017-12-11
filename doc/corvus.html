@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Corvus fm synth">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Corvus</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION corvus **** -->
+        <a id="corvus"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Corvus</h1>
+        <img class="center" src="images/synthcat/corvus.png" alt="" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="algo.html">Previous: Algo FM Synth</a></td>
+      <td><a href="combo.html">Next: Combo</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            Corvus is an 8 <a href="glossary.html#operator">operator</a>
+            <a href="https://en.wikipedia.org/wiki/Frequency_modulation_synthesis">FM</a> synth,
+            divided into four "stacks": 1, 2, 3 and 4.  Each stack is a simple modulator/carrier
+            pair which share a single envelope.  The stacks are identical except that stack 3 contains 
+            a noise generator and stack 4 contains a pulse (blip) generator.
+            </p>
+            
+        <img class="center" src="images/synthcat/corvus_op1.png" alt="" />
+            
+            Modulator:
+            <ul>
+              <li>Ratio <a href="glossary.html#tumbler">tumbler</a> - frequency ratio.</li>
+              <li>Lag slider - lag applied to modulator envelope.</li>
+              <li>LFO1 slider - LFO1 applied to modulation depth.</li>
+              <li>LFO2 slider - LFO2 applied to modulation depth.</li>
+              <li>External slider - external control applied to modulation depth.</li>
+              <li>Left keyscale <a href="glossary.html#msb">button</a> - left side key scale in db/octave.</li>
+              <li>Right keyscale. </li>
+              <li>Modulation  slider - modulation depth.</li>
+              <li>Modulation scale button - Sets slider sensitivity.</li>
+            </ul>
+            
+            
+            Carrier:
+            <ul>
+              <li>Ratio tumbler - carrier frequency ratio.</li>
+              <li>Bias tumbler - fixed bias added to carrier frequency.</li>
+              <li>Velocity slider - Sensitivity to key velocity is applied to carrier and modulator jointly.</li>
+              <li>LFO1 - LFO1 applied to carrier amplitude.</li>
+              <li>LFO2 - LFO2 applied to carrier amplitude.</li>
+              <li>Left keyscale <a href="glossary.html#msb">button</a> - left side key scale in db/octave.</li>
+              <li>Right keyscale. </li>
+              <li>keyscale button - reference key (60 = middle C).</li>
+              <li>Enable button</li>
+              <li>Amp - carrier <a href="glossary.html#volume-slider">volume slider</a>.</li>
+            </ul>
+            
+            <p class="section-body">
+             
+            Each stack has a single <a href="glossary.html#ADDSR">ADDSR</a> envelope shared between
+            the carrier and modulator.   The modulator lag slider introduces some variation in how
+            the envelope is used between the two components.
+            </p>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Stack 3 contains a filtered <b>noise</b> source ring modulated with the normal carrier output.
+            This works best with low modulation depths.  For narrow bandwidths the result is a cluster
+            of random components around the carrier frequency. 
+            </p>
+            
+        <img class="center" src="images/synthcat/corvus_noise.png" alt="" />
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Stack 4 contains an extra <b>Buzz</b> pulse generator.
+            </p>
+            
+        <img class="center" src="images/synthcat/corvus_buzz.png" alt="" />
+            
+            <ul>
+                <li>N.Harmonics slider - number of harmonics</li>
+                <li>Env slider, envelope to harmonic count</li>
+                <li>Lag slider, lag time applied to envelope</li>
+                <li>LFO2 slider, LFO2 to harmonic count</li>
+                <li>Mix Slider, mix between buzz and normal carrier signal</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            The <b>Misc</b> tab contains, LFO, pitch envelope and main output controls.
+            </p>
+            
+        <img class="center" src="images/synthcat/corvus_misc.png" alt="" />
+            
+            <ul>
+               <li>Portamento time, (does not work with Poly1 keymode)</li>
+            </ul>
+            
+            <p class="section-body">
+            
+            Corvus uses three LFOs.  The master LFO is dedicated to vibrato.  LFOs 1 and 2 
+            are for modulation depth and tremolo.  The frequencies of LFOs 1 and 2 are 
+            relative to the vibrato frequency.
+            </p>
+            
+            
+            <ul>
+               <li>Frequency <a href="glossary.html#tumbler">tumbler</a>, primary LFO frequency</li>
+               <li>Delay slider, vibrato onset delay</li>
+               <li>Sens slider, vibrato sensitivity</li>
+               <li>Depth slider, vibrato depth</li>
+               <li>External slider, external control signal applied to pitch</li>
+               <li>LFO1 and LFO2 delay sliders, onset delay</li>
+               <li>LFO1 and LFO2 ratio button, relative frequency ratio</li>
+               <li>Main output <a href="glossary.html#volume-slider">amp slider</a></li>
+            </ul>
+            
+            <p class="section-body">
+            
+            Corvus has a 4-stage <b>pitch envelope</b> which may be looped.  The envelope is set
+            by 5 level and 4 time sliders.  The envelope is applied individually to each 
+            of the 4 stacks.
+            </p>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>Buses:</b> Corvus has 5 audio output buses and 1 control input.
+            </p>
+            
+            
+            <ul>
+               <li>outbus - main output combines the four stacks</li>
+               <li>outbus1 - stack 1 output</li>
+               <li>outbus2 - stack 2 output</li>
+               <li>outbus3 - stack 3 output</li>
+               <li>outbus4 - stack 4 output</li>
+               <li>xbus - control input</li>
+            </ul>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            <b>Parameters:</b></p>
+            
+            
+            General Parameters:
+            <ul>
+               <li>port - portamento time (0.0 ... 1.0)</li>
+               <li>amp -   main amplitude (0.0 ... 2.0)</li>
+               <li>vfreq - primary (vibrato) LFO frequency (0.0 ... 99.999)</li>
+               <li>vdelay - vibrato onset delay (0.0 ... 4.0)</li>
+               <li>vsens -  vibrato sensitivity (0.0 ... 1.0)</li>
+               <li>vdepth - vibrato depth (0.0 ... 1.0)</li>
+               <li>xpitch - external control to pitch (0.0 ... 1.0)</li>
+               <li>lfo1_ratio - LFO1 frequency ratio, *see below</li>
+               <li>lfo1_delay - LFO1 onset delay (0.0 ... 4.0)</li>
+               <li>lfo2_ratio - LFO2 frequency ratio, *see below</li>
+               <li>lfo2_delay - LFO2 onset delay (0.0 ... 4.0)</li>
+            </ul>
+            * LFO Ratios:  (1/16, 1/8, 1/4, 3/8, 1/2, 5/8, 3/4, 7/8, 1, 9/8, 5/4, 4/3, 11/8, 3/2, 13/8, 5/3, 7/4, 15/8, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)<br><br>
+            
+            
+            Pitch envelope parameters:
+            <ul>
+                <li>pe_t1 - segment 1 time (0.0 ... 8.0)</li>
+                <li>pe_t2 - segment 2 time (0.0 ... 8.0)</li>
+                <li>pe_t3 - segment 3 time (0.0 ... 8.0)</li>
+                <li>pe_t4 - segment 4 time (0.0 ... 8.0)</li>
+                <li>pe_a0 - initial level (-1.0 ... +1.0)</li>
+                <li>pe_a1 - segment 1 level (-1.0 ... +1.0)</li>
+                <li>pe_a2 - segment 2 level (-1.0 ... +1.0)</li>
+                <li>pe_a3 - segment 3 level (-1.0 ... +1.0)</li>
+                <li>pe_a4 - segment 4 level (-1.0 ... +1.0)</li>
+                <li>pe_loop - loop segment selection (1|2|3|4)</li>
+            </ul>
+            
+            
+            Operator specific parameters have form op?_xxx and fm?_xxx where ? is 1,2,3 or 4
+            <ul>
+               <li>op?_enable - Enable carrier output (0|1)</li>
+               <li>op?_ratio - carrier frequency ratio (0.0 ...99.999)</li>
+               <li>op?_bias - carrier bias frequency (0.0 ... 999.999)</li>
+               <li>op?_amp - carrier amplitude (0.0 ... 2.0)</li>
+               <li>op?_velocity - combined carrier/modulator velocity sensitivity (0.0 ... 1.0)</li>
+               <li>op?_lfo1 - LFO1 to carrier tremolo (0.0 ... 1.0)</li>
+               <li>op?_lfo2 - LFO2 to carrier tremolo (0.0 ... 1.0)</li>
+               <li>op?_external - external control to carrier amplitude (0.0 ... 1.0)</li>
+               <li>op?_left - carrier left key scale in db/octave **see below</li>
+               <li>op?_right - carrier right key scale in db/octave **see below</li>
+               <li>op?_key - combined carrier/modulator reference key **see below</li>
+               <li>op?_attack - attack time (0.0 ... 8.0)</li>
+               <li>op?_decay1 - initial decay time (0.0 ... 8.0)</li>
+               <li>op?_decay2 - second decay time (0.0 ... 8.0)</li>
+               <li>op?_release - release time (0.0 ... 8.0)</li>
+               <li>op?_breakpoint - envelope breakpoint (0.0 ... 1.0)</li>
+               <li>op?_sustain - envelope sustain level (0.0 ... 1.0)</li>
+               <li>op?_env_mode - envelope mode (0=gated, 1=triggered)</li>
+               <li>op?_pe - pitch envelope depth (-1.0 ... +1.0)</li>
+               <li>fm_ratio - modulator frequency ratio (0.0 ... 99.999)</li>
+               <li>fm_modscale - modulator scale factor (1,10,100,1000,10000)</li>
+               <li>fm_moddepth - modulation depth (0.0 ... 1.0)</li>
+               <li>fm_lag - modulator envelope lag time (0.0 ... 1.0)</li>
+               <li>fm_lfo1 - LFO1 to modulation depth (0.0 ... 1.0)</li>
+               <li>fm_lfo2 - LFO2 to modulation depth (0.0 ... 1.0)</li>
+               <li>fm_external - external control to modulation depth (0.0 ... 1.0)</li>
+               <li>fm_left - modulator left key scale **see below</li>
+               <li>fm_right - modulator right key scale **see below</li>
+            </ul>
+            
+            **keyscale depths are in db/octave with possible values:<br>
+            (-18,-15,-12,-9,-6,-5,-4,-3,-2,-1,0,+1,+2,+3,+4,+5,+6,+9,+12,+15,+18)<br>
+            Reference key is in MIDI note number with possible values:<br>
+            (0,6,12, ..., 114,120,126)<br><br>
+            
+            
+            OP3 Noise parameters:
+            <ul>
+               <li>nse3_mix - mix between carrier and noise (0.0 ... 1.0)</li>
+               <li>nse3_bw - noise bandwidth (1,2,3,...,10,20,30,...,100,200,300,...,1000)</li>
+            </ul>
+            
+            
+            OP4 Buzz parameters:
+            <ul>
+               <li>bzz4_n - number of harmonics (1,2,3,...,128)</li>
+               <li>bzz4_env - envelope applied to harmonic count (-128,-127,...,-1,0,+1,...+127,+128)</li>
+               <li>bzz4_lfo2 - LFO2 applied to harmonic count (0,1,2,...,128)</li>
+               <li>bzz4_lag - lag time applied to envelope (0.0 ... 1.0)</li>
+               <li>bzz4_mix - mix between carrier and buzz signals (0.0 ... 1.0)</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="algo.html">Previous: Algo FM Synth</a></td>
+      <td><a href="combo.html">Next: Combo</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

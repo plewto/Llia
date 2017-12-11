@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia synths">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Synths</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION synths **** -->
+        <a id="synths"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Synths</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="quickstart2.html">Previous: Quick Start 2</a></td>
+      <td><a href="graph.html">Next: Graph</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+        <h4 class="heading">Synths</h4>
+             
+            There are three types of client-side synths:
+            <ol>
+               <li>Instruments</li>
+               <li>Effects</li>
+               <li>Controllers</li>
+            </ol>
+            
+            <p class="section-body">
+            
+            Technically these are instances of the Python <em>SynthProxy</em> class. There
+            are also server-side synths running within SuperCollider.  We are rarely
+            directly concerned with the server side synths and unless otherwise noted
+            the term &#34;synth&#34; refers to a client object.</p>
+            
+            <p class="section-body">
+            
+            The order in which synths are created is significant.  In general an effect
+            must be created <em>prior</em> to anything which serves as it's inputs.</p>
+            
+            <p class="section-body">
+             
+            If you wish to process an organ through a flanger and then a
+            reverb, the reverb must be created first, then the flanger and finally the organ.</p>
+            
+            <pre class="code">
+    
+       [organ]--&gt;[flanger]--&gt;[reverb]--&gt;
+    
+            </pre>
+            
+            Creation Order:
+            <ol>
+              <li>Reverb</li>
+              <li>Flanger</li>
+              <li>Organ</li>
+            </ol>
+            <p class="footnote">
+            
+            As always there is an exception.  Instruments which use the <em>Poly1</em> 
+            <a href="keymode.html">keymode</a> may be created at any time.  This is
+            because Poly1 creates server-side synths on the fly which are therefore
+            always newer the any other synth.  This trick only works while using
+            Poly1. </p>
+            
+            <p class="section-body">
+            
+            Control synths either generate or process control rate signals, and never
+            directly process audio.  The instrument and effect synths generate and/or
+            receive audio rate signals.  They may also receive control rate
+            signals and in some cases generate control signals.   Effects such as
+            flangers often have internal LFOs or other control generates. These are
+            often provided as control outputs of the effect.</p>
+            
+            <p class="section-body">
+            
+            The creation order for controller synths is not important, though there
+            may be subtle differences.</p>
+            
+            <p class="section-body">
+            
+            Synths are &#34;patched&#34; together using <em>buses</em> in the 
+            <a href="graph.html">Graph</a> window.  There are two types of buses:
+            </p>
+            
+            
+            <ol>
+              <li>Audio Buses</li>
+              <li>Control Buses</li>
+            </ol>
+            <p class="section-body">
+            
+            A bus may be connected to any number of inputs and outputs.  The same is
+            not true for synths, each synth input/output may only connect to a single
+            bus.</p>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="quickstart2.html">Previous: Quick Start 2</a></td>
+      <td><a href="graph.html">Next: Graph</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

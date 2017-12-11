@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia synths">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Llia Program Banks</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION bank **** -->
+        <a id="bank"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Program Banks</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="midi.html">Previous: MIDI</a></td>
+      <td><a href="group.html">Next: Group</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            Each active synth has its own bank of 128 programs.  With exception of 
+            <a href="midi.html">MIDI Performance</a> values programs are generally not
+            compatible between different synth types.   The bank area is to the left of
+            the editor window and is divided into several vertical areas.
+            </p>
+            
+        <img class="center" src="images/bank/bank_000.png" alt="" />
+            <p class="footnote">
+            The terms "program" and "patch" are used interchangeably. </p>
+            
+            <p class="section-body">
+            
+            At the very top is an icon identifying the synth type.  Immediately to the
+            right of the icon is an ID (called the "sid" in the code) which uniquely
+            identifies each active synth.  The sid is mostly relevant for the
+            scripting feature.  The numeric portion of the sid is useful for
+            determining how two synths may be patched.   Synths which were created
+            early will have lower sid values then later synths.  Thus a synth A may be
+            processed by effect X, only if the sid value of A is greater then the sid of
+            X.</p>
+            
+            <p class="section-body">
+            
+            Immediately below the icon are buttons for operation on the bank as a whole.
+            </p>
+            
+            
+            <ul>
+              <li><b>Open</b>, Read a bank data file.  Only files of the appropriate
+                  type may be read.</li>
+              <li><b>Save</b>, Save the current data bank to a file.  Bank files have
+                  extensions matching the synth type converted to lower case.  The file foo
+                  holding a MASA bank will have the name "foo.masa".</li>
+             <li><b>Init</b>, initialize bank data.</li>
+             <li><b>Rem</b>, enter optional remarks text for the bank.</li>
+            </ul>
+            <p class="section-body">
+            
+            Next comes a list box of the current bank contents.  The current program will
+            be highlighted though it may be scrolled out of view.</p>
+            
+            
+            Below the listbox are Performance related buttons.<br>
+            <ul>
+              <li><b>Copy</b>, copy the current Performance to the clipboard.</li>
+              <li><b>Paste</b>, paste the clipboard performance to the current
+                 program. The change is not permanent until the program is saved.</li>
+              <li><b>Fill</b>, copy the current Performance across a range of
+                 programs.</li>
+            </ul>
+            
+            Near the bottom are buttons related to individual Programs.<br>
+            <ul>
+               <li><b>Store</b>, save the current program to a slot in the bank.
+                  Options are provided to select the save location, and to enter optional
+                  remarks text.</li>
+               <li><b>RND</b>, Generates a random patch.  Not all synths support random
+                   patch generations.   The generated program is stored to slot
+                   128.</li>
+               <li><b>Init</b>, Initialize the current patch.</li>
+               <li><b>Copy</b>, Copy the current program to the clipboard.   The
+                  clipboard is smart enough to keep track synth types and may hold several
+                  programs simultaneously, but only one program each for each synth type.</li>
+               <li><b>Paste</b>, Paste contents of clipboard to current program.  The
+                   change is not permanent until the program is stored into the
+                   bank.</li>
+               <li><b>Lock</b>,  When selected the Lock checkbox disables program
+                   changes. Both changes over MIDI and manual program selection are
+                   disabled.  The lock function is to prevent certain effects, such as a
+                   mixer, from changing every time the program does.</li>
+            </ul>
+            <p class="section-body">
+            
+            It is not obvious but there is a handle between the bank and editor
+            sections to set the width of the bank display.</p>
+            
+        <img class="center" src="images/bank/bank_001.png" alt="" />
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="midi.html">Previous: MIDI</a></td>
+      <td><a href="group.html">Next: Group</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

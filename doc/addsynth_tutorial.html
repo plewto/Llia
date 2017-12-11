@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Adding synths to Llia">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Adding Llia Synths</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION addsynth_tutorial **** -->
+        <a id="addsynth_tutorial"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Adding a Simple Synth Tutorial</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="addsynth.html">Previous: Adding New Synths</a></td>
+      <td><a href="addsynth_editor_tutorial.html">Next: Defining a Synth Editor</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            
+            To concentrate on the mechanics of adding a synth the new instrument will be about as simple 
+            as it can get. The instrument's name will be "SDemo", it will have a single sawtooth oscillator
+            which feeds a Resonz filter.  The filter will track the keyboard by a variable amount and 
+            there will be a single ADSR envelope.
+            </p>
+            
+            <p class="section-body">
+            
+            Start be creating a parameter file named "~/sdemo_parameters" with the following content. 
+            </p>
+            
+            
+            <pre class="code">
+            000 : i track 1
+            001 : f res 1
+            002 : f filterEnv 0.0
+            003 : f attack 0.0
+            004 : f decay 0.1
+            005 : f sustain 1.0
+            006 : f release 0.0
+            007 : f amp 0.1
+            </pre>
+            
+            <p class="footnote">
+            
+            The line numbers to the left of each colon : are for reference only and are not part of the file.
+             </p>
+            
+            <p class="section-body">
+            
+            A parameter file is optional but considerably reduces the amount of manual editing 
+            required.  For more complex synths however the generated code may become unwieldy.
+            </p>
+            
+            
+            Navigate to the tools directory and execute addsynth:<br>
+            <pre class="code">
+            sj@MUDO:~/dev/Llia/tools$  ./addsynth --name SDemo --stype synth --params ~/sdemo_parameters
+            </pre>
+            addsynth will respond with something like:<br>
+            <pre class="code">
+            Llia development directory: '/home/sj/Documents/dev/Llia'
+            Params specified: 7
+            **** Creating SDemo Files ****
+            Writing synth def '/home/sj/Documents/dev/Llia/sc/SynthDefs/sdemo.scd'
+            Updating '/home/sj/Documents/dev/Llia/sc/SynthDefs/install_synths.scd'
+            Copied graphic templates to '/home/sj/Documents/dev/Llia/resources/SDemo'
+            Writing '/home/sj/Documents/dev/Llia/llia/synths/sdemo/sdemo_proxy.py'
+            Writing '/home/sj/Documents/dev/Llia/llia/synths/sdemo/sdemo_data.py'
+            Writing '/home/sj/Documents/dev/Llia/llia/synths/sdemo/sdemo_pp.py'
+            Writing '/home/sj/Documents/dev/Llia/llia/synths/sdemo/sdemo_random.py'
+            Writing '/home/sj/Documents/dev/Llia/llia/synths/sdemo/tk/editor.py'
+            </pre>
+            
+            <p class="section-body">
+            
+            At this point if you start Llia the new synth should be present with generic
+            graphics.  SuperCollider will still know nothing about it and the client
+            side files are empty shells.  We'll examine each file individually. 
+            </p>
+            
+            <hr class="section-head" />
+            
+            <b>/Llia/sc/SynthDefs/sdemo.scd</b><br>
+            <pre class="code">
+            000 : (SynthDef (\SDemo, {
+            001 :    |
+            002 :    outbus = 0             // primary audio output bus
+            003 :    // inbus = 8           // optional audio input bus
+            004 :    // xbus = 1023         // optional control bus
+            005 :    gate = 1               // envelope gate normalized high
+            006 :    doneAction = 2         // doneAction determined by key mode
+            007 :    freq = 440             // primary frequency
+            008 :    keynumber = 69         // MIDI key number
+            009 :    detune = 1             // MIDI pitch bend ratio
+            010 :    velocity = 1.0         // normalized range (0..1)
+            011 :    track = 1
+            012 :    res = 1
+            013 :    filterEnv = 0.0
+            014 :    attack = 0.0
+            015 :    decay = 0.1
+            016 :    sustain = 1.0
+            017 :    release = 0.0
+            018 :    amp = 0.1
+            019 :    |
+            020 :
+            021 :}).load)
+            </pre>
+            
+            <p class="section-body">
+            
+            The initial parameters, up to line 10 "velocity", are always included.  Many of these are not 
+            needed for this instrument.
+            </p>
+            
+            
+            <ul>
+              <li>outbus - The main audio output bus</li>
+              <li>inbus - The primary audio input bus is used for effects, it is not needed here.</li>
+              <li>xbus - Is used for external control signal input, it is not needed.</li>
+              <li>gate - The gate signal is used to trigger envelopes, by convention it defaults to 1.</li>
+              <li>doneAction - The value for doneAction will be established at run time by the 
+                 <a href="keymodes.html">keymode</a></li>
+              <li>freq - the note frequency in Hertz</li>
+              <li>keynumber - the MIDI key number. <br>keynumber is not redundant with frequency as 
+                  each key is mapped according to the <a href="midi.html">keytable</a> in effect.
+                  <br>The keynumber parameter is not used by this synth.</li>
+              <li>detune - sets a detune ratio for pitch bending, it should have a default value of 1.0</li>
+              <li>velocity - the key velocity is normalized to a range of (0.0,1.0), it is not 
+                  needed by this synth.</li>
+            </ul>
+            The remaining parameters were specified by the parameter file.<br><br>
+            
+            
+            After removing unused arguments and implementing the synth behavior the resulting 
+            file is:<br>
+            <pre class="code">
+            000 : (SynthDef (\SDemo, {
+            001 :	|
+            002 :	outbus = 0             // primary audio output bus
+            003 :	gate = 1               // envelope gate normalized high
+            004 :	doneAction = 2         // doneAction determined by key mode
+            005 :	freq = 440             // primary frequency
+            006 :	detune = 1             // MIDI pitch bend ratio
+            007 :	track = 1              // filter key track 1,2,3 ... 8
+            008 :	res = 1                // filter resonance (0..1)
+            009 :	filterEnv = 0.0        // env -> filter freq (-8,-7, ..., +7, +8)
+            010 :	attack = 0.0           // attack time >= 0
+            011 :	decay = 0.1
+            012 :	sustain = 1.0
+            013 :	release = 0.0
+            014 :	amp = 0.2              // main output gain
+            015 :	|
+            016 :	var env = EnvGen.kr(Env.adsr(attack,decay,sustain,release),gate,doneAction: doneAction);
+            017 :	var f = freq*detune;
+            018 :	var filterFreq = (f*(track+(env*filterEnv))).max(f).min(16000);
+            019 :	var rq = res.linexp(0,1,1,0.05);
+            020 :	var saw = Saw.ar(f);
+            021 :	var filterOut = Resonz.ar(saw,filterFreq,rq);
+            022 :	Out.ar(outbus,filterOut*env*amp);
+            023 : }).load)
+            </pre>
+            
+            <p class="section-body">
+            
+            Load this file into SuperCollider and execute it.
+            </p>
+            
+            <hr class="section-head" />
+            
+            <b>Llia/llia/synths/sdemo/sedmo_proxy.py</b><br>
+            <pre class="code">
+            000 : # llia.synths.sdemo.sdemo_proxy
+            001 : 
+            002 : from __future__ import print_function
+            003 : import llia.constants
+            004 : from llia.gui.pallet import default_pallet, Pallet
+            005 : from llia.synth_proxy import SynthSpecs, SynthProxy
+            006 : from llia.synths.sdemo.sdemo_data import program_bank
+            007 : from llia.synths.sdemo.sdemo_pp import sdemo_pp
+            008 : from llia.synths.sdemo.sdemo_random import sdemo_random
+            009 : 
+            010 : specs = SynthSpecs("SDemo")
+            011 : 
+            012 : class SDemoProxy(SynthProxy):
+            013 : 
+            014 :     def __init__(self, app):
+            015 :         super(SDemoProxy,self).__init__(app,specs,program_bank)
+            016 :         self._editor = None
+            017 : 
+            018 :     def create_subeditors(self):
+            019 :         gui = self.app.config["gui"].upper()
+            020 :         if gui == "TK":
+            021 :             from llia.synths.sdemo.tk.editor import create_editor
+            022 :             appwin = self.app.main_window()
+            023 :             parent_editor = appwin[self.sid]
+            024 :             create_editor(parent_editor)
+            025 :             return parent_editor
+            026 : 
+            027 : pallet = Pallet(default_pallet)
+            028 : #pallet["BACKGROUND"] =  
+            029 : #pallet["SLIDER-OUTLINE"] = 
+            030 : #pallet["SLIDER-TROUGH"] = 
+            031 : specs["constructor"] = SDemoProxy
+            032 : specs["description"] = "FIXME"
+            033 : specs["help"] = "SDemo"
+            034 : specs["pretty-printer"] = sdemo_pp
+            035 : specs["program-generator"] = sdemo_random
+            036 : specs["pallet"] = pallet
+            037 : specs["is-efx"] = False
+            038 : specs["is-controller"] = False
+            039 : specs["keymodes"] = ("PolyN","PolyRotate","Poly1","Mono1","MonoExclusive")
+            040 : specs["audio-output-buses"] = [["outbus","out_0"]] # FIXME
+            041 : specs["audio-input-buses"] = []
+            042 : specs["control-output-buses"] = []
+            043 : specs["control-input-buses"] = []  # FIXME
+            044 : print("	%s" % specs["format"])
+            045 : llia.constants.SYNTH_TYPES.append(specs["format"])
+            </pre> 
+            
+            <p class="section-body">
+            
+            The proxy file defines the client side representation of the synth.  The most 
+            important element is the specs object created on line 10.  A SynthSpecs object 
+            defines the specifications of a specific synth type.  The code
+            above line 27 can be left as is.
+            </p>
+            
+            <p class="section-body">
+            
+            The <i>pallet</i> specifications starting on line 28 uses Tk color values.  These are strings, 
+            either specific colors such as 'black', 'blue', etc, or RGB values of the form '#rrggbb'.
+            </p>
+            
+            <p class="section-body">
+            
+            The important stuff begins on line 31 where specific values are established for the specs object.
+            Many of these values are automatically generated by addsynth but several need manual 
+            adjustment.
+            </p>
+            
+            
+            <ol start='31'>
+              <li>'constructor' - Sets proxy constructor, this value should be left alone.</li>
+              <li>'description' - Add a concise, one line, description of the synth.</li>
+              <li>'help' - Sets help topic which should be the name of the synth. <br>
+                   currently there is no established way to integrate new help topics.</li>
+              <li>'pretty-printer' - Sets the function used for pretty printing. See below.</li>
+              <li>'program-generator' - Sets the function used for random program generation. See below.</li>
+              <li>'pallet' - Sets the pallet object</li>
+              <li>'is-efx' - a flag indicating if this synth is an effect.</li>
+              <li>'is-controller' - a flag indicating if this is a 'controller' synth.<br> 
+                   Controller synths are a special case of efx synths.  If is-controller is True,
+                   is-efx should also be True.</li>
+              <li>'keymodes' - Sets the keymodes this synth is compatible with.<br> 
+                   These values are automatically set by addsynth but you may want to change them
+                   in certain situations.</li>
+            </ol>
+            
+            
+            The remaining parameters, starting on line 40, specify audio and control buses.
+            The specifications are nested list of the form:<br>
+            <pre class="code">
+            [[param_1,default_1],[param_2,default_2] ... [param_n,default_n]]
+            
+            Where param_i is the synth parameter for the bus
+                  default_i is the default bus.
+            </pre>
+            
+            For audio outputs the defaults should be one of the hardware outputs:
+            "out_0", "out_1", etc... <br>
+            For audio inputs the defaults should be one of the hardware input buses:
+            "in_0", "in_1", etc... <br>
+            
+            For control inputs the default should be "null_sink".<br>
+            For control outputs the default should be "null_source".
+            
+            <p class="section-body">
+            
+            For this very simple illustration the proxy file created by addsynth does not 
+            need modification.
+            </p>
+            
+            <hr class="section-head" />
+            
+            <b>Llia/llia/synths/sdemo/sdemo_data.py</b><br>
+            <pre class="code">
+            000 : # llia.synths.SDemo.SDemo_data
+            001 : 
+            002 : from __future__ import print_function
+            003 : from llia.program import Program
+            004 : from llia.bank import ProgramBank
+            005 : from llia.performance_edit import performance
+            006 : 
+            007 : prototype = {
+            008 :     "track" : 1,
+            009 :     "res" : 1,
+            010 :     "filterEnv" : 0.0,
+            011 :     "attack" : 0.0,
+            012 :     "decay" : 0.1,
+            013 :     "sustain" : 1.0,
+            014 :     "release" : 0.0,
+            015 :     "amp" : 0.1}
+            016 : 
+            017 : class SDemo(Program):
+            018 : 
+            019 :     def __init__(self,name):
+            020 :         super(SDemo,self).__init__(name,SDemo,prototype)
+            021 :         self.performance = performance()
+            022 : 
+            023 : program_bank = ProgramBank(SDemo("Init"))
+            024 : program_bank.enable_undo = False
+            025 : 
+            026 : def sdemo(slot, name,
+            027 :           track = 1,
+            028 :           res = 1,
+            029 :           filterEnv = 0.0,
+            030 :           attack = 0.0,
+            031 :           decay = 0.1,
+            032 :           sustain = 1.0,
+            033 :           release = 0.0,
+            034 :           amp = 0.1):
+            035 :     def fval(x):
+            036 :         return round(float(x),4)
+            037 :     p = SDemo(name)
+            038 :     p["track"] = int(track)
+            039 :     p["res"] = fval(res)
+            040 :     p["filterEnv"] = fval(filterEnv)
+            041 :     p["attack"] = fval(attack)
+            042 :     p["decay"] = fval(decay)
+            043 :     p["sustain"] = fval(sustain)
+            044 :     p["release"] = fval(release)
+            045 :     p["amp"] = fval(amp)
+            046 :     program_bank[slot] = p
+            047 :     return p
+            048 : 
+            049 : sdemo(0,"Init")
+            </pre>
+            
+            <p class="section-body">
+            
+            The data file specifies the parameters used for the new synth. It is also where 
+            the default program bank is defined.
+            </p>
+            
+            <p class="section-body">
+            
+            On line 7 the prototype dictionary is defined.  This dictionary establishes the synth 
+            parameters and their default values.  When a synth program is initialized, it is the 
+            prototype values which are used.   Since a parameter file was passed to addsynth, the 
+            prototype values have been automatically generated.  If a parameter file had not been
+            used, these values would have to be added manually.
+            </p>
+            
+            <p class="section-body">
+            
+            Lines 17 through 25 define a new class and creates a 
+            <a href="bank.html">program bank</a>.  
+            These lines may be left alone.
+            </p>
+            
+            <p class="section-body">
+            
+            Starting on line 26 the sdemo function is defined.  This function creates a new instance of the 
+            SDemo class defined above.  It essentially creates a new program and stores it into the 
+            program bank.  As with the prototype dictionary the parameters for the sdemo function were
+            automatically filled in by the parameter file passed to addsynth.  If a parameter file had
+            not been specified this function would require manual implementation. 
+            </p>
+            
+            <p class="section-body">
+            
+            Automatically generated parameters produce a 'flat' list of values.   This is fine where 
+            a small number of parameters are used, but can become unwieldy with complex synths.  
+            For an example of a complex synth where parameters are combined into 
+            logical groups, examine the Algo data file.
+            </p>
+            
+            <p class="section-body">
+            
+            Starting on line 49, the above program function is used to create the default 
+            program bank.  In this case it is called only once to set bank slot 0.
+            </p>
+            
+            <hr class="section-head" />
+            
+            <b>Llia/llia/synths/sdemo/sdemo_pp.py</b><br>
+            
+            <pre class="code">
+            000 : # llia.synths.sdemo.sdemo_pp
+            001 : 
+            002 : def sdemo_pp(program,slot):
+            003 :     pad=" "*6
+            004 :     def fval(key):
+            005 :         return round(float(program[key]),4)
+            006 :     def ival(key):
+            007 :         return int(program[key])
+            008 :     acc = 'sdemo(%d,"%s",\n' % (slot,program.name)
+            009 :     acc += '%s%s = %d,\n' % (pad,'track',ival('track'))
+            010 :     acc += '%s%s = %5.4f,\n' % (pad,'res',fval('res'))
+            011 :     acc += '%s%s = %5.4f,\n' % (pad,'filterEnv',fval('filterEnv'))
+            012 :     acc += '%s%s = %5.4f,\n' % (pad,'attack',fval('attack'))
+            013 :     acc += '%s%s = %5.4f,\n' % (pad,'decay',fval('decay'))
+            014 :     acc += '%s%s = %5.4f,\n' % (pad,'sustain',fval('sustain'))
+            015 :     acc += '%s%s = %5.4f,\n' % (pad,'release',fval('release'))
+            016 :     acc += '%s%s = %5.4f)\n' % (pad,'amp',fval('amp'))
+            017 :     return acc
+            </pre>
+            
+            <p class="section-body">
+            
+            This file defines an optional "pretty printer" function.  This function is called
+            whenever the synth's program is changed.   If it is defined the return value should
+            be a String which is valid Python code.  Specifically it should be code, which if 
+            executed in the data file above, recreates the program.<br>
+            </p>
+            
+            <p class="section-body">
+            
+            The pretty printer serves two purposes.  First it is useful for debugging while 
+            developing a new synth.  Secondly it is a useful tool for developing program 
+            banks for a synth.  As with the objects defined above passing a parameter list
+            to addsynth automatically fills in the details for the pretty printer function.
+            If a parameter file is not used, and a pretty printer function is desired, 
+            it will have to be implemented manually.
+            </p>
+            
+            <hr class="section-head" />
+            
+            <b>LLia/llia/synths/sdemo/sdemo_random.py</b><br>
+            <pre class="code">
+            000 : # llia.synths.sdemo.sdemo_random
+            001 : 
+            002 : from __future__ import print_function
+            003 : from llia.util.lmath import (coin,rnd,pick)
+            004 : from llia.synths.sdemo.sdemo_data import sdemo
+            005 : #from llia.synths.sdemo.sdemo_constants import *
+            006 : 
+            007 : def sdemo_random(slot,*_):
+            008 :     # FIXME
+            009 :     return None
+            </pre>
+            
+            <p class="section-body">
+            
+            This file defines an optional random program generator.  If such a function is
+            desired, it will require manual implementation. An addsynth parameter list
+            has no effect on the random generator.
+            
+            The function should return a program as generated by the sdemo function in the 
+            data file.
+            </p>
+            
+            <p class="section-body">
+            
+            The llia.util.lmath module contains utility functions useful for random generations.
+            Several of the most useful utilities are automatically imported. There are a few 
+            additional functions which are not imported.
+            </p>
+            
+            
+            <pre class="code">
+            <b>rnd(n=1.0)</b>
+            
+            Returns a random float between 0 and n.  
+            If n is not specified it defaults to 1.0.
+            </pre>
+            
+            
+            <pre class="code">
+            <b>pick(list)</b>
+            
+            Returns random element from list.
+            </pre>
+            
+            
+            <pre class="code">
+            <b>coin(p=0.5, heads=True, tails=False)</b>
+            
+            Return result heads with probability p, where 0&lt;=p&lt;=1.
+            The results, heads and tails, may be either static values are callable
+            objects.  If they are callable the result will be heads() or tails().
+            </pre>
+            
+            
+            There are many possible ways to implement a random program generator,<br>
+            Here is one:<br>
+            <pre class="code">
+            000 : # llia.synths.sdemo.sdemo_random
+            001 : 
+            002 : from __future__ import print_function
+            003 : from llia.util.lmath import (coin,rnd,pick)
+            004 : from llia.synths.sdemo.sdemo_data import sdemo
+            005 : #from llia.synths.sdemo.sdemo_constants import *
+            006 : 
+            007 : def sdemo_random(slot,*_):
+            008 :     program = sdemo(127,"Random",
+            009 :                     track = pick([1,2,4]),
+            010 :                     res = rnd(),
+            011 :                     filterEnv = coin(0.75, rnd(4), 0),
+            012 :                     attack = rnd(),
+            013 :                     decay = rnd(),
+            014 :                     sustain = rnd(),
+            015 :                     release = rnd())
+            016 :      return program
+            </pre>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            <b>Graphics:</b><br><br>
+            Each synth has an associated folder in the resources directory which contains graphic files,
+            and possibly other data.  The logo files have standardized names and sizes:
+            </p>
+            
+            
+            <ul>
+              <li>logo.png - 96 x 96 pixels</li>
+              <li>logo_small - 64 x 64 pixels</li>
+              <li>logo_32 - 32 x 32 pixels</li>
+            </ul>
+            
+            <p class="section-body">
+            
+            For the GUI, each editor page requires background graphics and a tab image.
+            addsynth only takes care of the simple case of a single editor page.
+            </p>
+            
+            
+            <ul>
+               <li>editor.png - editor background graphics.<br>
+                   This file may have any name and may be of any size.  If more then<br>
+                   one editor page is used, additional images will have to be created.
+               </li>
+               <li>editor.xcf - A GIMP file used to create the editor file above.<br>
+                   This file is for convenience only and is not used by Llia.
+               </li>
+               <li>tab.png - A blank 64x32 pixel tab image used for the TK Notebook widget.
+               </li>
+            </ul>
+            
+            <hr class="section-head" />
+            <b>Conclusion</b><br><br>
+            <p class="section-body">
+            
+            After implementing the above files, the new synth (effect,controller) becomes
+            fully integrated into Llia, albeit without an editor.  The next page details
+            how to implement an editor.
+            </p>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="addsynth.html">Previous: Adding New Synths</a></td>
+      <td><a href="addsynth_editor_tutorial.html">Next: Defining a Synth Editor</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Lfo3">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Lfo3</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION lfo3 **** -->
+        <a id="lfo3"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Lfo3</h1>
+        <img class="center" src="images/synthcat/lfo3.png" alt="" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="lfo2.html">Previous: LFO2</a></td>
+      <td><a href="snh.html">Next: SnH  Sample and Hold</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            LFO3 is a complex triple LFO with phase shifts of 0, 120 and 240 degrees
+            between the LFOs.  A fourth LFO is used for modulation of the primary LFOs.
+            </p>
+            
+        <img class="center" src="images/synthcat/lfo3_editor.png" alt="" />
+        <h4 class="heading">Clock</h4>
+            <p class="section-body">
+            
+            The clock section sets a reference frequency. All LFO frequencies are
+            relative to the clock rate.
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Scale</b>, Scale factor applied to all primary LFOs.<br>
+            <b>Bias</b>, Bias added to the three primary LFOs.
+            </p>
+            
+        <h4 class="heading">Modulator</h4>
+            <p class="section-body">
+            
+            <b>Ratio button</b>, Modulator LFO frequency relative to clock<br>
+            <b>FM</b>, Amount MOD Fm applied to primary LFOs frequency modulation.<br>
+            <b>AM</b>, Amount MOD Fm applied to primary LFOs amplitude modulation.
+            </p>
+            
+        <h4 class="heading">Envelope</h4>
+            <p class="section-body">
+            
+            LFO3 is monophonic in the sense that the envelope triggers on the first key
+            down and does not release until all keys have been lifted.
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Delay</b>, Onset delay time.<br>
+            <b>Attack</b>, Attack time after initial delay.<br>
+            <b>Hold</b>, Envelope hold time after all keys have been lifted.<br>
+            <b>Release</b>,Envelope release time after hold period.<br>
+            <b>FM</b>, Application of envelope to LFO frequency.<br>
+            <b>Bleed</b>, Amount LFOs bleed through envelope.
+            </p>
+            
+        <h4 class="heading">LFO A, B and C</h4>
+            <p class="section-body">
+            
+            The three primary LFOs are identical except they have a phase shift
+            relative to each other.  LFO B is 120 degrees from LFO A, and LFO C is 120
+            degrees from LFO B.
+            </p>
+            
+            <p class="section-body">
+            
+            <b>Ratio button</b>, Sets LFO frequency relative to clock.<br>
+            <b>Amp</b>, Sets LFO amplitude.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Buses</h4>
+            <p class="section-body">
+            
+            <b>outbusA</b>, LFO A output<br>
+            <b>outbusB</b>, LFO B output<br>
+            <b>outbusC</b>, LFO C output
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">LFO3 Parameters</h4>
+            
+            <ul>
+            <li><b>lfScale</b>, &nbsp;nbsp; Global scale factor (0,4)</li>
+            <li><b>lfoBias</b>, &nbsp;nbsp; Global bias (-4,+4)</li>
+            <li><b>lfoFreq</b>, &nbsp;nbsp; Master clock frequency (0,99.999)</li>
+            <li><b>lfoModFreq</b>, &nbsp;nbsp; Modulator frequency</li>
+            <li><b>lfoFM</b>, &nbsp;nbsp; Modulator FM depth (0,8)</li>
+            <li><b>lfoAM</b>, &nbsp;nbsp; Modulator AM depth (0,1)</li>
+            <li><b>lfoDelay</b>, &nbsp;nbsp; Envelope onset delay (0,8)</li>
+            <li><b>lfoAttack</b>, &nbsp;nbsp; Envelope  attack time (0,8)</li>
+            <li><b>lfoHold</b>, &nbsp;nbsp; Envelope hold time (0,8)</li>
+            <li><b>lfoRelease</b>, &nbsp;nbsp; Envelope release time (0,8)</li>
+            <li><b>lfoEnvToFreq</b>, &nbsp;nbsp; Amount envelope applied to FM (0,8)</li>
+            <li><b>lfoBleed</b>, &nbsp;nbsp; Envelope bleed (0,1)</li>
+            <li><b>lfoRatioA</b>, &nbsp;nbsp; LFO A ratio</li>
+            <li><b>lfoRatioB</b>, &nbsp;nbsp; LFO B ratio</li>
+            <li><b>lfoRatioC</b>, &nbsp;nbsp; LFO C ratio</li>
+            <li><b>lfoAmpA</b>, &nbsp;nbsp; LFO A amp (0,1)</li>
+            <li><b>lfoAmpB</b>, &nbsp;nbsp; LFO B amp (0,1)</li>
+            <li><b>lfoAmpC</b>, &nbsp;nbsp; LFO C amp (0,1)</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="lfo2.html">Previous: LFO2</a></td>
+      <td><a href="snh.html">Next: SnH  Sample and Hold</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

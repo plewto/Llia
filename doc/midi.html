@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Llia synths">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>MIDI</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION midi **** -->
+        <a id="midi"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">MIDI</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="graph.html">Previous: Graph</a></td>
+      <td><a href="bank.html">Next: Bank</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            <p class="section-body">
+            Llia supports a comprehensive MIDI implementation.  All MIDI channel
+            events, with the exception of polyphonic after touch and release velocity,
+            are supported. There is an extensive mapping facility for translating MIDI
+            data to synth parameters.  Velocity, channel-pressure, pitch-bend,
+            continuous controllers and MIDI key numbers may be mapped to any synth
+            parameter.  Each source may map to several parameters simultaneously, each
+            with it's own set of range and transfer functions.</p>
+            
+            <p class="section-body">
+            Each active synth has a dedicated bank of up to 128 programs.
+            Each program stores specific patch values as well as most MIDI parameters.
+            For example the modulation wheel may be mapped to vibrato for program 1 and
+            to filter cutoff for program 2.  The set of MIDI parameters within a
+            program are called a <em>Performance</em>.  Performances have identical
+            structure across all Llia synths. It is possible to copy a performance from
+            one synth into another, even if they are of different types.  Any mapped
+            parameters which are present for the source synth but missing in the
+            destination are ignored.   Identical performances may also be copied across
+            several program bank slots.</p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Synth Level MIDI values.</h4>
+            <p class="section-body">
+            MIDI and performance parameters are accessed by the MIDI, Map1 and Map2
+            tabs of a <a href="group.html">group window</a>.
+            </p>
+            
+        <img class="center" src="images/midi/midi_000.png" alt="" />
+        <h4 class="heading">The MIDI tab</h4>
+            <p class="section-body">
+            The MIDI tab contains both performance and non-performance values.  The
+            non-performance values (MIDI channel and Key Table) are not saved as part
+            of a performance.   All other parameters are saved as part of a Performance
+            and may be different for each selected program.</p>
+            
+            
+            <ul>
+              <li><b>MIDI Input Channel.</b>  Not much to be said here, select an input channel.</li>
+              <li><b>Key Table.</b> Selects one of the available key tables for alternate tuning.<br>
+                   Currently there is no way for the user to define their own tables. The tables on offer are all tuned to A440 and fall into two general classes:
+                <ol>
+                  <li>Equal tempered scales are named "EQn", where n is the number of notes per octave.</li>
+                  <li>Most of the other scales use some kind of just intonations.  Many of these scales 
+                      are defined <a href="http://xenharmonic.wikispaces.com/Gallery+of+12-tone+Just+Intonation+Scales">here</a>.</li>
+                </ol>
+            <li><b>Transpose.</b> Transpose key number by up to 36 half-steps.</li>
+            <li><b>Key Range.</b> Sets range of key number this synth responds to.  Any transposition is applied after the key-range test.</li>
+            <li><b>Bend Range.</b> Sets pitch bend range in <a href="https://en.wikipedia.org/wiki/Cent_(music)">cents.</a></li>
+            </ul>
+        <h4 class="heading">Map 1 and Map 2 tabs</h4>
+        <img class="center" src="images/midi/midi_001.png" alt="" />
+            <p class="section-body">
+            
+            The contents of the Map1 and Map2 tabs are nearly identical.  The only
+            differences are the types of MIDI data they contain.   Map1
+            has controls for Continuous Controller and Pitch Wheel.  Map2 contains
+            mapping controls for Velocity, Aftertouch and Keynumber.</p>
+            
+            <p class="section-body">
+            
+            Adding or removing a map is (nearly) the same for all types of MIDI data.
+            Continuous controller maps have an additional parameter to set the controller
+            number, but otherwise is identical to the other data types.</p>
+            
+            <p class="section-body">
+            
+            To add a map click the [+] button in the appropriate section, which brings
+            up new dialog to set mapping parameters.</p>
+            
+        <img class="center" src="images/midi/midi_002.png" alt="" />
+            
+            <ul>
+               <li><b>Controller Number</b>,   Selects MIDI controller number (for controller maps only).</li>
+               <li><b>Params</b>,  Selects the synth parameter to send the MIDI data to.
+                   Parameters are listed in alphabetical order and at times may be
+                   cryptic. The parameters in this list do not necessarily match the
+                   label for the corresponding editor control.   You can determine the
+                   proper parameter name by mousing over an editor control.  The name and
+                   current value appears in the status line at the bottom of the editor
+                   window.</li>
+               <li><b>Curve</b>,  Selects the transfer curve.</li> 
+               <li><b>Modifier</b>,  is a coefficient which alters the curve steepness.
+            It has no effect for the linear curve.  For the exponential curve it
+            influences the curve degree and and changes the concavity. Positive and
+            negative values alternately produce concave and convex curves.   For the
+            step curve the modifier sets the number of steps.  If the modifier is
+            negative the end points are included in the step curve.</li>
+            
+            <li><b>Range</b>,  sets the range of mapped values. With exception of pitch
+            bend each controller generates a value between 0 and 1. Pitch bend is
+            signed and produces values between -1 and +1.  When mapping key numbers,
+            the lowest key in the key-range produces 0, the highest key produces 1.
+            Keys outside the key range are clipped to either 0 or 1. <br>
+            
+            The Range Low and High values set the range of values sent to the synth
+            parameter.  If these values are inverted, such that Low&gt;High, then the
+            mapping curve is inverted.</li>
+            <li><b>Limit</b>, sets an absolute maximum/minimum for the mapped values.
+            Care should be taken the the limit is not unintentionally restricting the
+            resulting values.</li>
+            </ul>
+            <p class="section-body">
+            
+            A parameter map is removed by clicking an apropriate [-] button.</p>
+            
+        <img class="center" src="images/midi/midi_003.png" alt="" />
+            <p class="section-body">
+            
+            Parameter maps may be removed individually or wholesale by selecting the
+            "All" checkbox.</p>
+            
+            <a class="tiny_footnote"; href="http://www.artnews.com/2017/03/15/ralph-eugene-meatyard-at-fraenkel-gallery-san-francisco/03-17_paae_ralph-eugene-meatyard_4/">How clear was all of that?</a>
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="graph.html">Previous: Graph</a></td>
+      <td><a href="bank.html">Next: Bank</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

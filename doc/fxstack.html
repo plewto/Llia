@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Fxstack">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Fxstack</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION fxstack **** -->
+        <a id="fxstack"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Fxstack</h1>
+        <img class="center" src="images/synthcat/fxstack.png" alt="" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="formant.html">Previous: Formant Parametric EQ</a></td>
+      <td><a href="galvaniser.html">Next: Galvaniser</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            FXstack is an integrated effects stack which combines distortion, filter, flanger,
+            dual delay lines and reverb into a single unit.  An envelope follower and two LFOs provide control signals. 
+            </p>
+            
+        <img class="center" src="images/synthcat/fxstack_editor1.png" alt="" />
+        <img class="center" src="images/synthcat/fxstack_editor2.png" alt="" />
+            <hr class="section-head" />
+        <h4 class="heading">Distortion</h4>
+            <p class="section-body">
+            
+            The distortion sections applies amplification (drive) to the signal before passing it 
+            to a limiting circuit.  The limiter output is restrained to &plusmn;1 regardless of 
+            input amplitude.
+            </p>
+            
+            <p class="section-body">
+            
+            The action of the LFO1 slider applies LFO1 to the clipper amplitude.  This slider has a non-linear
+            response.  Below 50&#37; increasing amounts of LFO1 as a sine wave is applied to clipper modulation.
+            Above 50&#37 a second modulating signal appears. The result is an asymmetric modulation.  As the slider
+            approaches 100&#37; the modulator becomes a sine wave with twice the original frequency.
+            </p>
+            
+            <p class="section-body">
+            
+            If the drive slider is at minimum the LFO1 slider applies tremolo to the signal with minimal distortion.
+            </p>
+            
+            <p class="section-body">
+            
+            The Mix slider sets how much of the clipped signal is mixed with the dry signal.  
+            If Mix is at 0 the clipper section is bypassed.   The Mix sliders for all other sections operates the 
+            same way.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Filter</h4>
+            <p class="section-body">
+            
+            The filter has a low pass contour whose cutoff may be modulated by either the Envelope Follower or LFO2.
+            If the Mix slider is set to 0 the filter is bypassed.</p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Flanger</h4>
+            <p class="section-body">
+            
+            The flanger uses 2 parallel comb filters. These are modulated in tandem by LFO1 but there is a slight offset 
+            in the 2 modulating signals.   The Delay1 and Delay2 sliders set the initial delay time of the two filters.
+            As with the other effects if the Mix slider is at 0, the flanger is bypassed.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Delay Lines</h4>
+            <p class="section-body">
+            
+            The two delay lines are nearly identical.  The LFO used as modulating source are different between the two delays.  
+            LFO1 modulates Delay1, while LFO2 modulates Delay2.   They also differ in the type of filter used in the feedback 
+            path.  For Delay1 the feedback filter is low pass, for Delay2 it is high pass.</p>
+            
+            <p class="section-body">
+            
+            The Feedback control of each delay is used to feed it's own signal (after filtering) back to it's input. 
+            The XFeedback control injects the output of the opposite delay into the feedback path.</p>
+            
+            <p class="section-body">
+            
+            With the Mix slider at 50&#37; the wet and dry signals are mixed equally.  At 100&#37; no dry signal appears in 
+            the output.  The outputs of both delays may be panned across a stereo field.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Reverb</h4>
+            <p class="section-body">
+            
+            The reverb produces a stereo signal which may be amplitude modulated by either the Envelope Follower
+            or LFO2.</p>
+            
+            <p class="section-body">
+            
+            With the Mix slider at 50&#37; the wet and dry signals are mixed equally.  At 100&#37; no dry signal appears in 
+            the output.</p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Envelope Follower</h4>
+            <p class="section-body">
+            
+            The Envelope Follower extract amplitude information from the incoming signal.  
+            The result may be used to modulate the Filter cutoff or to gate the reverb.
+            The envelope Follower gain control is separate.  The EF gain control is independent 
+            of the signal gain and offers up to 40db boost.</p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">LFOs</h4>
+            <p class="section-body">
+            
+            There are two independent sine-wave LFOs.  LFO frequency may be set between 0.001 and 99.999 Hertz.
+            The output of LFO1 may amplitude modulate LFO2.</p>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="formant.html">Previous: Formant Parametric EQ</a></td>
+      <td><a href="galvaniser.html">Next: Galvaniser</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

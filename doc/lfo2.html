@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Lfo2">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Lfo2</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION lfo2 **** -->
+        <a id="lfo2"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Lfo2</h1>
+        <img class="center" src="images/synthcat/lfo2.png" alt="" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="lfo1.html">Previous: LFO1</a></td>
+      <td><a href="lfo3.html">Next: LFO3</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            LFO2 is a switching LFO which alternates between sawtooth and pulse
+            signals.  The switching clock, sawtooth and pulse generators, may have
+            different frequencies, producing a wide range of complex periodic signals. 
+            </p>
+            
+        <img class="center" src="images/synthcat/lfo2_editor.png" alt="" />
+        <h4 class="heading">Clock</h4>
+            <p class="section-body">
+            
+            <b>Frequency</b> Switching clock frequency <a href="glossary.html#tumbler">tumbler</a><br>
+            <b>Pulse Width</b> Clock signal pulse width.
+            </p>
+            
+        <h4 class="heading">Saw</h4>
+            <p class="section-body">
+            
+            <b>Freq Ratio</b> Frequency ratio of sawtooth relative to clock frequency.<br>
+            <b>Wave Shape</b> Sawtooth wave shape, between sawtooth and triangle.<br>
+            <b>Amp</b> Sawtooth amplitude.<br>
+            <b>Bleed</b> Amount of sawtooth which bleeds through switch.<br>
+            <b>Bias</b> Fixed amount added to sawtooth signal.
+            </p>
+            
+        <h4 class="heading">Pulse</h4>
+            <p class="section-body">
+            
+            <b>Freq Ratio</b> Frequency ratio of pulse relative to clock frequency.<br>
+            <b>Wave Width</b> <br>
+            <b>Amp</b> Pulse amplitude.<br>
+            <b>Bleed</b> Amount of pulse which bleeds through switch.<br>
+            <b>Bias</b> Fixed amount added to pulse signal.
+            </p>
+            
+        <h4 class="heading">Lag</h4>
+            <p class="section-body">
+            
+            <b>Lag</b>  Lag time added to combined signal.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Buses</h4>
+            <p class="section-body">
+            
+            <b>outbusSaw</b>  Sawtooth output<br>
+            <b>outbusPulse</b> Pulse output
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">LFO2 Parameters</h4>
+            
+            <ul>
+            <li><b>clkFreq</b>, &nbsp;&nbsp; Switch clock frequency (0,99.999)</li>
+            <li><b>clkPw</b>, &nbsp;&nbsp;  switching clock pulse width (0,1)</li>
+            <li><b>sawRatio</b>, &nbsp;&nbsp; sawtooth frequency ratio</li>
+            <li><b>sawSlew</b>, &nbsp;&nbsp; sawtooth waveform (0,1)</li>
+            <li><b>sawAmp</b>, &nbsp;&nbsp; sawtooth amplitude (0,4)</li>
+            <li><b>sawBleed</b>, &nbsp;&nbsp; sawtooth signal bleed (0,1)</li>
+            <li><b>pulseRatio</b>, &nbsp;&nbsp; pulse frequency ratio</li>
+            <li><b>pulseWidth</b>, &nbsp;&nbsp; pulse width (0,1)</li>
+            <li><b>pulseAmp</b>, &nbsp;&nbsp; pulse amplitude (0,4)</li>
+            <li><b>pulseBleed</b>, &nbsp;&nbsp; pulse signal bleed (0,1)</li>
+            <li><b>sawBias</b>, &nbsp;&nbsp; fixed value added to sawtooth (-4,+4)</li>
+            <li><b>pulseBias</b>, &nbsp;&nbsp; fixed value added to pulse (-4,+4)</li>
+            <li><b>lag</b>, &nbsp;&nbsp; lag time (0,1)</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="lfo1.html">Previous: LFO1</a></td>
+      <td><a href="lfo3.html">Next: LFO3</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>
