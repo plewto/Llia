@@ -10,6 +10,7 @@
                  "cascade.scd",
                  "chronos.scd",
                  "comb.scd",
+                 "combo.scd",
                  "corvus.scd",
                  "crusher.scd",
                  "ctrlmixer.scd",
