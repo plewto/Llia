@@ -5,7 +5,7 @@
 print("Importing instrumental synths:")
 import llia.synths.ss1.ss1_proxy    
 import llia.synths.saw3.s3_proxy
-import llia.synths.orgn.orgn_proxy
+#import llia.synths.orgn.orgn_proxy
 import llia.synths.masa.masa_proxy
 import llia.synths.klstr.klstr_proxy
 import llia.synths.klstr2.klstr2_proxy
@@ -16,8 +16,8 @@ import llia.synths.io.io_proxy
 import llia.synths.corvus.corvus_proxy
 import llia.synths.m.m_proxy        
 import llia.synths.sol.sol_proxy
-import llia.synths.ttone.ttone_proxy
 import llia.synths.combo.combo_proxy
+import llia.synths.ttone.ttone_proxy
 # END SYNTH IMPORTS
 
 print("Importing effects:")
