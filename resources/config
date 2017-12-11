@@ -16,13 +16,13 @@ startup-script :
 startup-scene : 
 
 [MIDI]
+input-port: 
+output-port:
 # input-port : Launchkey Mini:Launchkey Mini MIDI 1 16:0
 # input-port : UM-1SX:UM-1SX MIDI 1 24:0
 # output-port : Launchkey Mini 28:0
 # output-port : UM-1SX:UM-1SX MIDI 1 24:0
 
-input-port: UM-1SX:UM-1SX MIDI 1 24:0
-output-port: UM-1SX:UM-1SX MIDI 1 24:0
 backend : mido.backends.rtmidi
 # backend : midi.backends.portmidi
 enable-program-pp : True
@@ -39,11 +39,11 @@ trace-osc-transmission : False
 [GUI]
 gui : Tk
 # gui : None
-no-splash : True
+no-splash : False
 warn-on-overwrite : True        ; Not recognized by Tk
 warn-on-initialize : True
 warn-on-exit : False
-enable-active-update : True     ; Enable MIDI controller changes to update GUI
+enable-active-update : False    ; Enable MIDI controller changes to update GUI
 
 [MIDI-CHANNELS]
 C01 : 
@@ -80,8 +80,8 @@ CTRL012 :
 CTRL013 : 
 CTRL014 : 
 CTRL015 : 
-CTRL016 : 
-CTRL017 : 
+CTRL016 : Joystick-x  ; Yamaha SY35
+CTRL017 : Joystick-y  
 CTRL018 : 
 CTRL019 : 
 CTRL020 : 
