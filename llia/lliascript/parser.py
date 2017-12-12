@@ -54,7 +54,6 @@ class Parser(object):
         name = "null_sink"
         e = LsEntity(name, "cbus")
         self.entities[name] = e
-        
         self._history = ""
         self._global_namespace = {}
         self._local_namespace = {}
@@ -137,6 +136,9 @@ class Parser(object):
             #self.proxy.sync_to_host()
                 
     def batch(self, pycode):
+        """
+        Execute Python script.
+        """
         try:
             exec pycode in self._global_namespace, self._local_namespace
         except Exception as err:
@@ -145,6 +147,9 @@ class Parser(object):
             self.warning(err.message)
 
     def load_python(self, filename):
+        """
+        Load and execute Python script from file.
+        """
         fname = os.path.expanduser(filename)
         if os.path.exists(fname):
             with open(fname, 'r') as input:
@@ -161,12 +166,18 @@ class Parser(object):
         self._history += "%s\n" % text
         
     def warning(self, msg):
+        """
+        Display warning message.
+        """
         for line in str(msg).split("\n"):
             line = "WARNING: %s" % line
             print(line)
             self._append_history(line)
 
     def status(self, msg):
+        """
+        Display status message.
+        """
         for line in str(msg).split("\n"):
             print(line)
             self._append_history(line)
@@ -178,10 +189,16 @@ class Parser(object):
         print("lliascript apropos not implemented")
             
     def is_abus(self, name):
+        """
+        Predicate, returns True if name is assigned to an audio bus.
+        """
         ent = self.entities.get(name, None)
         return ent and ent.lstype == "abus"
 
     def is_cbus(self, name):
+        """
+        Predicate, returns True if name is assigned to a control bus.
+        """
         ent = self.entities.get(name, None)
         return ent and ent.lstype == "cbus"
 
@@ -190,10 +207,18 @@ class Parser(object):
     #     return ent and ent.lstype == "buffer"
 
     def is_synth(self, name):
+        """
+        Predicate, returns True if name is assigned to a Synth.
+        """
         ent = self.entities.get(name, None)
         return ent and ent.lstype == "synth"
 
     def is_channel(self, name):
+        """
+        Predicate, returns True if name is a valid MIDI channel.
+        A valid channel is either an integer between 1 and 16 inclusive
+        or an assigned channel alias.
+        """
         try:
             name = int(str(name))
             return 1 <= name <= 16
@@ -201,6 +226,11 @@ class Parser(object):
             return self.config.channel_assignments.channel_defined(name)
 
     def is_controller(self, name):
+        """
+        Predicate, returns True if name is a valid MIDI controller.
+        A valid controller is either an integer between 0 and 127 inclusive
+        or an assigned controller alias.
+        """
         try:
             ctrl = int(str(name))
             return 0 <= ctrl <= 127
@@ -211,14 +241,17 @@ class Parser(object):
     # Does not actually remove underlying object.
     #
     def forget(self, name):
+        """
+        Removes name from the lliascript namespace.
+        Any object to which name is assigned is not removed.
+        """
         try:
             del self.entities[name]
         except KeyError:
             pass
-
-        
         
     def what_is(self, name):
+        "Returns string describing name."
         ent = self.entities.get(name, None)
         if ent:
             return ent.lstype
@@ -257,6 +290,17 @@ class Parser(object):
             return True
 
     def abus(self, name):
+        """
+        Creates and returns an AudioBus named name.
+
+        If an audio bus with the same name already exists,
+           Display message that the bus is being reused
+           Return existing AudioBus object.
+
+        If name is already assigned to some other type,
+           Display warning.
+           Return False.
+        """
         lstype = self.register_entity(name, "abus", {"channels" : 1})
         if lstype:
             if self.proxy.audio_bus_exists(name):
@@ -269,6 +313,17 @@ class Parser(object):
             return False
 
     def cbus(self, name):
+        """
+        Creates and returns ControlBus named name.
+
+        If a control bus with the same name already exists,
+           Display message that the bus is being reused
+           Return existing AudioBus object.
+
+        If name is already assigned to some other type,
+           Display warning.
+           Return False.
+        """
         lstype = self.register_entity(name, "cbus", {"channels" : 1})
         if lstype:
             if self.proxy.control_bus_exists(name):
@@ -280,6 +335,7 @@ class Parser(object):
         else:
             return False
 
+    # Helper function assign alias to MIDI channel.
     def _set_channel_name(self, channel, new_name):
         new_name.replace(' ','_')
         stype = self.what_is(new_name)
@@ -293,17 +349,32 @@ class Parser(object):
                 msg = "Channel '%s' already in use" % new_name
                 raise ValueError(msg)
         else:
-            msg = "Can not resuse %s '%s' as MIDI channel name"
+            msg = "Can not reuse %s '%s' as MIDI channel name"
             msg = msg % (stype, new_name)
             raise ValueError(msg)
     
     def channel_name(self, n, new_name=None, silent=False):
+        """
+        Sets/Displays/Returns MIDI channel name.
+
+        n - MIDI channel, int between 1 and 16 inclusive.
+        new_name - String, if specified set name_name as alias for channel n.
+                   If new_name is already assigned to some other type,
+                      Display warning. 
+                      Do not make name assignment.
+        silent - Bool, By default channel_name prints the channel's name.
+                   If silent is True,
+                      Do not print name - useful for batch processing.
+
+        Returns - String, the name assigned to channel n.
+        """
         if new_name != None:
             self._set_channel_name(n, new_name)
         cname = self.config.channel_name(n)
         if not silent: print(cname)
         return cname
-    
+
+    # Helper function for controller_name
     def _set_controller_name(self, ctrl, new_name):
         stype = self.what_is(new_name)
         if not stype:
@@ -322,8 +393,23 @@ class Parser(object):
             msg = "Can not reuse %s '%s' as MIDI controller name"
             msg = msg % (stype, new_name)
             raise ValueError(msg)
-    
+
     def controller_name(self, ctrl, new_name=None, silent=False):
+        """
+        Sets/Displays/Returns MIDI controller name.
+
+        n - MIDI controller number, int between 0 and 127 inclusive.
+        
+        new_name - String, if specified set name_name as alias for controller n.
+                   If new_name is already assigned to some other type,
+                      Display warning. 
+                      Do not make name assignment.
+        silent - Bool, By default controller_name prints the controller's name.
+                   If silent is True,
+                      Do not print name - useful for batch processing.
+
+        Returns - String, the name assigned to controller n.
+        """
         if 0 <= ctrl <= 127:
             if new_name != None:
                 self._set_controller_name(ctrl, new_name)
@@ -335,6 +421,9 @@ class Parser(object):
             raise IndexError(msg)
 
     def clear_history(self):
+        """
+        Clear interactive lliascript history.
+        """
         self._history = ""
         return True
 
@@ -345,6 +434,9 @@ class Parser(object):
         self._history = txt
     
     def print_history(self):
+        """
+        Display interactive lliascript history.
+        """
         print("HISTORY:")
         print(self._history)
         return True
@@ -352,17 +444,29 @@ class Parser(object):
     # ISSUE: FIX ME dump target not implemented
     #
     def dump(self, target=None):
+        """
+        Display list of current buses and synths.
+        """
         if not target:
             self.proxy.dump()
         else:
             self.synthhelper.dump_synth(target)
             
     def panic(self):
+        """
+        Transmits an OSC "panic" message to the server.
+        This should result in server side Keymode objects receiving an 
+        allNotesOff message.
+        """
         self.proxy.panic()
         print("Panic!")
         return True
 
     def ping(self, sid=None):
+        """
+        Transmit an OSC "ping" message to the server and listen for a response.
+        If sid is specified send ping to specific synth object.
+        """
         try:
             if sid:
                 self.synthhelper.ping_synth(sid)
@@ -385,6 +489,13 @@ class Parser(object):
         self.app.exit_()
 
     def pretty_printer(self, flag=None):
+        """
+        Returns and optionally changes pretty_printer status.
+
+        flag - bool, if specified disable/enable pretty printer
+
+        Returns bool
+        """
         if flag is not None:
             if flag:
                 flag = True
@@ -401,6 +512,11 @@ class Parser(object):
         return flag
 
     def trace_midi(self, flag):
+        """
+        Sets MIDI trace status.
+
+        flag - bool
+        """
         self.app.midi_receiver.enable_trace(flag)
         msg = "MIDI trace "
         if flag:
@@ -411,6 +527,12 @@ class Parser(object):
         return flag
         
     def trace_osc(self, flag):
+        """
+        Sets OSC trace status.
+
+
+        flag = bool.
+        """
         self.proxy.osc_transmitter.trace = flag
         for sy in self.proxy.get_all_synths():
             sy.osc_transmitter.trace = flag
@@ -453,12 +575,19 @@ class Parser(object):
             raise LliascriptError(msg)
 
     def compose(self):
+        """
+        Generates a Python "compose" script.
+        A compose script may be used to restore Llia's state.
+        """
         rb = Composer(self)
         code = rb.build()
         self._history = code
         print(code)
 
     def save_scene(self, filename):
+        """
+        Saves the current state of Llia to a scene file.
+        """
         scene = Scene(self)
         s = scene.serialize()
         self.status("Saving scene file '%s'" % filename)
@@ -467,6 +596,12 @@ class Parser(object):
         self.status("Scene saved to '%s'" % filename)
         
     def load_scene(self, filename):
+        """
+        Restore Llia's state from a scene file.
+
+        NOTE: When loading a scene all current data is lost.
+              It is not possible to use more then ones scene at a time.
+        """
         self.tabula_rasa()
         self.app.main_window().busy(True, "Loading scene '%s'" % filename)
         scene = Scene(self)
@@ -496,6 +631,10 @@ class Parser(object):
         self.status("Scene '%s' loaded" % filename)
         
     def tabula_rasa(self):
+        """
+        Resets Llia state to an initial condition.
+        All unsaved data will be lost.
+        """
         self.app.tabula_rasa()
         self.entities = {}
         for i in range(con.PROTECTED_AUDIO_OUTPUT_BUS_COUNT):
