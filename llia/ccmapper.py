@@ -43,7 +43,7 @@ class CCMapper(object):
 
     def remove_parameter(self, ctrl, param="ALL"):
         """
-        Removes parameter maps for single controller.
+        Removes parameter map(s)
         
         ARGS:
           ctrl  - MIDI controller number 
@@ -151,34 +151,6 @@ class CCMapper(object):
                 acc += "%s\n" % pm
             return acc
 
-    # Old style serilizatin (prior to v0.1.3)
-    # def serialize(self):
-    #     count = len(self._maps)
-    #     acc = ["llia.CCMapper",
-    #            {"domain" : self.domain,
-    #             "count" : count}]
-    #     maps = {}
-    #     for k,v in self._maps.items():
-    #         maps[k] = v.serialize()
-    #     acc.append(maps)
-    #     return acc
-
-    # Old style deserilization (prior to v0.1.3)
-    # @staticmethod
-    # def deserialize(obj):
-    #     cls = obj[0]
-    #     if cls == "llia.CCMapper":
-    #         maps = obj[2]
-    #         ccm = CCMapper()
-    #         for ctrl, v in maps.items():
-    #             sm = SourceMapper.deserialize(v)
-    #             ccm._maps[ctrl] = sm
-    #         return ccm
-    #     else:
-    #         msg = "Can not read %s as CCMapper" % type(obj)
-    #         raise RuntimeError(msg)
-
-    # New style serialization (introduced v0.1.3)
     def serialize(self):
         count = len(self._maps)
         acc = ["llia.CCMapper", [self.domain,count]]
@@ -188,7 +160,6 @@ class CCMapper(object):
         acc.append(maps)
         return acc
 
-    # New style deserilization (introduced v0.1.3 - no change over v.0.1.3)
     @staticmethod
     def deserialize(obj):
         cls = obj[0]
@@ -218,3 +189,4 @@ def _clone_ccm(obj):
 @hash_.when_type(CCMapper)
 def _hash_ccm(obj):
     return crc32(str(obj.serialize()).lower())
+

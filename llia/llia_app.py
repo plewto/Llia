@@ -1,5 +1,6 @@
 # llia.llia_app
-# Defines top-level client application
+# Top level Llia Client application
+#
 
 from __future__ import (print_function)
 import abc, sys, threading
@@ -25,7 +26,6 @@ class LliaApp(object):
         '''
         super(LliaApp, self).__init__()
         self._config = config
-        #self._groups = [SynthGroup()]
         self.pp_enabled = config.program_pp_enabled()
         self.proxy = LliaProxy(config, self)
         self._main_window = create_application_window(self)
@@ -74,7 +74,7 @@ class LliaApp(object):
             
     def global_osc_id(self):
         '''
-        Returns String, thr global OSC id.   
+        Returns String, the global OSC id.   
         The OSC id MUST match between the client and server applications.
         '''
         return self._config.global_osc_id()
@@ -98,7 +98,6 @@ class LliaApp(object):
             sys.exit(xcode)
         else:
             print("Exit aborted.")
-            
             
     def main_window(self):
         '''
@@ -148,5 +147,6 @@ class LliaApp(object):
     #     # print("LliaApp.sync_all is not completely implemented")
 
     def tabula_rasa(self):
+        "clean up - reinitialize all data."
         self.proxy.tabula_rasa()
         self._main_window.tabula_rasa()

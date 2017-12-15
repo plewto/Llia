@@ -36,6 +36,10 @@ class EnvEditorSpecs(LockedDictionary):
             
 class ADDSREditor(EnvEditorSpecs):
 
+    """
+    Provides Tk editor for ADDSR style envelopes.
+    """
+    
     clipboard = {'attack' : 0.0,
                  'decay1' : 0.0,
                  'decay2' : 0.0,

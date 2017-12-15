@@ -17,6 +17,7 @@ print("DEPRECIATION WARNING llia.gui.tk.decade_control")
 class DecadeControl(AbstractControl):
     
     """
+    DEPRECIATED, do not use.
     Defines compound coarse/fine synth GUI editor control.
     Coarse control provided by radio buttons.
     Fine control provided by slider (Scale in Tk parlance).

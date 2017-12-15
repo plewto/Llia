@@ -175,7 +175,7 @@ class ChannelAssignments(object):
         ARGS:
           config_parser - optional configuration parser.
                           If supplied channel name assignments are read
-                          form configuratio file section [MIDI-CHANNELS].
+                          form configuration file section [MIDI-CHANNELS].
 
         """
         self._channel_names = None
@@ -317,11 +317,6 @@ class ChannelAssignments(object):
         for c in self.formatted_list():
             acc += "%s%s\n" % (pad2, c)
         return acc
-    
-
-# GLOBAL_MIDI_CC_ASSIGNMENTS = CCAssignments()
-# GLOBAL_MIDI_CHANNEL_ASSIGNMENTS = ChannelAssignments()
-
 
 @dump.when_type(CCAssignments)
 def _dump_cc(obj):
@@ -330,22 +325,3 @@ def _dump_cc(obj):
 @dump.when_type(ChannelAssignments)
 def _dump_chan(obj):
     print(obj.dump())
-
-
-
-def test():    
-    cca = CCAssignments()
-    cca[16] = "Joystick x"
-    cca[17] = "Joystick y"
-    s1 = cca.serialize()
-    ccb = CCAssignments.deserialize(s1)
-    dump(cca)
-    dump(ccb)
-    
-    cha = ChannelAssignments()
-    cha[1] = "TX1"
-    cha[2] = "TX2"
-    s2 = cha.serialize()
-    chb = ChannelAssignments.deserialize(s2)
-    dump(cha)
-    dump(chb)

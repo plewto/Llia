@@ -43,9 +43,16 @@ class ProgramBank(list):
         self._lock_current_program = False # if true ignore program changes
 
     def lock_current_program(self, flag):
+        """
+        Locks current program number.
+        When locked the bank does not respond to Program Change events.
+        """
         self._lock_current_program = flag
 
     def current_program_locked(self):
+        """
+        Returns state of bank lock.
+        """
         return self._lock_current_program
         
     def append(self, _):
@@ -206,8 +213,8 @@ class ProgramBank(list):
 
     def create_program(self):
         '''
-        Creates a new Program based using the template passed to self at
-        construction time.   The Program is not contained in the bank.
+        Creates a new Program based on template passed to self at
+        construction time.   The Program is not initially contained in the bank.
 
         RETURNS: Program
         '''
@@ -236,8 +243,7 @@ class ProgramBank(list):
         
         ARGS:
           start - MIDI program number
-          end   - optional MIDI program number. If not 
-                  specified end = start+1
+          end   - optional MIDI program number, defaults to start+1.
         '''
         end = end or start + 1
         for i in range(slot, end):
@@ -267,7 +273,6 @@ class ProgramBank(list):
             prog2 = clone(prog)
             list.__setitem__(other, slot, prog2)
         return other
-    
  
     def save(self, filename):
         '''
@@ -282,65 +287,6 @@ class ProgramBank(list):
         with open(filename, 'w') as output:
             json.dump(s, output, indent=4)
         self.filename = filename
-
-    # Old style serialization (prior t v0.1.3)
-    # def serialize(self):
-    #     '''
-    #     Convert bank to serial data preparatory to saving it.
-    #     '''
-    #     acc = ["Llia.ProgramBank",
-    #            {"format" : self.template.data_format,
-    #             "name" : self.name,
-    #             "remarks" : self.remarks,
-    #             "count" : len(self),
-    #             "template" : self.template.serialize()}]
-    #     payload = []
-    #     for p in self:
-    #         payload.append(p.serialize())
-    #     acc.append(payload)
-    #     return acc
-
-    # Old style deserilization (prior to v0.1.3)
-    # @staticmethod
-    # def deserialize(s):
-    #     '''
-    #     Convert serialized data to an instance of Bank.  deserialize
-    #     is used as part of the bank read operation.
-    #     ARGS:
-    #       s - List, 
-    #
-    #     RETURNS: 
-    #       ProgramBank
-    #
-    #     Raise TypeError if s is not a list
-    #     Raises ValueError if s does not have the proper format.
-    #     Raises IndexError if s is too short.
-    #     '''
-    #     try:
-    #         if is_list(s):
-    #             id = s[0]
-    #             if id == "Llia.ProgramBank":
-    #                 header, payload = s[1:3]
-    #                 count = header["count"]
-    #                 template = Program.deserialize(header["template"])
-    #                 bank = ProgramBank(template)
-    #                 for slot in range(count):
-    #                     ps = payload[slot]
-    #                     list.__setitem__(bank, slot, Program.deserialize(ps))
-    #                 bank.use(0)
-    #                 bank.name = header["name"]
-    #                 bank.remarks = header["remarks"]
-    #                 # bank.undostack.clear()
-    #                 return bank
-    #             else:
-    #                 msg = "ProgramBank.deserialize did not find expected class id"
-    #                 raise ValueError(msg)
-    #         else:
-    #             msg = "ProgramBank.deserialize, wrong type: %s" % type(s)
-    #             raise TypeError(msg)
-    #     except IndexError:
-    #         msg = "ProgramBank.deserialize, IndexError"
-    #         raise IndexError(msg)
 
     def serialize(self):
         payload = []
@@ -395,13 +341,13 @@ class ProgramBank(list):
                         previous = program
                 return bank
             else:
-                msg = "ProgramBank.deserilize did not find exptected class id"
+                msg = "ProgramBank.deserilize did not find expected class id"
                 raise ValueError(msg)
         except IndexError:
-            msg = "ProgramBank.deserialize IndexError"
+            msg = "ProgramBank.deserilize IndexError"
             raise IndexError(msg)
             
-    # See deserialize for ui usage
+    # See deserilize for ui usage
     @staticmethod
     def read_bank(filename, ui=None):
         '''
@@ -425,7 +371,7 @@ class ProgramBank(list):
             msg = err.message + "\n" + msg
             raise IOError(msg)
 
-    # See deserialize for ui usage.
+    # See deserilize for ui usage.
     def load(self, filename, ui=None):
         '''
         Load bank data from file into self.

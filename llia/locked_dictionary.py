@@ -7,7 +7,7 @@ class LockedDictionary(dict):
 
     '''
     Defines a dictionary subclass with a pre-determined set of keys.
-    It is not possible to add new keys after construction time.
+    It is not possible to add new keys after construction.
     '''
     
     def __init__(self, template):

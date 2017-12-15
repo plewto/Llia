@@ -19,9 +19,9 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
 
 KEY_MODES = ("PolyN", "PolyRotate", "Poly1", "Mono1", "MonoExclusive", "EFX")
 
-SYNTH_TYPES = []
-EFFECT_TYPES = []
-CONTROLLER_SYNTH_TYPES = []
+SYNTH_TYPES = []                # Populated at startup
+EFFECT_TYPES = []               # Populated at startup
+CONTROLLER_SYNTH_TYPES = []     # Populated at startup
 
 LOGO_DIMENSIONS = (96,96)
 SMALL_LOGO_DIMENSIONS = (64,64)

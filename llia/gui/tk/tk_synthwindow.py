@@ -15,7 +15,25 @@ PROGRESSBAR_COLUMN = 3
 
 class TkSynthWindow(Frame):
 
+    """
+    Provides common synth editor elements: 
+          bank editor
+          MIDI tab
+          Mapping tabs
+
+     TkSynthWindow is customized by adding one or more TkSubEditor.
+    """
+    
     def __init__(self, master, sproxy):
+
+        """
+        Construct new TkSynthWindow
+
+        master - The Tk container for self.  In practice this is an 
+                 instance of llia.gui.tk.GroupWindow
+
+        sproxy - An instance of llia.Proxy.
+        """
         Frame.__init__(self, master)
         self.config(background=factory.bg())
         self.synth = sproxy
@@ -43,8 +61,6 @@ class TkSynthWindow(Frame):
         self._lab_status.grid(row=0, column=4, sticky='w')
         self._progressbar = Progressbar(south,mode="indeterminate")
         self._progressbar.grid(row=0,column=PROGRESSBAR_COLUMN, sticky='w', padx=8)
-        
-        
         south.config(background=factory.bg())
         main.add(self.bank_editor)
         main.add(east)
@@ -54,7 +70,6 @@ class TkSynthWindow(Frame):
         self.var_keyrange_low = StringVar()
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
-
         #self._init_busconnection_tab(self.notebook)
         self._init_midi_tab(self.notebook)
         self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
@@ -90,7 +105,7 @@ class TkSynthWindow(Frame):
             self.notebook.add(f,text=text,image=icon,compound="top")
             return f
         except IOError:
-            msg = "IOError while loaidng image file '%s'" % image_filename
+            msg = "IOError while loading image file '%s'" % image_filename
             print(msg)
             return self._create_basic_tab(text)
     
@@ -134,7 +149,7 @@ class TkSynthWindow(Frame):
         mw = self.app.main_window()
         grp = mw.group_windows[self.group_index]
         grp.lower()
-        self.status("Lowewr window")
+        self.status("Lower window")
         
     def sync_program_tab(self):
         bnk = self.synth.bank()
@@ -409,7 +424,7 @@ class TkSynthWindow(Frame):
             elif widget is b_add_keynum:
                 dialog = add_map_dialog(self.synth, "keynumber", self.app)
             else:
-                msg = "Invald widget - Should never see this"
+                msg = "Invalid widget - Should never see this"
                 raise ValueError(msg)
 
         def delete_map_callback(event):
@@ -421,7 +436,7 @@ class TkSynthWindow(Frame):
             elif widget is b_delete_keynum:
                 dialog = delete_map_dialog(self, self.synth, "keynumber", self.app)
             else:
-                msg = "Invald widget - Should never see this"
+                msg = "Invalid widget - Should never see this"
                 raise ValueError(msg)
 
         b_add_vel.bind("<Button-1>", add_map_callback)
@@ -474,16 +489,25 @@ class TkSynthWindow(Frame):
                 ed.sync(*ignore)
        
     def annotation_keys(self):
+        """
+        See TkSubEditor annotation
+        """
         acc = []
         for ed in self._child_editors.values():
             acc += ed.annotation_keys()
         return acc
 
     def set_annotation(self, key, text):
+        """
+        See TkSubEditor annotation
+        """
         for ed in self._child_editors.values():
             ed.annotation(key, text)
 
     def get_annotation(self, key):
+        """
+        See TkSubEditor annotation
+        """
         rs = None
         for ed in self._child_editors.values():
             rs = ed.get_annotation(key)
@@ -492,11 +516,19 @@ class TkSynthWindow(Frame):
         return None
 
     def update_progressbar(self, count, value):
+        """
+        Set progress bar to position value/count, where.
+        count - Expected number of steps.
+        value - Current step number.
+        """
         self._progressbar.config(mode="determinate", maximum=count)
         self._progressbar.step()
         self.update_idletasks()
     
     def busy(self, flag, message=""):
+        """
+        Set progress bar to 'busy'
+        """
         if message:
             self.status(message)
         self._progressbar.config(mode="indeterminate")

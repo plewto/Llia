@@ -106,7 +106,7 @@ def _is_sink(obj):
 class BusProxy(object):
     '''
     An abstract super class for audio or control buses.
-    Each bus has a name, a list of sources and a list of sinks.
+    Each bus has a name, list of sources and sinks.
     '''
     def __init__(self, name, app, sync=False):
         super(BusProxy, self).__init__()
@@ -132,9 +132,9 @@ class BusProxy(object):
         return None
 
     # Update editor of bus connection change
+    # ISSUE: place holder method, not implemented
     def sync_editor(self):
         pass
-        # ISSUE: place holder method, not implemented
     
     def is_audio_bus(self):
         return self.rate() == "Audio"

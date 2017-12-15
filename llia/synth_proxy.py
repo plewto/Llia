@@ -889,14 +889,6 @@ class SynthProxy(object):
     def _program_change_handler(self, mmsg):
         if mmsg.channel == self._midi_chan0:
             self.use_program(mmsg.program)            
-    
-    # def _keyswitch_handler(self, mmsg):
-    #     if mmsg.channel == self._keyswitch_chan0:
-    #         v127 = mmsg.velocity
-    #         if v127 != 0:
-    #             slot = mmsg.note+self._keyswitch_transpose
-    #             slot = min(max(slot, 0), 127)
-    #             self.use_program(slot)
                 
     def dump(self):
         pad = " "*4

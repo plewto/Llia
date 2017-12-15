@@ -99,24 +99,3 @@ def performance_pp(perf, tab=0):
         acc = acc[:-2]
     acc += "])\n"
     return acc
-
-    
-        
-    
-##### TEST
-# p = performance(transpose = 1,
-#                 key_range = [2, 3],
-#                 bend = [400, "BEND"],
-#                 smaps = [
-#                          smap("velocity", "alpha", "linear", 1, [0.0, 1.0], [0.0, 1.0]),
-#                          smap("velocity", "beta"),
-#                          smap("aftertouch", "Rats"),
-#                          smap("pitchwheel", "Bats"),
-#                          smap("keynumber", "Cats")
-#                 ],
-#                 ccmaps = [ccmap(1, "gamma"),
-#                           ccmap(1, "delta"),
-#                           ccmap(4, "epsilon")
-#                       ])
-#
-# print(performance_pp(p))

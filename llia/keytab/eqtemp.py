@@ -9,7 +9,7 @@ from llia.keytab.util import (eqtemp_to_list, eqtemp_scale_ratio, transpose_refe
 
 class EqTempKeyTable(KeyTable):
 
-    """Extends KeyTable fro equal-tempered scales."""
+    """Extends KeyTable for equal-tempered scales."""
     
     def __init__(self, name, npo, refkey=(69, 440.0), transpose=0, octave=2.0):
         """

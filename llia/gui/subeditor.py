@@ -10,8 +10,12 @@ from llia.generic import is_subeditor
 
 class SubEditor(object):
 
+    """
+    Depreciated do not use.
+    """
+    
     def __init__(self, parent, synth_proxy):
-        print("DEPRCIATION warning: llia.gui.subeditor.SubEditor is depreciated")
+        print("DEPRECIATION warning: llia.gui.subeditor.SubEditor is depreciated")
         super(SubEditor, self).__init__()
         self.parent = parent
         self.synth_proxy = synth_proxy

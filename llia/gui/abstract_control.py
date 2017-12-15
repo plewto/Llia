@@ -13,26 +13,29 @@ from llia.curves import identity
 from llia.curves import linear_coefficients as linco
 from llia.curves import linear_function as linfn
 
-
-# Defines an abstract GUI control element.
-# A control consist of one or more widgets. The exact widget type is
-# determined by the GUI library in use.
-#
-# Each control has a "value" and an associated "aspect".  A control's value
-# directly corresponds to a SC synth parameter.  A control's aspect
-# indicates it's appearance.
-#
-# A common simple case is an envelope time slider.  The slider
-# will have a fixed number of discrete steps, for instance between 0 and
-# 99, which indicate the slider's aspect.  Each of these positions will map
-# to some real value for envelope time.
-#
-# A control may also be "compound" and encompass more then one widget.  A
-# typical example would be a group of radio buttons.
-#
 class AbstractControl(object):
 
+    """
+    AbstractControl defines an abstract GUI control element.  A control
+    consist of one or more widgets. The exact widget type(s) is dependent on
+    the GUI system in use.
+
+    A control may assume any number of pre-defined values which directly
+    correspond to a Synth parameter. 
+
+    Each control value has a distinct 'aspect', where an aspect is the
+    visual appearance of the control.  This terminology is borrowed from
+    railroad signaling. 
+    """
+    
     def __init__(self, param, editor, primary_widget, **widgets):
+        """
+        Construct new AbstractControl 
+        param - string, the synth parameter
+        editor - 
+        primary_widget - The control's main widget
+        widgets - optional, secondary widgets.
+        """
         self.param = param
         self.editor = editor
         self.synth = editor.synth
@@ -43,29 +46,50 @@ class AbstractControl(object):
         self._current_aspect = None
         self._current_value = None
         self.range_ = [-1e6,1e6]   # [min max]
-
         
     def widget(self, key=None):
+        """
+        Returns named widget.
+        By default returns the primary widget.
+        """
         if not key:
             return self._widgets["primary"]
         else:
             return self._widgets[key]
 
     def widget_keys(self):
+        """
+        Returns list of string keys for constituent widgets.
+        At a minimum this list will contain "primary".
+        """
         return self._widgets.keys()
 
     def has_widget(self, key):
+        """
+        Predicate, True if key names a constituent widget.
+        """
         return self._widgets.has_key(key)
         
     @abc.abstractmethod
     def update_aspect(self):
+        """
+        Change appearance to match current value.
+        """
         pass
 
     @abc.abstractmethod
     def callback(self, *args):
+        """
+        Callback function to the GUI library.
+        callback is executed whenever the control is manipulated or changed.
+        """
         pass
     
     def aspect(self, new_aspect=None):
+        """
+        Returns, and optionally change, the current aspect.
+        If the aspect is altered, the control's values is changed to match.
+        """
         if new_aspect is not None:
             self._current_aspect = new_aspect
             self._current_value = self.aspect_to_value_transform(new_aspect)
@@ -73,6 +97,10 @@ class AbstractControl(object):
         return self._current_aspect
 
     def value(self, new_value=None):
+        """
+        Returns, and optionally change, the current value.
+        If the value is altered, the aspect is changed to match.
+        """
         if new_value is not None:
             mn,mx = self.range_
             new_value = float(min(max(new_value,mn),mx))
@@ -105,15 +133,25 @@ _norm_to_aspect = linfn((0.0, 1.0),(0, 199))
 _aspect_to_norm = linfn((0,199),(0.0,1.0))
 
 def norm_to_aspect(n):
+    """
+    Converts normalized value to control aspect.
+    Used with slider like controls to convert a "normalized" value between 
+    0.0 and 1.0 inclusive to slider position (int 0..199).
+    """
     return int(clip(_norm_to_aspect(n), 0, 199))
 
 def aspect_to_norm(a):
+    """
+    Converts aspect to normalized value.
+    Used with slider like controls to convert slider position (as an int
+    between 0 and 199) to a normalized float between 0.0 and 1.0 inclusive. 
+    """
     return float(clip(_aspect_to_norm(a), 0.0, 1.0))
 
 #  ---------------------------------------------------------------------- 
-#                          BiPolar Normalized values
+#                          Bipolar Normalized values
 #
-# Polarzied normal values have rwal range of [-1.0, +1.0] and an
+# Polarized normal values have real range of [-1.0, +1.0] and an
 # aspect range of [0,99]
 #
 
@@ -124,9 +162,21 @@ _polar_to_aspect = linfn((-1.0, 1.0),(0,199))
 _aspect_to_polar = linfn((0,199),(-1.0, 1.0))
 
 def polar_to_aspect(n):
+    """
+    Converts signed normalized value to controller aspect.
+    Used with slider like controls with signed normalized values.
+    Converts signed normal value, a float between -1.0 and +1.0 inclusive,
+    to slider position, an int between 0 and 199.
+    """
     return int(clip(_polar_to_aspect(n), 0, 199))
 
 def aspect_to_polar(n):
+    """
+    Converts controller aspect to signed normalized value.
+    Used with slider like controls with signed normalized values.
+    Converts slider position, an int between 0 and 199, to signed 
+    normalized value, a float between -1.;0 and +1.0.
+    """
     return float(clip(_aspect_to_polar(n), -1.0, 1.0))
 
 
@@ -137,7 +187,7 @@ def aspect_to_polar(n):
 # elements, such as oscillator levels.   
 #
 # The volume functions are for over all instrument/effect amplitude, and
-# provide up to +6db of gain.
+# provide up to +6 db of gain.
 #
 #  ---------------------------------------------------------------------- 
 #                                   Mix
@@ -145,12 +195,22 @@ def aspect_to_polar(n):
 # Mix is expressed as a liner aspect between 0 and 199 with a discontinuous
 # mapping to amplitude.   Maximum gain is 0.  
 #
-# aspect(199)   ->   0db
-# aspect(100)   ->  -9db
+# aspect(199)   ->   0 db
+# aspect(100)   ->  -9 db
 # aspect(  1)   -> -48db
 # aspect(  0)   -> -infinitiy
 
 def mix_aspect_to_amp(va):
+    """
+    Converts slider position, an int between 0 and 199, to gain factor.
+    Used with slider like gain controls.
+    The response is divided into several distinct regions.
+
+           199  -  0db
+    100 to 198  -  -9db to 0db
+      1 to  99  - -48db to -9db
+      0         - -infinity
+    """
     if va == 0:
         return 0
     elif va <= 99:
@@ -160,6 +220,11 @@ def mix_aspect_to_amp(va):
     return db_to_amp(min(a*va+b, 0))
 
 def amp_to_mix_aspect(amp):
+    """
+    Converts gain ratio to slider position.
+    Used with slider like gain controls.
+    The response is non-linear, see mix_aspect_to_amp
+    """
     amp = abs(amp)
     if amp == 0:
         return 0
@@ -176,7 +241,7 @@ def amp_to_mix_aspect(amp):
 #  ---------------------------------------------------------------------- 
 #                                   Volume
 #
-# Volume is similer to mix but allows positive gain and has control "dead"
+# Volume is similar to mix but allows positive gain and has control "dead"
 # spots.
 #
 # aspect(191...199)  ->  +6db
@@ -187,6 +252,18 @@ def amp_to_mix_aspect(amp):
 # aspect(0)          -> -infinity
 
 def volume_aspect_to_amp(va):
+    """
+    Convwerts controller aspect to gain factor. 
+    Used with slider like volume controls.
+    The response has several distinct regions:
+
+           199 -  +6db
+    181 to 198 -  +3db
+    179 to 180 -   0db
+     81 to 178 -  -12db to 0db
+      1 to 80  -  -48db to -12db
+      0        -  -infinity db
+    """
     if 191 <= va:
         db = 6
     elif 181 <= va:
@@ -203,6 +280,11 @@ def volume_aspect_to_amp(va):
     return amp
 
 def amp_to_volume_aspect(amp):
+    """
+    Converts gain factor to controller aspect.
+    Used with slider like volume controls.
+    See volume_aspect_to_amp
+    """
     amp = abs(amp)
     if amp == 0:
         return 0
@@ -229,7 +311,7 @@ def amp_to_volume_aspect(amp):
 # aspect range [0, 99]
 # time range [0.0, ~120]
 #
-# Times are divided into 4 regions with lowe aspects having higher
+# Times are divided into 4 regions with lower aspects having higher
 # resolutions.
 #
 
@@ -256,10 +338,19 @@ ENVTIME_ASPECT_DOMAIN = (0, 99)
 ENVTIME_CODOMAIN = (0.0, __ENV_TIMES[-1])
 
 def aspect_to_envtime(a):
+    """
+    Converts controller aspect to envelope segment time.
+    The response has several distinct regions:
+    """
     a = clip(a, 0, len(__ENV_TIMES)-1)
     return __ENV_TIMES[a]
 
 def envtime_to_aspect(t):
+    """
+    Converts envelope segment time to controller aspect.
+    The response has several distinct regions.
+    See aspect_to_envtime
+    """
     a = (numpy.abs(__ENV_TIMES-t)).argmin()
     return a
     
@@ -280,10 +371,16 @@ __SIMPLE_LFO_TO_ASPECT = linfn(SIMPLE_LFO_CODOMAIN,
                                SIMPLE_LFO_ASPECT_DOMAIN)
 
 def aspect_to_simple_lfo(a):
+    """
+    Converts controller aspect to LFO frequency.
+    """
     f = float(clip(__ASPECT_TO_SIMPLE_LFO(a), 0.1, 7.0))
     return f
 
 def simple_lfo_to_aspect(f):
+    """
+    Converts LFO frequency to controller aspect.
+    """
     a = int(clip(__SIMPLE_LFO_TO_ASPECT(f), 0, 199))
     return a
             

@@ -124,11 +124,12 @@ class LliaProxy(object):
         self._callback_message = {}
         return rs
 
-    # Check callback dictionary for expected response message
-    # Return True if expected message has been received.
-    # Return False otherwise
-    #
     def expect_osc_response(self, msg):
+        """
+        Check for expected OSC callback message.
+        Returns True if expected message has been received.
+        The response may only be checked once. 
+        """
         rs = False
         try:
             sleep(0.05)
@@ -162,12 +163,13 @@ class LliaProxy(object):
         # args = args[0].split(delim)
         return args
 
-    # Requst ping-response from host
-    # transmit Llia/oscID/ping
-    # response -> ping-response
-    # Riase LliaPingError if no response
-    # returns bool
     def ping(self):
+        """
+        Transmits OSC "ping" message to server and check for expected
+        "ping-response" return message.
+        Returns True if ping-response was received,
+        Raise LliaPingError if ping-response was not received.
+        """
         try:
             self._send("ping")
             if self.expect_osc_response("ping-response"):
@@ -182,7 +184,7 @@ class LliaProxy(object):
     def free(self):
         '''
         Transmit OSC 'free' message to server.
-        In response the server app should free all of it's resources.
+        In response the server app should free all of it's (llia managed) resources.
         '''
         self._send("free")
 
@@ -190,13 +192,16 @@ class LliaProxy(object):
         '''
         Transmit 'restart' message to server.
         In response the server app should revert to its startup condition.
-        All non-protected buses and <strike buffers> are freed. All synths are
+        All non-protected buses <strike>and buffers</strike> are freed. All synths are
         freed. 
         '''
         self._send("restart")
         rs = self.expect_osc_response("restarted")
 
     def tabula_rasa(self):
+        """
+        Restore self to initial condition.
+        """
         self.restart()
         self._synths = {}
         self._init_audio_buses()
@@ -257,7 +262,7 @@ class LliaProxy(object):
 
     def post(self, text):
         '''
-        Post (SupperColliders term for print) text to SuperCollider's 
+        Post (SuperCollider's term for print) text to SuperCollider's 
         post window.  Does not include line feed.
         '''
         self._send("post", [text])
@@ -325,13 +330,17 @@ class LliaProxy(object):
         return rs
 
     def bus_exists(self, bname):
+        """
+        Check if bus named bname exists.
+        If so return either "audio" or "control" indicating then bus rate.
+        Otherwise return False.
+        """
         if self.audio_bus_exists(bname):
             return "audio"
         elif self.control_bus_exists(bname):
             return "control"
         else:
             return False
-
     
     def audio_bus_exists(self, bname):
         '''
@@ -753,7 +762,8 @@ class LliaProxy(object):
 
     def list_efx(self):
         '''
-        Diagnostic method, print names of all efx synths
+        Diagnostic method, print names of all efx synths.
+        The result includes Controller synths.
         '''
         acc = []
         print("EFX Synths:")

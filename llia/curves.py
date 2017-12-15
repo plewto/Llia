@@ -1,4 +1,5 @@
 # llia.curves
+# Defines MIDI data curves.
 # 2016.03.19
 
 from math import tanh

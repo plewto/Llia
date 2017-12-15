@@ -40,7 +40,7 @@ class LliaConfig(dict):
         file.
         
            Linux    ~/.config/Llia/config
-           OSX      ~/.config/Llia/config (Tentitive)
+           OSX      ~/.config/Llia/config
            Windows  ? not yet determined
         
         ARGS:
@@ -534,45 +534,6 @@ class LliaConfig(dict):
             return int(rs)
         except (NoOptionError, NoSectionError, TypeError):
             return None
-
-    # def keyswitch_enabled(self):
-    #     '''
-    #     Returns flag indicating if MIDI 'keyswitch' mode is enabled.
-    #     Keyswitching allows MIDI key events to be interpreted as program 
-    #     changes.  
-
-    #     ISSUE: The current keyswitch implementation is rudimentary.
-    #     '''
-    #     flg = str(self._parser.get("MIDI", "enable-keyswitch")).upper()
-    #     return flg == "TRUE"
-
-    # def keyswitch_channel(self):
-    #     '''
-    #     Returns MIDI channel used for key switching. [1,2,3,...16]
-        
-    #     '''
-    #     mc = 10
-    #     try:
-    #         mc = int(self._parser.get("MIDI", "keyswitch-channel"))
-    #         mc = min(16, max(mc, 1))
-    #     except ValueError:
-    #         pass
-    #     return mc
-
-    # def keyswitch_transpose(self):
-    #     '''
-    #     Returns a transposition amount added to incoming key switch events
-    #     to produce to the resulting program number.
-
-    #     ISSUE: The keyswitch implementation is rudimentary and this 
-    #            method should be viewed with suspicion for the future.
-    #     '''
-    #     x = 0
-    #     try:
-    #         x = int(self._parser.get("MIDI", "keyswitch-transpose"))
-    #     except ValueError:
-    #         pass
-    #     return x
   
     def startup_script(self):
         '''

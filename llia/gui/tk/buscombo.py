@@ -7,6 +7,10 @@ from ttk import Combobox
 
 class AudioBusCombobox(Combobox):
 
+    """
+    Provides Tk Combobox for audio bus selection.
+    """
+    
     def __init__(self, master, proxy):
         self.proxy = proxy
         self.var_selection = StringVar()
@@ -22,6 +26,10 @@ class AudioBusCombobox(Combobox):
         
 class ControlBusCombobox(Combobox):
 
+    """
+    Provides Tk Combobox for control bus selection.
+    """
+    
     def __init__(self, master, proxy):
         self.proxy = proxy
         self.var_selection = StringVar()
@@ -33,6 +41,3 @@ class ControlBusCombobox(Combobox):
         values = self.proxy.control_bus_names()
         self.config(values=values)
         self.var_selection.set(values[0])
-        
-        
-        

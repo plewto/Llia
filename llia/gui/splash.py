@@ -1,6 +1,10 @@
 # llia.gui.splash
 # 2016.05.19
 
+"""
+Defines text based application "Splash" screen.
+"""
+
 from __future__ import print_function
 
 import sys
@@ -16,6 +20,12 @@ else:
     
 class TextSplashScreen(object):
 
+    """
+    Defines initial text-based application "screen" for use when there is no GUI system.
+    The screen enters a menu based loop where the user selects basic OSC and MIDI based
+    values.
+    """
+    
     def __init__(self, app):
         self.app = app
         self.config = app.config()

@@ -1,11 +1,8 @@
 # llia.gui.tk.msb
 # MSB --> Multi State Button
 #
-# Defines a multi-state synth control button which is rendered on a
-# Tk Canvas object.
+# Defines a multi-state synth control button for use with TkSubEditor
 #
-
-
 
 from llia.generic import is_synth_control
 
@@ -13,7 +10,6 @@ from llia.generic import is_synth_control
 #  ---------------------------------------------------------------------- 
 #                               MsbAspect class
 #
-
 
 class MsbAspect(dict):
 
@@ -90,10 +86,10 @@ def null_callback(*_):
 class MSB(object):
 
     '''
-    MSB (Multi State Button) is a synth editor widget which is rendered 
-    on a Tk Canvas.  Each MSB instance has a fixed number of possible
-    aspects/values.  Graphically an MSB consist of the following Canvas
-    items (from bottom up):
+     MSB (Multi State Button) is a synth editor widget for use with TkSubEditor
+    
+    each MSB has a fixed number of possible aspects/values.
+    Graphically an MSB consist of the following Canvas items (from bottom up):
 
         1) pad     - filled rectangle, the background
         2) outline - open rectangle
@@ -120,7 +116,7 @@ class MSB(object):
           naspects - int, number of possible aspects
 
         The number of possible aspects can not be changed once the button
-        is created.  Initially each aspect is set to a default.  Once the 
+        has been created.  Initially each aspect is set to a default.  Once the 
         button is created use the define_aspect method to set actual values.
         '''
         self.canvas = canvas
@@ -233,7 +229,9 @@ class MSB(object):
     
     def update_aspect(self):
         '''
-        Update the button appearance to match its current aspect/
+        Update the button appearance to match it's current aspect.
+        In most cases update_aspect should be called after all aspects are defined,
+        to force drawing of self on canvas. 
         '''
         canvas = self.canvas
         canvas.itemconfig(self._outline, fill='', width=self['outline-width'])
@@ -264,7 +262,6 @@ class MSB(object):
             msg = "[%s] -> %s" % (self.param, self.value())
             if self.editor:
                 self.editor.status(msg)
-            
             
     def _exit_callback(self, *_):
         # Mouse exit callback

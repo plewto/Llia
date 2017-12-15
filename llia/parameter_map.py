@@ -174,38 +174,6 @@ class ParameterMap(object):
             src = "%s " % self.source
         return src + self.__str_common()
 
-    # Old style serilization (pre v 0.1.3)
-    # def serialize(self):
-    #     acc = ["llia.ParameterMap",
-    #            {"source" : self.source,
-    #             "parameter" : self.parameter,
-    #             "curve" : self.curve_type,
-    #             "modifier" : self.curve_modifier,
-    #             "domain" : self.domain,
-    #             "range_" : self.range_,
-    #             "limits" : self.limits}]
-    #     return acc
-
-    # Old style deserilization (pre v 0.1.3)
-    # @staticmethod
-    # def deserialize(obj):
-    #     cls = obj[0]
-    #     if cls == "llia.ParameterMap":
-    #         data = obj[1]
-    #         src = data["source"]
-    #         param = data["parameter"]
-    #         curve = data["curve"]
-    #         mod = data["modifier"]
-    #         dom = data["domain"]
-    #         codom = data["range_"]
-    #         lim = data["limits"]
-    #         return ParameterMap(src, param, curve, mod, dom, codom, lim)
-    #     else:
-    #         msg = "Can not read %s as Llia ParameterMap" % type(obj)
-    #         raise RunTimeError(msg)
-
-
-    # New style serilizatin introduced v0.1.3
     # data is aprox 45% smaller.
     def serialize(self):
         acc = ["llia.ParameterMap",
@@ -218,7 +186,6 @@ class ParameterMap(object):
                 self.limits]]
         return acc
 
-    # New style deserilization introduced v0.1.3
     @staticmethod
     def deserialize(obj):
         cls = obj[0]

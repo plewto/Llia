@@ -8,7 +8,11 @@ from llia.lliascript.synthhelper import SynthHelper
 
 class Composer(object):
 
-    
+    """
+    Composer constructs a Python script which may be used to reconstruct
+    the current state of Llia.
+    """
+
     def __init__(self, parser):
         self.parser = parser
 
@@ -44,7 +48,6 @@ class Composer(object):
                     code += 'abus("%s")\n' % name
         code += "\n"
         return code
-
 
     @staticmethod
     def is_protected_control_bus(name):

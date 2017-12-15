@@ -1,7 +1,14 @@
 # llia.gui.tk.control_factory
 # 
-# "Controls" are widgets specifically for synth editors.
 
+"""
+Defines several control widgets specifically for use with TkSubEditor.
+
+TkSubEditor provides methods for creating many of these controls.  
+In most cases it is cleaner to construct controls using the editor methods
+instead of calling of these functions.   TkSubEditor however doe not provide
+methods for all control type.
+"""
 
 from __future__ import print_function
 import Tkinter as tk
@@ -15,6 +22,11 @@ from llia.curves import linear_function as linfn, normal_exp_curve
 
 class ControlSlider(absctrl.AbstractControl):
 
+
+    """
+    ControlSilder extends AbstractControl to provide a Tk slider widget.
+    """
+    
     DEFAULT_WIDTH = 12
     DEFAULT_LENGTH = 150
 
@@ -27,6 +39,23 @@ class ControlSlider(absctrl.AbstractControl):
     # curves[1] -> aspect_to_value map
     def __init__(self, master, param, editor, curves=(None, None),
                  domain=(200,0), orientation="vertical", ttip=""):
+        """
+        Constructs ControlSlider
+        master - Tk component to contain this control
+        param  - String, synth parameter
+        editor - TkSubEditor
+        curves - A tuple (a,b) of transformation functions.
+                 These functions transform slider position to parameter 
+                 values and the inverse parameter to slider position.
+                 The defaults are 
+                     a = llia.gui.abstract_control.norm_to_aspect
+                     b = llia.gui.abstract_control.aspect_to_norm
+        domain - Tuple, the number of slider positions (high, low) 
+                 default (200,0)
+        orientation - string, either "vertical" or "horizontal"
+                      The default is vertical.
+        ttip   - String, tool tip text, DEPRECIATED
+        """
         self._tkscale = factory.scale(master, from_=domain[0], to=domain[1],
                                       command = self.callback, ttip=ttip)
         super(ControlSlider, self).__init__(param, editor, self._tkscale)
@@ -42,7 +71,6 @@ class ControlSlider(absctrl.AbstractControl):
         #self._editor.status(self._param)
         msg = "[%s] -> %s" % (self._param, self.value())
         self._editor.status(msg)
-
         
     def update_aspect(self):
         self._tkscale.set(self._current_aspect)
@@ -61,10 +89,25 @@ class ControlSlider(absctrl.AbstractControl):
         self.client_callback(self, aspect, value)
                  
 def normalized_slider(master, param, editor, ttip=""):
+    """
+    Returns a Tk based ControlSlider with normalized values.
+    master - Tk container
+    param - string, synth parameter
+    editor - TkSubEditor
+    ttip - tool tip text, DEPRECIATED.
+    """
+    
     s = ControlSlider(master, param, editor, ttip=ttip)
     return s
 
 def bipolar_slider(master, param, editor, ttip=""):
+    """
+    Returns a Tk based ControlSlider with normalized bipolar range (-1..+1)
+    master - tk container
+    param - string, synth parameter
+    editor - TkSubEditor
+    ttip - tool tip text, DEPRECIATED.
+    """
     a_to_v = absctrl.aspect_to_polar
     v_to_a = absctrl.polar_to_aspect
     s = ControlSlider(master, param, editor,
@@ -73,6 +116,13 @@ def bipolar_slider(master, param, editor, ttip=""):
     return s
 
 def simple_lfo_freq_slider(master, param, editor, ttip="LFO Frequency"):
+    """
+    Returns a Tk ControlSlider for use with setting LFO frequency.
+    master - Tk container
+    param - string, synth parameter
+    editor - TkSubEditor 
+    ttip - tool tip text, DEPRECIATED.
+    """
     dom = list(absctrl.SIMPLE_LFO_ASPECT_DOMAIN)
     dom.reverse()
     s = ControlSlider(master, param, editor,
@@ -85,6 +135,19 @@ def simple_lfo_freq_slider(master, param, editor, ttip="LFO Frequency"):
 # of positive gain.   There are slider "dead spots" at +6, +3 and 0db.
 #
 def volume_slider(master, param, editor, ttip=""):
+    """
+    Returns ControlSlider for master volume adjustment. 
+    Slider positions are divided into several distinct regions.
+    Near the top are three discrete regions for 0, +3 and +6 db gain.
+    The upper middle has a range between -12db and 0db.
+    The lower middle has a range between -48db and -12db
+    The very lowest position is -infinity db
+
+    master - Tk container
+    param - string, synth parameter
+    editor - TkSubEditor 
+    ttip - tool tip text, DEPRECIATED.
+    """
     s = ControlSlider(master, param, editor,
                       (absctrl.amp_to_volume_aspect,
                        absctrl.volume_aspect_to_amp),
@@ -100,14 +163,23 @@ def volume_slider(master, param, editor, ttip=""):
     s.widget().bind("<Leave>", enter_callback)
     return s
 
-# mix_slider is for levels of synth components such as oscilators.
-# It is an atenuator only with maximum gain of 0db.
+# mix_slider is for levels of synth components such as oscillators.
+# It is an attenuator only with maximum gain of 0db.
 #
 def mix_slider(master, param, editor, ttip=""):
     s = ControlSlider(master, param, editor,
                       (absctrl.amp_to_mix_aspect,
                        absctrl.mix_aspect_to_amp),
                       ttip=ttip)
+    """
+    Returns ControlSlider for gain adjustment.
+    mix_slider is similar to volume_slider but does not provide positive gains.
+    
+    master - Tk container
+    param - string, synth parameter
+    editor - TkSubEditor
+    ttip - tool tip text, DEPRECIATED.
+    """
     def enter_callback(*_):
         amp = float(s.value())
         db = int(amp_to_db(amp))
@@ -118,8 +190,17 @@ def mix_slider(master, param, editor, ttip=""):
     s.widget().bind("<Leave>", enter_callback)
     return s
 
-
 def linear_slider(master, param, editor, domain=(0, 200), range_=(0.0, 1.0), ttip=""):
+    """
+    Provides ControlSlider over a linear range.
+
+    master - Tk container
+    param - string, synth parameter
+    editor - TkSubEditor
+    domain - tuple (a,b), the domain of slider positions, defaults to (0,200)
+    range_ - tuple (q,r), the range of synth parameter values, defaults to (0.0, 1.0)
+    ttip -tool tip text, DEPRECIATED.
+    """
     a_to_v = linfn(domain, range_)
     v_to_a = linfn(range_, domain)
     s = ControlSlider(master, param, editor,
@@ -127,8 +208,15 @@ def linear_slider(master, param, editor, domain=(0, 200), range_=(0.0, 1.0), tti
                       ttip=ttip)
     return s
 
-
 def third_octave_slider(master, param, editor, ttip=""):
+    """
+    Returns ControlSlider for discrete filter values in third_octave increment.
+    
+    master - Tk container
+    param - string, synth parameter
+    editor - TkSubEditor
+    ttip -tool tip text, DEPRECIATED.
+    """
     a_to_v = absctrl.aspect_to_third_octave
     v_to_a = absctrl.third_octave_to_aspect
     domain = (0, 32)
@@ -139,6 +227,15 @@ def third_octave_slider(master, param, editor, ttip=""):
     return s
                       
 def discrete_slider(master, param, editor, values=range(8), ttip=""):
+    """
+    Returns a ControlSlider with a few discrete positions.
+
+    master - Tk container
+    param - string, synth parameter
+    editor - TkSubEditor
+    values - list of possible values. Default to (0,1,2,3,4,5,6,7)
+    ttip - tool tip text, DEPRECIATED.
+    """
     count = len(values)
     rvs_tab = {}
     for i,v in enumerate(values):
@@ -240,8 +337,23 @@ class OscFrequencyControl(absctrl.AbstractControl):
 
 class ControlCheckbutton(absctrl.AbstractControl):
 
+    """
+    Defines synth controller using Tk Checkbox.
+    """
+    
     def __init__(self, master, param, editor,
                  text="", values=(0,1), ttip=""):
+        
+        """
+        Constructs ControlCheckbutton
+
+        master - Tk container
+        param - string, synth parameter
+        editor - TkSubEditor
+        text - label text
+        values - tuple (a,b), defaults (0,1)
+        ttip -tool tip text, DEPRECIATED
+        """
         self._var = tk.BooleanVar()
         self._cb = factory.checkbutton(master, text, self._var,
                                        command=self.callback, ttip=ttip)
@@ -259,7 +371,6 @@ class ControlCheckbutton(absctrl.AbstractControl):
         program[self.param] = v
         msg = "[%s] -> %s" % (self.param, v)
         self.editor.status(msg)
-        
 
     def update_aspect(self):
         program = self.synth.bank()[None]

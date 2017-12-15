@@ -187,47 +187,12 @@ class SourceMapper(object):
                 acc += "%s\n" % pm
         return acc
 
-    # Old style serilization (pre v0.1.3)
-    # def serialize(self):
-    #     acc = ["llia.SourceMapper",
-    #            {"source" : self.source,
-    #             "domain" : self.domain,
-    #             "map-count" : len(self._maps)}]
-    #     for m in self._maps.values():
-    #         acc.append(m.serialize())
-    #     return acc
-
-    # Old style serilization (pre v0.1.3)
-    # @staticmethod
-    # def deserialize(obj):
-    #     cls = obj[0]
-    #     if cls == "llia.SourceMapper":
-    #         header = obj[1]
-    #         src = header["source"]
-    #         dom = header["domain"]
-    #         count = header["map-count"]
-    #         mapper = SourceMapper(src, dom)
-    #         for i in range(count):
-    #             pm = obj[i+2][1]
-    #             param = pm["parameter"]
-    #             crv = pm["curve"]
-    #             mod = pm["modifier"]
-    #             cod = pm["range_"]
-    #             lim = pm["limits"]
-    #             mapper.add_parameter(param, crv, mod, cod, lim)
-    #         return mapper
-    #     else:
-    #         msg = "Can not read %s as SourceMapper" % type(obj)
-    #         raise RuntimeError(msg)
-
-    # New style serilization (introduced v0.1.3)
     def serialize(self):
         acc = ["llia.SourceMapper",[self.source,self.domain,len(self._maps)]]
         for m in self._maps.values():
             acc.append(m.serialize())
         return acc
 
-    # New style deserilization (introduced v0.1.3)
     @staticmethod
     def deserialize(obj):
         cls = obj[0]

@@ -1,9 +1,9 @@
 # llia.gui.tk.reciprocal_slider
 #
 # A compound synth control useful for (non-zero) scaling factors.
-# The widget compliment includes a slider (tk "scale") , and two optional
+# The widget compliment includes a slider (tk "scale") and two optional
 # checkbuttons.
-# The slider range is between 1 and a prograamed upper limit.
+# The slider range is between 1 and a programed upper limit.
 # The two checkbuttons modify the slider value by
 #   1) negative   value = -1 * slider
 #   2) reciprocal value = 1/slider

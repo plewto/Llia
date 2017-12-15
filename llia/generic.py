@@ -71,10 +71,6 @@ def is_bank(obj):
 def is_instrument(obj):
     return False
 
-# @generic
-# def is_pigwindow(obj):
-#     return False
-
 @generic
 def is_subeditor(obj):
     return False
@@ -86,19 +82,6 @@ def is_synth_control(obj):
 @generic
 def is_controller_name_map(obj):
     return False
-
-# @generic
-# def is_seq(obj):
-#     return False
-
-# @is_seq.when_type(list)
-# def _is_seq_list(obj):
-#     return True
-
-# @is_seq.when_type(tuple)
-# def _is_seq_tuple(obj):
-#     return True
-
 
 @generic
 def is_list(obj):

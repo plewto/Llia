@@ -1,7 +1,7 @@
 # llia.lliascript.bufferhelper
 # 2016.05.16
 # Extends Parser with buffer related commands.
-#
+# For the moment Buffer support has been disabled.
 
 from __future__ import print_function
 

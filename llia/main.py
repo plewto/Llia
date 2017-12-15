@@ -1,5 +1,5 @@
 # Llia.main
-#
+# Entry point for starting client application.
 
 from __future__ import print_function
 import os, sys

@@ -1,5 +1,8 @@
 # llia.gui.tk.factory
 # 2016.05.21
+#
+# Provides factory functions for creating general Tk widgets.
+# For editor controls see control_factory.
 
 from __future__ import print_function
 
@@ -82,17 +85,18 @@ def tooltip(widget, text):
 #  ---------------------------------------------------------------------- 
 #                              Canvas and Image
 
-# def image(fname):
-#     try:
-#         img = Image.open(fname)
-#         photo = ImageTk.PhotoImage(img)
-#         _image_cachet.append(photo)
-#         return photo
-#     except IOError as err:
-#         msg = "Can not open image file '%s'" % fname
-#         raise IOError(msg)
-
 def image(fname):
+    '''
+    Load image file.
+    Images are cached. If this file has previously been loaded, use the 
+    cached version.
+
+    fname - image file name
+
+    Returns - ImageTk.PhotoImage
+
+    Raises IOError.
+    '''
     try:
         photo = _image_cachet[fname]
         return photo
@@ -111,6 +115,9 @@ def image(fname):
 #
 def canvas(master, width, height, image_file=None,
            image_position=(0,0), image_anchor='nw'):
+    '''
+    Creates Tk canvas with optiona background image.
+    '''
     c = Canvas(master, width=width, height=height, background=bg())
     if image_file:
         photo = image(image_file)
@@ -124,6 +131,14 @@ def canvas(master, width, height, image_file=None,
 #                                   Labels
 
 def label(master, text, var=None, modal=False, justify=LEFT):
+    '''
+    Creates Tk label widget
+    master - Tk container
+    text  - 
+    var - Optional Tk var 
+    modal - flag, set True is this widget is for use in pop up dialog.
+    justify - String, default LEFT
+    '''
     w = Label(master, text=text)
     w.config(justify=justify)
     if var:
@@ -136,6 +151,9 @@ def label(master, text, var=None, modal=False, justify=LEFT):
     return w
 
 def center_label(master, text):
+    """
+    Creartes Tk label with cenered text.
+    """
     w = label(master, text)
     w.config(justify=CENTER)
     return w
@@ -150,10 +168,18 @@ def warning_label(master, text=" ", var=None, modal=True):
     return w
 
 def padding_label(master, n=4, modal=True):
+    """
+    Returns a blank label for padding out other widgets.
+    """
     w = label(master, "", modal=modal)
     return w
 
 def image_label(master, fname, alt=None):
+    """
+    Retuerns label containg an image
+    master - Tk container
+    fname - image file name, image is cached.
+    """
     alt = alt or fname
     w = label(master, "")
     try:
@@ -359,22 +385,6 @@ def combobox(master, values, ttip=""):
     tooltip(cb, ttip)
     return cb
 
-# def audio_bus_combobox(master, app):
-#     values = app.proxy.audio_bus_names()
-#     ttip = "Audio buses"
-#     return combobox(master, values, ttip)
-
-# def control_bus_combobox(master, app):
-#     values = app.proxy.control_bus_names()
-#     ttip = "Control buses"
-#     return combobox(master, values, ttip)
-
-# def buffer_combobox(master, app):
-#     values = app.proxy.buffer_keys()
-#     ttip = "Buffers"
-#     return combobox(master, values, ttip)
-
-
 def audio_bus_combobox(master, app):
     cb = AudioBusCombobox(master, app.proxy)
     return cb
@@ -451,13 +461,4 @@ def paned_window(master, orient=HORIZONTAL):
     pw = PanedWindow(master, orient=orient)
     pw.config(background=bg())
     return pw
-
-
-# #  ---------------------------------------------------------------------- 
-# #                                  Toplevel
-
-# def toplevel(master=None):
-#     t = Toplevel(master)
-#     t.config(background=bg())
-#     return t
 

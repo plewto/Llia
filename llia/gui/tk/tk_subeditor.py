@@ -14,9 +14,26 @@ from llia.gui.tk.tumbler import Tumbler
 
 class TkSubEditor(Frame):
 
+
+    """
+    TkSubEditor provides a primary canvas for constructions synth editors.
+    Depending on complexity an editor may be spread across several sub-editors.
+    Typically TkSubEditor is sub-classed for specific editor behavior.
+    """
+    
     # parent - either TkSubEditor or TkSynthWindow
     # 
     def __init__(self, tk_master, parent, name):
+        """
+        Construct new TkSubEditor
+        tk_master - Tk container.  
+                    Older existing editors may use a Tk Frame as the master.
+                    Newer editors should use a Canvas widget.             
+        parent - The parent editor, either an instance of TkSynthWindow 
+                 or another  TkSubEditor.
+        name - This editors name.  The name should be unique amongst all  
+               sub-editors in a given master TkSynthWindow.    
+        """
         Frame.__init__(self, tk_master)
         self.parent = parent
         self.synth = parent.synth
@@ -33,6 +50,10 @@ class TkSubEditor(Frame):
     # Returns set of annotation keys.
     # Does not include any child editors.
     def annotation_keys(self):
+        """
+        Returns a list of available annotation keys.
+        See annotation method.
+        """
         return self._annotations.keys()
 
     # Define new annotation key.
@@ -53,6 +74,10 @@ class TkSubEditor(Frame):
     # Returns annotation for key.
     # Returns None if key has not previously been defined by _define_annotation.
     def get_annotation(self, key):
+        """
+        Returns text for selected annotation.
+
+        """
         return self._annotations.get(key, None)
 
     # Subclasses should implement.
@@ -61,10 +86,27 @@ class TkSubEditor(Frame):
     # If key has not been defined by _define_annotation, return None
     @abc.abstractmethod
     def annotation(self, key, text=None):
+        """
+        Returns or optionally changes annotation text.
+        An annotation allows predesignated labels to be set at run time.
+        A typical use case is s mixer effect where annotations allow changing
+        fader labels.  The method annotation_keys returns a list of available 
+        annotation labels.
+
+        key - name of annotation label.
+        text - optional, if non-None, update label text.
+
+        Returns annotation text.  If key is not a defined label, return None.
+        """
         return None
     
     
     def add_control(self, param, sctrl):
+        """
+        Adds a synth control to self.
+        param - string, synth parameter
+        sctrl - The control, should be a sub class of AbstractControl
+        """
         if is_synth_control(sctrl):
             self._controls[param] = sctrl
         else:
@@ -73,6 +115,9 @@ class TkSubEditor(Frame):
             raise(TypeError(msg))
 
     def get_control(self, param):
+        """
+        Returns control(s) associated with synth parameter.
+        """
         acc = []
         try:
             acc.append(self._controls[param])
@@ -83,6 +128,9 @@ class TkSubEditor(Frame):
         return acc
 
     def has_control(self, param):
+        """
+        Predicate, True if self has a control for parameter param.
+        """
         f = self._controls.has_key(param)
         if f:
             return True
@@ -93,15 +141,34 @@ class TkSubEditor(Frame):
         return False
     
     def add_child_editor(self, name, child):
+        """
+        Adds an instance of TkSubEditor as a child to this editor
+        name - the sub editors name. All sub editors must have a unique name
+        child - TkSubEditor
+        """
         self._child_editors[name] = child
 
     def status(self, msg):
+        """
+        Displays text on status line.
+        """
         self.parent.status(msg)
 
     def warning(self, msg):
+        """
+        Displays warning on status line.
+        """
         self.parent.warning(msg)
 
     def set_value(self, param, value):
+        """
+        Set value for selected control(s)
+        param - string, synth parameter
+        value - new value for param
+
+        Note: This method only updates the editor control to match the new 
+              value. It does not alter the current synth program.
+        """
         try:
             c = self._controls[param]
             c.value(value)
@@ -111,6 +178,9 @@ class TkSubEditor(Frame):
             ed[1].set_value(param, value)
     
     def sync(self, *ignore):
+        """
+        Update all controls to match current program.
+        """
         for key, ed in self._child_editors.items():
             if key not in ignore:
                 ed.sync(*ignore)
@@ -310,6 +380,3 @@ class TkSubEditor(Frame):
         self.msb_aspect(b,0,off[0],text=off[1],update=False,fill=bg,foreground=fg)
         self.msb_aspect(b,1,on[0],text=on[1],update=True,fill=fg,foreground=bg,outline=fg)
         return b
-        
-        
-        

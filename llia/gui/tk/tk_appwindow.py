@@ -1,5 +1,7 @@
 # llia.gui.tk.tk_appwindow
 # 2016.05.20
+#
+# Tk implementation of AbstractApplicationWindow
 
 from __future__ import print_function
 from Tkinter import (Frame, Label, Menu, Tk, BOTH, Toplevel)
