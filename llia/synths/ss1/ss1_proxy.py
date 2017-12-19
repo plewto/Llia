@@ -6,6 +6,7 @@ import llia.constants
 from llia.gui.pallet import default_pallet, Pallet
 from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.ss1.ss1_data import program_bank,pp,random_ss1
+from llia.synths.ss1.ss1_mutation import SS1Mutation
 
 specs = SynthSpecs("SS1")
 
@@ -34,6 +35,7 @@ specs["description"] = "Simple Synth 1: 1 oscillator, 1 filter, 1 LFO, 1 envelop
 specs["keymodes"] = ('PolyN', 'PolyRotate', 'Poly1', 'PolyRotate', 'Mono1', 'MonoExclusive')
 specs["pretty-printer"] = pp   
 specs["program-generator"] = random_ss1
+specs["mutation"] = SS1Mutation()
 specs["help"] = "SS1"
 specs["pallet"] = ss1_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"]]
