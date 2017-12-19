@@ -44,6 +44,36 @@ class Program(dict):
         self.filename = ""
         self.initialize()
 
+
+    def diff(self, other):
+        '''
+        Diagnostic, returns diff of two programs.
+        The test program must have the same format as self.
+        
+        Returns dictionary
+            
+              {param1 : (v1,v2),
+               param2 : (v1,v2),
+              ................}
+
+              The dictionary keys are the parameter names (strings) where 
+              two programs have different values.  The dictionary values
+              are tuples (v1,v2) where v1 and v2 are the values for self
+              and the other program respectively.
+        '''
+        if self.data_format != other.data_format:
+            msg = "Can not apply Program.diff to different program types: %s and %s"
+            raise TypeError(msg % (self.data_format, other.data_format))
+        else:
+            acc = {}
+            for k in self.keys():
+                v1 = self[k]
+                v2 =other[k]
+                if not v1 == v2:
+                    acc[k] = (v1,v2)
+            return acc
+            
+        
     def initialize(self):
         '''
         Set all parameters to default values and initialize the Performance
