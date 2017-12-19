@@ -160,20 +160,20 @@ class TkBankEditor(Frame):
     def _select_slot(self, _):
         slot = self.listbox.curselection()[0]
         self.synth.use_program(slot)
-        self.sync() # ISSUE: Remove after testing
+        self.sync()
 
     def _decrement_selection(self, _):
         slot = self.listbox.curselection()[0]
         slot = max(slot-1, 0)
         self.synth.use_program(slot)
-        self.sync() # ISSUE: Remove after testing
+        self.sync()
 
     def _increment_selection(self, _):
         count = len(self.synth.bank())
         slot = self.listbox.curselection()[0]
         slot = min(slot+1, count-1)
         self.synth.use_program(slot)
-        self.sync() # ISSUE: Remove after testing
+        self.sync()
 
     def _open_bank(self):
         bnk = self.synth.bank()
