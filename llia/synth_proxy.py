@@ -14,6 +14,7 @@ from llia.llerrors import LliaPingError, NoSuchBusOrParameterError
 from llia.generic import is_instrument, clone, dump
 from llia.osc_transmitter import OSCTransmitter
 from llia.locked_dictionary import LockedDictionary
+from llia.mutation import DUMMY_MUTATION
 
 #  ---------------------------------------------------------------------- 
 #                               SynthSpecs class
@@ -22,6 +23,7 @@ SPECS_TEMPLATE = {"format" : None,
                   "constructor" : None,
                   "description" : None,
                   "program-generator" : None,
+                  "mutation" : DUMMY_MUTATION,
                   "pretty-printer" : None,
                   "help" : None,
                   "notes" : None,
