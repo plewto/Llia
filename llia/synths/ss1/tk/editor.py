@@ -9,9 +9,14 @@ from llia.gui.tk.expslider import ExpSlider
 from llia.synths.ss1.ss1_data import (HIGHPASS_CUTOFF,LOWPASS_CUTOFF,
                                       LOWPASS_TRACK,CFILL,CFOREGROUND,
                                       COUTLINE,MID_CUTOFF)
+from llia.gui.tk.tk_mutation_editor import TkMutationEditor
+
 
 def create_editor(parent):
     TkSS1Panel(parent)
+    muted = TkMutationEditor(parent)
+    muted.auto_allign()
+    
 
 class TkSS1Panel(TkSubEditor):
 
@@ -176,3 +181,4 @@ class TkSS1Panel(TkSubEditor):
         msb.layout((x_amp, y0+90))
         msb.update_aspect()
         volume_slider("amp",x_amp+90)
+
