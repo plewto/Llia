@@ -1,10 +1,15 @@
-# llia.mutation
+# llia.mutator
 # 2017.12.15
 #
+# TODO:
+#    Adopt approx to deal with 0 value
+#    Add suport for integer arguments.
 
 from __future__ import print_function
+from collections import OrderedDict
 
 from llia.util.lmath import coin,approx,clip
+
 
 class MutationParameter(object):
 
@@ -16,21 +21,33 @@ class MutationParameter(object):
         self.max_ratio = max_ratio
 
     def mutate(self, program):
+        current = program[self.param]
+        new_value = current
         if coin(self.probability):
-            current = program[self.param]
             mn,mx = self.range_
             new_value = clip(self.function(current, self.max_ratio),mn,mx)
             program[self.param] = new_value
 
-class Mutation(object):
+    def __str__(self):
+        frm = "%s prob %s  range %s  max_ratio %s"
+        return frm % (self.param,self.probability,self.range_,self.max_ratio)
+
+            
+class Mutator(object):
 
     def __init__(self):
-        self._params = {}
+        self._params = OrderedDict()
 
     def define(self, param, prob, range_, max_ratio=0.1):
         mp = MutationParameter(param,prob,range_,max_ratio)
         self._params[param] = mp
 
+    def keys(self):
+        return self._params.keys()
+
+    def items(self):
+        return self._params.items()
+        
     def weight(self,param,prob):
         try:
             mp = self._params[param]
@@ -40,26 +57,39 @@ class Mutation(object):
             raise KeyError(msg % param)
 
     def mutate(self, program):
+        program = program.clone()
         for mp in self._params.values():
             mp.mutate(program)
         return program
 
-class __DummyMutation(object):
+    def dump(self):
+        print("Mutation:")
+        for k,v in self._params.items():
+            print(k,v)
 
-    def __init__(self):
-        pass
+    
+# class __DummyMutation(object):
 
-    def define(self, *_):
-        pass
+#     def __init__(self):
+#         pass
 
-    def weight(self, *_):
-        pass
+#     def define(self, *_):
+#         pass
 
-    def mutate(self, program):
-        return program
+#     def keys(self):
+#         return []
+
+#     def items(self):
+#         return []
+    
+#     def weight(self, *_):
+#         pass
+
+#     def mutate(self, program):
+#         return program
 
 
-DUMMY_MUTATION = __DummyMutation()
+# DUMMY_MUTATION = __DummyMutation()
     
 
 
