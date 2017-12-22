@@ -53,7 +53,7 @@ class TkMutationStrip(object):
 class TkMutationEditor(TkSubEditor):
 
     NAME = "Mutation"
-    TAB_FILE = "resources/Tabs/rnd.png"
+    TAB_FILE = "resources/Tabs/helix.png"
     RESERVED_ROWS = 5
     RESERVED_COLUMNS = 5
     MAX_STRIPS_PER_COLUMN = 24
