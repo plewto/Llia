@@ -99,29 +99,36 @@ class TkMutationEditor(TkSubEditor):
             raise ValueError(msg)
         s = self._strips[param]
         s.frame.grid(row=row, column=col, pady=1)
-        
-    def _layout_common_widgets(self):
-        canvas = self.canvas
-        bMutate = factory.button(canvas,"Mutate",command=self.mutate)
-        bMutate.grid(row=5, column=1, padx=8, pady=16,columnspan=2)
 
+    def _layout_common_widgets(self):
+        frame = factory.frame(self.canvas)
+        frame.grid(row=0,column=0,rowspan=15, columnspan=4,pady=16)
+        b_mutate = factory.button(frame,"Mutate",command=self.mutate)
+        lab_slot = factory.label(frame,"Slot")
+        sb_slot = factory.int_spinbox(frame,self._var_fill_start,from_=0,to=127)
+        sb_slot.config(width=4)
+        sb_slot.config(command=self._link_slots)
+
+        b_mutate.grid(row=0,column=0, columnspan=3,sticky="ew", padx=4, pady=6)
+        lab_slot.grid(row=1,column=0,sticky="w", padx=4)
+        sb_slot.grid(row=1,column=2,sticky="e", padx=4, pady=6)
         
-        lab_start = factory.label(canvas,"Start")
-        lab_end = factory.label(canvas,"End")
-        sbStart = factory.int_spinbox(canvas,self._var_fill_start,from_=0, to=128)
-        sbEnd = factory.int_spinbox(canvas,self._var_fill_end,from_=0,to=128)
-        sbStart.config(width=4)
-        sbEnd.config(width=4)
-        lab_start.grid(row=11,column=1,pady=1)
-        lab_end.grid(row=11,column=2,pady=1)
-        sbStart.grid(row=12,column=1,pady=1)
-        sbEnd.grid(row=12,column=2,pady=1)
+        #  Fill controls
+        lab_fill = factory.label(frame,"Fill to:")
+        sb_end = factory.int_spinbox(frame,self._var_fill_end,from_=0,to=127)
+        sb_end.config(width=4)
+        cb_progressive = factory.checkbutton(frame,"+", var=self._var_progressive_fill)
+        lab_fill.grid(row=4,column=0,sticky="e",padx=4,pady=6)
+        cb_progressive.grid(row=5,column=0,sticky="w")
+        sb_end.grid(row=5,column=2,sticky='e')
         
-        bFill = factory.button(canvas,"Fill",command=self.fill)
-        cbProgressive = factory.checkbutton(canvas,"+",self._var_progressive_fill)
-        bFill.grid(row=10  ,column=1,pady=1,padx=4)
-        cbProgressive.grid(row=10 ,column=2)
+        # Page Headline
+        lab_head = factory.label(self.canvas,"Porgram Mutation")
+        lab_head.grid(row=0, column=0, columnspan=4, pady=8, padx=16)
         
+    def _link_slots(self):
+        self._var_fill_end.set(self._var_fill_start.get())
+    
     def _mutation_object(self):
         try:
             return self.synth.specs["mutation"]
@@ -131,18 +138,31 @@ class TkMutationEditor(TkSubEditor):
             return None
 
     def mutate(self):
-        print("------------------------------------") # DEBUG
         muobj = self._mutation_object()
-        prog1 = self.synth.bank()[None]
-        prog2 = muobj.mutate(prog1.clone())
-        if True:                # Diagnostic print
-            d = prog2.diff(prog1)
-            for k,v2 in d.items():
-                v1 = prog1[k]
-                print("%s:  %s -> %s" % (k,v1,v2))
-        slot = int(self._var_fill_start.get())
-        self.synth.bank()[slot] = prog2
-        self.synth.use_program(slot)
+        prog = self.synth.bank()[None].clone()
+        a,b = int(self._var_fill_start.get()), int(self._var_fill_end.get())
+        a,b = min(a,b),max(a,b)
+        count = (b-a)+1
+        smsg = "Program mutation slots: %d..%d" % (a,b)
+        for i in range(count):
+            slot = a+i
+            new_program = muobj.mutate(prog)
+            new_name = self._enumerate_name(prog.name,i)
+            new_program.name = new_name
+            self.synth.bank()[slot] = new_program
+            if int(self._var_progressive_fill.get()):
+                prog = new_program
+        self.synth.use_program(a)
+        self.status(smsg)
+                
+    def _enumerate_name(self,base, n):
+        pos = base.rfind("_")
+        if pos == -1:
+            return "%s_%d" % (base, n)
+        else:
+            return "%s_%d" % (base[:pos],n)
+        
+        
         
             
         
