@@ -146,6 +146,9 @@ class MSB(object):
         self.canvas.tag_bind(self._text, '<Button-3>', self.previous_state)
         self.client_callback = null_callback
 
+    def enable(self, state):
+        self.disable(not state)
+        
     def tag_bind(self, binding, callback, add='+'):
         self.canvas.tag_bind(self._pad, binding, callback, add)
         self.canvas.tag_bind(self._outline, binding, callback, add)

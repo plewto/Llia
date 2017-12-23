@@ -98,6 +98,7 @@ class TkBankEditor(Frame):
 
     def _cbextended_callback(self):
         state = int(self._var_extend_enable.get())
+        self.synth.synth_editor.enable(not state)
         if state:
             self.sbExtend['state'] = 'normal'
             count = int(self._var_extend_count.get())

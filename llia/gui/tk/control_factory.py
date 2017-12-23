@@ -66,6 +66,13 @@ class ControlSlider(absctrl.AbstractControl):
         self._tkscale.bind("<Enter>", self.enter_callback)
         self._editor = editor
         self._param = param
+
+    def enable(self, state):
+        if state:
+            state = "normal"
+        else:
+            state = "disabled"
+        self._primary_widget['state']=state
         
     def enter_callback(self, *_):
         #self._editor.status(self._param)
@@ -304,7 +311,15 @@ class OscFrequencyControl(absctrl.AbstractControl):
         self.scale_fine.grid(row=1, column=1, rowspan=row)
         self.lab_freq = factory.label(frame, "X.XXXX")
         self.lab_freq.grid(row=row+1, column=0, columnspan=2)
-      
+
+    def enable(self, state):
+        if state:
+            state = "normal"
+        else:
+            state = "disabled"
+        for w in self._widgets.items():
+            w['state'] = state
+        
     def callback(self, *_):
         ov8 = float(self.var_octave.get())
         if ov8 == ZERO_FREQ:
@@ -360,6 +375,13 @@ class ControlCheckbutton(absctrl.AbstractControl):
         self._values = values
         super(ControlCheckbutton, self).__init__(param, editor, self._cb)
 
+    def enable(self, state):
+        if state:
+            state = "normal"
+        else:
+            state = "disabled"
+        self._cb['state'] = state
+        
     def callback(self, *_):
         flg = float(self._var.get())
         if flg:

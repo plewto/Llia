@@ -47,6 +47,12 @@ class TkSubEditor(Frame):
         self.canvas = tk_master
         self.parent = parent
 
+    def enable(self, flag):
+        for q in self._controls.values():
+            q.enable(flag)
+        for ed in self._child_editors.values():
+            ed.enable(flag)
+        
     # Returns set of annotation keys.
     # Does not include any child editors.
     def annotation_keys(self):

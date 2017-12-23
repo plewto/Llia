@@ -108,7 +108,11 @@ class AbstractControl(object):
             self._current_value = new_value
             self.update_aspect()
         return self._current_value
-        
+
+    @abc.abstractmethod
+    def enable(self, flag):
+        pass
+    
 @is_synth_control.when_type(AbstractControl)
 def _is_synth_control(obj):
     return True

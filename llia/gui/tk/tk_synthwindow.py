@@ -53,12 +53,15 @@ class TkSynthWindow(Frame):
         south.pack(after=self.notebook, anchor="w", expand=True, fill="x")
     
         self._lab_status = factory.label(south, "<status>")
+        self._lab_extended = factory.label(south, "")
         b_panic = factory.panic_button(south, command=self.panic)
         b_lower = factory.button(south, "-", command=self.lower_window)
         b_lift = factory.button(south, "+", command=self.lift_window)
-        self._lab_status.grid(row=0, column=2, sticky='ew', padx=8)
+        # self._lab_status.grid(row=0, column=2, sticky='ew', padx=8)
         b_panic.grid(row=0, column=0)
-        self._lab_status.grid(row=0, column=4, sticky='w')
+        self._lab_status.grid(row=0, column=4, sticky='ew')
+        self._lab_extended.grid(row=0,column=5,sticky='e',padx=16)
+        self._lab_extended.config(fg="#f1f1cd")
         self._progressbar = Progressbar(south,mode="indeterminate")
         self._progressbar.grid(row=0,column=PROGRESSBAR_COLUMN, sticky='w', padx=8)
         south.config(background=factory.bg())
@@ -78,6 +81,15 @@ class TkSynthWindow(Frame):
         self._child_editors = {}
         self.update_progressbar(100, 0)
 
+    def enable(self, flag):
+        for ed in self._child_editors.values():
+            ed.enable(flag)
+        if flag:
+            msg = ""
+        else:
+            msg = "Editor locked while in extended mode"
+        self._lab_extended.config(text=msg)
+        
     def panic(self):
         self.synth.osc_transmitter.x_all_notes_off()
         self.status("All notes off")

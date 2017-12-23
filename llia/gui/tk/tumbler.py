@@ -43,8 +43,6 @@ class Tumbler(object):
                                       values=[-1,1])
         self._msb_sign.tag_bind("<Button-1>", self._callback)
         self._msb_sign.tag_bind("<Button-3>", self._callback)
-
-      
         acc = []
         for i in range(digits):
             msb = MSB.digit_msb(canvas,"",None,
@@ -62,7 +60,10 @@ class Tumbler(object):
         acc.reverse()
         self._digits = acc
         
-        
+    def enable(self, state):
+        self._msb_sign.enable(state)
+        for w in self._digits:
+            w.enable(state)
 
     def widget(self, key=None):
         msg = "Tumbler does not implement widget method"
