@@ -924,8 +924,10 @@ class SynthProxy(object):
         pad = " "*4
         program = self._bank[None]
         acc = "SynthProxy: sid = '%s'\n" % self.sid
-        acc += "%sMIDI input channel : %2d" % (pad, self.midi_input_channel())
-        acc += "%sKeytable           : %s" % (pad, self._key_table_name)
+        acc += "%sMIDI input channel    : %2d\n" % (pad, self.midi_input_channel())
+        acc += "%sKeytable              : %s\n" % (pad, self._key_table_name)
+        acc += "%sExtended mode enabled : %s\n" % (pad, self.extended_mode)
+        acc += "%sExtended voice count  : %s\n" % (pad, self.extended_count)
         acc += self._bank.dump(1)
         acc += program.dump(1)
         return acc

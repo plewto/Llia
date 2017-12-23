@@ -64,6 +64,8 @@ class SynthHelper(object):
         ns["get_annotation"] = self.get_annotation
         ns["bank_locked"] = self.bank_locked
         ns["lock_bank"] = self.lock_bank
+        ns["extended_mode"] = self.extended_mode
+        ns["extended_enabled"] = self.extended_enabled
         
     def warning(self, msg):
         self.parser.warning(msg)
@@ -1102,3 +1104,35 @@ class SynthHelper(object):
         sy = self.get_synth(sid)
         sy.bank().lock_current_program(flag)
         return flag
+    
+    def extended_mode(self, enable, count, sid=None, nosync=False):
+        """
+        Change status of extended_program mode.
+
+        enable - Bool.
+        count  - int, voice count
+        sid    - synth id.
+        nosunc - bool, if True do not update editor graphics.
+        """
+        sy = self.get_synth(sid)
+        km = sy.keymode
+        sync = not nosync
+        if km in SUPPORTS_EXTENDED_PROGRAMS:
+            count = max(0, min(count,sy.voice_count))
+            sy.extended_mode = enable
+            sy.extended_count = count
+            if sync:
+                sy.synth_editor.sync()
+
+    def extended_enabled(self,sid=None):
+        """
+        Returns status of extended program mode.
+        Result is either False or an int, the voice count.
+        """
+        sy =self.get_synth(sid)
+        return sy.extended_mode and sy.extended_count
+
+    
+
+            
+            

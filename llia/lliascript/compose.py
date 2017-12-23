@@ -112,6 +112,7 @@ class Composer(object):
             else:
                 sid = e.lsid
                 sy = self.get_synth(sid)
+                code += '# -------------------- Synth: %s\n' % sid
                 if e.data['is-control-synth']:
                     code += 'control_synth("%s")\n' % e.data['stype']
                 elif e.data['is-efx']:
@@ -122,6 +123,7 @@ class Composer(object):
                     vcount = e.data['voice-count']
                     code += 'synth("%s","%s",%s)\n' % (stype,kmode,vcount)
                 code += 'keytable("%s",silent=True)\n' % sy.keytable()
+                code += 'extended_mode(%s,%d,nosync=True)\n' % (sy.extended_mode, sy.extended_count)
                 code += 'midi_input_channel(%d,silent=True)\n' % sy.midi_input_channel()
                 code += 'create_editor()\n'
                 if load_banks:

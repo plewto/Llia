@@ -28,8 +28,8 @@ class TkBankEditor(Frame):
         self._var_extend_count = StringVar()
         self._var_extend_enable.set(0)
         self._var_extend_count.set(1)
-        north = self._init_north_toolbar()
         center = self._init_list_frame()
+        north = self._init_north_toolbar()
         perf_frame = self._init_performance_toolbar()
         south = self._init_south_toolbar()
         north.pack(pady=4, padx=4)
@@ -81,19 +81,17 @@ class TkBankEditor(Frame):
         lbx.bind("<Down>", self._increment_selection)
         sbar.config(command = lbx.yview)
         self.listbox = lbx
-        cbExtend = factory.checkbutton(frame,"Extend",self._var_extend_enable,
-                                       command = self._cbextended_callback)
-        sbExtend = factory.int_spinbox(frame,self._var_extend_count,
-                                       from_=0,to=self.synth.voice_count,
-                                       command = self._sbextended_callback)
-        sbExtend.config(width=2)
+        self.cbExtend = factory.checkbutton(frame,"Extend",self._var_extend_enable,
+                                            command = self._cbextended_callback)
+        self.sbExtend = factory.int_spinbox(frame,self._var_extend_count,
+                                            from_=0,to=self.synth.voice_count,
+                                            command = self._sbextended_callback)
+        self.sbExtend.config(width=2)
         lbx.grid(row=0,column=0,rowspan=3,columnspan=2,sticky="ewns")
         sbar.grid(row=0,column=2,rowspan=3,columnspan=1,sticky="ns")
         if self.synth.keymode in constants.SUPPORTS_EXTENDED_PROGRAMS:
-            cbExtend.grid(row=3,column=0,stick="w",pady=4,padx=4)
-            sbExtend.grid(row=3,column=1,sticky='w')
-        self.cbExtend = cbExtend
-        self.sbExtend = sbExtend
+            self.cbExtend.grid(row=3,column=0,stick="w",pady=4,padx=4)
+            self.sbExtend.grid(row=3,column=1,sticky='w')
         return frame
 
     def _cbextended_callback(self):
@@ -186,7 +184,23 @@ class TkBankEditor(Frame):
             self._var_lock_current.set(1)
         else:
             self._var_lock_current.set(0)
-
+        xflag = self.synth.extended_mode
+        if xflag:
+            xflag = '1'
+            sbstate = "normal"
+        else:
+            xflag='0'
+            sbstate = "disabled"
+        xcount = self.synth.extended_count
+        self._var_extend_enable.set(xflag)
+        self._var_extend_count.set(xcount)
+        try:
+            self.synth.synth_editor.enable(not xflag)
+            self.sbExtended['state'] = sbstate
+        except AttributeError:
+            #  Components may not yet be defined.
+            pass
+        
     def sync(self):
         self.sync_no_propegate()
         self.parent_editor.sync("bank")
