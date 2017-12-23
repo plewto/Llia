@@ -14,21 +14,18 @@ LliaSynthInfo : Object {
 	var vcount;   // voice count
 	var <>isEfx;
 
-
 	/*
-	** Create new LliaSynthInfo instance.
+    ** Construct instance of LliaSynthInfo.
     ** ARGS:
-	** lliaApp - Instance of LliaHandler	
-    **   stype - String, a Synth name, See Llia.docs.synthtypes
-    **   id    - Int, numeric synth id, id = 1,2,3,...
-    **           id used as part of the OSC path and must be unique
-    **           for each synthtype.
-    **           The final OSC path to this synth becomes:
-	**           /llia/stype/id/
-    **   km       - String, the keymode. See Llia.docs.keymodes
-    **   voiceCount - Optional number of synths to allocate.
-    **                Some keymodes will ignore this value.
-    */    
+    **   lliaApp - instance of LliaHandler
+    **   stype   - String, synth type.
+    **             See Llia.llia.constants.py
+    **   id      - int, unique synth serial number.
+    **   km      - String, key mode.
+    **             See Llia/llia/constants.py
+    **   voiceCount - int, number of voices to allocate. voiceCount 
+    **                is ignored by some key modes.
+	*/
 	*new {|lliaApp, stype, id, globalID, km, voiceCount|
 		^super.new.init(lliaApp, stype, id, globalID, km, voiceCount);
 	}

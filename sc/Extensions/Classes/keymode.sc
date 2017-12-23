@@ -1,6 +1,16 @@
 /*
 ** keymode.sc 2016.02.21
-** 
+**
+** The Keymode class is not used directly. Several classes extend Keymode
+** to define specific key response.  At this time (2017.12.23) the
+** following classes extend Keymode:
+**
+**    EfxKeymode
+**    Mono1
+**    MonoExclusive
+**    Poly1
+**    PolyN
+**    Rotate
 */
 
 Keymode : Object {
@@ -52,13 +62,28 @@ Keymode : Object {
 		this.initOSCFunctions;
 	}
 
-	path {|tail|
+	/*
+	** Construct OSC message path.
+    ** ARGS:
+    **   msg - String, message type
+    **
+    ** The resulting message has format:
+    **
+	**         /Llia/gid/stype/id/msg
+    **
+    ** Where:
+    **    gid   - Is the global OSC ID 
+    **    stype - Synth type
+    **    id    - int synth serial number
+    **    msg   - message type
+	*/
+	path {|msg|
 		var globalID, rs;
 		globalID = lliaApp.oscID;
 		rs = "/Llia/";
 		rs = rs ++ globalID;
 		rs = rs ++ "/" ++ synthType ++ "/" ++ synthID.asString;
-		rs = rs ++ "/" ++ tail.asString;
+		rs = rs ++ "/" ++ msg.asString;
 		^rs;
 	}
 
@@ -67,11 +92,15 @@ Keymode : Object {
 		oscHandlers.do.free;
 		ary = [
 
+			/*
+            ** 'ping' 
+            ** Diagnostic message to check connectivity to specific sid.
+			*/
 			OSCFunc({|msg|
 				postf("PING Synth % %\n", synthType, synthID);
 				lliaApp.respond("ping-response", "")},
 				this.path("ping")),
-
+			
 			OSCFunc({|msg|
 				this.reset()},
 				this.path("reset")),
@@ -84,6 +113,14 @@ Keymode : Object {
 				this.lliaDump},
 				this.path("dump")),
 
+			/*
+			** 'note-on' kn freq vel
+            ** Turn note on.
+            ** ARGS:
+            **   kn   - int, MIDI keynumber.
+            **   freq - float, frequency in Hz.
+            **   vel  - float, normalized key velocity, 0 <= vel <= 1.
+			*/	
 			OSCFunc({|msg|
 				var keynumber = msg[1];
 				var frequency = msg[2];
@@ -91,20 +128,39 @@ Keymode : Object {
 				this.noteOn(keynumber, frequency, velocity)},
 				this.path("note-on")),
 
+			/*
+            ** 'note-off' kn vel
+            ** Turn note off.
+            ** ARGS:
+            **   kn  - MIDI key number
+            **   vel - float, release velocity (not otherwise supported)
+            */
 			OSCFunc({|msg|
 				var keynumber = msg[1];
 				var velocity = msg[2];
 				this.noteOff(keynumber, velocity)},
 				this.path("note-off")),
 
+			/*
+            ** 'all-notes-off'
+            */
 			OSCFunc({|msg|
 				this.allNotesOff()},
 				this.path("all-notes-off")),
-
+			/*
+            ** 'panic' same as 'all-notes-off'
+			*/
 			OSCFunc({|msg|
 				this.allNotesOff()},
 				this.path("panic")),
-			
+
+			/*
+            ** 'synth-param'  param value
+		    ** Change synth parameter.
+            ** ARGS:
+			**	param - String, parameter name
+            **  value - Float, new value.
+            */
 			OSCFunc({|msg|
 				var param = msg[1];
 				var value = msg[2];
@@ -114,31 +170,52 @@ Keymode : Object {
 		oscHandlers = ary;
 	}
 
-
+	/*
+	** Free all managed synths.
+	*/
 	free {
 		isDead = true;
 		oscHandlers.do({|h| h.free;})
 	}
-	
+
+	/*
+	** Returns a list of parameters.
+    */
 	synthParams {
 		var plst = currentProgram.synthParams;
 		^plst;
 		//^(plst ++ fixedParameters);
 	}
 
+	/*
+    ** Turn all notes off.
+	*/
 	allNotesOff {
 		128.do{|kn| this.noteOff(kn, 0)};
 	}
 
+	/*
+    ** Turn all notes off and initialize program.
+    */
 	reset {
 		this.allNotesOff;
 		currentProgram = Program.new();
 	}
 
+	/*
+    ** Set synth parameter value.
+    ** ARGS:
+    **   param - String, parameter name
+    **   value - float, new value
+	*/
 	set_ {|param, value|
 		currentProgram.set_(param.asSymbol, value);
 	}
 
+	/*
+    ** Assign a bus number to synth parameter.
+    ** Bus related parameters are not effected by program changes.
+	*/
 	setBusParameter {|param, rate, busName, offset=0|
 		var index;
 		index = lliaApp.getBusIndex(rate, busName, offset);
@@ -147,6 +224,9 @@ Keymode : Object {
 		^index;
 	}
 
+	/*
+    ** Assign buffer number to synth parameter.
+	*/
 	setBufferParameter {|param, bufferName|
 		var buffer = lliaApp.getBuffer(bufferName);
 		fixedParameters.put(param.asSymbol, buffer);
@@ -157,10 +237,10 @@ Keymode : Object {
      * with fixed parameters (mostly bus and buffer assignments).
      *
      * ARGS:     
-     *    alist argument is associatein list from note-on event.
+     *    alist argument is association list from note-on event.
      *    [\gate, 1, \freq, n, \keynumber, n ...]
      *
-     * RETURNS: merged parameter/value association liet
+     * RETURNS: merged parameter/value association list
      *   [\param1, value1, \param2, value2, ...]
 	*/
 	mergeParameters {|alist|
@@ -168,7 +248,6 @@ Keymode : Object {
 		var alist2 = fixedParameters.getPairs;
 		^ alist ++ alist1 ++ alist2;
 	}
-
 		
 	// Abstract method
 	// velocity "normalized" [0.0, 1.0]
@@ -184,10 +263,4 @@ Keymode : Object {
 	}
 	
 
-} // end class
-		
-		
-	
-	
-	
-
+} // end Keymode

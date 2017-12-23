@@ -1,12 +1,11 @@
 /*
 ** mono1.sc   2015.11.29
-** changed gilrname to mono.sc 2016.11.07
 */
 
 
 /*
 ** Mono1
-** A monophonic MIDI event handler with last key priority.
+** A monophonic MIDI event handler with last note priority.
 ** Mono1 keeps a single Synth active at all times.
 **
 ** Pros:
@@ -29,7 +28,6 @@ Mono1 : Keymode {
      * events.  If there are keys still being help the synths frequency parameter
      * is updated with the frequency of the "freshest" held key.
     */
-
 	
 	*new {|lliaApp, synthType, oscid=nil, globalID="llia"|
 		^super.new().init(lliaApp, synthType, oscid, globalID);

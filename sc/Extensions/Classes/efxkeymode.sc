@@ -1,8 +1,11 @@
 /*
 ** efxkeymode.sc   2016.04.19
 ** 
-** A special 'keymode' for use with effects.
-**
+** A special 'keymode' where a single persistent Synth is instantiated for
+** use as an effect.  Typically effects are not sensitive to note events.
+** Nonetheless the EfxKeymode updates keynumber, frequency and velocity
+** parameters should the effect be interested in such things. 
+** 
 */
 
 EfxKeymode : Keymode {
@@ -52,7 +55,3 @@ EfxKeymode : Keymode {
 			});
 	}
 }
-		
-		
-		
-			

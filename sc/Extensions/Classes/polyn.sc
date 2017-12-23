@@ -49,7 +49,6 @@ PolyN : Keymode {
 			sy.set(param,value);
 		});
 	}
-
 	
 	noteOn {|keynumber, frequency, velocity|
 		var ptr,sy;
