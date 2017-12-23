@@ -26,11 +26,11 @@ class TkMutationStrip(object):
         
         spin_prob = factory.int_spinbox(self.frame,
                                           self.var_prob,0.0,100,
-                                          self.set_probability)
+                                          self._set_probability)
         spin_prob.config(width=6)
         spin_range = factory.int_spinbox(self.frame,
                                            self.var_range,0.0,100,
-                                           self.set_range)
+                                           self._set_range)
         spin_range.config(width=6)
         
         lab_param.grid(row=1,column=0, sticky="w", padx=4)
@@ -38,13 +38,32 @@ class TkMutationStrip(object):
         spin_prob.grid(row=1,column=2, sticky="w", padx=4)
         lab_range.grid(row=1,column=3, sticky="w", padx=4)
         spin_range.grid(row=1,column=4, sticky="w", padx=4)
-        
 
-    def set_probability(self):
+    def reset(self):
+        p = 0.1
+        self.paramobj.proability=p
+        self.var_prob.set(int(100*p))
+        r = 0.1
+        self.paramobj.max_ratio = p
+        self.var_range.set(100*r)
+
+    def zero(self):
+        self.paramobj.probability = 0.0
+        self.paramobj.max_range = 0.0
+        self.var_prob.set(0)
+        self.var_range.set(0)
+
+    def max_change(self):
+        self.paramobj.probability = 1.0
+        self.paramobj.max_range = 1.0
+        self.var_prob.set(100)
+        self.var_range.set(100)
+        
+    def _set_probability(self):
         i = int(self.var_prob.get())
         self.paramobj.probability = i/100.0
         
-    def set_range(self):
+    def _set_range(self):
         i = int(self.var_range.get())
         self.paramobj.max_ratio = i/100.0
         
@@ -101,30 +120,39 @@ class TkMutationEditor(TkSubEditor):
         s.frame.grid(row=row, column=col, pady=1)
 
     def _layout_common_widgets(self):
+        lab_head = factory.label(self.canvas,"Porgram Mutation")
+        lab_head.grid(row=0, column=0, columnspan=4, pady=16, padx=16)
+        lab_help = factory.label(self.canvas,"P = Probability of change, R = Maximum change.")
+        lab_help.grid(row=0,column=4,columnspan=4, sticky='w', padx=16)
+        
         frame = factory.frame(self.canvas)
-        frame.grid(row=0,column=0,rowspan=15, columnspan=4,pady=16)
+        frame.grid(row=1,column=0,rowspan=15, columnspan=4,pady=16)
         b_mutate = factory.button(frame,"Mutate",command=self.mutate)
         lab_slot = factory.label(frame,"Slot")
         sb_slot = factory.int_spinbox(frame,self._var_fill_start,from_=0,to=127)
         sb_slot.config(width=4)
         sb_slot.config(command=self._link_slots)
-
-        b_mutate.grid(row=0,column=0, columnspan=3,sticky="ew", padx=4, pady=6)
-        lab_slot.grid(row=1,column=0,sticky="w", padx=4)
-        sb_slot.grid(row=1,column=2,sticky="e", padx=4, pady=6)
-        
+        b_reset = factory.button(frame,"Reset",command=self.reset)
+        b_zero = factory.button(frame,"Zero",command=self.zero)
+        b_max = factory.button(frame,"Max",command=self.max_change)
+        b_mutate.grid(row=1,column=0, columnspan=3,sticky="ew", padx=4, pady=6)
+        lab_slot.grid(row=2,column=0,sticky="w", padx=4)
+        sb_slot.grid(row=2,column=2,sticky="e", padx=4, pady=6)
         #  Fill controls
         lab_fill = factory.label(frame,"Fill to:")
         sb_end = factory.int_spinbox(frame,self._var_fill_end,from_=0,to=127)
         sb_end.config(width=4)
         cb_progressive = factory.checkbutton(frame,"+", var=self._var_progressive_fill)
-        lab_fill.grid(row=4,column=0,sticky="e",padx=4,pady=6)
-        cb_progressive.grid(row=5,column=0,sticky="w")
-        sb_end.grid(row=5,column=2,sticky='e')
-        
-        # Page Headline
-        lab_head = factory.label(self.canvas,"Porgram Mutation")
-        lab_head.grid(row=0, column=0, columnspan=4, pady=8, padx=16)
+        lab_fill.grid(row=5,column=0,sticky="e",padx=4,pady=6)
+        cb_progressive.grid(row=6,column=0,sticky="w")
+        sb_end.grid(row=6,column=2,sticky='e')
+        pad1 = factory.padding_label(frame)
+        pad1.grid(row=7,column=0,pady=64)
+        b_reset.grid(row=8,column=0,columnspan=3,sticky="ew", padx=4)
+        b_zero.grid(row=9,column=0,columnspan=3,sticky="ew",padx=4,pady=4)
+        b_max.grid(row=10,column=0,columnspan=3,sticky="ew",padx=4)
+        pad2 = factory.padding_label(frame)
+
         
     def _link_slots(self):
         self._var_fill_end.set(self._var_fill_start.get())
@@ -137,6 +165,19 @@ class TkMutationEditor(TkSubEditor):
             self.status(msg)
             return None
 
+    def reset(self):
+        for strip in self._strips.values():
+            strip.reset()
+
+    def zero(self):
+        for strip in self._strips.values():
+            strip.zero()
+
+    def max_change(self):
+        for strip in self._strips.values():
+            strip.max_change()
+            
+            
     def mutate(self):
         muobj = self._mutation_object()
         prog = self.synth.bank()[None].clone()

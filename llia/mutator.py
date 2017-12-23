@@ -88,11 +88,14 @@ class Mutator(object):
         except KeyError:
             msg = "%s is not a defined Mutation parameter"
             raise KeyError(msg % param)
-
+        
     def mutate(self, program):
+        p1 = program.clone()
         program = program.clone()
         for mp in self._params.values():
             mp.mutate(program)
+        for k,v in p1.diff(program).items():
+            print("diff  %-16s  --> %s" % (k,v))
         return program
 
     def dump(self):
