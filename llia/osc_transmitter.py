@@ -168,6 +168,20 @@ class OSCTransmitter(object):
           value - The new value (most likely a float)        
         """
         self.send("synth-param", [param, value])
+
+    def x_synth_voice_param(self, vindex, param, value):
+        """
+        Update synth parameter of specific voice.
+        NOTE: This message should only be used with keymodes
+              which support addressing specific voices. 
+
+        ARGS:
+          vindex - int, the voice number.
+                   0 <= vindex < voice-count.
+          param  - String, parameter name
+          value  - float, new value.
+        """
+        self.send("voice-param", [vindex,param,value])
         
     def x_synth_program(self, program):
         """

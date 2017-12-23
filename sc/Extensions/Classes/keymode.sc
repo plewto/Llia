@@ -166,6 +166,13 @@ Keymode : Object {
 				var value = msg[2];
 				this.set_(param, value)},
 				this.path("synth-param")),
+
+			OSCFunc({|msg|
+				var vindex = msg[1].asInt;
+				var param = msg[2];
+				var value = msg[3];
+				this.set_voice_parameter_(vindex,param,value)},
+				this.path("voice-param")),
 		];
 		oscHandlers = ary;
 	}
@@ -212,6 +219,23 @@ Keymode : Object {
 		currentProgram.set_(param.asSymbol, value);
 	}
 
+	/*
+    ** Set synth parameter for specific voice.
+    ** ARGS:
+    **   vindex - voice array index 
+    **   param  - String, parameter name
+    **   value  - float, 
+    **
+    ** Unless overridden set_voice_parameter  has the same effect as 
+    ** calling set_ and ignoring the vindex argument.
+    ** However set_voice_parameter should only be used with sub classes
+    ** which implement it.  Calling the default implementation is 
+    ** if highly inefficient.
+    */
+	set_voice_parameter_ {|vindex,param,value|
+		this.set_(param,value)
+	}
+	
 	/*
     ** Assign a bus number to synth parameter.
     ** Bus related parameters are not effected by program changes.

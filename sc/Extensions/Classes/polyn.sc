@@ -49,6 +49,17 @@ PolyN : Keymode {
 			sy.set(param,value);
 		});
 	}
+
+	/*
+	** Set synth parameter for specific voice.
+    ** ARGS: 
+    **    vindex - int, voice array index
+    **    param  - String, parameter name
+    **    value  - float 
+	*/
+	set_voice_parameter_ {|vindex, param, value|
+		synths[vindex].set(param,value);
+	}
 	
 	noteOn {|keynumber, frequency, velocity|
 		var ptr,sy;

@@ -19,6 +19,9 @@ GUI_OPTIONS = (("None", "Use Llia without GUI."),
 
 KEY_MODES = ("PolyN", "PolyRotate", "Poly1", "Mono1", "MonoExclusive", "EFX")
 
+SUPPORTS_EXTENDED_PROGRAMS = ("PolyN",)
+
+
 SYNTH_TYPES = []                # Populated at startup
 EFFECT_TYPES = []               # Populated at startup
 CONTROLLER_SYNTH_TYPES = []     # Populated at startup

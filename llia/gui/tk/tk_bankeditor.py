@@ -10,6 +10,7 @@ import tkFileDialog
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.tk_layout as layout
 from llia.gui.tk.tk_init_warning import init_warning
+import llia.constants as constants
 
 HELP_TOPIC = "bank-editor"
 
@@ -23,6 +24,10 @@ class TkBankEditor(Frame):
         self.app = synth.app
         self.listbox = None
         self._var_lock_current = StringVar()
+        self._var_extend_enable = StringVar()
+        self._var_extend_count = StringVar()
+        self._var_extend_enable.set(0)
+        self._var_extend_count.set(1)
         north = self._init_north_toolbar()
         center = self._init_list_frame()
         perf_frame = self._init_performance_toolbar()
@@ -63,20 +68,48 @@ class TkBankEditor(Frame):
         lab_sid.grid(row=0, column=1, columnspan=2)
         toolbar.grid(row=1, column=0, columnspan=2)
         return frame
-        
+
     def _init_list_frame(self):
         frame = factory.frame(self)
         lbx = factory.listbox(frame)
         sbar = factory.scrollbar(frame, orientation="vertical")
-        lbx.pack(side="left", expand=True, fill="both")
-        sbar.pack(after=lbx, side="right", expand=True, fill="y")
+        # lbx.pack(side="left", expand=True, fill="both")
+        # sbar.pack(after=lbx, side="right", expand=True, fill="y")
         lbx.config(yscrollcommand=sbar.set)
         lbx.bind("<<ListboxSelect>>", self._select_slot)
         lbx.bind("<Up>", self._decrement_selection)
         lbx.bind("<Down>", self._increment_selection)
         sbar.config(command = lbx.yview)
         self.listbox = lbx
+        cbExtend = factory.checkbutton(frame,"Extend",self._var_extend_enable,
+                                       command = self._cbextended_callback)
+        sbExtend = factory.int_spinbox(frame,self._var_extend_count,
+                                       from_=0,to=self.synth.voice_count,
+                                       command = self._sbextended_callback)
+        sbExtend.config(width=2)
+        lbx.grid(row=0,column=0,rowspan=3,columnspan=2,sticky="ewns")
+        sbar.grid(row=0,column=2,rowspan=3,columnspan=1,sticky="ns")
+        if self.synth.keymode in constants.SUPPORTS_EXTENDED_PROGRAMS:
+            cbExtend.grid(row=3,column=0,stick="w",pady=4,padx=4)
+            sbExtend.grid(row=3,column=1,sticky='w')
+        self.cbExtend = cbExtend
+        self.sbExtend = sbExtend
         return frame
+
+    def _cbextended_callback(self):
+        state = int(self._var_extend_enable.get())
+        if state:
+            self.sbExtend['state'] = 'normal'
+            count = int(self._var_extend_count.get())
+            self.synth.extended_mode = True
+            self.synth.extended_count = count
+        else:
+            self.sbExtend['state'] = 'disabled'
+            self.synth.extended_mode = False
+
+    def _sbextended_callback(self):
+        count = int(self._var_extend_count.get())
+        self.synth.extend_count = count
     
     def _init_performance_toolbar(self):
         frame = factory.label_frame(self, "Performance")

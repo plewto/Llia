@@ -279,6 +279,8 @@ class SynthProxy(object):
         for bs in specs["control-input-buses"]:
             self._control_input_buses[bs[0]] = bs[1]
         self._buffers = {}
+        self.extended_mode = False
+        self.extended_count = 1
         host_and_port = app.config().host_and_port()
         host_and_port = host_and_port[0], int(host_and_port[1])
         trace_osc = app.config().osc_transmission_trace_enabled()
@@ -669,6 +671,29 @@ class SynthProxy(object):
         return self._key_table_name
 
     def use_program(self, slot):
+        if not self.extended_mode:
+            self._use_normal_program(slot)
+        else:
+            self._use_extended_program(slot)
+
+    
+    def _use_extended_program(self, slot):
+        acc = []
+        cp = self._bank.use(slot)
+        if self.synth_editor:
+            self.synth_editor.sync()
+        if self.extended_count is None:
+            count = self.voice_count
+        else:
+            count = min(self.voice_count, self.extended_count)
+        for vn in range(self.voice_count):
+            vslot = (slot+(vn % count)) % 127
+            prog = self._bank[vslot]
+            for param,value in prog.items():
+                self.x_voice_param_change(vn,param,value)
+                print("\t%s -> %s" % (param,value))            
+    
+    def _use_normal_program(self, slot):
         '''
         Recall indicated program.
         The following events take place:
@@ -824,6 +849,10 @@ class SynthProxy(object):
         '''
         self.osc_transmitter.x_synth_param(param, value)
 
+    def x_voice_param_change(self, vindex, param, value):
+        vindex = vindex % self.voice_count
+        self.osc_transmitter.x_synth_voice_param(vindex,param,value)
+        
     def x_program(self, program):
         '''
         Transmit program change to server.
