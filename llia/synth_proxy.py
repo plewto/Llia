@@ -680,8 +680,8 @@ class SynthProxy(object):
     def _use_extended_program(self, slot):
         acc = []
         cp = self._bank.use(slot)
-        if self.synth_editor:
-            self.synth_editor.sync()
+        # if self.synth_editor:
+        #     self.synth_editor.sync()
         if self.extended_count is None:
             count = self.voice_count
         else:

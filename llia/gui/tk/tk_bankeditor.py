@@ -105,6 +105,7 @@ class TkBankEditor(Frame):
         else:
             self.sbExtend['state'] = 'disabled'
             self.synth.extended_mode = False
+            self.synth.synth_editor.sync()
 
     def _sbextended_callback(self):
         count = int(self._var_extend_count.get())
@@ -193,7 +194,7 @@ class TkBankEditor(Frame):
             sbstate = "disabled"
         xcount = self.synth.extended_count
         self._var_extend_enable.set(xflag)
-        self._var_extend_count.set(xcount)
+        #self._var_extend_count.set(xcount)
         try:
             self.synth.synth_editor.enable(not xflag)
             self.sbExtended['state'] = sbstate
