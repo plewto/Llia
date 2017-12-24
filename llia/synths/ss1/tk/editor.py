@@ -1,5 +1,7 @@
 # llia.synths.ss1.tk.editor
 
+from __future__ import print_function
+
 from llia.gui.tk.tk_subeditor import TkSubEditor
 import llia.gui.tk.tk_factory as factory
 import llia.gui.tk.control_factory as cf
@@ -11,12 +13,10 @@ from llia.synths.ss1.ss1_data import (HIGHPASS_CUTOFF,LOWPASS_CUTOFF,
                                       COUTLINE,MID_CUTOFF)
 from llia.gui.tk.tk_mutation_editor import TkMutationEditor
 
-
 def create_editor(parent):
     TkSS1Panel(parent)
     muted = TkMutationEditor(parent)
     muted.auto_allign()
-    
 
 class TkSS1Panel(TkSubEditor):
 

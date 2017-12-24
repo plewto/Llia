@@ -39,7 +39,6 @@ class TkBankEditor(Frame):
         self.big_label = factory.big_label(self, "000 ABCDEFGH")
         self.big_label.pack()
         self.sync_no_propegate()
-
         
     def _init_north_toolbar(self):
         frame = factory.frame(self)
@@ -106,7 +105,7 @@ class TkBankEditor(Frame):
             self.sbExtend['state'] = 'disabled'
             self.synth.extended_mode = False
             self.synth.synth_editor.sync()
-
+            
     def _sbextended_callback(self):
         count = int(self._var_extend_count.get())
         self.synth.extend_count = count
@@ -188,15 +187,21 @@ class TkBankEditor(Frame):
         xflag = self.synth.extended_mode
         if xflag:
             xflag = '1'
+            ed_enable = False
             sbstate = "normal"
         else:
-            xflag='0'
+            xflag ='0'
+            ed_enable = True
             sbstate = "disabled"
         xcount = self.synth.extended_count
+        self.cbExtend.config(command=None)
+        self.sbExtend.config(command=None)
         self._var_extend_enable.set(xflag)
-        #self._var_extend_count.set(xcount)
+        self._var_extend_count.set(xcount)
+        self.cbExtend.config(command=self._cbextended_callback)
+        self.sbExtend.config(command=self._sbextended_callback)
         try:
-            self.synth.synth_editor.enable(not xflag)
+            self.synth.synth_editor.enable(ed_enable)
             self.sbExtended['state'] = sbstate
         except AttributeError:
             #  Components may not yet be defined.

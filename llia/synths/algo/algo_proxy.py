@@ -8,6 +8,7 @@ from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.algo.algo_data import program_bank
 from llia.synths.algo.algo_pp import pp
 from llia.synths.algo.algogen.algo_random import algogen
+from llia.synths.algo.algo_mutation import AlgoMutator
 
 specs = SynthSpecs("Algo")
 
@@ -35,6 +36,7 @@ specs["description"] = "An 8-operator FM Synth"
 specs["keymodes"] = ('PolyN','PolyRotate','Poly1','Mono1','MonoExclusive')
 specs["pretty-printer"] = pp   
 specs["program-generator"] = algogen
+specs["mutation"] = AlgoMutator()
 specs["help"] = "Algo"
 specs["pallet"] = algo_pallet
 specs["audio-output-buses"] = [["outbus", "out_0"],

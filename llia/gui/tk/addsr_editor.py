@@ -72,6 +72,7 @@ class ADDSREditor(EnvEditorSpecs):
         self.parent = parent_editor
         self.synth = parent_editor.synth
         self.bank = self.synth.bank()
+        self._enabled = True
         self.zoom = 1
         self.max_segment_time = max_segment_time
         self.paramlist = paramlist
@@ -258,6 +259,9 @@ class ADDSREditor(EnvEditorSpecs):
             msg = msg % (type(sctrl), param)
             raise(TypeError(msg))
 
+    def enable(self,flag):
+        self._enabled = flag
+        
     def status(self, msg):
         self.parent.status(msg)
 
@@ -290,6 +294,7 @@ class ADDSREditor(EnvEditorSpecs):
         return time,level
 
     def attack_drag(self, event):
+        if not self._enabled: return
         time, level = self._drag_helper("env%s-point-0" % self.envid, event)
         param = self.params['attack']
         self.set_value(param, time)
@@ -297,23 +302,27 @@ class ADDSREditor(EnvEditorSpecs):
         self.sync_ui()
 
     def decay1_drag(self, event):
+        if not self._enabled: return
         time, level = self._drag_helper("env%s-point-1" % self.envid, event)
         self.set_synth_value(self.params['breakpoint'], level)
         self.set_synth_value(self.params['decay1'], time)
         self.sync_ui()
 
     def decay2_drag(self, event):
+        if not self._enabled: return
         time, level = self._drag_helper("env%s-point-2" % self.envid, event)
         self.set_synth_value(self.params['sustain'], level)
         self.set_synth_value(self.params['decay2'], time)
         self.sync_ui()
         
     def sustain_drag(self, event):
+        if not self._enabled: return
         time, level = self._drag_helper("env%s-point-3" % self.envid, event)
         self.set_synth_value(self.params['sustain'], level)
         self.sync_ui()
         
     def release_drag(self, event):
+        if not self._enabled: return
         time, level = self._drag_helper("env%s-point-4" % self.envid, event)
         self.set_synth_value(self.params['release'], time)
         self.sync_ui()

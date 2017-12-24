@@ -25,7 +25,6 @@ class TkSynthWindow(Frame):
     """
     
     def __init__(self, master, sproxy):
-
         """
         Construct new TkSynthWindow
 
@@ -51,13 +50,11 @@ class TkSynthWindow(Frame):
         self.notebook.pack(anchor="nw", expand=True, fill="both")
         south = factory.frame(east)
         south.pack(after=self.notebook, anchor="w", expand=True, fill="x")
-    
         self._lab_status = factory.label(south, "<status>")
         self._lab_extended = factory.label(south, "")
         b_panic = factory.panic_button(south, command=self.panic)
         b_lower = factory.button(south, "-", command=self.lower_window)
         b_lift = factory.button(south, "+", command=self.lift_window)
-        # self._lab_status.grid(row=0, column=2, sticky='ew', padx=8)
         b_panic.grid(row=0, column=0)
         self._lab_status.grid(row=0, column=4, sticky='ew')
         self._lab_extended.grid(row=0,column=5,sticky='e',padx=16)
@@ -73,14 +70,13 @@ class TkSynthWindow(Frame):
         self.var_keyrange_low = StringVar()
         self.var_keyrange_high = StringVar()
         self.var_bendrange = StringVar()
-        #self._init_busconnection_tab(self.notebook)
         self._init_midi_tab(self.notebook)
         self._init_map1_tab(self.notebook) # MIDI controllers and pitchwheel
         self._init_map2_tab(self.notebook) # velocity, aftertouch, keynumber
         self._init_info_tab(self.notebook)
         self._child_editors = {}
         self.update_progressbar(100, 0)
-
+        
     def enable(self, flag):
         for ed in self._child_editors.values():
             ed.enable(flag)
@@ -174,7 +170,6 @@ class TkSynthWindow(Frame):
             txt = ""
         self._info_text_widget.delete(1.0, "end")
         self._info_text_widget.insert("end", txt)
-    
 
     def _init_midi_tab(self, master):
         img = factory.image("resources/Tabs/midi.png")
@@ -490,7 +485,6 @@ class TkSynthWindow(Frame):
     
     def sync(self, *ignore):
         self.sync_program_tab()
-        # self.bus_connection_editor.sync()
         self.sync_midi_tab()
         self.sync_map1_tab()
         self.sync_map2_tab()
@@ -499,7 +493,7 @@ class TkSynthWindow(Frame):
         for key, ed in self._child_editors.items():
             if key not in ignore:
                 ed.sync(*ignore)
-       
+                
     def annotation_keys(self):
         """
         See TkSubEditor annotation

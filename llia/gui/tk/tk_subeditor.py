@@ -13,16 +13,12 @@ from llia.gui.tk.msb import MSB, ToggleButton
 from llia.gui.tk.tumbler import Tumbler
 
 class TkSubEditor(Frame):
-
-
     """
     TkSubEditor provides a primary canvas for constructions synth editors.
     Depending on complexity an editor may be spread across several sub-editors.
     Typically TkSubEditor is sub-classed for specific editor behavior.
     """
     
-    # parent - either TkSubEditor or TkSynthWindow
-    # 
     def __init__(self, tk_master, parent, name):
         """
         Construct new TkSubEditor

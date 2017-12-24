@@ -10,6 +10,7 @@ import llia.synths.algo.algo_constants as acon
 from llia.synths.algo.tk.envedit import TkAlgoEnvelopePanel
 from llia.synths.algo.tk.miscedit import TkAlgoMiscPanel
 from llia.synths.algo.tk.proggen import TkProgramGenConfigPanel
+from llia.gui.tk.tk_mutation_editor import TkMutationEditor
 
 def create_editor(parent):
     TkAlgoStackPanel("A", "Stack A","resources/Algo/editor_stack_a.png",parent)
@@ -20,7 +21,8 @@ def create_editor(parent):
     TkAlgoEnvelopePanel("C",parent)
     TkAlgoMiscPanel(parent)
     TkProgramGenConfigPanel(parent)
-    
+    muted = TkMutationEditor(parent)
+    muted.auto_allign()
 
 class TkAlgoStackPanel(TkSubEditor):
 

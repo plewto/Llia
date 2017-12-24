@@ -38,6 +38,7 @@ class MutationParameter(object):
         current = program[self.param]
         new_value = current
         if coin(self.probability):
+            print("DEBUG param = ", self.param)
             mn,mx = self.range_
             new_value = clip(self.function(current), mn,mx)
             program[self.param] = new_value
