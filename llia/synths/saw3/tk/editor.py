@@ -9,11 +9,14 @@ import llia.gui.tk.control_factory as cf
 from llia.gui.tk.expslider import ExpSlider
 from llia.gui.tk.tumbler import Tumbler
 from llia.synths.saw3.tk.s3filter import TkSaw3FilterPanel
+from llia.gui.tk.tk_mutation_editor import TkMutationEditor
 
 def create_editor(parent):
     panel1 = TkSaw3Panel1(parent)
     panel2 = TkSaw3FilterPanel(parent)
     panel4 = TkSaw3InfoPanel(parent)
+    muteed = TkMutationEditor(parent)
+    muteed.auto_allign()
     
 class TkSaw3Panel1(TkSubEditor):
 

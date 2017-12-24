@@ -9,6 +9,7 @@ from llia.synth_proxy import SynthSpecs, SynthProxy
 from llia.synths.saw3.s3_data import program_bank
 from llia.synths.saw3.s3_pp import pp_saw3
 from llia.synths.saw3.s3_gen import s3gen
+from llia.synths.saw3.s3_mutation import S3Mutator
 
 specs = SynthSpecs("Saw3")
 
@@ -35,6 +36,7 @@ specs["description"] = "A 3 Oscillator Subtractive Synth"
 specs["keymodes"] = ('PolyN', 'PolyRotate','Poly1','Mono1','MonoExclusive')
 specs["pretty-printer"] = pp_saw3  
 specs["program-generator"] = s3gen
+specs["mutation"] = S3Mutator()
 specs["pallet"] = s3_pallet
 specs["help"] = "saw3"
 specs["audio-output-buses"] = [["outbus", "out_0"]]

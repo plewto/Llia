@@ -9,7 +9,6 @@ class SS1Mutation(Mutator):
     def __init__(self):
         super(SS1Mutation,self).__init__()
         self.define("port", 0.10, (0,1), 0.01)
-        # self.define("vsens", 0.10, (0,1),0.01)
         self.define("vdepth", 0.10, (0,1),0.01)
         self.define("lfoFreq", 0.10, (0.001,99),0.01)
         self.define("lfoDelay", 0.10, (0,3),0.01)
