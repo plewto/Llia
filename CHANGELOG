@@ -1,5 +1,9 @@
+**************************************************** v 0.2.1    2017.12.24
+Fixed broken bank save feature.
+Added extended program mode - each voice may use a different program.
 Added program mutations.
-**************************************************** v 0.1.2    2017.03.23
+Added code documentation.
+**************************************************** v 0.2.0
 Added Fxstack - an integrated multi-effect.
 Added Galvinizer effect.
 Added Extremely simple TestTone synth.
@@ -12,13 +16,11 @@ Added Klstr2 synth
 Reduced size for ProgramBank files.
 Added scene feature, saves synth states in single file.
 Added better restart options.
-	
 **************************************************** v 0.1.2    2017.03.23
 Multiple bug fixes
 Added Scanner phase-shifter
 Added Comb filter
 Increased size of splash screen to accumodate more MIDI devices.
-
 **************************************************** v 0.1.0    2016.12.17
 Multiple bug fixes
 Documentation

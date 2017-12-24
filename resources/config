@@ -25,7 +25,7 @@ output-port:
 
 backend : mido.backends.rtmidi
 # backend : midi.backends.portmidi
-enable-program-pp : True
+enable-program-pp : False
 trace-midi-reception : False
 
 [OSC]
