@@ -691,7 +691,6 @@ class SynthProxy(object):
             prog = self._bank[vslot]
             for param,value in prog.items():
                 self.x_voice_param_change(vn,param,value)
-                print("\t%s -> %s" % (param,value))            
     
     def _use_normal_program(self, slot):
         '''
