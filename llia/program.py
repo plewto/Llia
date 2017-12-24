@@ -150,7 +150,7 @@ class Program(dict):
             raise TypeError(msg)
 
     def hash_(self):
-        return crc32(str(self.__serialize()))
+        return crc32(str(self.serialize(self.items())))
         
     def __eq__(self, other):
         if self is other:
