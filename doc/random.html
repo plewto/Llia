@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Random Programs">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/llia_icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>Random</title>
+</head>
+<body>
+<div id="page_wrapper">
+        <!-- **** SECTION random **** -->
+        <a id="random"></a>
+        <section>
+        <div class="section">
+        <h1 class="small-banner">Random Programs</h1>
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="bank.html">Previous: Bank</a></td>
+      <td><a href="group.html">Next: Group</a></td>
+    </tr>
+    </table>
+            <hr class="section-head" />
+            <p class="section-body">
+            </p>
+            
+            
+            Llia provides two methods for generating random programs:<br>
+            <ol>
+              <li>Random - activated by the <a href="bank.html">bank</a> RND button.</li>
+              <li>Mutation - accessed by a "Mutation" tab on the editor.</li>
+            </ol>
+            
+            <p class="section-body">
+            
+            Not all synth types will implement random program generation.  Some may
+            implemented one type of generator and not the other.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Random Programs</h4>
+            <p class="section-body">
+            
+            Random programs are created by clicking the RND button at the bottom of the
+            program bank editor.  The generated programs are created from scratch and
+            in most cases there is no control over the result.</p>
+            
+            <p class="section-body">
+            
+            In a few cases a synth may offer controls to influence or give hints to the
+            generator.   Currently (2017.12.24) ALGO is the only synth which provides 
+            these controls. Use the ALGO editor RND tab to access random hint controls.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Mutations</h4>
+            <p class="section-body">
+            
+            A mutation generates new programs by making random changes to an existing
+            program.  Synths which implement mutations will have a mutation tab on
+            their editor.
+            </p>
+            
+        <img class="center" src="images/random/tab.png" alt="" />
+            <p class="section-body">
+            
+            The Mutation tab will have several lines of controls like the following:
+            </p>
+            
+        <img class="center" src="images/random/strip.png" alt="" />
+            
+            Each line controls a single parameter, from left to right:
+            <ul>
+               <li>The parameter name</li>
+               <li>P control - probability of change in percent.</li>
+               <li>R control - maximum ratio of change in percent.</li>
+            </ul>
+            
+            <p class="section-body">
+            
+            To the left of the parameters are general controls.
+            </p>
+            
+        <img class="center" src="images/random/general.png" alt="" />
+            
+            <ul>
+               <li>Mutate Button - generate mutated program(s).</li>
+               <li>Slot - location where generated program is stored.</li>
+               <li>Fill to - final slot for program storage.<br>
+                   A new program is created for each slot between slot and fill to.</li>
+               <li>[+] checkbox -  Selects how sequential mutations are created.
+                   <ul>
+                     <li>Unselected - each new program uses the original program as a starting point.</li>
+                     <li>Selected - each new program starts the previously generated program,</li>
+                   </ul>
+                </li>
+            </ul>
+            
+            
+            The remaining buttons set parameters to preset values.<br>
+            <ul>
+               <li>Reset - sets all probabilities and max ranges to 10%.</li>
+               <li>Zero - sets all probabilities top 0%.</li>
+               <li>Max - sets all probabilities and ranges to 100%.</li>
+            </ul>
+            
+            <hr class="section-head" />
+    <table style="width:50%">
+    <tr>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="TOC.html">Contents</a></td>
+      <td><a href="synth_catalog.html">Synth Catalog</a></td>
+      <td><a href="bank.html">Previous: Bank</a></td>
+      <td><a href="group.html">Next: Group</a></td>
+    </tr>
+    </table>
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

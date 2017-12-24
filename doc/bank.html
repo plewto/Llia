@@ -24,7 +24,7 @@
       <td><a href="TOC.html">Contents</a></td>
       <td><a href="synth_catalog.html">Synth Catalog</a></td>
       <td><a href="midi.html">Previous: MIDI</a></td>
-      <td><a href="group.html">Next: Group</a></td>
+      <td><a href="random.html">Next: Random</a></td>
     </tr>
     </table>
             <hr class="section-head" />
@@ -33,7 +33,7 @@
             
             <p class="section-body">
             
-            Each active synth has its own bank of 128 programs.  With exception of 
+            Each active synth has its own bank of 127 programs.  With exception of 
             <a href="midi.html">MIDI Performance</a> values programs are generally not
             compatible between different synth types.   The bank area is to the left of
             the editor window and is divided into several vertical areas.
@@ -43,6 +43,8 @@
             <p class="footnote">
             The terms "program" and "patch" are used interchangeably. </p>
             
+            <hr class="section-head" />
+        <h4 class="heading">Bank Level Controls</h4>
             <p class="section-body">
             
             At the very top is an icon identifying the synth type.  Immediately to the
@@ -54,6 +56,8 @@
             processed by effect X, only if the sid value of A is greater then the sid of
             X.</p>
             
+            <hr class="section-head" />
+        <h4 class="heading">Programs List</h4>
             <p class="section-body">
             
             Immediately below the icon are buttons for operation on the bank as a whole.
@@ -74,6 +78,33 @@
             Next comes a list box of the current bank contents.  The current program will
             be highlighted though it may be scrolled out of view.</p>
             
+        <h4 class="heading">Extended Program Mode</h4>
+            <p class="section-body">
+            
+            When using the PolyN and PoyRotate <a href="keymodes.html">keymodes</a> two
+            additional widgets appear below the program list.
+            </p>
+            
+        <img class="center" src="images/bank/bank_002.png" alt="" />
+            <p class="section-body">
+            
+            When Extend is checked program changes transmit multiple programs to the
+            server side <a href="synths.html">synths</a>.  The number in the spinner
+            indicates how many programs are used.  In the image above, selecting program
+            6 transmits programs 6,7,8, and 9 to the synth objects.  If the number
+            of voices exceeded 4 the programs start over again at 6.
+            </p>
+            
+            <p class="section-body">
+            
+            With extended mode each note played may use a different program.  The
+            effect can be extreme or subtle.   When extended mode is enabled synth
+            editor controls are disabled.  This is because it would not be clear
+            exactly which program was being edited.
+            </p>
+            
+            <hr class="section-head" />
+        <h4 class="heading">Performance Level Controls</h4>
             
             Below the listbox are Performance related buttons.<br>
             <ul>
@@ -83,6 +114,8 @@
               <li><b>Fill</b>, copy the current Performance across a range of
                  programs.</li>
             </ul>
+            <hr class="section-head" />
+        <h4 class="heading">Program Level Controls</h4>
             
             Near the bottom are buttons related to individual Programs.<br>
             <ul>
@@ -90,8 +123,7 @@
                   Options are provided to select the save location, and to enter optional
                   remarks text.</li>
                <li><b>RND</b>, Generates a random patch.  Not all synths support random
-                   patch generations.   The generated program is stored to slot
-                   128.</li>
+                   patch generations.   The generated program is stored to slot 127.</li>
                <li><b>Init</b>, Initialize the current patch.</li>
                <li><b>Copy</b>, Copy the current program to the clipboard.   The
                   clipboard is smart enough to keep track synth types and may hold several
@@ -117,7 +149,7 @@
       <td><a href="TOC.html">Contents</a></td>
       <td><a href="synth_catalog.html">Synth Catalog</a></td>
       <td><a href="midi.html">Previous: MIDI</a></td>
-      <td><a href="group.html">Next: Group</a></td>
+      <td><a href="random.html">Next: Random</a></td>
     </tr>
     </table>
         </div>
