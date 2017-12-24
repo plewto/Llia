@@ -38,7 +38,6 @@ class MutationParameter(object):
         current = program[self.param]
         new_value = current
         if coin(self.probability):
-            print("DEBUG param = ", self.param)
             mn,mx = self.range_
             new_value = clip(self.function(current), mn,mx)
             program[self.param] = new_value
@@ -95,8 +94,8 @@ class Mutator(object):
         program = program.clone()
         for mp in self._params.values():
             mp.mutate(program)
-        for k,v in p1.diff(program).items():
-            print("diff  %-16s  --> %s" % (k,v))
+        # for k,v in p1.diff(program).items():
+        #     print("diff  %-16s  --> %s" % (k,v))
         return program
 
     def dump(self):
