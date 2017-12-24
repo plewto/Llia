@@ -197,7 +197,7 @@ class TkBankEditor(Frame):
         self.cbExtend.config(command=None)
         self.sbExtend.config(command=None)
         self._var_extend_enable.set(xflag)
-        self._var_extend_count.set(xcount)
+        #self._var_extend_count.set(xcount)
         self.cbExtend.config(command=self._cbextended_callback)
         self.sbExtend.config(command=self._sbextended_callback)
         try:
