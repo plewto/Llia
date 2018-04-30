@@ -30,7 +30,7 @@
 	var outsig = Pan2.ar(dry, position);
 	Out.ar(outbusA, outsig[0]);
 	Out.ar(outbusB, outsig[1]);
-	Out.kr(lfo);
+	Out.kr(lfoOutbus,lfo);
 }).load)
 
 
