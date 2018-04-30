@@ -28,7 +28,8 @@
 	var d1 = DelayL.kr(a1+fb,maxdelay,delay.min(maxdelay).max(0));
 	var d2 = Select.kr(enableHpDelay, [d1, HPF.kr(d1, cutoff)]);
 	var d3 = Lag2.kr(d2, lagDelay.linlin(0,1,0.0,0.2));
-	LocalOut.kr([d1]);
+	//LocalOut.kr([d1]);
+	LocalOut.kr([d1,0]);   // Hack: using dummy 2nd channel to avoid SC bug.
 	a3 = (a3*scaleA)+biasA;
 	d3 = (d3*scaleDelay)+biasDelay;
 	Out.kr(outbus, a3+d3);
